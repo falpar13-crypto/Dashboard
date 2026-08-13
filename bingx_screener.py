@@ -361,9 +361,9 @@ display_df = filtered.sort_values("Volume (24h, USDT)", ascending=False).reset_i
 
 styled = (
     display_df.style
-    .applymap(color_pct, subset=["Gyertya Vol. Változás (%)"])
-    .applymap(color_macd, subset=["MACD Státusz"])
-    .applymap(color_rsi, subset=["RSI (14)"])
+    .map(color_pct, subset=["Gyertya Vol. Változás (%)"])
+    .map(color_macd, subset=["MACD Státusz"])
+    .map(color_rsi, subset=["RSI (14)"])
     .format({
         "Ár": "{:.6f}",
         "Volume (24h, USDT)": "{:,.0f}",
