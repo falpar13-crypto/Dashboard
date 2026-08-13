@@ -472,30 +472,24 @@ bearish_cross_count = int((filtered["MACD Státusz"] == "Bearish Cross").sum())
 top_gainer = filtered.loc[filtered["Gyertya Vol. Változás (%)"].idxmax()] if len(filtered) else None
 avg_rsi = filtered["RSI (14)"].mean() if len(filtered) else 0
 
-st.markdown(f"""
-<div class="cg-header">
-    <div class="cg-title"><span class="cg-dot"></span> BINGX SCREENER</div>
-    <div class="cg-sub">{now_str} · {timeframe_label} · {len(filtered)}/{len(df)} pár</div>
-</div>
-<div class="cg-stats">
-    <div class="cg-stat">
-        <div class="cg-stat-label">Bullish Cross</div>
-        <div class="cg-stat-value cg-green">{bullish_cross_count}</div>
-    </div>
-    <div class="cg-stat">
-        <div class="cg-stat-label">Bearish Cross</div>
-        <div class="cg-stat-value cg-red">{bearish_cross_count}</div>
-    </div>
-    <div class="cg-stat">
-        <div class="cg-stat-label">Átlag RSI</div>
-        <div class="cg-stat-value">{avg_rsi:.1f}</div>
-    </div>
-    <div class="cg-stat">
-        <div class="cg-stat-label">Top Gainer (vol.)</div>
-        <div class="cg-stat-value cg-green" style="font-size:14px;">{top_gainer['Ticker'] if top_gainer is not None else '–'}</div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+top_gainer_label = top_gainer['Ticker'] if top_gainer is not None else '–'
+header_html = (
+    '<div class="cg-header">'
+    '<div class="cg-title"><span class="cg-dot"></span> BINGX SCREENER</div>'
+    f'<div class="cg-sub">{now_str} · {timeframe_label} · {len(filtered)}/{len(df)} pár</div>'
+    '</div>'
+    '<div class="cg-stats">'
+    '<div class="cg-stat"><div class="cg-stat-label">Bullish Cross</div>'
+    f'<div class="cg-stat-value cg-green">{bullish_cross_count}</div></div>'
+    '<div class="cg-stat"><div class="cg-stat-label">Bearish Cross</div>'
+    f'<div class="cg-stat-value cg-red">{bearish_cross_count}</div></div>'
+    '<div class="cg-stat"><div class="cg-stat-label">Átlag RSI</div>'
+    f'<div class="cg-stat-value">{avg_rsi:.1f}</div></div>'
+    '<div class="cg-stat"><div class="cg-stat-label">Top Gainer (vol.)</div>'
+    f'<div class="cg-stat-value cg-green" style="font-size:14px;">{top_gainer_label}</div></div>'
+    '</div>'
+)
+st.markdown(header_html, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------------
 # 8) KÁRTYA RÁCS (fő megjelenítés - mobilon 1 oszlop, nagyobb kijelzőn több)
@@ -542,34 +536,34 @@ for _, row in filtered.iterrows():
     bar_width = max(2, min(100, (row["Volume (24h, USDT)"] / max_vol_in_view) * 100)) if max_vol_in_view else 2
     bar_color = "#0ecb81" if vol_pct >= 0 else "#f6465d"
 
-    cards_html.append(f"""
-    <div class="cg-card">
-        <div class="cg-card-top">
-            <div><span class="cg-ticker">{row['Ticker']}</span><span class="cg-cat">{row['Kategória']}</span></div>
-            <div class="cg-price">${price_fmt(row['Ár'])}</div>
-        </div>
-        <div class="cg-row">
-            <div class="cg-metric">
-                <div class="cg-metric-label">Vol 24h</div>
-                <div class="cg-metric-value">{fmt_compact(row['Volume (24h, USDT)'])}</div>
-            </div>
-            <div class="cg-metric">
-                <div class="cg-metric-label">Vol Δ</div>
-                <div class="cg-metric-value {vol_color}">{vol_sign}{vol_pct:.2f}%</div>
-            </div>
-            <div class="cg-metric">
-                <div class="cg-metric-label">Open Int.</div>
-                <div class="cg-metric-value">{fmt_compact(row['Open Interest'])}</div>
-            </div>
-            <div class="cg-metric">
-                <div class="cg-metric-label">RSI</div>
-                <div class="cg-metric-value {rsi_color}">{rsi_txt}</div>
-            </div>
-        </div>
-        <span class="cg-badge {badge_cls}">{row['MACD Státusz']}</span>
-        <div class="cg-volbar-track"><div class="cg-volbar-fill" style="width:{bar_width:.0f}%; background:{bar_color};"></div></div>
-    </div>
-    """)
+    # FONTOS: a HTML-t egyetlen, behúzás nélküli sorban építjük fel.
+    # Ha ez több sorba törne 4+ szóköz behúzással, a Streamlit Markdown-parsere
+    # "indented code block"-ként (nyers szövegként) jelenítené meg a kártyát
+    # a lista második elemétől kezdve.
+    card = (
+        '<div class="cg-card">'
+        '<div class="cg-card-top">'
+        f'<div><span class="cg-ticker">{row["Ticker"]}</span>'
+        f'<span class="cg-cat">{row["Kategória"]}</span></div>'
+        f'<div class="cg-price">${price_fmt(row["Ár"])}</div>'
+        '</div>'
+        '<div class="cg-row">'
+        '<div class="cg-metric"><div class="cg-metric-label">Vol 24h</div>'
+        f'<div class="cg-metric-value">{fmt_compact(row["Volume (24h, USDT)"])}</div></div>'
+        '<div class="cg-metric"><div class="cg-metric-label">Vol \u0394</div>'
+        f'<div class="cg-metric-value {vol_color}">{vol_sign}{vol_pct:.2f}%</div></div>'
+        '<div class="cg-metric"><div class="cg-metric-label">Open Int.</div>'
+        f'<div class="cg-metric-value">{fmt_compact(row["Open Interest"])}</div></div>'
+        '<div class="cg-metric"><div class="cg-metric-label">RSI</div>'
+        f'<div class="cg-metric-value {rsi_color}">{rsi_txt}</div></div>'
+        '</div>'
+        f'<span class="cg-badge {badge_cls}">{row["MACD Státusz"]}</span>'
+        '<div class="cg-volbar-track">'
+        f'<div class="cg-volbar-fill" style="width:{bar_width:.0f}%; background:{bar_color};"></div>'
+        '</div>'
+        '</div>'
+    )
+    cards_html.append(card)
 cards_html.append("</div>")
 
 if len(filtered) == 0:
