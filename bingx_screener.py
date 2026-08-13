@@ -256,16 +256,152 @@ def build_dashboard_data(symbols_tuple, interval):
     return pd.DataFrame(rows)
 
 # ----------------------------------------------------------------------------
-# 4) SIDEBAR - SZŰRŐK
+# 4) EGYÉNI DIZÁJN (CoinGlass-stílusú, sötét, mobilra optimalizált)
 # ----------------------------------------------------------------------------
 
-st.sidebar.title("⚙️ Screener beállítások")
+CUSTOM_CSS = """
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+    /* Streamlit alap chrome elrejtése / karcsúsítása */
+    #MainMenu { visibility: hidden; }
+    footer { visibility: hidden; }
+    .block-container {
+        padding-top: 0.8rem !important;
+        padding-bottom: 2rem !important;
+        padding-left: 0.9rem !important;
+        padding-right: 0.9rem !important;
+        max-width: 1400px;
+    }
+
+    /* Teljes app háttér */
+    [data-testid="stAppViewContainer"], [data-testid="stApp"] {
+        background: #0a0d13;
+    }
+    [data-testid="stSidebar"] {
+        background: #0d1017;
+        border-right: 1px solid #1b202b;
+    }
+    [data-testid="stSidebar"] * { color: #c7ccd6; }
+
+    /* ---- Fejléc ---- */
+    .cg-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 6px 2px 14px 2px; flex-wrap: wrap; gap: 6px;
+    }
+    .cg-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px; font-weight: 700; color: #f2f4f8;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .cg-dot {
+        width: 8px; height: 8px; border-radius: 50%;
+        background: #0ecb81; box-shadow: 0 0 8px #0ecb81;
+        animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+    .cg-sub { font-size: 11.5px; color: #6b7385; font-family: 'JetBrains Mono', monospace; }
+
+    /* ---- Statisztika sáv (horizontális scroll mobilon) ---- */
+    .cg-stats {
+        display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 16px 2px;
+        scrollbar-width: none;
+    }
+    .cg-stats::-webkit-scrollbar { display: none; }
+    .cg-stat {
+        flex: 0 0 auto; min-width: 118px;
+        background: linear-gradient(180deg, #10141d 0%, #0d1017 100%);
+        border: 1px solid #1b202b; border-radius: 10px; padding: 10px 14px;
+    }
+    .cg-stat-label {
+        font-size: 10px; color: #6b7385; text-transform: uppercase;
+        letter-spacing: 0.06em; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px;
+    }
+    .cg-stat-value {
+        font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+        color: #f2f4f8;
+    }
+
+    /* ---- Kártya rács ---- */
+    .cg-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 10px;
+    }
+    .cg-card {
+        background: #10141d; border: 1px solid #1b202b; border-radius: 12px;
+        padding: 13px 15px; position: relative; overflow: hidden;
+        transition: border-color 0.15s ease;
+    }
+    .cg-card:hover { border-color: #2a3244; }
+    .cg-card-top {
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+    }
+    .cg-ticker {
+        font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px;
+        color: #f2f4f8;
+    }
+    .cg-cat {
+        font-size: 10px; color: #7b8494; background: #171c26; border: 1px solid #232a38;
+        border-radius: 20px; padding: 2px 8px; margin-left: 8px; font-family: 'JetBrains Mono', monospace;
+    }
+    .cg-price {
+        font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 17px; color: #f2f4f8;
+    }
+    .cg-row {
+        display: flex; justify-content: space-between; gap: 8px; margin-top: 9px;
+    }
+    .cg-metric { flex: 1; }
+    .cg-metric-label {
+        font-size: 9.5px; color: #565e70; text-transform: uppercase; letter-spacing: 0.05em;
+        font-family: 'JetBrains Mono', monospace; margin-bottom: 2px;
+    }
+    .cg-metric-value {
+        font-size: 12.5px; font-weight: 600; font-family: 'JetBrains Mono', monospace;
+    }
+    .cg-badge {
+        display: inline-block; font-size: 10.5px; font-weight: 700; padding: 3px 9px;
+        border-radius: 5px; font-family: 'JetBrains Mono', monospace; margin-top: 10px;
+    }
+    .cg-volbar-track {
+        width: 100%; height: 3px; background: #1b202b; border-radius: 2px; margin-top: 11px; overflow: hidden;
+    }
+    .cg-volbar-fill { height: 100%; border-radius: 2px; }
+
+    .cg-green { color: #0ecb81; }
+    .cg-red { color: #f6465d; }
+    .cg-dim { color: #7b8494; }
+    .cg-badge-bull-cross { background: #0ecb81; color: #06120c; }
+    .cg-badge-bear-cross { background: #f6465d; color: #1a0508; }
+    .cg-badge-bull-trend { background: #0ecb8122; color: #0ecb81; border: 1px solid #0ecb8144; }
+    .cg-badge-bear-trend { background: #f6465d22; color: #f6465d; border: 1px solid #f6465d44; }
+    .cg-badge-neutral { background: #1b202b; color: #7b8494; }
+</style>
+"""
+
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+BADGE_CLASS = {
+    "Bullish Cross": "cg-badge-bull-cross",
+    "Bearish Cross": "cg-badge-bear-cross",
+    "Bullish (trend)": "cg-badge-bull-trend",
+    "Bearish (trend)": "cg-badge-bear-trend",
+    "Nincs kereszt": "cg-badge-neutral",
+}
+
+# ----------------------------------------------------------------------------
+# 5) SIDEBAR - SZŰRŐK
+# ----------------------------------------------------------------------------
+
+st.sidebar.markdown("### ⚙️ Screener beállítások")
 
 timeframe_label = st.sidebar.selectbox("Idősík (Timeframe)", list(TIMEFRAMES.keys()), index=1)
 interval = TIMEFRAMES[timeframe_label]
 
 max_symbols = st.sidebar.slider(
-    "Vizsgált párok maximális száma (teljesítmény miatt)",
+    "Vizsgált párok max. száma",
     min_value=20, max_value=400, value=120, step=10,
     help="Minél több párt vizsgálunk, annál tovább tart a frissítés az API rate limit miatt."
 )
@@ -282,23 +418,24 @@ selected_categories = st.sidebar.multiselect(
 
 search_text = st.sidebar.text_input("Keresés (pl. BTC-USDT)", value="").upper().strip()
 
+sort_options = {
+    "Volumen (24h)": "Volume (24h, USDT)",
+    "Vol. változás %": "Gyertya Vol. Változás (%)",
+    "RSI": "RSI (14)",
+    "Open Interest": "Open Interest",
+    "Ticker (ABC)": "Ticker",
+}
+sort_label = st.sidebar.selectbox("Rendezés", list(sort_options.keys()), index=0)
+sort_dir = st.sidebar.radio("Sorrend", ["Csökkenő", "Növekvő"], horizontal=True)
+
 if st.sidebar.button("🔄 Adatok frissítése (cache törlése)"):
     st.cache_data.clear()
 
-st.sidebar.caption(
-    "Az adatok automatikusan cache-elve vannak (~45-60 mp), hogy elkerüljük "
-    "a BingX API rate limit túllépését."
-)
+st.sidebar.caption("Az adatok ~45-60 mp-ig cache-elve vannak a BingX rate limit védelme miatt.")
 
 # ----------------------------------------------------------------------------
-# 5) FŐ TARTALOM
+# 6) ADAT BETÖLTÉS
 # ----------------------------------------------------------------------------
-
-st.title("📊 BingX Perpetual Swap Screener")
-st.caption(
-    f"Utolsó frissítés: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')} "
-    f"| Idősík: {timeframe_label}"
-)
 
 with st.spinner("Szimbólumok betöltése..."):
     all_symbols = load_symbols()
@@ -316,67 +453,132 @@ if df.empty:
     st.warning("Nincs megjeleníthető adat. Próbáld csökkenteni a szűrők szigorúságát, vagy frissítsd az oldalt.")
     st.stop()
 
-# --- Szűrők alkalmazása ---
 filtered = df[df["Volume (24h, USDT)"] >= min_volume]
 filtered = filtered[filtered["Kategória"].isin(selected_categories)]
 if search_text:
     filtered = filtered[filtered["Ticker"].str.contains(search_text)]
 
-st.markdown(f"**{len(filtered)}** / {len(df)} pár felel meg a szűrési feltételeknek.")
+sort_col = sort_options[sort_label]
+ascending = sort_dir == "Növekvő"
+filtered = filtered.sort_values(sort_col, ascending=ascending, na_position="last").reset_index(drop=True)
 
 # ----------------------------------------------------------------------------
-# 6) VIZUÁLIS FORMÁZÁS ÉS TÁBLÁZAT MEGJELENÍTÉS
+# 7) FEJLÉC + STATISZTIKA SÁV
 # ----------------------------------------------------------------------------
 
-def color_pct(val):
-    if pd.isna(val):
-        return ""
-    color = "#1a7f37" if val > 0 else ("#c0392b" if val < 0 else "")
-    return f"color: {color}; font-weight: 600;"
+now_str = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
+bullish_cross_count = int((filtered["MACD Státusz"] == "Bullish Cross").sum())
+bearish_cross_count = int((filtered["MACD Státusz"] == "Bearish Cross").sum())
+top_gainer = filtered.loc[filtered["Gyertya Vol. Változás (%)"].idxmax()] if len(filtered) else None
+avg_rsi = filtered["RSI (14)"].mean() if len(filtered) else 0
+
+st.markdown(f"""
+<div class="cg-header">
+    <div class="cg-title"><span class="cg-dot"></span> BINGX SCREENER</div>
+    <div class="cg-sub">{now_str} · {timeframe_label} · {len(filtered)}/{len(df)} pár</div>
+</div>
+<div class="cg-stats">
+    <div class="cg-stat">
+        <div class="cg-stat-label">Bullish Cross</div>
+        <div class="cg-stat-value cg-green">{bullish_cross_count}</div>
+    </div>
+    <div class="cg-stat">
+        <div class="cg-stat-label">Bearish Cross</div>
+        <div class="cg-stat-value cg-red">{bearish_cross_count}</div>
+    </div>
+    <div class="cg-stat">
+        <div class="cg-stat-label">Átlag RSI</div>
+        <div class="cg-stat-value">{avg_rsi:.1f}</div>
+    </div>
+    <div class="cg-stat">
+        <div class="cg-stat-label">Top Gainer (vol.)</div>
+        <div class="cg-stat-value cg-green" style="font-size:14px;">{top_gainer['Ticker'] if top_gainer is not None else '–'}</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ----------------------------------------------------------------------------
+# 8) KÁRTYA RÁCS (fő megjelenítés - mobilon 1 oszlop, nagyobb kijelzőn több)
+# ----------------------------------------------------------------------------
+
+max_vol_in_view = filtered["Volume (24h, USDT)"].max() if len(filtered) else 1
+
+def fmt_compact(n):
+    """Nagy számok kompakt formázása (pl. 1.2M, 340K)."""
+    if n is None or pd.isna(n):
+        return "–"
+    n = float(n)
+    for unit, div in [("B", 1_000_000_000), ("M", 1_000_000), ("K", 1_000)]:
+        if abs(n) >= div:
+            return f"{n/div:.2f}{unit}"
+    return f"{n:.0f}"
 
 
-def color_macd(val):
-    if val == "Bullish Cross":
-        return "background-color: #1a7f37; color: white; font-weight: 700;"
-    if val == "Bearish Cross":
-        return "background-color: #c0392b; color: white; font-weight: 700;"
-    if val == "Bullish (trend)":
-        return "color: #1a7f37;"
-    if val == "Bearish (trend)":
-        return "color: #c0392b;"
-    return ""
+def price_fmt(p):
+    if p >= 100:
+        return f"{p:,.2f}"
+    if p >= 1:
+        return f"{p:,.4f}"
+    return f"{p:.6f}"
 
 
-def color_rsi(val):
-    if pd.isna(val):
-        return ""
-    if val >= 70:
-        return "color: #c0392b; font-weight: 600;"
-    if val <= 30:
-        return "color: #1a7f37; font-weight: 600;"
-    return ""
+cards_html = ['<div class="cg-grid">']
+for _, row in filtered.iterrows():
+    vol_pct = row["Gyertya Vol. Változás (%)"]
+    vol_color = "cg-green" if vol_pct > 0 else ("cg-red" if vol_pct < 0 else "cg-dim")
+    vol_sign = "+" if vol_pct > 0 else ""
 
+    rsi_val = row["RSI (14)"]
+    if pd.isna(rsi_val):
+        rsi_color, rsi_txt = "cg-dim", "–"
+    elif rsi_val >= 70:
+        rsi_color, rsi_txt = "cg-red", f"{rsi_val:.1f}"
+    elif rsi_val <= 30:
+        rsi_color, rsi_txt = "cg-green", f"{rsi_val:.1f}"
+    else:
+        rsi_color, rsi_txt = "", f"{rsi_val:.1f}"
 
-display_df = filtered.sort_values("Volume (24h, USDT)", ascending=False).reset_index(drop=True)
+    badge_cls = BADGE_CLASS.get(row["MACD Státusz"], "cg-badge-neutral")
+    bar_width = max(2, min(100, (row["Volume (24h, USDT)"] / max_vol_in_view) * 100)) if max_vol_in_view else 2
+    bar_color = "#0ecb81" if vol_pct >= 0 else "#f6465d"
 
-styled = (
-    display_df.style
-    .map(color_pct, subset=["Gyertya Vol. Változás (%)"])
-    .map(color_macd, subset=["MACD Státusz"])
-    .map(color_rsi, subset=["RSI (14)"])
-    .format({
-        "Ár": "{:.6f}",
-        "Volume (24h, USDT)": "{:,.0f}",
-        "Gyertya Vol. Változás (%)": "{:+.2f}%",
-        "Open Interest": "{:,.2f}",
-        "RSI (14)": "{:.1f}",
-    })
-)
+    cards_html.append(f"""
+    <div class="cg-card">
+        <div class="cg-card-top">
+            <div><span class="cg-ticker">{row['Ticker']}</span><span class="cg-cat">{row['Kategória']}</span></div>
+            <div class="cg-price">${price_fmt(row['Ár'])}</div>
+        </div>
+        <div class="cg-row">
+            <div class="cg-metric">
+                <div class="cg-metric-label">Vol 24h</div>
+                <div class="cg-metric-value">{fmt_compact(row['Volume (24h, USDT)'])}</div>
+            </div>
+            <div class="cg-metric">
+                <div class="cg-metric-label">Vol Δ</div>
+                <div class="cg-metric-value {vol_color}">{vol_sign}{vol_pct:.2f}%</div>
+            </div>
+            <div class="cg-metric">
+                <div class="cg-metric-label">Open Int.</div>
+                <div class="cg-metric-value">{fmt_compact(row['Open Interest'])}</div>
+            </div>
+            <div class="cg-metric">
+                <div class="cg-metric-label">RSI</div>
+                <div class="cg-metric-value {rsi_color}">{rsi_txt}</div>
+            </div>
+        </div>
+        <span class="cg-badge {badge_cls}">{row['MACD Státusz']}</span>
+        <div class="cg-volbar-track"><div class="cg-volbar-fill" style="width:{bar_width:.0f}%; background:{bar_color};"></div></div>
+    </div>
+    """)
+cards_html.append("</div>")
 
-st.dataframe(styled, use_container_width=True, height=650)
+if len(filtered) == 0:
+    st.info("Nincs a szűrésnek megfelelő pár. Próbálj lazítani a szűrőkön.")
+else:
+    st.markdown("".join(cards_html), unsafe_allow_html=True)
 
-st.caption(
-    "⚠️ Az Open Interest oszlop a pillanatnyi (aktuális) OI értéket mutatja, mivel a BingX "
-    "nyilvános API nem biztosít historikus OI adatot minden lekérdezéshez. A volumen-változás "
-    "az utolsó két lezárt gyertya közötti százalékos eltérést mutatja a kiválasztott idősíkon."
+st.markdown(
+    '<p class="cg-sub" style="margin-top:18px;">⚠️ Az Open Interest a pillanatnyi értéket mutatja '
+    '(a BingX publikus API nem ad historikus OI-t). A Vol Δ az utolsó két lezárt gyertya közti változás.</p>',
+    unsafe_allow_html=True
 )
