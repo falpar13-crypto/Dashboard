@@ -85,7 +85,7 @@ def is_probably_crypto(symbol: str) -> bool:
 # --- OI referenciapont keresése (VÁLTOZATLAN) ---
 OI_TARGET_WINDOW_MINUTES = 5
 OI_MIN_WINDOW_MINUTES = 2
-OI_MAX_WINDOW_MINUTES = 15
+OI_MAX_WINDOW_MINUTES = 20   # kis puffer, ha a külső cron pár percet csúszna
 MAX_HISTORY_AGE_MINUTES = 60
 
 # --- Spam-védelem (VÁLTOZATLAN) ---
