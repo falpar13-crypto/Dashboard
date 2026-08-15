@@ -8,6 +8,13 @@ on:
     - cron: "*/5 * * * *"
   workflow_dispatch: {}   # ezzel kézzel is elindítható a "Actions" fülön, teszteléshez
 
+# Ha egy futás még nem fejeződött be, amikor a következő indulna, az újat
+# sorba állítjuk (nem párhuzamosan futtatjuk) - így nem ütközhet két job az
+# alert_state.json visszaírásakor.
+concurrency:
+  group: bingx-alert-checker
+  cancel-in-progress: false
+
 permissions:
   contents: write   # kell, hogy a job vissza tudja commitolni az állapotfájlt
 
