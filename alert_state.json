@@ -1,1 +1,4502 @@
-{}
+{
+  "LTC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 11382419.49
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "INJ-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 10902611.561
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZEC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 10686287.86
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000PEPE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 10167626.4294797
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DOGE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 9357705.61264
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DOT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 8356393.8911
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NEAR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 7541570.756
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ENA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 7483037.1896
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CGPT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1104615.65041
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GAS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1112513.499
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ERA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2976418.83524
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PIPPIN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1074503.76691
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KERNEL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1400277.40353
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ARPA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1079806.408347
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SKR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1199981.58845
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NIGHT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4355316.4144
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XPL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5691250.11885
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "Q-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1309377.440655
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XAN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1072099.15451
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SIREN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1951320.56477
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FHE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3639418.81268
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 942770.20658
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RVN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1057189.418799
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ONDO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 11512749.2518
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "S-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2795302.09245
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BIGTIME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1537595.169197
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SPX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2929724.8664
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2874341.62978
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DOOD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1397779.936129
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TRADOOR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4104161.582
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IOST-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1417426.6852292
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LPT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1948739.899
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MANCER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 630477.329078
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CFG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1454838.6152
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SNX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1951308.0269
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STRK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4144556.79431
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SPORTFUN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1316430.41782
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BIO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1161884.87422
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ENS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3634989.659
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "THETA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1968413.5593
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "VANA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1816538.9527
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TURBO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1900346.7196237
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FARTCOIN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 7226399.1677
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GMT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1076016.368828
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MAGMA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1089448.3285
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PIXEL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1080744.223163
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OPN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1445394.88844
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GEOD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 618130.5163
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DEEP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1149264.34453
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STONK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 632867.872639
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "VVV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1138250.176
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MONAD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 932641.25006
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "2Z-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3189713.86753
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AZTEC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1162482.28979
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SLX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1475177.45429
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DEXE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1523099.856
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RLC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1075153.7067
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AXL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1289514.78164
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MMT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5859412.2446
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BLUAI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5623971.76049
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XAUT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 6538743.22
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "4-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1064420.971375
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZORA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1043410.9912
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ALLO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5840136.86769
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SXT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1767888.868012
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PAXG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5619048.68
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KAT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1422194.073996
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "POPCAT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1640629.60137
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "APR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4217436.9999
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CUPSEY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 610412.27815
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HMSTR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1100035.1252435
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ALPINE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1049159.2458
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GLM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1024450.96754
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ORCA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2418788.296
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LDO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2433385.1287
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AEVO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1079878.19654
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "COMP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3614014.27
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ONE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1306133.376068
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ACH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1121640.981488
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DOGS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 621449.26659901
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GMX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1466936.592
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HOME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5953968.556499
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MNT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 926273.2104
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BOME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 8165246.543138
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "A-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1999536.07272
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SOPH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1943672.825202
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000000BOB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 636692.94495
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LAB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1318093.3849
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "COLLECT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1969659.03705
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PIEVERSE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5628395.7925
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ARX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1437429.2189
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NIL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3754420.84982
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZAMA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1135153.9696
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RUNE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2904857.9394
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FIDA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1104088.28063
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MAVIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1077169.58155
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000CHEEMS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1081922.3580974
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STBL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1639977.23027
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "APT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4328798.3825
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KITE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5545359.3894
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SFP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1137905.7542
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MAGIC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1329950.90587
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "JUP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5695362.504
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WLFI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 6267943.8261
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DASH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2106665.01
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CKB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 861485.8227803
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ID-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1955223.25395
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AVNT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3521210.87151
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SAHARA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1974082.404829
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "COW-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 7703893.1114
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PARTI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2844166.41735
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MANTA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1146221.37783
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AWE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2997317.397
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DRIFT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2023691.19296
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MEW-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 748208.0246734
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GOAT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1041287.37794
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SOON-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5576602.8755
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ROBO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3095076.99023
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AVA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1098040.057
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CHZ-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1955939.08046
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FLOCK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1052653.09988
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MANTRA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1430844.527448
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "COTI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1234531.649072
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HYPERLANE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 938315.221
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZEREBRO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1135522.386682
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IRYS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1052616.27868
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AXS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2088415.6184
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CFX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4139060.42806
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MELANIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1058568.06808
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BEAM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 967778.779174
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BMT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2222413.28644
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "POWER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1138998.84129
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PHAROS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1407361.8546
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MIRANETWORK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 933606.44794
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HANA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5562950.9128
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GUA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1947423.25368
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LSK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1083900.56989
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RECALL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1467922.6641
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FLOW-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1342814.53804
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MAV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 996080.917788
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AEONBSC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 930314.76142
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GENIUS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1445972.4393
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ORDER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1165567.67212
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PLUME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5756076.85331
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SUN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1839508.254954
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CASHCAT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 749629.71471
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SSV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1593649.768
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BROCCOLIF3B-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1036094.440153
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RAVE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1965716.1869
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SYRUP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5433637.87222
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KMNO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1015344.11038
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ANSEM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 727612.0582
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ATOM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2907931.126
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SOMI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1532582.7534
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CTK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 770088.6279
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "QNT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2017658.69
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BLEND-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 989836.93222
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZRX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1302919.5455
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZEN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1981541.207
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LIGHTER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 909994.5997
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GRT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1984586.03559
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PNUT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3588667.37411
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2569061.04444
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ARIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1946529.14419
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HOLO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3894086.32146
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1494931.3049
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SOLV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1604948.493724
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1500857.344
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AGT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3641607.295946
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AMP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 618521.396826
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FLOKI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 934423.84399184
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "REDSTONE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 947585.8743
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MARSCOIN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 666029.605474
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SQD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1956579.30511
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "H-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4451343.90704
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ICNT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2192922.6246
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KOMA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1085252.171671
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SPK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1947905.29283
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DOS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1473351.8359
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TURTLE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1701428.35528
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MEGA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1399545.30509
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SAFE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1243934.91651
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4106279.2804
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GIGGLE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5797805.65
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "YFI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1971926.0
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "10000NEX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 938241.68747
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ACU-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1346795.51688
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "EUL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5516809.8231
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FIL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 9506805.3979
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5644166.24684
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AIN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4870841.02
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CAKE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1987539.7752
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AKT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1127942.1645
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZRO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 6687311.2217
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ENJ-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1941204.28279
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000SHIB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1499568.071401
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000000BABYDOGE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 966394.2984027
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PUMPBTC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1828256.59292
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MERL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1412077.25557
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SIGN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2049399.808894
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CLANKER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1363042.01
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "US-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1325053.903539
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RAY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 927705.4969
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FLUX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1102398.15476
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "B2-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1065268.7401
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RATS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 800709.65026512
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PONS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 622959.521424
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LINEA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1935083.858519
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TOWNS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1439125.802293
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SKY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1957147.49006
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KNC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1131317.185
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1079301.04054
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CRV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5875369.9603
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DOLO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1331653.8435
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CHR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1082985.03973
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PHA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1103801.60273
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TAKE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2058544.88804
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ALT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1061639.911623
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CROSS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1347987.00474
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "REZ-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1875400.41761
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TUT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3914437.04631
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TAG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1242842.22749
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AIINU-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 648722.841272
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RSR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1338057.156901
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IMX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2337523.539
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "THE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1984846.79343
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GRASS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5871431.4455
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FLUID-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1102425.998
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ANIME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 985329.973245
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NXPC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3838507.5934
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AIOT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1097376.84253
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AIXBT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1730393.40771
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1273128.4379
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MASK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1898021.1891
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SCRT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1099311.80027
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PEOPLE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4738345.615691
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "QTUM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1536597.6531
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MANA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1980537.28363
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NOT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1893874.9457054
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BERA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3493202.8014
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ON-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5890772.69921
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CATE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 634031.693741
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BICO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1971615.85198
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LAYER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1407407.887
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TST-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1128320.25658
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FIGHTID-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 933530.395932
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "VIRTUAL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5715436.9343
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MOVR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2470818.126
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "UB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2023649.95779
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SLP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 879097.516095
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SAND-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2025091.38437
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PROM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1212719.534
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WET-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1466025.19989
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DYDX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3218811.19425
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LUNC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 903213.63183726
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XAI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1863982.627969
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "METEORA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 960185.5808
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DATANETWORK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 966273.1615
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BLESS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5338326.385583
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MEME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1886942.7819263
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BITLIGHT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 921925.2534
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STAR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1413540.70922
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ILV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1289823.94
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ANKR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1052346.77949
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OFC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 979959.400923
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FET-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2736853.6809
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RESOLV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1648914.52424
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZEST-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 617002.93945
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZIL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1925897.741328
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TWT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1991857.6332
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZETA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 910074.27908
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BABY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3187501.64984
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "VET-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1979870.77923
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STEEM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 963201.42244
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GWEI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1503835.31196
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ENSO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4605632.1361
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1100107.14563
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "VELODROME-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1051373.18237
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "INIT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1620702.59602
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "G-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1394532.558925
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "COOKIE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1747834.478961
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HBAR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2955337.60183
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ALCH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2422455.01021
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ESPORTS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1147428.9691
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4691913.2379
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GPUBSC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 606015.329772
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ATH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2408346.1629
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "EPIC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2216271.2112
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TRUMPSOL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 995265.591
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XLM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2793809.89222
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "W-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2471277.91654
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KAITO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 6261837.7902
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "0G-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4757966.3778
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3802345.4587
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RPL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 939221.757
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KAS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2069397.21316
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "UAI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4134243.9921
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IOTA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1954675.46759
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RARE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1096320.75859
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HAEDAL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1049110.52961
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZKP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2660537.34598
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ROSE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1897929.432962
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AKE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5754588.7024157
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000CAT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1071625.16568
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DRV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 620334.2167
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CITREA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 951859.974641
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RON-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 977873.8412
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AERO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1149919.6771
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ELSA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1074871.3358
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CAP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1816461.57024
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TOSHI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 836038.5328807
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AGLD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1556267.7653
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MOVE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2631602.837478
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FRAX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1047392.8296
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "INX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2633899.677025
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BANANAS31-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1984468.754469
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ASTR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1180318.833423
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BNLIFE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 984881.02
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TREE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1519457.59555
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "JASMY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2091681.921387
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WAVES-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 997045.6412
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DYM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1632834.9641
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BAT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1078188.60328
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MTL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 999855.4478
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "F-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1319947.369998
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SHELL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1912393.56966
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "POWR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 861099.14468
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MOODENG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1521916.41893
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BRETT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 815422.902765
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1045765.3738
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ARK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 934295.4191
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CELO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1251532.30584
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PTB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1118931.9023508
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GRVT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1456971.0361
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SAPIEN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1839550.77997
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BTR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3450830.56574
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CTSI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1349133.30384
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PENGU-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1494442.423707
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TRUST-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1759384.16645
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KSM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1367472.996
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "UMA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1329632.477
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SUPER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1467054.92846
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1940070.69287
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AUCTION-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1873246.972
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OKB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 967529.44
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MUBARAK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2036658.25201
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IDOL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1948279.08767
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NAORIS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1063507.11057
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WOO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1130534.13166
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TRB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3650371.313
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SENT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1082184.09549
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TRUTH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4139274.869729
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BSB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1529313.41729
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MINA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1482562.89961
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ARKM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1886170.5698
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "EIGEN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1109805.8827
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PLAYSOUT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 986105.80001
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "APEX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 935272.0233
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SKL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1735813.513894
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "JTO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 8860160.7084
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BANANA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1913874.806
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "M-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1933345.6257
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BIRB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 632313.72063
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TRIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1423442.033495
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WOTAMALAILE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 925160.221395
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "VINE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 912348.900467
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TOAD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 647839.39248
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CHILLGUY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1127456.405775
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LUMIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1114255.51638
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "10000SATS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 929239.1020469
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "JCT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1203408.876365
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WIF-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5773757.356
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PORTAL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1212245.70781
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WAL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4446350.98909
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ADA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5627940.1235
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GALA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5275672.363613
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PRL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2305397.0746
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "POLYX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1218887.34643
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XPIN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5619971.505766
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ACT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1052914.421941
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GPS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1128348.442027
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GENSYN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 990274.25428
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "METIS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1232608.256
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KAIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1554191.05826
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "YB-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1770152.53062
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "COAI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1960808.773
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CRO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 925381.80468
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000BONK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 11732195.216416
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LYN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4662138.86609
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OPG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1401914.3129
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NEO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1951195.594
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CETUS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1063129.28786
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LUNA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 928925.19872
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HUMA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5717479.660601
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "B-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1049772.3541
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "1000000MOG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 615635.4855
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TAC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1117213.177467
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SANTOS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1063814.3355
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NEIROCTO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 956953.76644498
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "C-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1968272.63118
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RIF-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1985292.05625
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FOGO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1061816.409352
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ETC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4758716.807
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KAVA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1925921.93754
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FF-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5562850.94848
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XMR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2627429.86
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BSV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1782379.28
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SWARMS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3468985.870427
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STONKBROKER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 643677.975832
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1988238.905
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ALGO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2041729.44345
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ALICE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1814131.7242
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MYX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5217784.65102
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AIO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5468143.10634
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IOTX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1466118.098791
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ARC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1412738.49136
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PENDLE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4348608.3948
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BAS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2360988.318653
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XNY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1214071.335961
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PYTH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2076803.49974
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PROMPT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1143285.98287
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SYN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1156310.7031
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "EDGEX-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 954499.3139
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5644324.1012
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ESP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1452233.88859
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BANK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 6210716.64539
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BCH-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5634267.62
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SAGA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1127144.29028
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LISTA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1064637.39165
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LONGXIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 908455.329398
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CHIP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1475048.64717
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HIVE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1073821.01433
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CYBER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1120699.2179
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TAIKO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1914228.82403
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CARV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1080443.32931
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NMR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1302587.564
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ASR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1063607.227
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "POL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5832029.58564
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1930752.26714
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CYS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 12285025.3984
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BROCCOLI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 950558.828315
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STABLE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4731096.61804
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CLO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1088476.32992
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HMM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 629013.4843
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "WCT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1888301.87657
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PUMP-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 8203405.201689
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BTW-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2606646.86546
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "O-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1396563.7511
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "MORPHO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1081604.8229
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CATI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2179207.64216
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SKYAI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5848079.69132
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SPACECOIN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 918758.473843
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GUN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1171835.146847
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "PROVE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1954874.5587
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "APE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4282617.7961
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "USELESS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2027194.64556
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FORM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1959820.5283
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "FOLKS-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5893188.331
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ONG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1079410.06822
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RENDER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 6478225.564
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZKC-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1243224.15121
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BASED-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1487836.72929
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "CORE-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 930592.97845
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "SUSHI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2095594.9562
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "LQTY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 859905.2026
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OPENLEDGER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 993341.0569
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TLM-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1069378.510057
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GRAMTON-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 955315.297
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ASTER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5659807.449
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ONT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1786351.0041
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NOMINA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 912538.050966
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BLUR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1824556.45963
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "XCN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 918124.5730569
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "OPENEDEN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 937696.2897
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3974633.6996
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HEMI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2347708.43359
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "ZBT-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1073572.29097
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "JST-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2015616.59874
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "AIA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1942285.31911
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "JIMOTHY-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 622128.363466
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "HEI-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1814166.34495
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "KGEN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 4416154.9244
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "YGG-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1733692.44537
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "EDU-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1965634.67859
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "USUAL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1049575.742156
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BREV-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1363559.48876
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "EGLD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1844339.158
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "NES-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 622747.064
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "STO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3067008.28378
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BILL-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1434236.32201
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "GRIFFAIN-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 3025917.458555
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "RIVER-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5817099.746
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "QUID-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 617048.94027
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "DUSK-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1015253.8204
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "BARD-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2535300.1052
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "IO-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 1084695.9484
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "TNSR-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2160192.80032
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "EVAA-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 5593634.4268
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "API3-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 2049394.4557
+      }
+    ],
+    "last_alert_ts": null
+  },
+  "VELVET-USDT": {
+    "oi_history": [
+      {
+        "ts": "2026-08-15T18:56:20.794683+00:00",
+        "oi": 9069423.474
+      }
+    ],
+    "last_alert_ts": null
+  }
+}
