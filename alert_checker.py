@@ -1,32 +1,30 @@
 """
-BingX Perpetual - "Csendes felhalmozás / kitörés előtti" figyelő
+BingX Perpetual - "5M Skalp" kitörés előtti figyelő
 ====================================================================
-Ez a szkript NEM a Streamlit dashboard része — önállóan fut, GitHub Actions
-cron job hívja meg periodikusan (elméletileg 5 percenként). Célja: kis/közepes
-market cap-ú ALTCOINOK között megkeresi azokat, ahol:
+Ez a szkript NEM a Streamlit dashboard része — teljesen önállóan fut, a
+dashboard-on beállított idősíktól FÜGGETLENÜL mindig az 5 PERCES gyertyákat
+vizsgálja (lásd ALERT_TIMEFRAME lent). GitHub Actions cron job hívja meg
+periodikusan (elméletileg 5 percenként, de lásd a #2-es megjegyzést).
 
-    - az Open Interest (nyitott pozíciók) NÖVEKSZIK,
-    - a 24h volumen is NÖVEKSZIK,
-    - de az ÁR ALIG MOZDUL (oldalaz)
+Mit keres: olyan kis/közepes market cap-ú, TISZTÁN kriptó altcoint, ahol az
+utolsó LEZÁRT 5 perces gyertyán:
+    - az ár szinte nem mozdult (szűk oldalazás),
+    - az Open Interest hirtelen ugrott,
+    - a gyertya volumene hirtelen (min. duplájára) nőtt az előző gyertyához
+      képest, és eléri a minimum USDT-küszöböt (likviditásszűrő).
 
-...ami klasszikus "csendes felhalmozás" mintázat egy hirtelen kitörés előtt.
-Találat esetén Telegram üzenetet küld.
+FONTOS #1: minden Δ számítás KIZÁRÓLAG lezárt gyertyákon dolgozik - az utolsó,
+még formálódó (nyitott) gyertyát mindig eldobjuk.
 
-FONTOS #1: mivel minden Actions-futás friss, "üres memóriájú" gépen indul, a
-korábbi méréseket egy JSON állapotfájlban (alert_state.json) tároljuk, amit
-minden futás után visszaírunk a repóba. Enélkül nem lenne mihez viszonyítani.
+FONTOS #2: mivel minden Actions-futás friss, "üres memóriájú" gépen indul, az
+OI-hoz (aminek nincs nyilvános historikus API-ja) egy JSON állapotfájlban
+(alert_state.json) tárolt pillanatképet használunk referenciaként. A GitHub
+Actions "*/5 * * * *" ütemezése csak "best effort" (csúszhat/kimaradhat), ezért
+az OI-referenciapontot is TÉNYLEGES időbélyeg alapján, ~5 perces célablakkal
+keressük meg, nem fix darabszám alapján.
 
-FONTOS #2 (JAVÍTVA): a GitHub Actions "*/5 * * * *" cron ütemezése CSAK "best
-effort" - nagy terhelés esetén akár 1+ órás csúszás/kihagyás is előfordulhat.
-Emiatt NEM szabad fix darabszámú (pl. "utolsó 10 mérés") ablakot feltételezni,
-mert az irreálisan hosszú/rövid tényleges időtartamot takarhat. Ehelyett a
-TÉNYLEGES időbélyegek alapján keressük meg a ~TARGET_WINDOW_MINUTES korú
-referenciapontot minden egyes szimbólumnál.
-
-FONTOS #3 (JAVÍTVA): a BingX ticker végpontja nemcsak kriptó perpetualokat ad
-vissza, hanem tokenizált részvény-szerű szintetikus termékeket is (pl.
-"NCSKJNJ2USD-USDT" = a Johnson & Johnson részvényt követő termék). Ezeket egy
-heurisztikus szűrővel + a hivatalos contracts listával kizárjuk.
+FONTOS #3: a BingX ticker végpontja nemcsak kriptó perpetualokat ad vissza,
+hanem tokenizált részvény-szerű szintetikus termékeket is - ezeket kiszűrjük.
 """
 
 import asyncio
@@ -36,32 +34,41 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import aiohttp
+import pandas as pd
 import requests
 
 # ----------------------------------------------------------------------------
-# BEÁLLÍTÁSOK - nyugodtan hangold ízlés szerint
+# 1) SKALP PARAMÉTEREK - fix (hardkódolt) globális változók, ahogy kérted
+# ----------------------------------------------------------------------------
+ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashboard
+                             # idősík-választójától teljesen függetlenül
+MAX_PRICE_CHANGE = 0.5      # max. %-os ármozgás a gyertyán belül (szűk oldalazás)
+MIN_OI_INCREASE = 3.5       # minimum OI-ugrás %-ban (~5 perces referenciaablak)
+MIN_VOL_INCREASE = 100.0    # minimum gyertya-volumen növekedés %-ban (dupla)
+MIN_CANDLE_VOL_USDT = 50_000  # a vizsgált gyertya USDT-forgalmának minimuma
+
+# ----------------------------------------------------------------------------
+# 0) ÁLTALÁNOS BEÁLLÍTÁSOK
 # ----------------------------------------------------------------------------
 BASE_URL = "https://open-api.bingx.com"
 TICKER_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/ticker"
 OI_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/openInterest"
 CONTRACTS_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/contracts"
+KLINES_ENDPOINT = f"{BASE_URL}/openApi/swap/v3/quote/klines"
 
 STATE_FILE = Path(__file__).parent / "alert_state.json"
 
-# --- "Kis/közepes market cap altcoin" szűrés a 24h volumen alapján ---
-MIN_VOLUME_USDT = 300_000        # ennél illikvidebb "shitcoin" ne érdekeljen
-MAX_VOLUME_USDT = 15_000_000     # ennél nagyobb napi volumen -> valszeg large cap, kizárva
+# --- "Kis/közepes market cap altcoin" előszűrés a 24h volumen alapján ---
+# (ez csökkenti, mennyi párnak kell egyáltalán 5m klines-t lekérnünk minden
+# futásnál - enélkül minden BingX perpetualra lekérnénk, ami lassú és
+# rate-limitet kockáztat).
+MIN_VOLUME_USDT = 300_000
+MAX_VOLUME_USDT = 15_000_000
 
-# --- ÚJ: nem-kriptó (tokenizált részvény/egyéb szintetikus) termékek kiszűrése ---
-# Megfigyelés alapján a BingX ilyen prefixszel jelöli ezeket - bővítsd, ha
-# újabb "gyanús" tickert látsz a riasztásokban.
+# --- Nem-kriptó (tokenizált részvény/egyéb szintetikus) termékek kiszűrése ---
 NON_CRYPTO_PREFIXES = ("NCSK",)
 
 def is_probably_crypto(symbol: str) -> bool:
-    """Heurisztikus szűrő: kizárja a tokenizált részvény-szerű termékeket.
-    Valódi kriptó tickerek szinte sosem tartalmaznak "USD"-t a szimbólum
-    BELSEJÉBEN (csak a "-USDT" végződésben) - ez erős jel szintetikus
-    termékre (pl. "...2USD-USDT")."""
     base = symbol.split("-")[0]
     if any(base.startswith(p) for p in NON_CRYPTO_PREFIXES):
         return False
@@ -69,24 +76,20 @@ def is_probably_crypto(symbol: str) -> bool:
         return False
     return True
 
-# --- ÚJ: valós időbélyeg alapú, változó cron-cadence-hez robusztus ablak ---
-TARGET_WINDOW_MINUTES = 45    # ideális összehasonlítási ablak
-MIN_WINDOW_MINUTES = 20       # ennél frissebb baseline túl zajos, nem fogadjuk el
-MAX_WINDOW_MINUTES = 90       # ennél régebbi baseline már nem "gyors mozgás", kihagyjuk
-MAX_HISTORY_AGE_MINUTES = 240  # ennél régebbi history-bejegyzéseket eldobjuk (fájl tisztán tartása)
+# --- OI referenciapont keresése: valós időbélyeg alapján, ~5 perces célra ---
+OI_TARGET_WINDOW_MINUTES = 5
+OI_MIN_WINDOW_MINUTES = 2
+OI_MAX_WINDOW_MINUTES = 15
+MAX_HISTORY_AGE_MINUTES = 60  # ennél régebbi OI history-bejegyzést eldobjuk
 
-# --- Riasztási küszöbök (a fenti ablakon belüli változás) ---
-OI_GROWTH_THRESHOLD_PCT = 5.0        # OI-nak legalább ennyit kell nőnie
-VOLUME_GROWTH_THRESHOLD_PCT = 15.0   # a volumennek is nőnie kell legalább ennyit
-PRICE_FLAT_THRESHOLD_PCT = 1.0       # az ár +/- ennyi %-on belül maradjon ("oldalaz")
-
-# --- Spam-védelem: ugyanarra a párra ennyi ideig nem riaszt újra ---
-ALERT_COOLDOWN_MINUTES = 90   # ~1.5 óra (a felhasználó kérésére csökkentve 4 óráról)
+# --- Spam-védelem ---
+ALERT_COOLDOWN_MINUTES = 30   # skalp-jelzésnél rövidebb cooldown indokolt
 
 MAX_CONCURRENT_REQUESTS = 8
 REQUEST_TIMEOUT = 10
 RETRY_COUNT = 3
 RETRY_BACKOFF = 1.5
+KLINES_LIMIT = 5   # csak pár gyertya kell: utolsó (nyitott) + 2 lezárt, kis ráhagyással
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
@@ -145,12 +148,9 @@ async def fetch_all_tickers(session):
 
 
 async def fetch_valid_contract_symbols(session):
-    """A hivatalos, listázott USDT-perpetual szerződések halmaza - erre
-    keresztezzük rá a ticker-listát, hogy kiszűrjük az esetleges extra
-    (nem szabvány perpetual) instrumentumokat."""
     data = await _get_json(session, CONTRACTS_ENDPOINT)
     if not data or "data" not in data:
-        return None  # ha nem elérhető, ne blokkoljuk emiatt a futást
+        return None
     return {
         c["symbol"] for c in data["data"]
         if c.get("symbol", "").endswith("-USDT") and c.get("status", 1) == 1
@@ -160,13 +160,32 @@ async def fetch_valid_contract_symbols(session):
 async def fetch_open_interest(session, semaphore, symbol):
     async with semaphore:
         data = await _get_json(session, OI_ENDPOINT, params={"symbol": symbol})
-        await asyncio.sleep(0.05)
+        await asyncio.sleep(0.03)
         if not data or "data" not in data or not data["data"]:
             return symbol, None
         try:
             return symbol, float(data["data"].get("openInterest", 0))
         except (TypeError, ValueError):
             return symbol, None
+
+
+async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT):
+    async with semaphore:
+        params = {"symbol": symbol, "interval": interval, "limit": limit}
+        data = await _get_json(session, KLINES_ENDPOINT, params=params)
+        await asyncio.sleep(0.03)
+        if not data or "data" not in data or not data["data"]:
+            return symbol, None
+        df = pd.DataFrame(data["data"])
+        expected = {"open", "close", "high", "low", "volume", "time"}
+        if not expected.issubset(df.columns):
+            return symbol, None
+        df = df.rename(columns={"time": "timestamp"})
+        for col in ["open", "close", "high", "low", "volume"]:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+        df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
+        df = df.sort_values("timestamp").reset_index(drop=True)
+        return symbol, df
 
 # ----------------------------------------------------------------------------
 # TELEGRAM ÉRTESÍTÉS
@@ -189,34 +208,66 @@ def send_telegram_message(text: str) -> None:
         print(f"Telegram küldési hiba: {e}")
 
 
-def format_alert_message(symbol, current, oi_change, price_change, vol_change, window_minutes):
+def format_scalp_message(symbol, price, price_change_pct, candle_vol_usdt,
+                          vol_change_pct, oi_value, oi_change_pct):
     return (
-        f"🚨 <b>Csendes felhalmozás gyanú</b> — <b>{symbol}</b>\n\n"
-        f"💰 Ár: ${current['price']:.6f}  ({price_change:+.2f}%)\n"
-        f"📊 Volumen (24h): {current['volume']:,.0f} USDT  ({vol_change:+.2f}%)\n"
-        f"🧲 Open Interest: {current['oi']:,.0f}  ({oi_change:+.2f}%)\n\n"
-        f"⏱ Elmúlt ~{window_minutes} percben: OI és volumen nő, az ár szinte nem mozdult.\n"
-        f"Ez sokszor kitörés előtti felhalmozási mintázat — érdemes ránézni a BingX-en."
+        f"⚡ 5M SKALP JELZÉS: <b>{symbol}</b> ⚡\n"
+        f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
+        f"📊 Vol (5m): {candle_vol_usdt:,.0f} USDT ({vol_change_pct:+.2f}%)\n"
+        f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)\n"
+        f"⏱ Szűk oldalazás hirtelen tőkebeáramlással. Figyeld a kitörést!"
     )
 
 # ----------------------------------------------------------------------------
-# FŐ LOGIKA
+# OI REFERENCIAPONT KERESÉSE (időbélyeg alapú, cron-cadence-hez robusztus)
 # ----------------------------------------------------------------------------
 
-def find_baseline(history_without_current, now):
-    """Megkeresi a history-ban azt a bejegyzést, amelynek kora a legközelebb
-    esik a TARGET_WINDOW_MINUTES-hez, de csak a [MIN, MAX] tartományon belül.
-    Ez teszi robusztussá a logikát a GitHub Actions kiszámíthatatlan
-    ütemezéséhez képest - fix darabszám helyett valós idő alapján dolgozik."""
+def find_oi_baseline(history_without_current, now):
     best, best_diff = None, None
     for h in history_without_current:
         age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
-        if MIN_WINDOW_MINUTES <= age_min <= MAX_WINDOW_MINUTES:
-            diff = abs(age_min - TARGET_WINDOW_MINUTES)
+        if OI_MIN_WINDOW_MINUTES <= age_min <= OI_MAX_WINDOW_MINUTES:
+            diff = abs(age_min - OI_TARGET_WINDOW_MINUTES)
             if best_diff is None or diff < best_diff:
                 best, best_diff = h, diff
     return best
 
+# ----------------------------------------------------------------------------
+# EGY SZIMBÓLUM KIÉRTÉKELÉSE
+# ----------------------------------------------------------------------------
+
+def evaluate_candle(kdf: pd.DataFrame):
+    """A klines DataFrame-ből kiszámolja az utolsó LEZÁRT gyertya adatait az
+    előtte lezárt gyertyához képest. Az utolsó (még formálódó) gyertyát
+    mindig eldobjuk."""
+    if kdf is None or len(kdf) < 3:
+        return None
+    closed = kdf.iloc[:-1]  # az utolsó, még nyitott gyertya eldobása
+    if len(closed) < 2:
+        return None
+
+    curr = closed.iloc[-1]
+    prev = closed.iloc[-2]
+
+    if prev["close"] <= 0 or prev["volume"] <= 0:
+        return None
+
+    price_change_pct = (curr["close"] - prev["close"]) / prev["close"] * 100
+    vol_change_pct = (curr["volume"] - prev["volume"]) / prev["volume"] * 100
+    # A kline válasz csak bázis-mennyiségi volument ad, nincs külön USDT-mező,
+    # ezért közelítjük: bázis-volumen * záróár ≈ a gyertya USDT-forgalma.
+    candle_vol_usdt = float(curr["volume"] * curr["close"])
+
+    return {
+        "price": float(curr["close"]),
+        "price_change_pct": round(float(price_change_pct), 2),
+        "vol_change_pct": round(float(vol_change_pct), 2),
+        "candle_vol_usdt": candle_vol_usdt,
+    }
+
+# ----------------------------------------------------------------------------
+# FŐ LOGIKA
+# ----------------------------------------------------------------------------
 
 async def main():
     state = load_state()
@@ -241,51 +292,45 @@ async def main():
                 continue
             candidates.append(s)
 
-        print(f"{len(candidates)} jelölt (kis/közepes cap, tisztán kriptó altcoin) a {len(tickers)} párból.")
+        print(f"{len(candidates)} jelölt (kis/közepes cap, tisztán kriptó altcoin) a {len(tickers)} párból. "
+              f"5m gyertyák + OI lekérése következik...")
 
         semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
         oi_tasks = [fetch_open_interest(session, semaphore, s) for s in candidates]
+        kline_tasks = [fetch_klines(session, semaphore, s, ALERT_TIMEFRAME) for s in candidates]
         oi_results = await asyncio.gather(*oi_tasks)
+        kline_results = await asyncio.gather(*kline_tasks)
 
     oi_map = {s: oi for s, oi in oi_results if oi is not None}
+    klines_map = {s: df for s, df in kline_results if df is not None}
 
     alerts_sent = 0
     for symbol in candidates:
-        info = tickers[symbol]
-        oi = oi_map.get(symbol)
-        if oi is None:
+        candle = evaluate_candle(klines_map.get(symbol))
+        oi_now = oi_map.get(symbol)
+        if candle is None or oi_now is None:
             continue
 
-        entry = state.setdefault(symbol, {"history": [], "last_alert_ts": None})
-        entry["history"].append({
-            "ts": now.isoformat(),
-            "price": info["last_price"],
-            "oi": oi,
-            "volume": info["quote_volume_24h"],
-        })
-        # Régi bejegyzések eldobása (időalapú, nem darabszám-alapú trimmelés)
+        # --- OI history frissítése + régi bejegyzések eldobása ---
+        entry = state.setdefault(symbol, {"oi_history": [], "last_alert_ts": None})
+        entry["oi_history"].append({"ts": now.isoformat(), "oi": oi_now})
         cutoff = now - timedelta(minutes=MAX_HISTORY_AGE_MINUTES)
-        entry["history"] = [
-            h for h in entry["history"] if datetime.fromisoformat(h["ts"]) >= cutoff
+        entry["oi_history"] = [
+            h for h in entry["oi_history"] if datetime.fromisoformat(h["ts"]) >= cutoff
         ]
 
-        current = entry["history"][-1]
-        baseline = find_baseline(entry["history"][:-1], now)
-        if baseline is None:
-            continue  # még nincs megfelelő korú (20-90 perces) referenciapont
+        oi_baseline = find_oi_baseline(entry["oi_history"][:-1], now)
+        if oi_baseline is None or oi_baseline["oi"] <= 0:
+            continue  # még nincs ~5 perces korú OI referenciapont
 
-        if baseline["oi"] <= 0 or baseline["price"] <= 0 or baseline["volume"] <= 0:
-            continue
+        oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
 
-        oi_change = (current["oi"] - baseline["oi"]) / baseline["oi"] * 100
-        price_change = (current["price"] - baseline["price"]) / baseline["price"] * 100
-        vol_change = (current["volume"] - baseline["volume"]) / baseline["volume"] * 100
-        window_minutes = int((now - datetime.fromisoformat(baseline["ts"])).total_seconds() / 60)
-
+        # --- A négy skalp-feltétel egyszerre ---
         is_setup = (
-            oi_change >= OI_GROWTH_THRESHOLD_PCT
-            and vol_change >= VOLUME_GROWTH_THRESHOLD_PCT
-            and abs(price_change) <= PRICE_FLAT_THRESHOLD_PCT
+            abs(candle["price_change_pct"]) <= MAX_PRICE_CHANGE
+            and oi_change_pct >= MIN_OI_INCREASE
+            and candle["vol_change_pct"] >= MIN_VOL_INCREASE
+            and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
         )
 
         cooldown_ok = True
@@ -295,11 +340,16 @@ async def main():
                 cooldown_ok = False
 
         if is_setup and cooldown_ok:
-            msg = format_alert_message(symbol, current, oi_change, price_change, vol_change, window_minutes)
+            msg = format_scalp_message(
+                symbol, candle["price"], candle["price_change_pct"],
+                candle["candle_vol_usdt"], candle["vol_change_pct"],
+                oi_now, oi_change_pct,
+            )
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
-            print(f"RIASZTÁS küldve: {symbol} (OI {oi_change:+.2f}%, Vol {vol_change:+.2f}%, Ár {price_change:+.2f}%, ablak {window_minutes} perc)")
+            print(f"SKALP JELZÉS küldve: {symbol} (Ár {candle['price_change_pct']:+.2f}%, "
+                  f"Vol {candle['vol_change_pct']:+.2f}%, OI {oi_change_pct:+.2f}%)")
 
     save_state(state)
     print(f"Kész. {alerts_sent} riasztás kiküldve ebben a futásban.")
