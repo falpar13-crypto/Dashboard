@@ -1,5 +1,5 @@
 """
-BingX Perpetual - "Élő Gyertya" Skalp Felhalmozás-figyelő (v3)
+BingX Perpetual - "Élő Gyertya" Skalp Felhalmozás-figyelő (v4)
 ====================================================================
 Ez a szkript NEM a Streamlit dashboard része — teljesen önállóan fut, a
 dashboard-on beállított idősíktól FÜGGETLENÜL mindig az 5 PERCES gyertyákat
@@ -28,6 +28,14 @@ a lefedettség gyakorlatilag folyamatos.
 v3 VÁLTOZÁS #3 - IRÁNY + ÚJ ÜZENETFORMÁTUM: az üzenet most zöld/piros ponttal
 és LONG/SHORT címkével jelzi az irányt (élő gyertya open vs. jelenlegi ár
 alapján), a korábbi "szűk oldalazás" szöveg nélkül.
+
+v4 VÁLTOZÁS - AUTOMATIKUS VISSZAIGAZOLÁS: mivel az élő gyertyás jelzés néha
+"hamisnak" bizonyul (a mozgás visszafordul, mire a gyertya lezár), a bot
+mostantól minden jelzéshez elmenti, MELYIK gyertyáról volt szó. Amikor az a
+gyertya ténylegesen lezár, egy MÁSODIK Telegram-üzenetet küld: "✅ Megerősítve"
+vagy "❌ Visszafordult". Ez nem lassítja az eredeti jelzést (az továbbra is
+azonnal megy), csak utólag, automatikusan visszajelez a jelzés minőségéről -
+így idővel kézi munka nélkül is látszik a bot valódi találati aránya.
 
 FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
 JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
@@ -103,6 +111,10 @@ MAX_HISTORY_AGE_MINUTES = 60
 # hogy egy 5 perces élő gyertyát a 30 mp-es belső ciklus többszöri vizsgálata
 # se riasszon ki ismételten). ---
 ALERT_COOLDOWN_MINUTES = 30
+
+# --- ÚJ: automatikus visszaigazolás, amikor az élő gyertya, amire jeleztünk,
+# ténylegesen lezár - így a bot "leellenőrzi a saját munkáját" ---
+MAX_CONFIRMATION_WAIT_MINUTES = 20   # ha ennyi idő után sincs eredmény, feladjuk (pl. a pár kiesett a szűrőből)
 
 MAX_CONCURRENT_REQUESTS = 8
 REQUEST_TIMEOUT = 10
@@ -241,6 +253,20 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
     )
 
+
+def format_confirmation_message(symbol, original_direction, confirmed, price_change_since_alert):
+    if confirmed:
+        return (
+            f"✅ Megerősítve: <b>{symbol}</b>\n"
+            f"A jelzett {original_direction} irány kitartott a gyertya zárásáig "
+            f"({price_change_since_alert:+.2f}% a jelzés óta)."
+        )
+    return (
+        f"❌ Visszafordult: <b>{symbol}</b>\n"
+        f"A jelzett {original_direction} irány NEM tartott ki a gyertya zárásáig "
+        f"({price_change_since_alert:+.2f}% a jelzés óta) - hamis jelzés volt."
+    )
+
 # ----------------------------------------------------------------------------
 # OI REFERENCIAPONT KERESÉSE (VÁLTOZATLAN)
 # ----------------------------------------------------------------------------
@@ -295,7 +321,59 @@ def evaluate_candle(kdf: pd.DataFrame):
         "vol_multiplier": round(float(vol_multiplier), 2),
         "candle_vol_usdt": candle_vol_usdt,
         "direction": direction,
+        "candle_open_ts": live["timestamp"].isoformat(),
     }
+
+# ----------------------------------------------------------------------------
+# ÚJ: FÜGGŐ VISSZAIGAZOLÁSOK ELLENŐRZÉSE
+# Amikor egy jelzés kiment egy élő gyertyára, elmentjük, melyik gyertyáról
+# volt szó (candle_open_ts). Minden következő körben megnézzük: ha ez a
+# gyertya időközben LEZÁRT (megjelenik a kdf lezárt részében), elküldjük a
+# visszaigazoló/cáfoló üzenetet, és töröljük a "függő" állapotot.
+# ----------------------------------------------------------------------------
+
+def check_pending_confirmation(entry: dict, symbol: str, kdf: pd.DataFrame, now: datetime) -> bool:
+    """True-t ad vissza, ha küldött visszaigazoló üzenetet (ekkor a hívó fél
+    törli a pending_confirmation-t az entry-ből)."""
+    pending = entry.get("pending_confirmation")
+    if not pending:
+        return False
+
+    sent_dt = datetime.fromisoformat(pending["sent_ts"])
+    if (now - sent_dt) > timedelta(minutes=MAX_CONFIRMATION_WAIT_MINUTES):
+        # Túl régi, valószínűleg a pár kiesett a szűrőből - feladjuk csendben.
+        entry["pending_confirmation"] = None
+        return False
+
+    if kdf is None or len(kdf) < 2:
+        return False  # ebben a körben nincs friss adatunk erről a párról
+
+    try:
+        target_ts = pd.Timestamp(pending["candle_open_ts"])
+    except (ValueError, TypeError):
+        entry["pending_confirmation"] = None
+        return False
+    if target_ts.tzinfo is not None:
+        target_ts = target_ts.tz_localize(None)  # a BingX klines timestampjei tz-naive-ok
+
+    closed = kdf.iloc[:-1]
+    match = closed[closed["timestamp"] == target_ts]
+    if match.empty:
+        return False  # a gyertya még nem zárt le (vagy még nem látjuk lezártként)
+
+    final_candle = match.iloc[-1]
+    final_direction = "LONG" if final_candle["close"] >= final_candle["open"] else "SHORT"
+    confirmed = final_direction == pending["direction"]
+    price_change_since_alert = (
+        (float(final_candle["close"]) - pending["alert_price"]) / pending["alert_price"] * 100
+        if pending["alert_price"] > 0 else 0.0
+    )
+
+    msg = format_confirmation_message(symbol, pending["direction"], confirmed, price_change_since_alert)
+    send_telegram_message(msg)
+    print(f"VISSZAIGAZOLÁS küldve: {symbol} -> {'megerősítve' if confirmed else 'visszafordult'}")
+    entry["pending_confirmation"] = None
+    return True
 
 # ----------------------------------------------------------------------------
 # EGY KIÉRTÉKELÉSI KÖR (a belső 30 mp-es ciklus egy "üteme")
@@ -307,7 +385,7 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
         tickers = await fetch_all_tickers(session)
         if not tickers:
             print("Nem sikerült ticker adatot lekérni a BingX API-ból, kör kihagyva.")
-            return 0, 0, valid_contracts
+            return 0, 0, valid_contracts, 0
 
         if valid_contracts is None:
             valid_contracts = await fetch_valid_contract_symbols(session)
@@ -331,6 +409,16 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
     oi_map = {s: oi for s, oi in oi_results if oi is not None}
     klines_map = {s: df for s, df in kline_results if df is not None}
 
+    # --- 1. lépés: függő visszaigazolások ellenőrzése (minden korábban
+    # jelzett, még le nem zárt gyertyára, nem csak a mostani jelöltekre) ---
+    confirmations_sent = 0
+    for symbol, entry in state.items():
+        if not isinstance(entry, dict) or not entry.get("pending_confirmation"):
+            continue
+        if check_pending_confirmation(entry, symbol, klines_map.get(symbol), now):
+            confirmations_sent += 1
+
+    # --- 2. lépés: új jelzések keresése (VÁLTOZATLAN logika) ---
     alerts_sent = 0
     evaluated = 0
     for symbol in candidates:
@@ -340,7 +428,7 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
             continue
         evaluated += 1
 
-        entry = state.setdefault(symbol, {"oi_history": [], "last_alert_ts": None})
+        entry = state.setdefault(symbol, {"oi_history": [], "last_alert_ts": None, "pending_confirmation": None})
         entry["oi_history"].append({"ts": now.isoformat(), "oi": oi_now})
         cutoff = now - timedelta(minutes=MAX_HISTORY_AGE_MINUTES)
         entry["oi_history"] = [
@@ -374,11 +462,18 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
             )
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
+            # Elmentjük, mit kell majd visszaigazolni, amikor ez a gyertya lezár.
+            entry["pending_confirmation"] = {
+                "candle_open_ts": candle["candle_open_ts"],
+                "alert_price": candle["price"],
+                "direction": candle["direction"],
+                "sent_ts": now.isoformat(),
+            }
             alerts_sent += 1
             print(f"JELZÉS küldve: {symbol} [{candle['direction']}] (Ár {candle['price_change_pct']:+.2f}%, "
                   f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
 
-    return alerts_sent, evaluated, valid_contracts
+    return alerts_sent, evaluated, valid_contracts, confirmations_sent
 
 # ----------------------------------------------------------------------------
 # FŐ CIKLUS - kb. 4.5 percig fut, 30 mp-enként újra kiértékelve
@@ -390,6 +485,7 @@ async def main():
     valid_contracts = None
     pass_num = 0
     total_alerts = 0
+    total_confirmations = 0
 
     while True:
         elapsed_total = time.monotonic() - loop_start
@@ -400,12 +496,14 @@ async def main():
         pass_start = time.monotonic()
         now = datetime.now(timezone.utc)
 
-        alerts, evaluated, valid_contracts = await run_single_pass(state, valid_contracts, now)
+        alerts, evaluated, valid_contracts, confirmations = await run_single_pass(state, valid_contracts, now)
         total_alerts += alerts
+        total_confirmations += confirmations
         save_state(state)  # minden kör után mentünk, ne vesszen el adat félbeszakadás esetén
 
-        print(f"[{pass_num}. kör] {evaluated} pár kiértékelve, {alerts} riasztás "
-              f"(összesen eddig: {total_alerts}).")
+        print(f"[{pass_num}. kör] {evaluated} pár kiértékelve, {alerts} riasztás, "
+              f"{confirmations} visszaigazolás (összesen eddig: {total_alerts} riasztás, "
+              f"{total_confirmations} visszaigazolás).")
 
         pass_elapsed = time.monotonic() - pass_start
         remaining_total = TOTAL_RUN_BUDGET_SECONDS - (time.monotonic() - loop_start)
@@ -417,8 +515,9 @@ async def main():
         if sleep_time > 0:
             await asyncio.sleep(sleep_time)
 
-    print(f"Ciklus vége: {pass_num} kör lefutott, összesen {total_alerts} riasztás. "
-          f"A szkript rendesen leáll - a következő külső cron-hívás friss példányt indít.")
+    print(f"Ciklus vége: {pass_num} kör lefutott, összesen {total_alerts} riasztás, "
+          f"{total_confirmations} visszaigazolás. A szkript rendesen leáll - a következő "
+          f"külső cron-hívás friss példányt indít.")
 
 
 if __name__ == "__main__":
