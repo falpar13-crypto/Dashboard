@@ -46,6 +46,27 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Az alert_state.json-ra "ours" merge-stratégiát állítunk: ha két futás
+          # véletlenül átfedésbe kerülne, a git NEM hibázik el ütközésnél, hanem
+          # automatikusan a saját (ebben a futásban frissített) verziót tartja meg.
+          git config merge.ours.driver true
+
           git add alert_state.json
-          git diff --quiet --cached || git commit -m "alert_state frissítve [skip ci]"
-          git push
+          if git diff --quiet --cached; then
+            echo "Nincs változás az állapotfájlban, nincs mit commitolni."
+            exit 0
+          fi
+          git commit -m "alert_state frissítve [skip ci]"
+
+          # Push újrapróbálással, ha közben más futás is írt volna a repóba.
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Push sikeres."
+              exit 0
+            fi
+            echo "Push ütközött (${i}. próbálkozás) - remote frissítés és újrapróbálás..."
+            git fetch origin main
+            git pull --no-rebase origin main --no-edit
+            sleep $((RANDOM % 6 + 3))
+          done
+          echo "Push végül sem sikerült 5 próbálkozás után - a state ebben a körben elveszhet, de a következő futás újra megpróbálja."
