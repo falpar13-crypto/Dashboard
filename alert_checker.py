@@ -1,41 +1,47 @@
 """
-BingX Perpetual - "5M Skalp" kitörés előtti figyelő (v2 - MA-volumen alapú)
+BingX Perpetual - "Élő Gyertya" Skalp Felhalmozás-figyelő (v3)
 ====================================================================
 Ez a szkript NEM a Streamlit dashboard része — teljesen önállóan fut, a
 dashboard-on beállított idősíktól FÜGGETLENÜL mindig az 5 PERCES gyertyákat
-vizsgálja (lásd ALERT_TIMEFRAME lent). GitHub Actions cron job hívja meg
-periodikusan (elméletileg 5 percenként, de lásd a #2-es megjegyzést).
+vizsgálja (lásd ALERT_TIMEFRAME lent).
 
-Mit keres: olyan kis/közepes market cap-ú, TISZTÁN kriptó altcoint, ahol az
-utolsó LEZÁRT 5 perces gyertyán:
-    - az ár szinte nem mozdult (szűk oldalazás, ±MAX_PRICE_CHANGE%),
-    - az Open Interest hirtelen ugrott (min. MIN_OI_INCREASE%),
-    - a gyertya volumene messze meghaladja az előző VOLUME_MA_PERIOD db
-      lezárt gyertya ÁTLAGÁT (min. MIN_VOL_MULTIPLIER-szerese), és eléri a
-      minimum USDT-küszöböt (likviditásszűrő).
+v3 VÁLTOZÁS #1 - ÉLŐ GYERTYA: a korábbi verziók mindig eldobták az utolsó,
+még formálódó gyertyát, és csak lezárt gyertyákat hasonlítottak össze. Ez
+biztonságos volt, de KÉSŐN jelzett - mire egy gyertya lezárt, a mozgás nagy
+része már megtörtént. Most a bot a MÉG NYITOTT (élő) gyertyát vizsgálja a
+megelőző N db LEZÁRT gyertya átlagához képest, így már a gyertya kialakulása
+KÖZBEN jelezhet, ha a volumen/OI szokatlanul felpörög.
+Ára van: az élő gyertya adatai a lekérdezés pillanatáig "STOP-kamerázott"
+részleges adatok - a végleges (lezárt) érték eltérhet, és elméletileg egy
+gyors visszapattanás miatt "hamis" jelzés is előfordulhat. Ez a tudatosan
+vállalt ára annak, hogy korábban jelezzen.
 
-v2 VÁLTOZÁS: a volumen-feltétel korábban csak az EGY előző gyertyához
-hasonlított, ami lassan épülő trendeknél hamis-negatív jelzést adott. Most
-egy mozgóátlaghoz (Moving Average Volume) viszonyítunk, ami stabilabb
-referencia egy hirtelen tőkebeáramlás felismerésére.
+v3 VÁLTOZÁS #2 - BELSŐ 30 MÁSODPERCES CIKLUS: mivel a GitHub Actions indítása
+(gépfoglalás, checkout, csomagtelepítés) önmagában kb. 15-20 másodpercet
+elvesz, ha csak egyszer futtatnánk le a kiértékelést egy Actions-hívásban,
+rengeteg idő veszne kárba "üresjáratban". Ezért a main() most egy belső
+while-ciklusban, kb. 4.5 percig (270 mp) fut, 30 másodpercenként újra
+lekérdezve és kiértékelve az adatokat, majd rendesen leáll - így a következő,
+5 percenkénti külső cron-indítás (cron-job.org) egy friss példányt indít, és
+a lefedettség gyakorlatilag folyamatos.
 
-FONTOS #1: minden Δ számítás KIZÁRÓLAG lezárt gyertyákon dolgozik - az utolsó,
-még formálódó (nyitott) gyertyát mindig eldobjuk.
+v3 VÁLTOZÁS #3 - IRÁNY + ÚJ ÜZENETFORMÁTUM: az üzenet most zöld/piros ponttal
+és LONG/SHORT címkével jelzi az irányt (élő gyertya open vs. jelenlegi ár
+alapján), a korábbi "szűk oldalazás" szöveg nélkül.
 
-FONTOS #2: mivel minden Actions-futás friss, "üres memóriájú" gépen indul, az
-OI-hoz (aminek nincs nyilvános historikus API-ja) egy JSON állapotfájlban
-(alert_state.json) tárolt pillanatképet használunk referenciaként. A GitHub
-Actions "*/5 * * * *" ütemezése csak "best effort" (csúszhat/kimaradhat), ezért
-az OI-referenciapontot is TÉNYLEGES időbélyeg alapján, ~5 perces célablakkal
-keressük meg, nem fix darabszám alapján.
-
-FONTOS #3: a BingX ticker végpontja nemcsak kriptó perpetualokat ad vissza,
-hanem tokenizált részvény-szerű szintetikus termékeket is - ezeket kiszűrjük.
+FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
+JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
+referenciaként, valós időbélyeg alapján keresve a ~5 perces referenciapontot.
+A cooldown-mechanizmus (alert_state.json alapú, per-szimbólum "last_alert_ts")
+VÁLTOZATLAN maradt - ez védi ki, hogy egy élő gyertyán belül (amit a 30
+másodperces belső ciklus miatt akár 10x is megvizsgálunk) többször riasszon
+ugyanarra a mozgásra.
 """
 
 import asyncio
 import json
 import os
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -48,13 +54,18 @@ import requests
 # ----------------------------------------------------------------------------
 ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashboard
                              # idősík-választójától teljesen függetlenül
-MAX_PRICE_CHANGE = 1.0      # max. %-os ármozgás a gyertyán belül (v2: 0.5 -> 1.0)
-MIN_OI_INCREASE = 2.5       # minimum OI-ugrás %-ban (v2: 3.5 -> 2.5)
-MIN_CANDLE_VOL_USDT = 50_000  # a vizsgált gyertya USDT-forgalmának minimuma (változatlan)
+MAX_PRICE_CHANGE = 1.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
+                             # lezárt gyertya záróárához képest)
+MIN_OI_INCREASE = 2.5       # minimum OI-ugrás %-ban (~5 perces referenciaablak)
+MIN_CANDLE_VOL_USDT = 50_000  # az élő gyertya eddigi USDT-forgalmának minimuma
 
-# --- ÚJ (v2): mozgóátlaghoz viszonyított volumen-feltétel ---
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
-MIN_VOL_MULTIPLIER = 2.0    # a vizsgált gyertya legalább ennyiszerese legyen az átlagnak
+MIN_VOL_MULTIPLIER = 2.0    # az élő gyertya eddigi volumene legalább ennyiszerese
+                             # legyen az átlagnak
+
+# --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
+TOTAL_RUN_BUDGET_SECONDS = 270   # ~4.5 perc - a szkript ennyi ideig fut egyben
+PASS_INTERVAL_SECONDS = 30       # ennyi mp-enként fut újra a kiértékelés
 
 # ----------------------------------------------------------------------------
 # 0) ÁLTALÁNOS BEÁLLÍTÁSOK
@@ -67,7 +78,7 @@ KLINES_ENDPOINT = f"{BASE_URL}/openApi/swap/v3/quote/klines"
 
 STATE_FILE = Path(__file__).parent / "alert_state.json"
 
-# --- "Kis/közepes market cap altcoin" előszűrés (VÁLTOZATLAN, ahogy kérted) ---
+# --- "Kis/közepes market cap altcoin" előszűrés (VÁLTOZATLAN) ---
 MIN_VOLUME_USDT = 300_000
 MAX_VOLUME_USDT = 15_000_000
 
@@ -85,35 +96,23 @@ def is_probably_crypto(symbol: str) -> bool:
 # --- OI referenciapont keresése (VÁLTOZATLAN) ---
 OI_TARGET_WINDOW_MINUTES = 5
 OI_MIN_WINDOW_MINUTES = 2
-OI_MAX_WINDOW_MINUTES = 20   # kis puffer, ha a külső cron pár percet csúszna
+OI_MAX_WINDOW_MINUTES = 20
 MAX_HISTORY_AGE_MINUTES = 60
 
-# --- Spam-védelem (VÁLTOZATLAN) ---
+# --- Spam-védelem (VÁLTOZATLAN - a 30 perces cooldown egyben azt is biztosítja,
+# hogy egy 5 perces élő gyertyát a 30 mp-es belső ciklus többszöri vizsgálata
+# se riasszon ki ismételten). ---
 ALERT_COOLDOWN_MINUTES = 30
 
 MAX_CONCURRENT_REQUESTS = 8
 REQUEST_TIMEOUT = 10
 RETRY_COUNT = 3
 RETRY_BACKOFF = 1.5
-# Kell: 1 nyitott (eldobandó) + 1 vizsgált lezárt + VOLUME_MA_PERIOD baseline gyertya,
-# plusz egy kis ráhagyás.
+# Kell: 1 élő (nyitott) + VOLUME_MA_PERIOD lezárt gyertya a baseline-hoz, ráhagyással.
 KLINES_LIMIT = VOLUME_MA_PERIOD + 5
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
-
-
-def _timeframe_to_minutes(tf: str) -> int:
-    """'5m' -> 5, '1h' -> 60, stb. - az üzenetben megjelenő ablak-hossz kiírásához."""
-    if tf.endswith("m"):
-        return int(tf[:-1])
-    if tf.endswith("h"):
-        return int(tf[:-1]) * 60
-    if tf.endswith("d"):
-        return int(tf[:-1]) * 60 * 24
-    return 5
-
-AVG_WINDOW_MINUTES = _timeframe_to_minutes(ALERT_TIMEFRAME) * VOLUME_MA_PERIOD
 
 # ----------------------------------------------------------------------------
 # ÁLLAPOT (JSON fájl) KEZELÉSE
@@ -229,15 +228,17 @@ def send_telegram_message(text: str) -> None:
         print(f"Telegram küldési hiba: {e}")
 
 
-def format_scalp_message(symbol, price, price_change_pct, candle_vol_usdt,
-                          vol_multiplier, oi_value, oi_change_pct):
+def format_scalp_message(symbol, direction, price, price_change_pct,
+                          candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct):
+    if direction == "LONG":
+        header = f"🟢 LONG Felhalmozás: <b>{symbol}</b>"
+    else:
+        header = f"🔴 SHORT Felhalmozás: <b>{symbol}</b>"
     return (
-        f"⚡ 5M SKALP JELZÉS: <b>{symbol}</b> ⚡\n"
+        f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
-        f"📊 Vol (5m): {candle_vol_usdt:,.0f} USDT "
-        f"({vol_multiplier:.1f}x az elmúlt {AVG_WINDOW_MINUTES} perc átlagához képest)\n"
-        f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)\n"
-        f"⏱ Szűk oldalazás hirtelen tőkebeáramlással. Figyeld a kitörést!"
+        f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
+        f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
     )
 
 # ----------------------------------------------------------------------------
@@ -255,62 +256,61 @@ def find_oi_baseline(history_without_current, now):
     return best
 
 # ----------------------------------------------------------------------------
-# EGY SZIMBÓLUM KIÉRTÉKELÉSE (v2: MA-volumen alapú)
+# EGY SZIMBÓLUM KIÉRTÉKELÉSE (v3: ÉLŐ gyertya a lezártak átlagához képest)
 # ----------------------------------------------------------------------------
 
 def evaluate_candle(kdf: pd.DataFrame):
-    """A klines DataFrame-ből kiszámolja az utolsó LEZÁRT gyertya adatait:
-    - ár-változás az előtte lezárt gyertyához képest (változatlan logika)
-    - volumen-szorzó a megelőző VOLUME_MA_PERIOD db lezárt gyertya átlagához
-      képest (ÚJ v2 logika, a korábbi "csak 1 előző gyertya" helyett)
-    Az utolsó, még formálódó gyertyát mindig eldobjuk."""
-    if kdf is None:
-        return None
-    closed = kdf.iloc[:-1]  # az utolsó, még nyitott gyertya eldobása
-    # Kell: 1 vizsgált (utolsó lezárt) + VOLUME_MA_PERIOD baseline gyertya
-    if len(closed) < VOLUME_MA_PERIOD + 2:
+    """Az ÉLŐ (még nyitott) gyertyát értékeli ki a megelőző VOLUME_MA_PERIOD db
+    LEZÁRT gyertya átlagához képest. Az irányt az élő gyertya nyitó- és
+    jelenlegi ára határozza meg."""
+    if kdf is None or len(kdf) < VOLUME_MA_PERIOD + 1:
         return None
 
-    curr = closed.iloc[-1]
-    prev = closed.iloc[-2]
-    baseline_window = closed.iloc[-(VOLUME_MA_PERIOD + 1):-1]  # az utolsó előtti N gyertya
+    live = kdf.iloc[-1]                      # az éppen formálódó gyertya
+    closed = kdf.iloc[:-1]                    # az összes lezárt gyertya
+    baseline_window = closed.iloc[-VOLUME_MA_PERIOD:]
+    if len(baseline_window) < VOLUME_MA_PERIOD:
+        return None
 
-    if prev["close"] <= 0:
+    prev_close = closed.iloc[-1]["close"]     # az utolsó LEZÁRT gyertya záróára
+    if prev_close <= 0 or live["open"] <= 0:
         return None
 
     avg_vol = baseline_window["volume"].mean()
     if avg_vol is None or pd.isna(avg_vol) or avg_vol <= 0:
         return None
 
-    price_change_pct = (curr["close"] - prev["close"]) / prev["close"] * 100
-    vol_multiplier = curr["volume"] / avg_vol
+    current_price = float(live["close"])      # az élő gyertya JELENLEGI ára
+    price_change_pct = (current_price - prev_close) / prev_close * 100
+    vol_multiplier = live["volume"] / avg_vol
     # A kline válasz csak bázis-mennyiségi volument ad, nincs külön USDT-mező,
-    # ezért közelítjük: bázis-volumen * záróár ≈ a gyertya USDT-forgalma.
-    candle_vol_usdt = float(curr["volume"] * curr["close"])
+    # ezért közelítjük: bázis-volumen * jelenlegi ár ≈ az élő gyertya eddigi
+    # USDT-forgalma.
+    candle_vol_usdt = float(live["volume"] * current_price)
+    direction = "LONG" if current_price >= live["open"] else "SHORT"
 
     return {
-        "price": float(curr["close"]),
+        "price": current_price,
         "price_change_pct": round(float(price_change_pct), 2),
         "vol_multiplier": round(float(vol_multiplier), 2),
         "candle_vol_usdt": candle_vol_usdt,
+        "direction": direction,
     }
 
 # ----------------------------------------------------------------------------
-# FŐ LOGIKA
+# EGY KIÉRTÉKELÉSI KÖR (a belső 30 mp-es ciklus egy "üteme")
 # ----------------------------------------------------------------------------
 
-async def main():
-    state = load_state()
-    now = datetime.now(timezone.utc)
-
+async def run_single_pass(state: dict, valid_contracts, now: datetime):
     connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
     async with aiohttp.ClientSession(connector=connector) as session:
         tickers = await fetch_all_tickers(session)
         if not tickers:
-            print("Nem sikerült ticker adatot lekérni a BingX API-ból, kilépés.")
-            return
+            print("Nem sikerült ticker adatot lekérni a BingX API-ból, kör kihagyva.")
+            return 0, 0, valid_contracts
 
-        valid_contracts = await fetch_valid_contract_symbols(session)
+        if valid_contracts is None:
+            valid_contracts = await fetch_valid_contract_symbols(session)
 
         candidates = []
         for s, info in tickers.items():
@@ -321,9 +321,6 @@ async def main():
             if valid_contracts is not None and s not in valid_contracts:
                 continue
             candidates.append(s)
-
-        print(f"{len(candidates)} jelölt (kis/közepes cap, tisztán kriptó altcoin) a {len(tickers)} párból. "
-              f"5m gyertyák ({KLINES_LIMIT} db/pár) + OI lekérése következik...")
 
         semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
         oi_tasks = [fetch_open_interest(session, semaphore, s) for s in candidates]
@@ -356,7 +353,6 @@ async def main():
 
         oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
 
-        # --- A négy skalp-feltétel egyszerre (v2 küszöbökkel) ---
         is_setup = (
             abs(candle["price_change_pct"]) <= MAX_PRICE_CHANGE
             and oi_change_pct >= MIN_OI_INCREASE
@@ -372,19 +368,57 @@ async def main():
 
         if is_setup and cooldown_ok:
             msg = format_scalp_message(
-                symbol, candle["price"], candle["price_change_pct"],
+                symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
                 oi_now, oi_change_pct,
             )
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
-            print(f"SKALP JELZÉS küldve: {symbol} (Ár {candle['price_change_pct']:+.2f}%, "
+            print(f"JELZÉS küldve: {symbol} [{candle['direction']}] (Ár {candle['price_change_pct']:+.2f}%, "
                   f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
 
-    save_state(state)
-    print(f"Kész. {evaluated} pár volt ténylegesen kiértékelhető (elég gyertya+OI history), "
-          f"{alerts_sent} riasztás kiküldve ebben a futásban.")
+    return alerts_sent, evaluated, valid_contracts
+
+# ----------------------------------------------------------------------------
+# FŐ CIKLUS - kb. 4.5 percig fut, 30 mp-enként újra kiértékelve
+# ----------------------------------------------------------------------------
+
+async def main():
+    state = load_state()
+    loop_start = time.monotonic()
+    valid_contracts = None
+    pass_num = 0
+    total_alerts = 0
+
+    while True:
+        elapsed_total = time.monotonic() - loop_start
+        if elapsed_total >= TOTAL_RUN_BUDGET_SECONDS:
+            break
+
+        pass_num += 1
+        pass_start = time.monotonic()
+        now = datetime.now(timezone.utc)
+
+        alerts, evaluated, valid_contracts = await run_single_pass(state, valid_contracts, now)
+        total_alerts += alerts
+        save_state(state)  # minden kör után mentünk, ne vesszen el adat félbeszakadás esetén
+
+        print(f"[{pass_num}. kör] {evaluated} pár kiértékelve, {alerts} riasztás "
+              f"(összesen eddig: {total_alerts}).")
+
+        pass_elapsed = time.monotonic() - pass_start
+        remaining_total = TOTAL_RUN_BUDGET_SECONDS - (time.monotonic() - loop_start)
+        if remaining_total <= 0:
+            break
+
+        sleep_time = max(0.0, PASS_INTERVAL_SECONDS - pass_elapsed)
+        sleep_time = min(sleep_time, remaining_total)
+        if sleep_time > 0:
+            await asyncio.sleep(sleep_time)
+
+    print(f"Ciklus vége: {pass_num} kör lefutott, összesen {total_alerts} riasztás. "
+          f"A szkript rendesen leáll - a következő külső cron-hívás friss példányt indít.")
 
 
 if __name__ == "__main__":
