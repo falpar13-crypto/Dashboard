@@ -106,7 +106,7 @@ STATE_FILE = Path(__file__).parent / "alert_state.json"
 
 # --- "Kis/közepes market cap altcoin" előszűrés (VÁLTOZATLAN) ---
 MIN_VOLUME_USDT = 300_000
-MAX_VOLUME_USDT = 15_000_000
+MAX_VOLUME_USDT = 50_000_000
 
 # --- Nem-kriptó termékek kiszűrése (VÁLTOZATLAN) ---
 NON_CRYPTO_PREFIXES = ("NCSK",)
