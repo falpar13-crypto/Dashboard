@@ -258,6 +258,9 @@ async def fetch_htf_trend(session, semaphore, symbol):
         if last_close < last_ema:
             return symbol, "DOWN"
         return symbol, "NEUTRAL"
+
+
+async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT):
     async with semaphore:
         params = {"symbol": symbol, "interval": interval, "limit": limit}
         data = await _get_json(session, KLINES_ENDPOINT, params=params)
