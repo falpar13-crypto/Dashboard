@@ -142,7 +142,8 @@ HTF_EMA_PERIOD = 50           # EMA(50) az 1h gyertyákon - záróár ehhez kép
 HTF_KLINES_LIMIT = 100        # ennyi 1h gyertyát kérünk le az EMA50 stabilizálásához
 REQUIRE_HTF_ALIGNMENT = True  # False-ra állítva kikapcsolható a szűrő kódtörlés nélkül
 
-MAX_CONCURRENT_REQUESTS = 8
+MAX_CONCURRENT_REQUESTS = 12   # a MAX_VOLUME_USDT emelése miatt nagyobb lett a
+                                # jelöltlista, ezért itt is emeltünk kicsit (8 -> 12)
 REQUEST_TIMEOUT = 10
 RETRY_COUNT = 3
 RETRY_BACKOFF = 1.5
@@ -487,17 +488,25 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
             candidates.append(s)
 
         semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+        missing_htf = [s for s in candidates if s not in htf_cache]
+
+        # JAVÍTÁS: korábban az OI, a gyertyák és a HTF-trend lekérdezése 3
+        # EGYMÁS UTÁNI (szekvenciális) await-blokkban történt, ami feleslegesen
+        # megnyújtotta a kör futásidejét - főleg az első körben, amikor a teljes
+        # HTF-cache még üres. Mostantól mindhárom EGYSZERRE, egy közös
+        # gather()-ben fut, a MAX_CONCURRENT_REQUESTS szemafor így is korlátozza
+        # az egyidejű valós hálózati kéréseket, csak nem kell egymásra várniuk.
         oi_tasks = [fetch_open_interest(session, semaphore, s) for s in candidates]
         kline_tasks = [fetch_klines(session, semaphore, s, ALERT_TIMEFRAME) for s in candidates]
-        oi_results = await asyncio.gather(*oi_tasks)
-        kline_results = await asyncio.gather(*kline_tasks)
+        htf_tasks = [fetch_htf_trend(session, semaphore, s) for s in missing_htf]
 
-        # --- ÚJ (v5): 1h HTF trend lekérése, de CSAK azokra a szimbólumokra,
-        # amikre még nincs cache-elt eredményünk ebben a futásban. ---
-        missing_htf = [s for s in candidates if s not in htf_cache]
-        if missing_htf:
-            htf_tasks = [fetch_htf_trend(session, semaphore, s) for s in missing_htf]
-            htf_results = await asyncio.gather(*htf_tasks)
+        oi_results, kline_results, htf_results = await asyncio.gather(
+            asyncio.gather(*oi_tasks),
+            asyncio.gather(*kline_tasks),
+            asyncio.gather(*htf_tasks),
+        )
+
+        if htf_results:
             for s, trend in htf_results:
                 if trend is not None:
                     htf_cache[s] = trend
@@ -610,9 +619,21 @@ async def main():
         pass_start = time.monotonic()
         now = datetime.now(timezone.utc)
 
-        alerts, evaluated, valid_contracts, confirmations, htf_cache = await run_single_pass(
-            state, valid_contracts, htf_cache, now
-        )
+        # Biztonsági időkorlát: egyetlen kör se futhat a hátralévő budget-nél
+        # tovább (pl. ha a jelöltek száma megnő, vagy a BingX API lassan
+        # válaszol) - így a szkript garantáltan időben, rendesen leáll.
+        remaining_budget = max(30.0, TOTAL_RUN_BUDGET_SECONDS - elapsed_total)
+        try:
+            alerts, evaluated, valid_contracts, confirmations, htf_cache = await asyncio.wait_for(
+                run_single_pass(state, valid_contracts, htf_cache, now),
+                timeout=remaining_budget,
+            )
+        except asyncio.TimeoutError:
+            print(f"[{pass_num}. kör] Túllépte az időkeretet ({remaining_budget:.0f} mp), megszakítva. "
+                  f"A state addig elért állapotát elmentjük, a ciklus leáll.")
+            save_state(state)
+            break
+
         total_alerts += alerts
         total_confirmations += confirmations
         save_state(state)  # minden kör után mentünk, ne vesszen el adat félbeszakadás esetén
