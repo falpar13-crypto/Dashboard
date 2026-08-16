@@ -37,6 +37,24 @@ vagy "❌ Visszafordult". Ez nem lassítja az eredeti jelzést (az továbbra is
 azonnal megy), csak utólag, automatikusan visszajelez a jelzés minőségéről -
 így idővel kézi munka nélkül is látszik a bot valódi találati aránya.
 
+v5 VÁLTOZÁS - MAGASABB IDŐSÍK TREND-SZŰRŐ: mostantól a bot megnézi az adott
+pár 1 órás trendjét (záróár az 1h EMA50-hez képest) is. Az 1h trendet
+takarékosan, futásonként csak egyszer (nem minden 30 mp-es körben) kérdezzük
+le és memóriában cache-eljük a futás hátralévő részére.
+
+v6 VÁLTOZÁS - HTF FIGYELMEZTETÉS BLOKKOLÁS HELYETT: a v5-ben a trenddel
+szembemenő jelzést egyszerűen NEM küldtük ki. A felhasználói visszajelzés
+alapján ez túl szigorúnak bizonyult - mostantól a jelzés MINDIG kimegy, csak
+egy "⚠️ Trenddel szemben (1h: DOWN/UP)" figyelmeztető sort kap az üzenet, ha
+az irány nem egyezik az 1h trenddel. Így a döntés a felhasználónál marad.
+
+v6 VÁLTOZÁS - VISSZAIGAZOLÁS-KÜSZÖB: kiderült, hogy a visszaigazolás-ellenőrző
+korábban egy nagyon apró (pl. -0.02% vs +0.02%), gyakorlatilag zajszintű
+nyitó->záró mozgást is egyértelmű LONG/SHORT eredménynek vett, ami hibás
+"megerősítve" jelzéseket adott. Mostantól van egy CONFIRMATION_MIN_MOVE_PCT
+küszöb: ha a záró gyertya nyitó->záró mozgása ennél kisebb, a bot "➖ Semleges
+zárás" üzenetet küld megerősítés/cáfolat helyett.
+
 FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
 JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
 referenciaként, valós időbélyeg alapján keresve a ~5 perces referenciapontot.
@@ -115,6 +133,14 @@ ALERT_COOLDOWN_MINUTES = 30
 # --- ÚJ: automatikus visszaigazolás, amikor az élő gyertya, amire jeleztünk,
 # ténylegesen lezár - így a bot "leellenőrzi a saját munkáját" ---
 MAX_CONFIRMATION_WAIT_MINUTES = 20   # ha ennyi idő után sincs eredmény, feladjuk (pl. a pár kiesett a szűrőből)
+CONFIRMATION_MIN_MOVE_PCT = 0.05     # ennél kisebb nyitó->záró mozgásnál "semleges" a zárás, nem
+                                      # számít se megerősítésnek, se cáfolatnak (zajszint kiszűrése)
+
+# --- ÚJ (v5): magasabb idősík trend-szűrő ---
+HIGHER_TIMEFRAME = "1h"       # ezen az idősíkon nézzük a fő trendet
+HTF_EMA_PERIOD = 50           # EMA(50) az 1h gyertyákon - záróár ehhez képest = trend
+HTF_KLINES_LIMIT = 100        # ennyi 1h gyertyát kérünk le az EMA50 stabilizálásához
+REQUIRE_HTF_ALIGNMENT = True  # False-ra állítva kikapcsolható a szűrő kódtörlés nélkül
 
 MAX_CONCURRENT_REQUESTS = 8
 REQUEST_TIMEOUT = 10
@@ -201,7 +227,37 @@ async def fetch_open_interest(session, semaphore, symbol):
             return symbol, None
 
 
-async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT):
+async def fetch_htf_trend(session, semaphore, symbol):
+    """Az 1 órás (HIGHER_TIMEFRAME) trend meghatározása: az utolsó LEZÁRT 1h
+    gyertya záróára az EMA(50) fölött van-e (UP) vagy alatta (DOWN). Csak
+    lezárt gyertyákat használ, hogy az élő 1h gyertya zaja ne billentse ki."""
+    async with semaphore:
+        params = {"symbol": symbol, "interval": HIGHER_TIMEFRAME, "limit": HTF_KLINES_LIMIT}
+        data = await _get_json(session, KLINES_ENDPOINT, params=params)
+        await asyncio.sleep(0.03)
+        if not data or "data" not in data or not data["data"]:
+            return symbol, None
+        df = pd.DataFrame(data["data"])
+        if "close" not in df.columns or "time" not in df.columns:
+            return symbol, None
+        df["close"] = pd.to_numeric(df["close"], errors="coerce")
+        df["timestamp"] = pd.to_datetime(df["time"], unit="ms")
+        df = df.sort_values("timestamp").reset_index(drop=True)
+
+        closed = df.iloc[:-1]  # az élő 1h gyertyát itt is eldobjuk
+        if len(closed) < HTF_EMA_PERIOD:
+            return symbol, None  # nincs elég adat egy megbízható EMA(50)-hez
+
+        ema = closed["close"].ewm(span=HTF_EMA_PERIOD, adjust=False).mean()
+        last_close = closed["close"].iloc[-1]
+        last_ema = ema.iloc[-1]
+        if pd.isna(last_ema):
+            return symbol, None
+        if last_close > last_ema:
+            return symbol, "UP"
+        if last_close < last_ema:
+            return symbol, "DOWN"
+        return symbol, "NEUTRAL"
     async with semaphore:
         params = {"symbol": symbol, "interval": interval, "limit": limit}
         data = await _get_json(session, KLINES_ENDPOINT, params=params)
@@ -241,25 +297,43 @@ def send_telegram_message(text: str) -> None:
 
 
 def format_scalp_message(symbol, direction, price, price_change_pct,
-                          candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct):
+                          candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
+                          htf_trend=None):
     if direction == "LONG":
         header = f"🟢 LONG Felhalmozás: <b>{symbol}</b>"
     else:
         header = f"🔴 SHORT Felhalmozás: <b>{symbol}</b>"
+
+    warning_line = ""
+    against_trend = (
+        (direction == "LONG" and htf_trend == "DOWN")
+        or (direction == "SHORT" and htf_trend == "UP")
+    )
+    if against_trend:
+        warning_line = f"\n⚠️ Trenddel szemben (1h: {htf_trend})"
+
     return (
         f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
+        f"{warning_line}"
     )
 
 
-def format_confirmation_message(symbol, original_direction, confirmed, price_change_since_alert):
-    if confirmed:
+def format_confirmation_message(symbol, original_direction, status, price_change_since_alert):
+    """status: 'confirmed' / 'reversed' / 'neutral' (túl kicsi mozgás a lezáráskor)"""
+    if status == "confirmed":
         return (
             f"✅ Megerősítve: <b>{symbol}</b>\n"
             f"A jelzett {original_direction} irány kitartott a gyertya zárásáig "
             f"({price_change_since_alert:+.2f}% a jelzés óta)."
+        )
+    if status == "neutral":
+        return (
+            f"➖ Semleges zárás: <b>{symbol}</b>\n"
+            f"A gyertya lényegében változatlanul zárt ({price_change_since_alert:+.2f}%) - "
+            f"túl kicsi mozgás ahhoz, hogy egyértelműen megerősítsük vagy megcáfoljuk a {original_direction} jelzést."
         )
     return (
         f"❌ Visszafordult: <b>{symbol}</b>\n"
@@ -362,16 +436,25 @@ def check_pending_confirmation(entry: dict, symbol: str, kdf: pd.DataFrame, now:
         return False  # a gyertya még nem zárt le (vagy még nem látjuk lezártként)
 
     final_candle = match.iloc[-1]
-    final_direction = "LONG" if final_candle["close"] >= final_candle["open"] else "SHORT"
-    confirmed = final_direction == pending["direction"]
+    final_open = float(final_candle["open"])
+    final_close = float(final_candle["close"])
+    final_move_pct = (final_close - final_open) / final_open * 100 if final_open > 0 else 0.0
+
+    if abs(final_move_pct) < CONFIRMATION_MIN_MOVE_PCT:
+        # Túl kicsi, gyakorlatilag zajszintű mozgás - se nem megerősítés, se nem cáfolat.
+        status = "neutral"
+    else:
+        final_direction = "LONG" if final_move_pct > 0 else "SHORT"
+        status = "confirmed" if final_direction == pending["direction"] else "reversed"
+
     price_change_since_alert = (
-        (float(final_candle["close"]) - pending["alert_price"]) / pending["alert_price"] * 100
+        (final_close - pending["alert_price"]) / pending["alert_price"] * 100
         if pending["alert_price"] > 0 else 0.0
     )
 
-    msg = format_confirmation_message(symbol, pending["direction"], confirmed, price_change_since_alert)
+    msg = format_confirmation_message(symbol, pending["direction"], status, price_change_since_alert)
     send_telegram_message(msg)
-    print(f"VISSZAIGAZOLÁS küldve: {symbol} -> {'megerősítve' if confirmed else 'visszafordult'}")
+    print(f"VISSZAIGAZOLÁS küldve: {symbol} -> {status}")
     entry["pending_confirmation"] = None
     return True
 
@@ -379,13 +462,13 @@ def check_pending_confirmation(entry: dict, symbol: str, kdf: pd.DataFrame, now:
 # EGY KIÉRTÉKELÉSI KÖR (a belső 30 mp-es ciklus egy "üteme")
 # ----------------------------------------------------------------------------
 
-async def run_single_pass(state: dict, valid_contracts, now: datetime):
+async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: datetime):
     connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
     async with aiohttp.ClientSession(connector=connector) as session:
         tickers = await fetch_all_tickers(session)
         if not tickers:
             print("Nem sikerült ticker adatot lekérni a BingX API-ból, kör kihagyva.")
-            return 0, 0, valid_contracts, 0
+            return 0, 0, valid_contracts, 0, htf_cache
 
         if valid_contracts is None:
             valid_contracts = await fetch_valid_contract_symbols(session)
@@ -406,6 +489,16 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
         oi_results = await asyncio.gather(*oi_tasks)
         kline_results = await asyncio.gather(*kline_tasks)
 
+        # --- ÚJ (v5): 1h HTF trend lekérése, de CSAK azokra a szimbólumokra,
+        # amikre még nincs cache-elt eredményünk ebben a futásban. ---
+        missing_htf = [s for s in candidates if s not in htf_cache]
+        if missing_htf:
+            htf_tasks = [fetch_htf_trend(session, semaphore, s) for s in missing_htf]
+            htf_results = await asyncio.gather(*htf_tasks)
+            for s, trend in htf_results:
+                if trend is not None:
+                    htf_cache[s] = trend
+
     oi_map = {s: oi for s, oi in oi_results if oi is not None}
     klines_map = {s: df for s, df in kline_results if df is not None}
 
@@ -421,6 +514,7 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
     # --- 2. lépés: új jelzések keresése (VÁLTOZATLAN logika) ---
     alerts_sent = 0
     evaluated = 0
+    htf_warned = 0
     for symbol in candidates:
         candle = evaluate_candle(klines_map.get(symbol))
         oi_now = oi_map.get(symbol)
@@ -441,12 +535,23 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
 
         oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
 
+        # --- v6: a magasabb idősík trendje MOSTANTÓL NEM blokkol, csak
+        # figyelmeztető sort kap az üzenet, ha a jelzés a trenddel szemben megy. ---
+        htf_trend = htf_cache.get(symbol)
+        against_trend = REQUIRE_HTF_ALIGNMENT and (
+            (candle["direction"] == "LONG" and htf_trend == "DOWN")
+            or (candle["direction"] == "SHORT" and htf_trend == "UP")
+        )
+
         is_setup = (
             abs(candle["price_change_pct"]) <= MAX_PRICE_CHANGE
             and oi_change_pct >= MIN_OI_INCREASE
             and candle["vol_multiplier"] >= MIN_VOL_MULTIPLIER
             and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
         )
+
+        if against_trend:
+            htf_warned += 1
 
         cooldown_ok = True
         if entry.get("last_alert_ts"):
@@ -458,7 +563,7 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
             msg = format_scalp_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
-                oi_now, oi_change_pct,
+                oi_now, oi_change_pct, htf_trend=htf_trend,
             )
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
@@ -470,10 +575,15 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
                 "sent_ts": now.isoformat(),
             }
             alerts_sent += 1
+            trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
             print(f"JELZÉS küldve: {symbol} [{candle['direction']}] (Ár {candle['price_change_pct']:+.2f}%, "
-                  f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
+                  f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%, "
+                  f"1h trend: {htf_trend or 'ismeretlen'}){trend_note}")
 
-    return alerts_sent, evaluated, valid_contracts, confirmations_sent
+    if htf_warned:
+        print(f"  (ebben a körben {htf_warned} kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)")
+
+    return alerts_sent, evaluated, valid_contracts, confirmations_sent, htf_cache
 
 # ----------------------------------------------------------------------------
 # FŐ CIKLUS - kb. 4.5 percig fut, 30 mp-enként újra kiértékelve
@@ -483,6 +593,7 @@ async def main():
     state = load_state()
     loop_start = time.monotonic()
     valid_contracts = None
+    htf_cache = {}   # symbol -> "UP"/"DOWN"/"NEUTRAL", futáson belül újrahasznosítva
     pass_num = 0
     total_alerts = 0
     total_confirmations = 0
@@ -496,7 +607,9 @@ async def main():
         pass_start = time.monotonic()
         now = datetime.now(timezone.utc)
 
-        alerts, evaluated, valid_contracts, confirmations = await run_single_pass(state, valid_contracts, now)
+        alerts, evaluated, valid_contracts, confirmations, htf_cache = await run_single_pass(
+            state, valid_contracts, htf_cache, now
+        )
         total_alerts += alerts
         total_confirmations += confirmations
         save_state(state)  # minden kör után mentünk, ne vesszen el adat félbeszakadás esetén
