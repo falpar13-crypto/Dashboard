@@ -774,8 +774,43 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
 # FŐ CIKLUS - kb. 4.5 percig fut, 30 mp-enként újra kiértékelve
 # ----------------------------------------------------------------------------
 
+# --- ÚJ: alkalmazás-szintű zár (a GitHub Actions "concurrency" beállítása
+# önmagában NEM garantálja 100%-ban, hogy két futás sose fusson egyszerre -
+# ez egy plusz védelmi réteg, ami a state fájlban tárolt "zár" időbélyeg
+# alapján, magában a Python kódban akadályozza meg az átfedést). ---
+RUN_LOCK_STALE_MINUTES = (TOTAL_RUN_BUDGET_SECONDS / 60) + 2  # ha ennél régebbi a zár, "beragadtnak" tekintjük és felülírjuk
+
+
 async def main():
     state = load_state()
+    now_start = datetime.now(timezone.utc)
+
+    # --- Zár ellenőrzése: fut-e már másik példány? ---
+    existing_lock = state.get("_run_lock")
+    if existing_lock:
+        try:
+            lock_age_minutes = (now_start - datetime.fromisoformat(existing_lock)).total_seconds() / 60
+        except (ValueError, TypeError):
+            lock_age_minutes = None
+        if lock_age_minutes is not None and lock_age_minutes < RUN_LOCK_STALE_MINUTES:
+            print(f"Egy másik futás már aktívnak tűnik (zár kora: {lock_age_minutes:.1f} perc) - "
+                  f"ez a példány csendben kilép, hogy elkerüljük az átfedést/dupla riasztást.")
+            return
+        else:
+            print("A talált zár elavultnak (beragadtnak) tűnik - felülírjuk és folytatjuk.")
+
+    state["_run_lock"] = now_start.isoformat()
+    save_state(state)  # azonnal mentjük, hogy egy majdnem egyidőben induló futás is lássa
+
+    try:
+        await _run_main_loop(state)
+    finally:
+        # A zárat MINDIG feloldjuk, még hiba esetén is, hogy ne ragadjon be véglegesen.
+        state["_run_lock"] = None
+        save_state(state)
+
+
+async def _run_main_loop(state: dict):
     loop_start = time.monotonic()
     valid_contracts = None
     htf_cache = {}   # symbol -> {"trend":..., "support":..., "resistance":...}, futáson belül újrahasznosítva
