@@ -68,6 +68,21 @@ trend-szűrőnél, ez SEM blokkolja a jelzést - a jelzés MINDIG kimegy, csak:
 Nincs plusz API-hívás: ugyanabból az 1h lekérésből számol, amit a HTF
 trendhez is használunk.
 
+v9 VÁLTOZÁS - JAVÍTVA A VISSZAIGAZOLÁS PARADOXONA: korábban a "megerősítve/
+visszafordult" döntés a lezáró gyertya SAJÁT nyitó->záró irányát nézte, ami
+paradox üzenetet adhatott (pl. "Megerősítve +1.52%" egy DUMP jelzésnél).
+Mostantól egységesen a JELZÉSKORI árhoz viszonyított tényleges elmozdulás
+dönt - ez mindig konzisztens a kiírt %-kal.
+
+v9 VÁLTOZÁS - RSI + MACD INFÓ: a bot most RSI(14)-et és MACD(12,26,9)-et is
+számol az 5m adatokból (nincs plusz API-hívás, csak nagyobb limit ugyanarra a
+lekérésre). Ez CSAK tájékoztató jellegű sor az üzenetben - nem szűr és nem
+blokkol semmit. Az RSI mellett "(túlvett)"/"(túladott)" jelölés jelenik meg
+RSI_OVERBOUGHT/RSI_OVERSOLD küszöbök alapján.
+
+v9 VÁLTOZÁS - NCFX KIZÁRVA: az NCSK mellett az NCFX előtagú (szintén nem
+kriptó, tokenizált) termékek is ki vannak zárva a jelöltek közül.
+
 FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
 JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
 referenciaként, valós időbélyeg alapján keresve a ~5 perces referenciapontot.
@@ -122,7 +137,7 @@ MIN_VOLUME_USDT = 500_000
 MAX_VOLUME_USDT = 15_000_000
 
 # --- Nem-kriptó termékek kiszűrése (VÁLTOZATLAN) ---
-NON_CRYPTO_PREFIXES = ("NCSK",)
+NON_CRYPTO_PREFIXES = ("NCSK", "NCFX")
 
 def is_probably_crypto(symbol: str) -> bool:
     base = symbol.split("-")[0]
@@ -160,8 +175,14 @@ MAX_CONCURRENT_REQUESTS = 12   # a MAX_VOLUME_USDT emelése miatt nagyobb lett a
 REQUEST_TIMEOUT = 10
 RETRY_COUNT = 3
 RETRY_BACKOFF = 1.5
-# Kell: 1 élő (nyitott) + VOLUME_MA_PERIOD lezárt gyertya a baseline-hoz, ráhagyással.
-KLINES_LIMIT = VOLUME_MA_PERIOD + 5
+# Kell: 1 élő (nyitott) + VOLUME_MA_PERIOD lezárt gyertya a baseline-hoz, PLUSZ
+# elég előzmény egy stabil RSI(14)/MACD(12,26,9) számításához (~35-40 minimum,
+# biztonsági ráhagyással 65).
+KLINES_LIMIT = 65
+
+# --- ÚJ: RSI infó-küszöbök (csak megjelenítés, NEM szűr - a felhasználó kérésére) ---
+RSI_OVERBOUGHT = 70
+RSI_OVERSOLD = 30
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
@@ -342,7 +363,8 @@ DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  # belső irány-kód -> me
 
 def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
-                          htf_trend=None, bounce_confluence=False, near_level_risk=False):
+                          htf_trend=None, bounce_confluence=False, near_level_risk=False,
+                          rsi=None, macd_status=None):
     if direction == "LONG":
         header = f"🟢 PUMP Gyanú: <b>{symbol}</b>"
     else:
@@ -366,11 +388,27 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         level_type = "ellenállás" if direction == "LONG" else "támasz"
         risk_line = f"\n⚠️ Közeli {level_type} ({SR_LOOKBACK_PERIOD}h-s csatorna) - onnan visszapattanhat!"
 
+    # ÚJ: RSI/MACD infósor - csak tájékoztat, semmit nem szűr.
+    indicator_line = ""
+    if rsi is not None or macd_status is not None:
+        parts = []
+        if rsi is not None:
+            rsi_note = ""
+            if rsi >= RSI_OVERBOUGHT:
+                rsi_note = " (túlvett)"
+            elif rsi <= RSI_OVERSOLD:
+                rsi_note = " (túladott)"
+            parts.append(f"RSI: {rsi:.1f}{rsi_note}")
+        if macd_status is not None:
+            parts.append(f"MACD: {macd_status}")
+        indicator_line = f"\n📐 {' | '.join(parts)}"
+
     return (
         f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
+        f"{indicator_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
@@ -416,6 +454,49 @@ def find_oi_baseline(history_without_current, now):
 # EGY SZIMBÓLUM KIÉRTÉKELÉSE (v3: ÉLŐ gyertya a lezártak átlagához képest)
 # ----------------------------------------------------------------------------
 
+def compute_rsi_macd(close_series: pd.Series):
+    """RSI(14) és MACD(12,26,9) számítása a TELJES sorozaton (lezárt gyertyák +
+    élő gyertya) - ez tudatosan a szkript "korai jelzés" filozófiáját követi:
+    az RSI/MACD is a jelenleg formálódó mozgást tükrözi, nem csak a múltat.
+    Csak INFÓ, nem szűr semmit - ha nincs elég adat, egyszerűen None-t ad
+    vissza, és az üzenet kihagyja ezt a sort."""
+    if len(close_series) < 35:
+        return None, None
+
+    delta = close_series.diff()
+    gain = delta.clip(lower=0)
+    loss = -delta.clip(upper=0)
+    avg_gain = gain.ewm(alpha=1 / 14, min_periods=14, adjust=False).mean()
+    avg_loss = loss.ewm(alpha=1 / 14, min_periods=14, adjust=False).mean()
+    rs = avg_gain / avg_loss.replace(0, pd.NA)
+    rsi_series = 100 - (100 / (1 + rs))
+    # Ha avg_loss pontosan 0 (tiszta, megszakítás nélküli emelkedés), a fenti
+    # osztás NaN-t ad, holott ez a helyzet elméletileg RSI=100-at jelent.
+    rsi_series = rsi_series.where(~((avg_loss == 0) & (avg_gain > 0)), 100.0)
+    rsi_val = rsi_series.iloc[-1]
+    rsi_val = round(float(rsi_val), 1) if pd.notna(rsi_val) else None
+
+    ema12 = close_series.ewm(span=12, adjust=False).mean()
+    ema26 = close_series.ewm(span=26, adjust=False).mean()
+    macd_line = ema12 - ema26
+    signal_line = macd_line.ewm(span=9, adjust=False).mean()
+
+    macd_status = None
+    if len(macd_line) >= 2 and not macd_line.iloc[-2:].isna().any():
+        prev_diff = macd_line.iloc[-2] - signal_line.iloc[-2]
+        curr_diff = macd_line.iloc[-1] - signal_line.iloc[-1]
+        if prev_diff < 0 and curr_diff > 0:
+            macd_status = "Bullish Cross"
+        elif prev_diff > 0 and curr_diff < 0:
+            macd_status = "Bearish Cross"
+        elif curr_diff > 0:
+            macd_status = "Bullish"
+        else:
+            macd_status = "Bearish"
+
+    return rsi_val, macd_status
+
+
 def evaluate_candle(kdf: pd.DataFrame):
     """Az ÉLŐ (még nyitott) gyertyát értékeli ki a megelőző VOLUME_MA_PERIOD db
     LEZÁRT gyertya átlagához képest. Az irányt az élő gyertya nyitó- és
@@ -446,6 +527,8 @@ def evaluate_candle(kdf: pd.DataFrame):
     candle_vol_usdt = float(live["volume"] * current_price)
     direction = "LONG" if current_price >= live["open"] else "SHORT"
 
+    rsi_val, macd_status = compute_rsi_macd(kdf["close"])
+
     return {
         "price": current_price,
         "price_change_pct": round(float(price_change_pct), 2),
@@ -453,6 +536,8 @@ def evaluate_candle(kdf: pd.DataFrame):
         "candle_vol_usdt": candle_vol_usdt,
         "direction": direction,
         "candle_open_ts": live["timestamp"].isoformat(),
+        "rsi": rsi_val,
+        "macd_status": macd_status,
     }
 
 # ----------------------------------------------------------------------------
@@ -493,21 +578,25 @@ def check_pending_confirmation(entry: dict, symbol: str, kdf: pd.DataFrame, now:
         return False  # a gyertya még nem zárt le (vagy még nem látjuk lezártként)
 
     final_candle = match.iloc[-1]
-    final_open = float(final_candle["open"])
     final_close = float(final_candle["close"])
-    final_move_pct = (final_close - final_open) / final_open * 100 if final_open > 0 else 0.0
 
-    if abs(final_move_pct) < CONFIRMATION_MIN_MOVE_PCT:
-        # Túl kicsi, gyakorlatilag zajszintű mozgás - se nem megerősítés, se nem cáfolat.
-        status = "neutral"
-    else:
-        final_direction = "LONG" if final_move_pct > 0 else "SHORT"
-        status = "confirmed" if final_direction == pending["direction"] else "reversed"
-
+    # JAVÍTÁS: korábban a gyertya SAJÁT nyitó->záró iránya döntött arról, hogy
+    # "megerősítve" vagy "visszafordult" - ez paradox üzenetet eredményezhetett
+    # (pl. "Megerősítve +1.52%" egy DUMP jelzésnél), mert a gyertya technikailag
+    # még a jelzett irányban zárhatott, miközben a jelzés PILLANATÁHOZ képest az
+    # ár már ellenkező irányba mozdult. Mostantól egységesen a JELZÉSKORI árhoz
+    # viszonyított tényleges elmozdulás dönt - ez konzisztens a kiírt %-kal.
     price_change_since_alert = (
         (final_close - pending["alert_price"]) / pending["alert_price"] * 100
         if pending["alert_price"] > 0 else 0.0
     )
+
+    if abs(price_change_since_alert) < CONFIRMATION_MIN_MOVE_PCT:
+        # Túl kicsi, gyakorlatilag zajszintű mozgás - se nem megerősítés, se nem cáfolat.
+        status = "neutral"
+    else:
+        final_direction = "LONG" if price_change_since_alert > 0 else "SHORT"
+        status = "confirmed" if final_direction == pending["direction"] else "reversed"
 
     msg = format_confirmation_message(symbol, pending["direction"], status, price_change_since_alert)
     send_telegram_message(msg)
@@ -656,6 +745,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
                 oi_now, oi_change_pct, htf_trend=htf_trend,
                 bounce_confluence=bounce_confluence, near_level_risk=near_level_risk,
+                rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
             )
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
