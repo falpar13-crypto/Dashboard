@@ -55,6 +55,19 @@ nyitó->záró mozgást is egyértelmű LONG/SHORT eredménynek vett, ami hibás
 küszöb: ha a záró gyertya nyitó->záró mozgása ennél kisebb, a bot "➖ Semleges
 zárás" üzenetet küld megerősítés/cáfolat helyett.
 
+v8 VÁLTOZÁS - TÁMASZ/ELLENÁLLÁS FIGYELMEZTETÉS: a bot most egy egyszerű,
+"N-periódusos csatorna" módszerrel (az utolsó SR_LOOKBACK_PERIOD=60 db lezárt
+1h gyertya legalacsonyabb mélypontja/legmagasabb csúcsa - NEM chartolvasói
+Order Block, hanem jól definiált matematikai közelítés) megnézi, közel van-e
+az ár egy támaszhoz/ellenálláshoz (±SR_PROXIMITY_PCT%). Csakúgy, mint a HTF
+trend-szűrőnél, ez SEM blokkolja a jelzést - a jelzés MINDIG kimegy, csak:
+  - 🎯 kiemelést kap, ha a jelzés egy szintről való visszapattanással egyezik
+    (PUMP a támasznál, DUMP az ellenállásnál),
+  - ⚠️ figyelmeztetést kap, ha a jelzés egy szint ELLEN menne (DUMP a
+    támasznál, PUMP az ellenállásnál - onnan könnyen visszapattanhat).
+Nincs plusz API-hívás: ugyanabból az 1h lekérésből számol, amit a HTF
+trendhez is használunk.
+
 FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
 JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
 referenciaként, valós időbélyeg alapján keresve a ~5 perces referenciapontot.
@@ -228,37 +241,61 @@ async def fetch_open_interest(session, semaphore, symbol):
             return symbol, None
 
 
+# --- ÚJ (v7): egyszerű "N-periódusos csatorna" támasz/ellenállás ---
+SR_LOOKBACK_PERIOD = 60     # ennyi lezárt 1h gyertya alapján számoljuk a szinteket
+SR_PROXIMITY_PCT = 0.5      # ennyi %-on belül számít "a szint közelének"
+
+
 async def fetch_htf_trend(session, semaphore, symbol):
-    """Az 1 órás (HIGHER_TIMEFRAME) trend meghatározása: az utolsó LEZÁRT 1h
-    gyertya záróára az EMA(50) fölött van-e (UP) vagy alatta (DOWN). Csak
-    lezárt gyertyákat használ, hogy az élő 1h gyertya zaja ne billentse ki."""
+    """Az 1 órás (HIGHER_TIMEFRAME) trend + támasz/ellenállás meghatározása,
+    UGYANABBÓL az egyetlen lekérésből (nincs plusz API-hívás):
+    - trend: az utolsó LEZÁRT 1h gyertya záróára az EMA(50) fölött (UP) vagy
+      alatta (DOWN) van-e
+    - support/resistance: az utolsó SR_LOOKBACK_PERIOD db lezárt 1h gyertya
+      legalacsonyabb mélypontja / legmagasabb csúcsa (egyszerű, jól definiált
+      "N-periódusos csatorna" módszer - nem chartolvasói/szubjektív szint)
+    Csak lezárt gyertyákat használ mindenhol."""
     async with semaphore:
         params = {"symbol": symbol, "interval": HIGHER_TIMEFRAME, "limit": HTF_KLINES_LIMIT}
         data = await _get_json(session, KLINES_ENDPOINT, params=params)
         await asyncio.sleep(0.03)
+        empty_result = {"trend": None, "support": None, "resistance": None}
         if not data or "data" not in data or not data["data"]:
-            return symbol, None
+            return symbol, empty_result
         df = pd.DataFrame(data["data"])
-        if "close" not in df.columns or "time" not in df.columns:
-            return symbol, None
-        df["close"] = pd.to_numeric(df["close"], errors="coerce")
+        required_cols = {"close", "high", "low", "time"}
+        if not required_cols.issubset(df.columns):
+            return symbol, empty_result
+        for col in ["close", "high", "low"]:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
         df["timestamp"] = pd.to_datetime(df["time"], unit="ms")
         df = df.sort_values("timestamp").reset_index(drop=True)
 
         closed = df.iloc[:-1]  # az élő 1h gyertyát itt is eldobjuk
         if len(closed) < HTF_EMA_PERIOD:
-            return symbol, None  # nincs elég adat egy megbízható EMA(50)-hez
+            return symbol, empty_result  # nincs elég adat egy megbízható EMA(50)-hez
 
         ema = closed["close"].ewm(span=HTF_EMA_PERIOD, adjust=False).mean()
         last_close = closed["close"].iloc[-1]
         last_ema = ema.iloc[-1]
-        if pd.isna(last_ema):
-            return symbol, None
-        if last_close > last_ema:
-            return symbol, "UP"
-        if last_close < last_ema:
-            return symbol, "DOWN"
-        return symbol, "NEUTRAL"
+        trend = None
+        if not pd.isna(last_ema):
+            if last_close > last_ema:
+                trend = "UP"
+            elif last_close < last_ema:
+                trend = "DOWN"
+            else:
+                trend = "NEUTRAL"
+
+        support = resistance = None
+        sr_window = closed.iloc[-SR_LOOKBACK_PERIOD:]
+        if len(sr_window) >= SR_LOOKBACK_PERIOD:
+            support = float(sr_window["low"].min())
+            resistance = float(sr_window["high"].max())
+
+        return symbol, {"trend": trend, "support": support, "resistance": resistance}
+
+
 
 
 async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT):
@@ -305,7 +342,7 @@ DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  # belső irány-kód -> me
 
 def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
-                          htf_trend=None):
+                          htf_trend=None, bounce_confluence=False, near_level_risk=False):
     if direction == "LONG":
         header = f"🟢 PUMP Gyanú: <b>{symbol}</b>"
     else:
@@ -319,12 +356,24 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
     if against_trend:
         warning_line = f"\n⚠️ Trenddel szemben (1h: {htf_trend})"
 
+    bounce_line = ""
+    if bounce_confluence:
+        level_type = "támaszról" if direction == "LONG" else "ellenállásról"
+        bounce_line = f"\n🎯 Szint-visszapattanás ({level_type}, {SR_LOOKBACK_PERIOD}h-s csatorna)"
+
+    risk_line = ""
+    if near_level_risk:
+        level_type = "ellenállás" if direction == "LONG" else "támasz"
+        risk_line = f"\n⚠️ Közeli {level_type} ({SR_LOOKBACK_PERIOD}h-s csatorna) - onnan visszapattanhat!"
+
     return (
         f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
         f"{warning_line}"
+        f"{bounce_line}"
+        f"{risk_line}"
     )
 
 
@@ -511,9 +560,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
         )
 
         if htf_results:
-            for s, trend in htf_results:
-                if trend is not None:
-                    htf_cache[s] = trend
+            for s, htf_data in htf_results:
+                if htf_data is not None and htf_data.get("trend") is not None:
+                    htf_cache[s] = htf_data
 
     oi_map = {s: oi for s, oi in oi_results if oi is not None}
     klines_map = {s: df for s, df in kline_results if df is not None}
@@ -531,6 +580,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
     alerts_sent = 0
     evaluated = 0
     htf_warned = 0
+    sr_warned = 0
     for symbol in candidates:
         candle = evaluate_candle(klines_map.get(symbol))
         oi_now = oi_map.get(symbol)
@@ -551,12 +601,35 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
 
         oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
 
-        # --- v6: a magasabb idősík trendje MOSTANTÓL NEM blokkol, csak
-        # figyelmeztető sort kap az üzenet, ha a jelzés a trenddel szemben megy. ---
-        htf_trend = htf_cache.get(symbol)
+        # --- v6: a magasabb idősík trendje NEM blokkol, csak figyelmeztető
+        # sort kap az üzenet, ha a jelzés a trenddel szemben megy. ---
+        htf_data = htf_cache.get(symbol, {})
+        htf_trend = htf_data.get("trend")
+        support = htf_data.get("support")
+        resistance = htf_data.get("resistance")
+
         against_trend = REQUIRE_HTF_ALIGNMENT and (
             (candle["direction"] == "LONG" and htf_trend == "DOWN")
             or (candle["direction"] == "SHORT" and htf_trend == "UP")
+        )
+
+        # --- v8: a támasz/ellenállás-közelség MOSTANTÓL SEM blokkol (ahogy a
+        # HTF trend sem) - csak figyelmeztető / kiemelő sort kap az üzenet.
+        # near_level_risk: a jelzés a szint ellen menne (DUMP a támasznál,
+        #   PUMP az ellenállásnál) -> ⚠️ figyelmeztetés, de a jelzés KIMEGY.
+        # bounce_confluence: a jelzés a szintről való visszapattanással
+        #   egyezik (PUMP a támasznál, DUMP az ellenállásnál) -> 🎯 kiemelés.
+        price = candle["price"]
+        near_support = support is not None and support > 0 and abs(price - support) / support * 100 <= SR_PROXIMITY_PCT
+        near_resistance = resistance is not None and resistance > 0 and abs(price - resistance) / resistance * 100 <= SR_PROXIMITY_PCT
+
+        near_level_risk = (
+            (candle["direction"] == "LONG" and near_resistance)
+            or (candle["direction"] == "SHORT" and near_support)
+        )
+        bounce_confluence = (
+            (candle["direction"] == "LONG" and near_support)
+            or (candle["direction"] == "SHORT" and near_resistance)
         )
 
         is_setup = (
@@ -568,6 +641,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
 
         if against_trend:
             htf_warned += 1
+        if near_level_risk:
+            sr_warned += 1
 
         cooldown_ok = True
         if entry.get("last_alert_ts"):
@@ -580,6 +655,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
                 oi_now, oi_change_pct, htf_trend=htf_trend,
+                bounce_confluence=bounce_confluence, near_level_risk=near_level_risk,
             )
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
@@ -592,12 +668,15 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
             }
             alerts_sent += 1
             trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
+            bounce_note = " 🎯 SZINT-VISSZAPATTANÁS" if bounce_confluence else ""
             print(f"JELZÉS küldve: {symbol} [{candle['direction']}] (Ár {candle['price_change_pct']:+.2f}%, "
                   f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%, "
-                  f"1h trend: {htf_trend or 'ismeretlen'}){trend_note}")
+                  f"1h trend: {htf_trend or 'ismeretlen'}){trend_note}{bounce_note}")
 
     if htf_warned:
         print(f"  (ebben a körben {htf_warned} kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)")
+    if sr_warned:
+        print(f"  (ebben a körben {sr_warned} kiküldött jelzés ment támasz/ellenállás ellen - figyelmeztetéssel)")
 
     return alerts_sent, evaluated, valid_contracts, confirmations_sent, htf_cache
 
@@ -609,7 +688,7 @@ async def main():
     state = load_state()
     loop_start = time.monotonic()
     valid_contracts = None
-    htf_cache = {}   # symbol -> "UP"/"DOWN"/"NEUTRAL", futáson belül újrahasznosítva
+    htf_cache = {}   # symbol -> {"trend":..., "support":..., "resistance":...}, futáson belül újrahasznosítva
     pass_num = 0
     total_alerts = 0
     total_confirmations = 0
