@@ -80,10 +80,10 @@ import requests
 # ----------------------------------------------------------------------------
 ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashboard
                              # idősík-választójától teljesen függetlenül
-MAX_PRICE_CHANGE = 1.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
+MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
 MIN_OI_INCREASE = 2.5       # minimum OI-ugrás %-ban (~5 perces referenciaablak)
-MIN_CANDLE_VOL_USDT = 50_000  # az élő gyertya eddigi USDT-forgalmának minimuma
+MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimuma
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
 MIN_VOL_MULTIPLIER = 2.0    # az élő gyertya eddigi volumene legalább ennyiszerese
@@ -105,8 +105,8 @@ KLINES_ENDPOINT = f"{BASE_URL}/openApi/swap/v3/quote/klines"
 STATE_FILE = Path(__file__).parent / "alert_state.json"
 
 # --- "Kis/közepes market cap altcoin" előszűrés (VÁLTOZATLAN) ---
-MIN_VOLUME_USDT = 300_000
-MAX_VOLUME_USDT = 50_000_000
+MIN_VOLUME_USDT = 500_000
+MAX_VOLUME_USDT = 15_000_000
 
 # --- Nem-kriptó termékek kiszűrése (VÁLTOZATLAN) ---
 NON_CRYPTO_PREFIXES = ("NCSK",)
@@ -300,13 +300,16 @@ def send_telegram_message(text: str) -> None:
         print(f"Telegram küldési hiba: {e}")
 
 
+DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  # belső irány-kód -> megjelenített szöveg
+
+
 def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
                           htf_trend=None):
     if direction == "LONG":
-        header = f"🟢 LONG Felhalmozás: <b>{symbol}</b>"
+        header = f"🟢 PUMP Gyanú: <b>{symbol}</b>"
     else:
-        header = f"🔴 SHORT Felhalmozás: <b>{symbol}</b>"
+        header = f"🔴 DUMP Gyanú: <b>{symbol}</b>"
 
     warning_line = ""
     against_trend = (
@@ -327,21 +330,22 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
 
 def format_confirmation_message(symbol, original_direction, status, price_change_since_alert):
     """status: 'confirmed' / 'reversed' / 'neutral' (túl kicsi mozgás a lezáráskor)"""
+    label = DIRECTION_LABELS.get(original_direction, original_direction)
     if status == "confirmed":
         return (
             f"✅ Megerősítve: <b>{symbol}</b>\n"
-            f"A jelzett {original_direction} irány kitartott a gyertya zárásáig "
+            f"A jelzett {label} irány kitartott a gyertya zárásáig "
             f"({price_change_since_alert:+.2f}% a jelzés óta)."
         )
     if status == "neutral":
         return (
             f"➖ Semleges zárás: <b>{symbol}</b>\n"
             f"A gyertya lényegében változatlanul zárt ({price_change_since_alert:+.2f}%) - "
-            f"túl kicsi mozgás ahhoz, hogy egyértelműen megerősítsük vagy megcáfoljuk a {original_direction} jelzést."
+            f"túl kicsi mozgás ahhoz, hogy egyértelműen megerősítsük vagy megcáfoljuk a {label} jelzést."
         )
     return (
         f"❌ Visszafordult: <b>{symbol}</b>\n"
-        f"A jelzett {original_direction} irány NEM tartott ki a gyertya zárásáig "
+        f"A jelzett {label} irány NEM tartott ki a gyertya zárásáig "
         f"({price_change_since_alert:+.2f}% a jelzés óta) - hamis jelzés volt."
     )
 
