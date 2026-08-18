@@ -117,6 +117,13 @@ VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszo
 MIN_VOL_MULTIPLIER = 2.0    # az élő gyertya eddigi volumene legalább ennyiszerese
                              # legyen az átlagnak
 
+# --- ÚJ (v10): A/B teszt - "Sáv kitörés" jelzéstípus a "Standard" mellé ---
+# Ugyanazok a fő feltételek (OI, volumen, ár) döntik el, hogy egyáltalán menjen-e
+# jelzés - ez a rész csak UTÓLAG CÍMKÉZI a már jóváhagyott jelzést aszerint,
+# hogy egy előzetes szűk sávból való kitöréssel esik-e egybe.
+RANGE_LOOKBACK_PERIOD = 8          # ennyi megelőző lezárt gyertyán nézzük a sáv szélességét (40 perc)
+RANGE_COMPRESSION_THRESHOLD_PCT = 1.5  # a sáv ennél szűkebb legyen ahhoz, hogy "beszűkültnek" számítson
+
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
 TOTAL_RUN_BUDGET_SECONDS = 270   # ~4.5 perc - a szkript ennyi ideig fut egyben
 PASS_INTERVAL_SECONDS = 30       # ennyi mp-enként fut újra a kiértékelés
@@ -359,16 +366,18 @@ def send_telegram_message(text: str) -> None:
 
 
 DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  # belső irány-kód -> megjelenített szöveg
+SIGNAL_TYPE_LABELS = {"STANDARD": "Standard", "RANGE_BREAKOUT": "Sáv kitörés"}  # A/B teszthez
 
 
 def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
                           htf_trend=None, bounce_confluence=False, near_level_risk=False,
-                          rsi=None, macd_status=None):
-    if direction == "LONG":
-        header = f"🟢 PUMP Gyanú: <b>{symbol}</b>"
+                          rsi=None, macd_status=None, signal_type="STANDARD"):
+    action = DIRECTION_LABELS.get(direction, direction)
+    if signal_type == "RANGE_BREAKOUT":
+        header = f"🎯 SÁV KITÖRÉS ({action}): <b>{symbol}</b>"
     else:
-        header = f"🔴 DUMP Gyanú: <b>{symbol}</b>"
+        header = f"⚡ STANDARD {action}: <b>{symbol}</b>"
 
     warning_line = ""
     against_trend = (
@@ -415,23 +424,24 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
     )
 
 
-def format_confirmation_message(symbol, original_direction, status, price_change_since_alert):
+def format_confirmation_message(symbol, original_direction, status, price_change_since_alert, signal_type="STANDARD"):
     """status: 'confirmed' / 'reversed' / 'neutral' (túl kicsi mozgás a lezáráskor)"""
     label = DIRECTION_LABELS.get(original_direction, original_direction)
+    type_label = SIGNAL_TYPE_LABELS.get(signal_type, signal_type)
     if status == "confirmed":
         return (
-            f"✅ Megerősítve: <b>{symbol}</b>\n"
+            f"✅ Megerősítve ({type_label}): <b>{symbol}</b>\n"
             f"A jelzett {label} irány kitartott a gyertya zárásáig "
             f"({price_change_since_alert:+.2f}% a jelzés óta)."
         )
     if status == "neutral":
         return (
-            f"➖ Semleges zárás: <b>{symbol}</b>\n"
+            f"➖ Semleges zárás ({type_label}): <b>{symbol}</b>\n"
             f"A gyertya lényegében változatlanul zárt ({price_change_since_alert:+.2f}%) - "
             f"túl kicsi mozgás ahhoz, hogy egyértelműen megerősítsük vagy megcáfoljuk a {label} jelzést."
         )
     return (
-        f"❌ Visszafordult: <b>{symbol}</b>\n"
+        f"❌ Visszafordult ({type_label}): <b>{symbol}</b>\n"
         f"A jelzett {label} irány NEM tartott ki a gyertya zárásáig "
         f"({price_change_since_alert:+.2f}% a jelzés óta) - hamis jelzés volt."
     )
@@ -529,6 +539,25 @@ def evaluate_candle(kdf: pd.DataFrame):
 
     rsi_val, macd_status = compute_rsi_macd(kdf["close"])
 
+    # --- ÚJ: sáv-beszűkülés (range compression) + kitörés detektálása ---
+    # Az élő gyertyát megelőző RANGE_LOOKBACK_PERIOD db lezárt gyertya
+    # sávszélessége, és hogy az élő ár most kitör-e ebből a sávból.
+    range_window = closed.iloc[-RANGE_LOOKBACK_PERIOD:]
+    signal_type = "STANDARD"
+    range_width_pct = None
+    if len(range_window) >= RANGE_LOOKBACK_PERIOD:
+        range_high = float(range_window["high"].max())
+        range_low = float(range_window["low"].min())
+        if range_low > 0:
+            range_width_pct = (range_high - range_low) / range_low * 100
+            is_tight_range = range_width_pct <= RANGE_COMPRESSION_THRESHOLD_PCT
+            is_breakout = (
+                (direction == "LONG" and current_price > range_high)
+                or (direction == "SHORT" and current_price < range_low)
+            )
+            if is_tight_range and is_breakout:
+                signal_type = "RANGE_BREAKOUT"
+
     return {
         "price": current_price,
         "price_change_pct": round(float(price_change_pct), 2),
@@ -538,6 +567,8 @@ def evaluate_candle(kdf: pd.DataFrame):
         "candle_open_ts": live["timestamp"].isoformat(),
         "rsi": rsi_val,
         "macd_status": macd_status,
+        "signal_type": signal_type,
+        "range_width_pct": round(range_width_pct, 2) if range_width_pct is not None else None,
     }
 
 # ----------------------------------------------------------------------------
@@ -598,9 +629,12 @@ def check_pending_confirmation(entry: dict, symbol: str, kdf: pd.DataFrame, now:
         final_direction = "LONG" if price_change_since_alert > 0 else "SHORT"
         status = "confirmed" if final_direction == pending["direction"] else "reversed"
 
-    msg = format_confirmation_message(symbol, pending["direction"], status, price_change_since_alert)
+    msg = format_confirmation_message(
+        symbol, pending["direction"], status, price_change_since_alert,
+        signal_type=pending.get("signal_type", "STANDARD"),
+    )
     send_telegram_message(msg)
-    print(f"VISSZAIGAZOLÁS küldve: {symbol} -> {status}")
+    print(f"VISSZAIGAZOLÁS küldve: {symbol} -> {status} ({pending.get('signal_type', 'STANDARD')})")
     entry["pending_confirmation"] = None
     return True
 
@@ -746,6 +780,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
                 oi_now, oi_change_pct, htf_trend=htf_trend,
                 bounce_confluence=bounce_confluence, near_level_risk=near_level_risk,
                 rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
+                signal_type=candle.get("signal_type", "STANDARD"),
             )
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
@@ -755,11 +790,13 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
                 "alert_price": candle["price"],
                 "direction": candle["direction"],
                 "sent_ts": now.isoformat(),
+                "signal_type": candle.get("signal_type", "STANDARD"),
             }
             alerts_sent += 1
             trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
             bounce_note = " 🎯 SZINT-VISSZAPATTANÁS" if bounce_confluence else ""
-            print(f"JELZÉS küldve: {symbol} [{candle['direction']}] (Ár {candle['price_change_pct']:+.2f}%, "
+            type_note = f" [{candle.get('signal_type', 'STANDARD')}]"
+            print(f"JELZÉS küldve: {symbol} [{candle['direction']}]{type_note} (Ár {candle['price_change_pct']:+.2f}%, "
                   f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%, "
                   f"1h trend: {htf_trend or 'ismeretlen'}){trend_note}{bounce_note}")
 
