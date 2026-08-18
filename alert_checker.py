@@ -110,7 +110,7 @@ ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashb
                              # idősík-választójától teljesen függetlenül
 MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
-MIN_OI_INCREASE = 2.5       # minimum OI-ugrás %-ban (~5 perces referenciaablak)
+MIN_OI_INCREASE = 1.5       # minimum OI-ugrás %-ban (~5 perces referenciaablak)
 MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimuma
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
