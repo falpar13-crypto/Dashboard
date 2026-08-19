@@ -103,6 +103,32 @@ beszakadást jelezve. A HTF trend/RSI/MACD/killzone/funding infósorok ennél a
 jelzéstípusnál is megjelennek, csakúgy, mint a többinél. Lazított (60% OI /
 70% volumen) küszöbökkel fut, ugyanúgy, mint az EMA Squeeze.
 
+v13 VÁLTOZÁS - EMA 20/50 REJECTION KÉTFÁZISÚVÁ BŐVÍTVE + LAZÍTOTT KÜSZÖBÖK:
+az EMA Rejection korábban csak addig működött, amíg EMA20 > EMA50 volt (csak
+az EMA20-ról való visszapattanást ismerte fel). Mostantól, ha a letörés már
+annyira megerősödött, hogy az EMA20 lekeresztezte az EMA50-et, a logika
+automatikusan az EMA50-re, mint "alsó" szintre vált - ugyanazzal a letörés->
+visszateszt->elutasítás mintával. Emellett a STANDARD/EMA SQUEEZE/EMA
+REJECTION küszöbök (OI%, volumen-szorzó, visszateszt-tolerancia stb.) kicsit
+lazábbak lettek, hogy több valós jelzés menjen ki.
+
+v14 VÁLTOZÁS - NAPI WINRATE-ÖSSZESÍTŐ: minden kiküldött jelzést (típustól
+függetlenül) a bot mostantól "megjegyez" (state-ben, "pending_outcomes" néven)
+a belépő árral együtt, és OUTCOME_EVAL_MINUTES (30) perc múlva - a soron
+következő körben, a már úgyis lekért ticker-árak alapján, TEHÁT NINCS PLUSZ
+API-HÍVÁS - kiértékeli: a jelzés iránya szerint mozdult-e az ár legalább
+OUTCOME_WIN_THRESHOLD_PCT (0.3%) %-ot (WIN), az ellenkező irányba (LOSS), vagy
+egyik sem (NEUTRAL). Ezt egy önálló, append-only naplófájlba (alert_log.jsonl)
+írja. Minden nap, kicsivel éjfél UTC után (hogy az előző nap utolsó jelzései
+is stabilan kiértékelődjenek), egyetlen összesítő Telegram-üzenetben elküldi
+az előző nap jelzéstípusonkénti darabszámát, W/L/N bontását és winrate-jét.
+Ismert korlát: ha egy adott naphoz tartozó jelzés csak a nap váltása UTÁN,
+a DAILY_SUMMARY_MIN_DELAY_MINUTES ablakon túl értékelődik ki (ritka, csak
+akkor fordulhat elő, ha a szimbólum közben kikerül a jelöltlistából és
+OUTCOME_MAX_STALE_MINUTES-ig nem sikerül árat találni hozzá), az az adott nap
+összesítőjéből technikailag kimaradhat - ez egy tudatosan vállalt, apró
+pontatlanság egy személyes használatra szánt eszköznél.
+
 FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
 JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
 referenciaként, valós időbélyeg alapján keresve a ~5 perces referenciapontot.
@@ -259,6 +285,225 @@ TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 # ----------------------------------------------------------------------------
+# ÚJ (v14): NAPI WINRATE-KÖVETÉS
+# ----------------------------------------------------------------------------
+# Minden kiküldött jelzést (típustól függetlenül: STANDARD/SÁV KITÖRÉS/EMA
+# SQUEEZE/EMA REJECTION) elmentünk egy "függőben lévő" listába (state-ben),
+# a belépő árral és egy jövőbeli időponttal, amikor kiértékeljük. Amikor
+# letelik ez az idő, a következő körben (ami már úgyis lekéri a ticker-
+# árakat - NINCS plusz API-hívás) megnézzük, merre mozdult az ár a jelzés
+# iránya szerint, és WIN/LOSS/NEUTRAL-t rendelünk hozzá. Ezt egy önálló,
+# append-only naplófájlba (SIGNAL_LOG_FILE) írjuk. Minden nap - kicsit éjfél
+# UTC után, hogy az előző nap utolsó jelzései is stabilan kiértékelődjenek -
+# a bot egyetlen összesítő Telegram-üzenetben elküldi az előző nap
+# jelzéstípusonkénti darabszámát, W/L/N bontását és winrate-jét.
+SIGNAL_LOG_FILE = Path(__file__).parent / "alert_log.jsonl"
+
+OUTCOME_EVAL_MINUTES = 30       # ennyi idő elteltével értékeljük ki a jelzést
+OUTCOME_WIN_THRESHOLD_PCT = 0.3 # ennyi %-os, a jelzés iránya szerinti elmozdulás
+                                 # kell WIN-hez (illetve ennek ellentettje LOSS-hoz);
+                                 # a kettő közötti sáv NEUTRAL
+OUTCOME_MAX_STALE_MINUTES = 90  # ha ennyi idő után sem sikerül árat találni a
+                                 # szimbólumhoz (pl. kikerült a jelöltlistából),
+                                 # UNKNOWN-ként lezárjuk, hogy ne ragadjon be
+
+DAILY_SUMMARY_MIN_DELAY_MINUTES = OUTCOME_EVAL_MINUTES + 5  # ennyivel éjfél UTC
+                                                              # után küldjük az
+                                                              # előző napi összesítőt
+
+
+def _log_signal_outcome(record: dict) -> None:
+    """Egyetlen sort ír a napló (JSONL) fájlba - append-only, soha nem
+    módosítunk/törlünk belőle korábbi sort."""
+    try:
+        with SIGNAL_LOG_FILE.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except OSError as e:
+        print(f"HIBA: nem sikerült írni a jelzés-naplóba: {e}")
+
+
+def register_pending_signal(state: dict, symbol: str, signal_type: str,
+                             direction: str, entry_price: float, now: datetime) -> None:
+    """Egy most kiküldött jelzést berak a 'pending_outcomes' listába - ezt
+    fogja a resolve_pending_signals() a megfelelő időben kiértékelni."""
+    pending = state.setdefault("pending_outcomes", [])
+    pending.append({
+        "id": f"{symbol}_{signal_type}_{now.strftime('%Y%m%dT%H%M%S')}",
+        "symbol": symbol,
+        "signal_type": signal_type,
+        "direction": direction,
+        "entry_price": entry_price,
+        "entry_ts": now.isoformat(),
+        "entry_date": now.strftime("%Y-%m-%d"),  # UTC dátum - ehhez a naphoz
+                                                    # számít a napi összesítőben,
+                                                    # függetlenül attól, mikor
+                                                    # zárul le ténylegesen
+        "evaluate_at_ts": (now + timedelta(minutes=OUTCOME_EVAL_MINUTES)).isoformat(),
+    })
+
+
+def resolve_pending_signals(state: dict, price_map: dict, now: datetime) -> None:
+    """Végigmegy a függőben lévő jelzéseken, és amelyiknél letelt a
+    kiértékelési ablak (vagy már túl régi ahhoz, hogy értelmes legyen tovább
+    várni), lezárja: megnézi az irány szerinti %-os elmozdulást, WIN/LOSS/
+    NEUTRAL-t rendel hozzá, és a végleges rekordot a naplófájlba írja."""
+    pending = state.get("pending_outcomes", [])
+    if not pending:
+        return
+
+    still_pending = []
+    for item in pending:
+        try:
+            evaluate_at = datetime.fromisoformat(item["evaluate_at_ts"])
+            entry_dt = datetime.fromisoformat(item["entry_ts"])
+        except (KeyError, ValueError):
+            continue  # sérült bejegyzés - eldobjuk, nem akadunk el rajta
+
+        age_minutes = (now - entry_dt).total_seconds() / 60
+        if now < evaluate_at:
+            still_pending.append(item)
+            continue
+
+        current_price = price_map.get(item["symbol"])
+        if current_price is None or current_price <= 0:
+            if age_minutes >= OUTCOME_MAX_STALE_MINUTES:
+                # Túl régóta nem sikerül árat találni ehhez a szimbólumhoz
+                # (pl. kikerült a 24h volumen-sávból) - inkább UNKNOWN-ként
+                # lezárjuk, mintsem örökre a listában ragadjon.
+                _log_signal_outcome({**item, "exit_price": None,
+                                      "exit_ts": now.isoformat(),
+                                      "pnl_pct": None, "outcome": "UNKNOWN"})
+            else:
+                still_pending.append(item)  # próbáljuk újra a következő körben
+            continue
+
+        entry_price = item["entry_price"]
+        if item["direction"] == "LONG":
+            directional_pct = (current_price - entry_price) / entry_price * 100
+        else:  # SHORT
+            directional_pct = (entry_price - current_price) / entry_price * 100
+
+        if directional_pct >= OUTCOME_WIN_THRESHOLD_PCT:
+            outcome = "WIN"
+        elif directional_pct <= -OUTCOME_WIN_THRESHOLD_PCT:
+            outcome = "LOSS"
+        else:
+            outcome = "NEUTRAL"
+
+        _log_signal_outcome({
+            **item,
+            "exit_price": current_price,
+            "exit_ts": now.isoformat(),
+            "pnl_pct": round(float(directional_pct), 3),
+            "outcome": outcome,
+        })
+
+    state["pending_outcomes"] = still_pending
+
+
+def _load_log_entries_for_date(date_str: str) -> list:
+    """Beolvassa a napló azon sorait, amelyek 'entry_date' mezője a megadott
+    (UTC) napra esik."""
+    if not SIGNAL_LOG_FILE.exists():
+        return []
+    entries = []
+    try:
+        with SIGNAL_LOG_FILE.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except json.JSONDecodeError:
+                    continue  # egy sérült sor ne dobja el az egész összesítőt
+                if rec.get("entry_date") == date_str:
+                    entries.append(rec)
+    except OSError as e:
+        print(f"HIBA: nem sikerült beolvasni a jelzés-naplót: {e}")
+    return entries
+
+
+def _format_daily_summary(date_str: str, entries: list) -> str:
+    by_type = {}
+    for rec in entries:
+        by_type.setdefault(rec.get("signal_type", "ISMERETLEN"), []).append(rec)
+
+    type_labels = {
+        "STANDARD": "⚡ STANDARD",
+        "RANGE_BREAKOUT": "🎯 SÁV KITÖRÉS",
+        "EMA_SQUEEZE": "🗜️ EMA SQUEEZE",
+        "EMA_REJECTION": "📉 EMA REJECTION",
+    }
+
+    lines = [f"📊 <b>Napi összesítő</b> ({date_str})", "━━━━━━━━━━━━━"]
+    total_wins = total_losses = total_neutral = total_unknown = 0
+
+    for sig_type in sorted(by_type.keys()):
+        recs = by_type[sig_type]
+        wins = sum(1 for r in recs if r.get("outcome") == "WIN")
+        losses = sum(1 for r in recs if r.get("outcome") == "LOSS")
+        neutral = sum(1 for r in recs if r.get("outcome") == "NEUTRAL")
+        unknown = sum(1 for r in recs if r.get("outcome") == "UNKNOWN")
+        total_wins += wins
+        total_losses += losses
+        total_neutral += neutral
+        total_unknown += unknown
+
+        decided = wins + losses
+        winrate_str = f"{(wins / decided * 100):.1f}%" if decided > 0 else "n/a"
+        label = type_labels.get(sig_type, sig_type)
+        lines.append(
+            f"{label}: {len(recs)} jelzés | {wins}W-{losses}L-{neutral}N"
+            f"{f'-{unknown}?' if unknown else ''} | Winrate: {winrate_str}"
+        )
+
+    total = len(entries)
+    total_decided = total_wins + total_losses
+    total_winrate_str = f"{(total_wins / total_decided * 100):.1f}%" if total_decided > 0 else "n/a"
+    lines.append("━━━━━━━━━━━━━")
+    lines.append(
+        f"Összesen: {total} jelzés | {total_wins}W-{total_losses}L-{total_neutral}N"
+        f"{f'-{total_unknown}?' if total_unknown else ''} | Winrate: {total_winrate_str}"
+    )
+    return f"\n{chr(10).join(lines)}\n"
+
+
+def maybe_send_daily_summary(state: dict, now: datetime) -> None:
+    """Ha új UTC nap kezdődött (és eltelt DAILY_SUMMARY_MIN_DELAY_MINUTES
+    perc éjfél óta, hogy az előző nap utolsó jelzései is kiértékelődjenek),
+    elküldi az előző nap winrate-összesítőjét, majd megjegyzi state-ben, hogy
+    a mai napra már küldtünk (ne menjen ki még egyszer ugyanaznap)."""
+    today_str = now.strftime("%Y-%m-%d")
+    last_summary_date = state.get("_last_summary_date")
+
+    if last_summary_date is None:
+        # Első futás valaha - nincs mit összesíteni, csak megjegyezzük a mai
+        # napot, hogy holnap már legyen mihez képest "új nap".
+        state["_last_summary_date"] = today_str
+        return
+
+    if last_summary_date == today_str:
+        return  # ma már küldtünk (vagy még ugyanaz a nap van) - nincs teendő
+
+    midnight_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    minutes_since_midnight = (now - midnight_today).total_seconds() / 60
+    if minutes_since_midnight < DAILY_SUMMARY_MIN_DELAY_MINUTES:
+        return  # várunk még egy kicsit éjfél után, hogy a tegnapi utolsó
+                 # jelzések is stabilan kiértékelődjenek
+
+    yesterday_str = (now - timedelta(days=1)).strftime("%Y-%m-%d")
+    entries = _load_log_entries_for_date(yesterday_str)
+    if entries:
+        summary_msg = _format_daily_summary(yesterday_str, entries)
+        send_telegram_message(summary_msg)
+        print(f"Napi winrate-összesítő elküldve ({yesterday_str}, {len(entries)} jelzés).")
+    else:
+        print(f"Nem volt jelzés {yesterday_str}-n - napi összesítő kihagyva.")
+
+    state["_last_summary_date"] = today_str
+
+# ----------------------------------------------------------------------------
 # ÁLLAPOT (JSON fájl) KEZELÉSE
 # ----------------------------------------------------------------------------
 
@@ -302,8 +547,14 @@ async def fetch_all_tickers(session):
         if not symbol.endswith("-USDT"):
             continue
         try:
+            # ÚJ (v14): a "lastPrice" mezőt is eltároljuk - ez kell a NAPI
+            # WINRATE ÖSSZESÍTŐHÖZ (lásd lent), hogy a korábban kiküldött
+            # jelzések utóéletét (WIN/LOSS/NEUTRAL) tudjuk követni. Mivel ezt
+            # a ticker-lekérést MINDEN körben úgyis lefuttatjuk, ez NEM jelent
+            # plusz API-hívást.
             result[symbol] = {
                 "quote_volume_24h": float(t.get("quoteVolume", 0) or 0),
+                "last_price": float(t.get("lastPrice", 0) or 0) or None,
             }
         except (TypeError, ValueError):
             continue
@@ -900,6 +1151,12 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         if valid_contracts is None:
             valid_contracts = await fetch_valid_contract_symbols(session)
 
+        # ÚJ (v14): a korábban kiküldött, még függőben lévő jelzések
+        # kiértékelése - ugyanabból a ticker-lekérésből, amit fentebb úgyis
+        # elvégeztünk minden szimbólumra, tehát NINCS plusz API-hívás.
+        price_map = {s: info.get("last_price") for s, info in tickers.items()}
+        resolve_pending_signals(state, price_map, now)
+
         candidates = []
         for s, info in tickers.items():
             if not (MIN_VOLUME_USDT <= info["quote_volume_24h"] <= MAX_VOLUME_USDT):
@@ -1062,6 +1319,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
+            # ÚJ (v14): a jelzést a napi winrate-összesítőhöz is regisztráljuk.
+            register_pending_signal(state, symbol, candle.get("signal_type", "STANDARD"),
+                                     candle["direction"], candle["price"], now)
             trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
             bounce_note = " 🎯 SZINT-VISSZAPATTANÁS" if bounce_confluence else ""
             type_note = f" [{candle.get('signal_type', 'STANDARD')}]"
@@ -1112,6 +1372,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 send_telegram_message(ema_msg)
                 entry["last_ema_squeeze_alert_ts"] = now.isoformat()
                 alerts_sent += 1
+                # ÚJ (v14): a jelzést a napi winrate-összesítőhöz is regisztráljuk.
+                register_pending_signal(state, symbol, "EMA_SQUEEZE", ema_signal, candle["price"], now)
                 print(f"JELZÉS küldve: {symbol} [{ema_signal}] [EMA_SQUEEZE] (EMA gap {candle.get('ema_gap_pct')}%, "
                       f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
 
@@ -1152,6 +1414,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 send_telegram_message(rejection_msg)
                 entry["last_ema_rejection_alert_ts"] = now.isoformat()
                 alerts_sent += 1
+                # ÚJ (v14): a jelzést a napi winrate-összesítőhöz is regisztráljuk.
+                register_pending_signal(state, symbol, "EMA_REJECTION", ema_rejection_signal, candle["price"], now)
                 print(f"JELZÉS küldve: {symbol} [{ema_rejection_signal}] [EMA_REJECTION/{candle.get('ema_rejection_level')}] "
                       f"(Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
 
@@ -1159,6 +1423,12 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         print(f"  (ebben a körben {htf_warned} kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)")
     if sr_warned:
         print(f"  (ebben a körben {sr_warned} kiküldött jelzés ment támasz/ellenállás ellen - figyelmeztetéssel)")
+
+    # ÚJ (v14): ha új UTC nap kezdődött (és eltelt egy kis idő éjfél óta),
+    # elküldi az előző nap winrate-összesítőjét. A state-alapú gate miatt
+    # (lásd maybe_send_daily_summary) naponta csak egyszer megy ki, akárhány
+    # 30 mp-es körben is fut le ez a függvény.
+    maybe_send_daily_summary(state, now)
 
     return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
 
