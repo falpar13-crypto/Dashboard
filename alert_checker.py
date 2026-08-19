@@ -1199,3 +1199,446 @@ if __name__ == "__main__":
         print("FIGYELEM: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID nincs beállítva - "
               "az értesítés küldése ki lesz hagyva, csak a state fájl frissül.")
     asyncio.run(main())
+
+
+
+# ============================================================
+# V13 SIGNAL QUALITY ENGINE
+# ============================================================
+# Improvements:
+#   - volume pace / intrabar-normalized volume
+#   - OI + price relationship classification
+#   - stronger 1H EMA20/EMA50 trend + slope
+#   - ATR-based compression/squeeze
+#   - swing-based support/resistance
+#   - break -> retest -> rejection validation
+#   - RSI/MACD/funding as weighted confluence
+#   - 0-10 quality score
+#   - background outcome tracking
+#
+# This layer is intentionally dependency-light and can be integrated
+# with the existing exchange/Telegram code without changing credentials.
+
+from dataclasses import dataclass, asdict
+from collections import deque
+from pathlib import Path
+import json
+import math
+import time
+
+
+V13_MIN_SCORE = 7
+V13_HIGH_SCORE = 9
+V13_OUTCOME_FILE = Path("signal_outcomes_v13.jsonl")
+
+
+@dataclass
+class V13Signal:
+    symbol: str
+    direction: str
+    score: int
+    label: str
+    entry: float
+    oi_change_pct: float = 0.0
+    price_change_pct: float = 0.0
+    volume_ratio: float = 0.0
+    volume_pace: float = 0.0
+    htf_trend: str = "NEUTRAL"
+    market_regime: str = "UNKNOWN"
+    support_distance_pct: float = 0.0
+    resistance_distance_pct: float = 0.0
+    reasons: tuple = ()
+
+
+def v13_safe_float(x, default=0.0):
+    try:
+        v = float(x)
+        return v if math.isfinite(v) else default
+    except (TypeError, ValueError):
+        return default
+
+
+def v13_pct_change(now, old):
+    now = v13_safe_float(now)
+    old = v13_safe_float(old)
+    if old == 0:
+        return 0.0
+    return (now - old) / abs(old) * 100.0
+
+
+def v13_sma(values, n):
+    vals = [v13_safe_float(x) for x in values if x is not None]
+    if len(vals) < n:
+        return None
+    return sum(vals[-n:]) / n
+
+
+def v13_ema(values, n):
+    vals = [v13_safe_float(x) for x in values if x is not None]
+    if len(vals) < n:
+        return None
+    k = 2.0 / (n + 1.0)
+    e = sum(vals[:n]) / n
+    for x in vals[n:]:
+        e = x * k + e * (1.0 - k)
+    return e
+
+
+def v13_atr(highs, lows, closes, n=14):
+    highs = list(map(v13_safe_float, highs))
+    lows = list(map(v13_safe_float, lows))
+    closes = list(map(v13_safe_float, closes))
+    if len(closes) < n + 1 or len(highs) != len(lows) or len(highs) != len(closes):
+        return None
+
+    trs = []
+    for i in range(1, len(closes)):
+        trs.append(max(
+            highs[i] - lows[i],
+            abs(highs[i] - closes[i - 1]),
+            abs(lows[i] - closes[i - 1]),
+        ))
+    if len(trs) < n:
+        return None
+    return sum(trs[-n:]) / n
+
+
+def v13_volume_pace(current_volume, elapsed_seconds, full_seconds,
+                    historical_bars, min_history=10):
+    """
+    Normalizes live-candle volume by how much of the candle has elapsed.
+    Historical bars are expected as dicts with:
+        {"volume": ..., "elapsed_seconds": ...}
+    If elapsed_seconds is unavailable, falls back to a simple ratio.
+    """
+    cur = v13_safe_float(current_volume)
+    elapsed = max(1.0, min(v13_safe_float(elapsed_seconds), full_seconds))
+    expected = 0.0
+
+    samples = []
+    for b in historical_bars[-min_history:]:
+        vol = v13_safe_float(b.get("volume"))
+        age = v13_safe_float(b.get("elapsed_seconds"), full_seconds)
+        age = max(1.0, min(age, full_seconds))
+        samples.append(vol * (elapsed / age))
+
+    if not samples:
+        return 0.0
+
+    expected = sum(samples) / len(samples)
+    if expected <= 0:
+        return 0.0
+    return cur / expected
+
+
+def v13_oi_price_regime(price_change_pct, oi_change_pct):
+    p = v13_safe_float(price_change_pct)
+    oi = v13_safe_float(oi_change_pct)
+
+    if p > 0 and oi > 0:
+        return "LONG_BUILDUP"
+    if p < 0 and oi > 0:
+        return "SHORT_BUILDUP"
+    if p > 0 and oi < 0:
+        return "SHORT_COVERING"
+    if p < 0 and oi < 0:
+        return "LONG_LIQUIDATION"
+    return "NEUTRAL"
+
+
+def v13_htf_trend(closes, ema_fast=20, ema_slow=50, slope_bars=5):
+    closes = list(map(v13_safe_float, closes))
+    if len(closes) < ema_slow + slope_bars:
+        return "NEUTRAL", {}
+
+    e20 = v13_ema(closes, ema_fast)
+    e50 = v13_ema(closes, ema_slow)
+
+    e20_prev = v13_ema(closes[:-slope_bars], ema_fast)
+    e50_prev = v13_ema(closes[:-slope_bars], ema_slow)
+    price = closes[-1]
+
+    if None in (e20, e50, e20_prev, e50_prev):
+        return "NEUTRAL", {}
+
+    slope20 = v13_pct_change(e20, e20_prev)
+    slope50 = v13_pct_change(e50, e50_prev)
+
+    if price > e20 > e50 and slope20 > 0 and slope50 >= 0:
+        trend = "STRONG_UP"
+    elif price < e20 < e50 and slope20 < 0 and slope50 <= 0:
+        trend = "STRONG_DOWN"
+    elif price > e50:
+        trend = "UP"
+    elif price < e50:
+        trend = "DOWN"
+    else:
+        trend = "NEUTRAL"
+
+    return trend, {
+        "ema20": e20,
+        "ema50": e50,
+        "ema20_slope_pct": slope20,
+        "ema50_slope_pct": slope50,
+    }
+
+
+def v13_swing_levels(highs, lows, left=2, right=2, max_levels=8):
+    highs = list(map(v13_safe_float, highs))
+    lows = list(map(v13_safe_float, lows))
+    swing_highs, swing_lows = [], []
+
+    for i in range(left, len(highs) - right):
+        h = highs[i]
+        l = lows[i]
+        if h >= max(highs[i-left:i]) and h >= max(highs[i+1:i+1+right]):
+            swing_highs.append(h)
+        if l <= min(lows[i-left:i]) and l <= min(lows[i+1:i+1+right]):
+            swing_lows.append(l)
+
+    return swing_highs[-max_levels:], swing_lows[-max_levels:]
+
+
+def v13_nearest_sr(entry, highs, lows):
+    entry = v13_safe_float(entry)
+    swing_highs, swing_lows = v13_swing_levels(highs, lows)
+
+    resistances = [x for x in swing_highs if x > entry]
+    supports = [x for x in swing_lows if x < entry]
+
+    resistance = min(resistances) if resistances else None
+    support = max(supports) if supports else None
+
+    return support, resistance
+
+
+def v13_atr_compression(highs, lows, closes, ema_gap_atr=0.30,
+                        range_atr=1.00, lookback=4):
+    """
+    Replaces fixed-percent squeeze thresholds with volatility-adaptive ATR rules.
+    """
+    if len(closes) < 60:
+        return False
+
+    atr = v13_atr(highs, lows, closes, 14)
+    e20 = v13_ema(closes, 20)
+    e50 = v13_ema(closes, 50)
+    if atr is None or e20 is None or e50 is None or atr <= 0:
+        return False
+
+    recent_high = max(map(v13_safe_float, highs[-lookback:]))
+    recent_low = min(map(v13_safe_float, lows[-lookback:]))
+
+    ema_gap = abs(e20 - e50)
+    recent_range = recent_high - recent_low
+
+    return ema_gap <= atr * ema_gap_atr and recent_range <= atr * range_atr
+
+
+def v13_retest_rejection(closes, highs, lows, ema_period=20,
+                         direction="SHORT", lookback=6):
+    """
+    Requires a meaningful break/retest/rejection sequence rather than
+    merely touching an EMA channel.
+    """
+    closes = list(map(v13_safe_float, closes))
+    highs = list(map(v13_safe_float, highs))
+    lows = list(map(v13_safe_float, lows))
+
+    if len(closes) < ema_period + lookback + 2:
+        return False
+
+    ema_series = []
+    for i in range(ema_period, len(closes) + 1):
+        ema_series.append(v13_ema(closes[:i], ema_period))
+
+    # align recent section
+    ema = ema_series[-lookback:]
+    c = closes[-lookback:]
+    h = highs[-lookback:]
+    l = lows[-lookback:]
+
+    if direction.upper() == "SHORT":
+        # Break below EMA, then retest from below, then close back below.
+        break_i = None
+        for i in range(lookback - 1):
+            if c[i] < ema[i]:
+                break_i = i
+        if break_i is None or break_i >= lookback - 1:
+            return False
+
+        retest_i = break_i + 1
+        touched = h[retest_i] >= ema[retest_i] * 0.999
+        rejected = c[-1] < ema[-1]
+        return touched and rejected
+
+    # LONG: break above EMA, retest from above, close back above.
+    break_i = None
+    for i in range(lookback - 1):
+        if c[i] > ema[i]:
+            break_i = i
+    if break_i is None or break_i >= lookback - 1:
+        return False
+
+    retest_i = break_i + 1
+    touched = l[retest_i] <= ema[retest_i] * 1.001
+    rejected = c[-1] > ema[-1]
+    return touched and rejected
+
+
+def v13_confluence_score(direction, entry, *,
+                         price_change_pct=0.0,
+                         oi_change_pct=0.0,
+                         volume_ratio=0.0,
+                         volume_pace=0.0,
+                         htf_trend="NEUTRAL",
+                         rsi=None,
+                         macd=None,
+                         macd_signal=None,
+                         funding_rate=None,
+                         support=None,
+                         resistance=None,
+                         compression=False,
+                         rejection=False,
+                         breakout=False):
+    """
+    0-10+ weighted score. The hard signal threshold is V13_MIN_SCORE.
+    Scores above 10 are capped at 10.
+    """
+    direction = direction.upper()
+    score = 0
+    reasons = []
+
+    regime = v13_oi_price_regime(price_change_pct, oi_change_pct)
+
+    if volume_pace >= 1.50:
+        score += 2
+        reasons.append("volume pace strong")
+    elif volume_ratio >= 2.0:
+        score += 1
+        reasons.append("volume elevated")
+
+    if direction == "LONG" and regime == "LONG_BUILDUP":
+        score += 2
+        reasons.append("OI + price long buildup")
+    elif direction == "SHORT" and regime == "SHORT_BUILDUP":
+        score += 2
+        reasons.append("OI + price short buildup")
+    elif direction == "LONG" and regime == "SHORT_COVERING":
+        score += 1
+        reasons.append("short covering")
+    elif direction == "SHORT" and regime == "LONG_LIQUIDATION":
+        score += 1
+        reasons.append("long liquidation")
+
+    if direction == "LONG" and htf_trend in ("UP", "STRONG_UP"):
+        score += 2 if htf_trend == "STRONG_UP" else 1
+        reasons.append("1H trend aligned")
+    elif direction == "SHORT" and htf_trend in ("DOWN", "STRONG_DOWN"):
+        score += 2 if htf_trend == "STRONG_DOWN" else 1
+        reasons.append("1H trend aligned")
+
+    if rejection:
+        score += 1
+        reasons.append("EMA rejection")
+    if compression:
+        score += 1
+        reasons.append("ATR compression")
+    if breakout:
+        score += 1
+        reasons.append("breakout")
+
+    if rsi is not None:
+        r = v13_safe_float(rsi)
+        if direction == "LONG" and 50 <= r < 70:
+            score += 1
+            reasons.append("RSI bullish")
+        elif direction == "SHORT" and 30 < r <= 50:
+            score += 1
+            reasons.append("RSI bearish")
+        # Extreme RSI is deliberately not rewarded; it can mean exhaustion.
+
+    if macd is not None and macd_signal is not None:
+        m = v13_safe_float(macd)
+        ms = v13_safe_float(macd_signal)
+        if direction == "LONG" and m > ms:
+            score += 1
+            reasons.append("MACD bullish")
+        elif direction == "SHORT" and m < ms:
+            score += 1
+            reasons.append("MACD bearish")
+
+    if funding_rate is not None:
+        f = v13_safe_float(funding_rate)
+        # Mildly favorable funding = confluence; extreme funding also indicates
+        # crowded positioning, so it can be used by the caller as squeeze logic.
+        if direction == "LONG" and f < 0:
+            score += 1
+            reasons.append("negative funding")
+        elif direction == "SHORT" and f > 0:
+            score += 1
+            reasons.append("positive funding")
+
+    # S/R is a confluence penalty/bonus rather than a standalone signal.
+    if support is not None and entry:
+        sd = (entry - support) / entry * 100
+        if direction == "SHORT" and sd < 0.40:
+            score -= 1
+            reasons.append("short too close to support")
+    if resistance is not None and entry:
+        rd = (resistance - entry) / entry * 100
+        if direction == "LONG" and rd < 0.40:
+            score -= 1
+            reasons.append("long too close to resistance")
+
+    score = max(0, min(10, score))
+
+    if score >= V13_HIGH_SCORE:
+        label = "HIGH_CONFIDENCE"
+    elif score >= V13_MIN_SCORE:
+        label = "SIGNAL"
+    else:
+        label = "IGNORE"
+
+    return score, label, regime, tuple(reasons)
+
+
+def v13_record_signal(signal: V13Signal):
+    """
+    Append-only outcome journal. No Telegram spam.
+    The journal can later be evaluated at +0.5%, +1%, +2%, etc.
+    """
+    payload = asdict(signal)
+    payload["timestamp"] = int(time.time())
+    try:
+        with V13_OUTCOME_FILE.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    except OSError:
+        pass
+
+
+def v13_register_outcome(signal_id, outcome, pnl_pct=None):
+    """
+    Call this from a background outcome checker when a tracked signal reaches
+    TP/SL/timeout. It intentionally writes a separate event so the original
+    signal record remains immutable.
+    """
+    payload = {
+        "type": "outcome",
+        "signal_id": signal_id,
+        "outcome": outcome,
+        "pnl_pct": pnl_pct,
+        "timestamp": int(time.time()),
+    }
+    try:
+        with V13_OUTCOME_FILE.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    except OSError:
+        pass
+
+
+def v13_should_alert(score):
+    return int(score) >= V13_MIN_SCORE
+
+
+# End of V13 signal quality engine.
