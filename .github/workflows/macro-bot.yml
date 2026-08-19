@@ -1,0 +1,44 @@
+name: Macro Alerter Bot
+
+on:
+  schedule:
+    # 1. Reggeli figyelmeztető (Minden nap 06:00 UTC - CET 07:00 / 08:00)
+    - cron: '0 6 * * *'
+    
+    # 2. Nyári Adatmegjelenés (12:33 UTC -> 14:33 HU) 
+    # (3 perccel az adat után fut, hogy a ForexFactory adatbázisa biztosan frissüljön!)
+    - cron: '33 12 * * *'
+    
+    # 3. Téli Adatmegjelenés (13:33 UTC -> 14:33 HU)
+    - cron: '33 13 * * *'
+    
+    # 4. Nyári FOMC Kamatdöntés (18:03 UTC -> 20:03 HU)
+    - cron: '03 18 * * *'
+    
+    # 5. Téli FOMC Kamatdöntés (19:03 UTC -> 20:03 HU)
+    - cron: '03 19 * * *'
+    
+  workflow_dispatch: # Kézi indítási lehetőség gombnyomásra
+
+jobs:
+  run-macro-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        # A requests csomag kell a webes lekérésekhez
+        run: pip install requests
+
+      - name: Run Macro Alerter
+        env:
+          # Automatikusan behúzza a már létező titkos kulcsaidat
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python macro_alerter.py
