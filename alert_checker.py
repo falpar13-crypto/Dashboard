@@ -131,12 +131,13 @@ ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashb
                              # idősík-választójától teljesen függetlenül
 MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
-MIN_OI_INCREASE = 1.5       # minimum OI-ugrás %-ban (~5 perces referenciaablak)
+MIN_OI_INCREASE = 1.2       # v13: 1.5 -> 1.2, minimum OI-ugrás %-ban (~5 perces referenciaablak) -
+                             # kicsit lazítva, hogy több jelzés menjen ki
 MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimuma
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
-MIN_VOL_MULTIPLIER = 2.0    # az élő gyertya eddigi volumene legalább ennyiszerese
-                             # legyen az átlagnak
+MIN_VOL_MULTIPLIER = 1.8    # v13: 2.0 -> 1.8, az élő gyertya eddigi volumene legalább ennyiszerese
+                             # legyen az átlagnak - kicsit lazítva
 
 # --- ÚJ (v10): A/B teszt - "Sáv kitörés" jelzéstípus a "Standard" mellé ---
 # Ugyanazok a fő feltételek (OI, volumen, ár) döntik el, hogy egyáltalán menjen-e
@@ -157,9 +158,9 @@ FUNDING_SQUEEZE_THRESHOLD_PCT = 0.01
 EMA_SQUEEZE_FAST_PERIOD = 20
 EMA_SQUEEZE_SLOW_PERIOD = 50
 EMA_SQUEEZE_LOOKBACK_CANDLES = 4       # ennyi utolsó LEZÁRT gyertyán nézzük a szorítást
-EMA_SQUEEZE_MAX_EMA_GAP_PCT = 1.5      # az EMA20 és EMA50 távolsága ennél kisebb legyen
-EMA_SQUEEZE_MIN_OI_INCREASE = 0.8      # a standardnál lazább OI-küszöb (a setup önmagában erős)
-EMA_SQUEEZE_MIN_VOL_MULTIPLIER = 1.3   # a standardnál lazább volumen-küszöb
+EMA_SQUEEZE_MAX_EMA_GAP_PCT = 1.8      # v13: 1.5 -> 1.8, az EMA20 és EMA50 távolsága ennél kisebb legyen
+EMA_SQUEEZE_MIN_OI_INCREASE = 0.7      # v13: 0.8 -> 0.7, a standardnál lazább OI-küszöb (a setup önmagában erős)
+EMA_SQUEEZE_MIN_VOL_MULTIPLIER = 1.15  # v13: 1.3 -> 1.15, a standardnál lazább volumen-küszöb
 EMA_SQUEEZE_MAX_PRICE_CHANGE = 5.0     # felső korlát az élő gyertya ármozgására - egy
                                         # adathiba/kiugrás miatti extrém "kitörést" szűr ki
 
@@ -171,17 +172,22 @@ EMA_SQUEEZE_MAX_PRICE_CHANGE = 5.0     # felső korlát az élő gyertya ármozg
 # határozottan piros, jelezve a beszakadás folytatódását. ---
 EMA_REJECTION_FAST_PERIOD = 20
 EMA_REJECTION_SLOW_PERIOD = 50
-EMA_REJECTION_LOOKBACK_CANDLES = 6         # "utolsó 3-6 gyertya" - a felső határt vesszük
-EMA_REJECTION_BREAK_BELOW_PCT = 0.1        # ennyivel legyen a close "határozottan" EMA20 alatt (%)
-EMA_REJECTION_RETEST_TOLERANCE_PCT = 0.5   # a visszateszt High-ja ennyi %-on belül érintse az EMA20-at
-EMA_REJECTION_MIN_RED_BODY_PCT = 0.15      # a trigger-gyertya piros teste legalább ennyi % legyen
-                                            # (nyitó->jelenlegi ár), hogy ne zajszintű mozgás triggereljen
+EMA_REJECTION_LOOKBACK_CANDLES = 8         # v13: 6 -> 8, hogy több lehetőség legyen a "letörés"
+                                            # gyertyát megtalálni (lazítás, több jelzésért)
+EMA_REJECTION_BREAK_BELOW_PCT = 0.08       # v13: 0.1 -> 0.08, ennyivel legyen a close "határozottan"
+                                            # a szint alatt (%) - kicsit engedékenyebb
+EMA_REJECTION_RETEST_TOLERANCE_PCT = 0.7   # v13: 0.5 -> 0.7, a visszateszt High-ja ennyi %-on belül
+                                            # érintse a szintet - szélesebb "érintési" zóna
+EMA_REJECTION_MIN_RED_BODY_PCT = 0.10      # v13: 0.15 -> 0.10, a trigger-gyertya piros teste legalább
+                                            # ennyi % legyen (nyitó->jelenlegi ár), hogy ne zajszintű
+                                            # mozgás triggereljen, de több valódi setup átjöjjön
 EMA_REJECTION_MAX_PRICE_CHANGE = 5.0       # felső korlát az élő gyertya ármozgására (adathiba-védelem)
 # Lazított OI/volumen-küszöbök, ugyanúgy, mint az EMA Squeeze-nél: a setup
 # önmagában (price action) elég erős, ezért a standardnál engedékenyebb
-# küszöbök is elfogadhatók - itt kifejezetten a kért 60%/70% arányban:
-EMA_REJECTION_MIN_OI_INCREASE = 0.9        # MIN_OI_INCREASE (1.5) 60%-a
-EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.4     # MIN_VOL_MULTIPLIER (2.0) 70%-a
+# küszöbök is elfogadhatók. v13: tovább lazítva (a korábbi 60%/70% arányról),
+# hogy a bővített (EMA20 + EMA50 kétfázisú) logika több jelzést hozzon:
+EMA_REJECTION_MIN_OI_INCREASE = 0.7        # korábban 0.9
+EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.2     # korábban 1.4
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
 TOTAL_RUN_BUDGET_SECONDS = 270   # ~4.5 perc - a szkript ennyi ideig fut egyben
@@ -486,14 +492,17 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
                           htf_trend=None, bounce_confluence=False, near_level_risk=False,
                           rsi=None, macd_status=None, signal_type="STANDARD",
-                          funding_rate=None, now=None):
+                          funding_rate=None, now=None, ema_rejection_level=None):
     action = DIRECTION_LABELS.get(direction, direction)
     if signal_type == "RANGE_BREAKOUT":
         header = f"🎯 SÁV KITÖRÉS ({action}): <b>{symbol}</b>"
     elif signal_type == "EMA_SQUEEZE":
         header = f"🗜️ EMA SQUEEZE KITÖRÉS ({action}): <b>{symbol}</b>"
     elif signal_type == "EMA_REJECTION":
-        header = f"📉 EMA REJECTION ({action}): <b>{symbol}</b>"
+        # v13: a jelzés most már megmutatja, melyik szintről (EMA20 vagy
+        # EMA50) történt a visszautasítás - lásd detect_ema_rejection().
+        level_note = f" [{ema_rejection_level}]" if ema_rejection_level else ""
+        header = f"📉 EMA REJECTION{level_note} ({action}): <b>{symbol}</b>"
     else:
         header = f"⚡ STANDARD {action}: <b>{symbol}</b>"
 
@@ -680,78 +689,125 @@ def detect_ema_squeeze(closed: pd.DataFrame, live: pd.Series):
 
 
 # ----------------------------------------------------------------------------
-# ÚJ (v12): EMA 20 REJECTION (MOZGÓÁTLAG-VISSZAUTASÍTÁS) DETEKTÁLÁS - önálló,
-# a STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN FÜGGETLEN, kizárólag
-# SHORT (DUMP) irányú logika. Ugyanazokból a klines adatokból számol, nincs
-# plusz API-hívás.
-# 1) Alap trend: EMA20 az EMA50 felett legyen (a korábbi irány UP volt).
-# 2) Letörés: az utolsó EMA_REJECTION_LOOKBACK_CANDLES db LEZÁRT gyertya közül
+# ÚJ (v12), KIBŐVÍTVE v13-BAN: EMA 20/50 REJECTION (MOZGÓÁTLAG-VISSZAUTASÍTÁS)
+# DETEKTÁLÁS - önálló, a STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN
+# FÜGGETLEN, kizárólag SHORT (DUMP) irányú logika. Ugyanazokból a klines
+# adatokból számol, nincs plusz API-hívás.
+#
+# v13 VÁLTOZÁS: a felhasználó egy TradingView chart-képernyőképet küldött,
+# amin jól látszik, hogy egy erős dump során az ár EGYMÁS UTÁN, KÉT
+# KÜLÖNBÖZŐ mozgóátlagról (fentről lefelé: előbb a gyorsabb EMA20-ról, majd -
+# ahogy a letörés tovább erősödik és az EMA20 is lekeresztezi az EMA50-et -
+# az EMA50-ről is) pattan vissza lefelé, folytatva a esést. A korábbi (v12)
+# logika ezt csak az EMA20-ra nézte, és a "last_ema20 > last_ema50" feltétel
+# miatt onnantól, hogy a trend teljesen megfordult (EMA20 az EMA50 ALÁ
+# keresztezett), a második, EMA50-ös visszautasítást SOHA nem tudta jelezni -
+# ez volt a hiányzó rész. A kép kérésének megfelelően EGY (a legfelső)
+# HARMADIK, ennél is lejjebb lévő mozgóátlagot (pl. EMA100/200) TUDATOSAN NEM
+# veszünk figyelembe - kizárólag a felső kettő (EMA20/EMA50) számít.
+#
+# Két, egymást kizáró FÁZIS van (mindig csak az egyik releváns az adott
+# pillanatban, "fentről lefelé" haladva):
+#   FÁZIS 1 (EMA20 a szint): amíg EMA20 > EMA50 (a trend csak most kezd
+#     megtörni) - a letörés+visszateszt+elutasítás mintát az EMA20-ra nézzük.
+#   FÁZIS 2 (EMA50 a szint): ha EMA20 <= EMA50 (az EMA20 már lekeresztezte az
+#     EMA50-et, a letörés megerősödött) - innentől ugyanazt a mintát az
+#     EMA50-re nézzük, hiszen a képen látható módon ez lesz a következő
+#     "alsó" szint, amiről az ár visszapattanhat.
+#
+# Az egyes fázisokon belüli lépések (1 szintre, "level_ema"-ra vetítve):
+# 1) Letörés: az utolsó EMA_REJECTION_LOOKBACK_CANDLES db LEZÁRT gyertya közül
 #    legalább egynek a záróára határozottan (EMA_REJECTION_BREAK_BELOW_PCT
-#    %-kal) az akkori EMA20 alatt legyen - tehát a trend megtört.
-# 3) Visszateszt: az utolsó LEZÁRT vagy az ÉLŐ gyertya High-ja alulról szorosan
+#    %-kal) az akkori level_ema alatt legyen - tehát a trend megtört.
+# 2) Visszateszt: az utolsó LEZÁRT vagy az ÉLŐ gyertya High-ja alulról szorosan
 #    (EMA_REJECTION_RETEST_TOLERANCE_PCT %-on belül) megközelítse a jelenlegi
-#    EMA20-at.
-# 4) Trigger: az élő gyertya határozottan piros (jelenlegi ár a nyitóár alatt,
-#    minimum EMA_REJECTION_MIN_RED_BODY_PCT %-kal), ÉS a jelenlegi ár már az
-#    EMA20 alatt van - ez igazolja, hogy a szint tényleg visszautasította az
-#    árat.
+#    level_ema-t.
+# 3) Trigger: az élő gyertya határozottan piros (jelenlegi ár a nyitóár alatt,
+#    minimum EMA_REJECTION_MIN_RED_BODY_PCT %-kal), ÉS a jelenlegi ár már a
+#    level_ema alatt van - ez igazolja, hogy a szint tényleg visszautasította
+#    az árat.
 # ----------------------------------------------------------------------------
 
+def _ema_rejection_level_triggered(closed: pd.DataFrame, live: pd.Series,
+                                    level_ema_series: pd.Series, level_ema_now: float) -> bool:
+    """Egy KONKRÉT EMA-szintre (lehet EMA20 vagy EMA50 is - a hívó dönti el)
+    nézi meg a letörés -> visszateszt -> elutasítás hármas mintát. Ugyanazt a
+    lépéssort futtatja le, amit korábban csak az EMA20-ra használtunk, immár
+    újrafelhasználhatóan bármelyik EMA-ra."""
+    if pd.isna(level_ema_now) or level_ema_now <= 0:
+        return False
+
+    # 1) Letörés: legalább egy lezárt gyertya close-ja határozottan az akkori
+    # level_ema alatt zárt (a saját időpontjának megfelelő EMA-hoz
+    # viszonyítva, nem a jelenlegihez - így a "megtört a trend" pillanatát
+    # nézzük).
+    lookback_closed = closed.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
+    lookback_ema = level_ema_series.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
+    break_threshold = lookback_ema * (1 - EMA_REJECTION_BREAK_BELOW_PCT / 100)
+    broke_below = bool((lookback_closed["close"].values < break_threshold.values).any())
+    if not broke_below:
+        return False
+
+    # 2) Visszateszt: az utolsó LEZÁRT gyertya VAGY az ÉLŐ gyertya High-ja
+    # alulról szorosan megközelítette a (jelenlegi) level_ema-t.
+    tolerance = level_ema_now * (EMA_REJECTION_RETEST_TOLERANCE_PCT / 100)
+    channel_low = level_ema_now - tolerance
+    channel_high = level_ema_now + tolerance
+
+    last_closed_high = float(closed["high"].iloc[-1])
+    live_high = float(live["high"])
+    retested = (channel_low <= last_closed_high <= channel_high) or (channel_low <= live_high <= channel_high)
+    if not retested:
+        return False
+
+    # 3) Trigger: az élő gyertya határozottan piros, ÉS a jelenlegi ár már a
+    # level_ema alatt van (igazolva, hogy a szint tényleg visszautasított).
+    live_open = float(live["open"])
+    live_close = float(live["close"])
+    if live_open <= 0:
+        return False
+
+    red_body_pct = (live_open - live_close) / live_open * 100
+    if red_body_pct < EMA_REJECTION_MIN_RED_BODY_PCT:
+        return False
+    if live_close >= level_ema_now:
+        return False
+
+    return True
+
+
 def detect_ema_rejection(closed: pd.DataFrame, live: pd.Series):
-    """Visszaadja "SHORT"-ot, ha teljesül az EMA 20 Rejection setup, egyébként
-    None-t."""
+    """Visszaad egy (irány, szint) párost - ("SHORT", "EMA20") vagy
+    ("SHORT", "EMA50") -, ha teljesül az EMA Rejection setup a megfelelő
+    fázisban, egyébként (None, None)-t. Lásd a fenti blokk-kommentet a két
+    fázis (EMA20, majd EMA50) logikájáról."""
     min_len = EMA_REJECTION_SLOW_PERIOD + EMA_REJECTION_LOOKBACK_CANDLES
     if len(closed) < min_len:
-        return None
+        return None, None
 
     ema20 = closed["close"].ewm(span=EMA_REJECTION_FAST_PERIOD, adjust=False).mean()
     ema50 = closed["close"].ewm(span=EMA_REJECTION_SLOW_PERIOD, adjust=False).mean()
 
     last_ema20 = ema20.iloc[-1]
     last_ema50 = ema50.iloc[-1]
-    if pd.isna(last_ema20) or pd.isna(last_ema50) or last_ema20 <= 0:
-        return None
+    if pd.isna(last_ema20) or pd.isna(last_ema50):
+        return None, None
 
-    # 1) Alap trend: EMA20 > EMA50 (korábban UP trend volt).
-    if last_ema20 <= last_ema50:
-        return None
+    if last_ema20 > last_ema50:
+        # FÁZIS 1: a trend csak most kezd megtörni - az EMA20 (a "felső",
+        # gyorsabb átlag) a releváns visszautasítási szint.
+        if _ema_rejection_level_triggered(closed, live, ema20, last_ema20):
+            return "SHORT", "EMA20"
+        return None, None
 
-    # 2) Letörés: legalább egy lezárt gyertya close-ja határozottan az akkori
-    # EMA20 alatt zárt (a saját időpontjának megfelelő EMA20-hoz viszonyítva,
-    # nem a jelenlegihez - így a "megtört a trend" pillanatát nézzük).
-    lookback_closed = closed.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
-    lookback_ema20 = ema20.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
-    break_threshold = lookback_ema20 * (1 - EMA_REJECTION_BREAK_BELOW_PCT / 100)
-    broke_below = bool((lookback_closed["close"].values < break_threshold.values).any())
-    if not broke_below:
-        return None
+    # FÁZIS 2: az EMA20 már lekeresztezte lefelé az EMA50-et (a letörés
+    # megerősödött) - innentől az EMA50 a releváns, "alsó" szint. Egy
+    # esetleges HARMADIK, még lejjebb lévő mozgóátlagot (a kérésnek
+    # megfelelően) itt sem veszünk figyelembe.
+    if _ema_rejection_level_triggered(closed, live, ema50, last_ema50):
+        return "SHORT", "EMA50"
 
-    # 3) Visszateszt: az utolsó LEZÁRT gyertya VAGY az ÉLŐ gyertya High-ja
-    # alulról szorosan megközelítette a (jelenlegi) EMA20-at.
-    tolerance = last_ema20 * (EMA_REJECTION_RETEST_TOLERANCE_PCT / 100)
-    channel_low = last_ema20 - tolerance
-    channel_high = last_ema20 + tolerance
-
-    last_closed_high = float(closed["high"].iloc[-1])
-    live_high = float(live["high"])
-    retested = (channel_low <= last_closed_high <= channel_high) or (channel_low <= live_high <= channel_high)
-    if not retested:
-        return None
-
-    # 4) Trigger: az élő gyertya határozottan piros, ÉS a jelenlegi ár már az
-    # EMA20 alatt van (igazolva, hogy a szint tényleg visszautasított).
-    live_open = float(live["open"])
-    live_close = float(live["close"])
-    if live_open <= 0:
-        return None
-
-    red_body_pct = (live_open - live_close) / live_open * 100
-    if red_body_pct < EMA_REJECTION_MIN_RED_BODY_PCT:
-        return None
-    if live_close >= last_ema20:
-        return None
-
-    return "SHORT"
+    return None, None
 
 
 def evaluate_candle(kdf: pd.DataFrame):
@@ -808,9 +864,11 @@ def evaluate_candle(kdf: pd.DataFrame):
     # ÚJ: EMA Squeeze (beszorulás) kitörés-jelzés - önálló, kiegészítő infó.
     ema_squeeze_signal, ema_gap_pct = detect_ema_squeeze(closed, live)
 
-    # ÚJ (v12): EMA 20 Rejection (mozgóátlag-visszautasítás) - önálló,
-    # kizárólag SHORT irányú kiegészítő jelzés.
-    ema_rejection_signal = detect_ema_rejection(closed, live)
+    # ÚJ (v12, kibővítve v13-ban): EMA 20/50 Rejection (mozgóátlag-
+    # visszautasítás) - önálló, kizárólag SHORT irányú kiegészítő jelzés.
+    # v13-tól kétfázisú: EMA20-ról VAGY (ha a trend már lejjebb tartott)
+    # EMA50-ről való visszautasítást is felismeri - lásd detect_ema_rejection.
+    ema_rejection_signal, ema_rejection_level = detect_ema_rejection(closed, live)
 
     return {
         "price": current_price,
@@ -824,6 +882,7 @@ def evaluate_candle(kdf: pd.DataFrame):
         "ema_squeeze_signal": ema_squeeze_signal,
         "ema_gap_pct": ema_gap_pct,
         "ema_rejection_signal": ema_rejection_signal,
+        "ema_rejection_level": ema_rejection_level,
     }
 
 # ----------------------------------------------------------------------------
@@ -1088,11 +1147,12 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
                     signal_type="EMA_REJECTION",
                     funding_rate=funding_rate, now=now,
+                    ema_rejection_level=candle.get("ema_rejection_level"),
                 )
                 send_telegram_message(rejection_msg)
                 entry["last_ema_rejection_alert_ts"] = now.isoformat()
                 alerts_sent += 1
-                print(f"JELZÉS küldve: {symbol} [{ema_rejection_signal}] [EMA_REJECTION] "
+                print(f"JELZÉS küldve: {symbol} [{ema_rejection_signal}] [EMA_REJECTION/{candle.get('ema_rejection_level')}] "
                       f"(Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
 
     if htf_warned:
@@ -1199,446 +1259,3 @@ if __name__ == "__main__":
         print("FIGYELEM: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID nincs beállítva - "
               "az értesítés küldése ki lesz hagyva, csak a state fájl frissül.")
     asyncio.run(main())
-
-
-
-# ============================================================
-# V13 SIGNAL QUALITY ENGINE
-# ============================================================
-# Improvements:
-#   - volume pace / intrabar-normalized volume
-#   - OI + price relationship classification
-#   - stronger 1H EMA20/EMA50 trend + slope
-#   - ATR-based compression/squeeze
-#   - swing-based support/resistance
-#   - break -> retest -> rejection validation
-#   - RSI/MACD/funding as weighted confluence
-#   - 0-10 quality score
-#   - background outcome tracking
-#
-# This layer is intentionally dependency-light and can be integrated
-# with the existing exchange/Telegram code without changing credentials.
-
-from dataclasses import dataclass, asdict
-from collections import deque
-from pathlib import Path
-import json
-import math
-import time
-
-
-V13_MIN_SCORE = 7
-V13_HIGH_SCORE = 9
-V13_OUTCOME_FILE = Path("signal_outcomes_v13.jsonl")
-
-
-@dataclass
-class V13Signal:
-    symbol: str
-    direction: str
-    score: int
-    label: str
-    entry: float
-    oi_change_pct: float = 0.0
-    price_change_pct: float = 0.0
-    volume_ratio: float = 0.0
-    volume_pace: float = 0.0
-    htf_trend: str = "NEUTRAL"
-    market_regime: str = "UNKNOWN"
-    support_distance_pct: float = 0.0
-    resistance_distance_pct: float = 0.0
-    reasons: tuple = ()
-
-
-def v13_safe_float(x, default=0.0):
-    try:
-        v = float(x)
-        return v if math.isfinite(v) else default
-    except (TypeError, ValueError):
-        return default
-
-
-def v13_pct_change(now, old):
-    now = v13_safe_float(now)
-    old = v13_safe_float(old)
-    if old == 0:
-        return 0.0
-    return (now - old) / abs(old) * 100.0
-
-
-def v13_sma(values, n):
-    vals = [v13_safe_float(x) for x in values if x is not None]
-    if len(vals) < n:
-        return None
-    return sum(vals[-n:]) / n
-
-
-def v13_ema(values, n):
-    vals = [v13_safe_float(x) for x in values if x is not None]
-    if len(vals) < n:
-        return None
-    k = 2.0 / (n + 1.0)
-    e = sum(vals[:n]) / n
-    for x in vals[n:]:
-        e = x * k + e * (1.0 - k)
-    return e
-
-
-def v13_atr(highs, lows, closes, n=14):
-    highs = list(map(v13_safe_float, highs))
-    lows = list(map(v13_safe_float, lows))
-    closes = list(map(v13_safe_float, closes))
-    if len(closes) < n + 1 or len(highs) != len(lows) or len(highs) != len(closes):
-        return None
-
-    trs = []
-    for i in range(1, len(closes)):
-        trs.append(max(
-            highs[i] - lows[i],
-            abs(highs[i] - closes[i - 1]),
-            abs(lows[i] - closes[i - 1]),
-        ))
-    if len(trs) < n:
-        return None
-    return sum(trs[-n:]) / n
-
-
-def v13_volume_pace(current_volume, elapsed_seconds, full_seconds,
-                    historical_bars, min_history=10):
-    """
-    Normalizes live-candle volume by how much of the candle has elapsed.
-    Historical bars are expected as dicts with:
-        {"volume": ..., "elapsed_seconds": ...}
-    If elapsed_seconds is unavailable, falls back to a simple ratio.
-    """
-    cur = v13_safe_float(current_volume)
-    elapsed = max(1.0, min(v13_safe_float(elapsed_seconds), full_seconds))
-    expected = 0.0
-
-    samples = []
-    for b in historical_bars[-min_history:]:
-        vol = v13_safe_float(b.get("volume"))
-        age = v13_safe_float(b.get("elapsed_seconds"), full_seconds)
-        age = max(1.0, min(age, full_seconds))
-        samples.append(vol * (elapsed / age))
-
-    if not samples:
-        return 0.0
-
-    expected = sum(samples) / len(samples)
-    if expected <= 0:
-        return 0.0
-    return cur / expected
-
-
-def v13_oi_price_regime(price_change_pct, oi_change_pct):
-    p = v13_safe_float(price_change_pct)
-    oi = v13_safe_float(oi_change_pct)
-
-    if p > 0 and oi > 0:
-        return "LONG_BUILDUP"
-    if p < 0 and oi > 0:
-        return "SHORT_BUILDUP"
-    if p > 0 and oi < 0:
-        return "SHORT_COVERING"
-    if p < 0 and oi < 0:
-        return "LONG_LIQUIDATION"
-    return "NEUTRAL"
-
-
-def v13_htf_trend(closes, ema_fast=20, ema_slow=50, slope_bars=5):
-    closes = list(map(v13_safe_float, closes))
-    if len(closes) < ema_slow + slope_bars:
-        return "NEUTRAL", {}
-
-    e20 = v13_ema(closes, ema_fast)
-    e50 = v13_ema(closes, ema_slow)
-
-    e20_prev = v13_ema(closes[:-slope_bars], ema_fast)
-    e50_prev = v13_ema(closes[:-slope_bars], ema_slow)
-    price = closes[-1]
-
-    if None in (e20, e50, e20_prev, e50_prev):
-        return "NEUTRAL", {}
-
-    slope20 = v13_pct_change(e20, e20_prev)
-    slope50 = v13_pct_change(e50, e50_prev)
-
-    if price > e20 > e50 and slope20 > 0 and slope50 >= 0:
-        trend = "STRONG_UP"
-    elif price < e20 < e50 and slope20 < 0 and slope50 <= 0:
-        trend = "STRONG_DOWN"
-    elif price > e50:
-        trend = "UP"
-    elif price < e50:
-        trend = "DOWN"
-    else:
-        trend = "NEUTRAL"
-
-    return trend, {
-        "ema20": e20,
-        "ema50": e50,
-        "ema20_slope_pct": slope20,
-        "ema50_slope_pct": slope50,
-    }
-
-
-def v13_swing_levels(highs, lows, left=2, right=2, max_levels=8):
-    highs = list(map(v13_safe_float, highs))
-    lows = list(map(v13_safe_float, lows))
-    swing_highs, swing_lows = [], []
-
-    for i in range(left, len(highs) - right):
-        h = highs[i]
-        l = lows[i]
-        if h >= max(highs[i-left:i]) and h >= max(highs[i+1:i+1+right]):
-            swing_highs.append(h)
-        if l <= min(lows[i-left:i]) and l <= min(lows[i+1:i+1+right]):
-            swing_lows.append(l)
-
-    return swing_highs[-max_levels:], swing_lows[-max_levels:]
-
-
-def v13_nearest_sr(entry, highs, lows):
-    entry = v13_safe_float(entry)
-    swing_highs, swing_lows = v13_swing_levels(highs, lows)
-
-    resistances = [x for x in swing_highs if x > entry]
-    supports = [x for x in swing_lows if x < entry]
-
-    resistance = min(resistances) if resistances else None
-    support = max(supports) if supports else None
-
-    return support, resistance
-
-
-def v13_atr_compression(highs, lows, closes, ema_gap_atr=0.30,
-                        range_atr=1.00, lookback=4):
-    """
-    Replaces fixed-percent squeeze thresholds with volatility-adaptive ATR rules.
-    """
-    if len(closes) < 60:
-        return False
-
-    atr = v13_atr(highs, lows, closes, 14)
-    e20 = v13_ema(closes, 20)
-    e50 = v13_ema(closes, 50)
-    if atr is None or e20 is None or e50 is None or atr <= 0:
-        return False
-
-    recent_high = max(map(v13_safe_float, highs[-lookback:]))
-    recent_low = min(map(v13_safe_float, lows[-lookback:]))
-
-    ema_gap = abs(e20 - e50)
-    recent_range = recent_high - recent_low
-
-    return ema_gap <= atr * ema_gap_atr and recent_range <= atr * range_atr
-
-
-def v13_retest_rejection(closes, highs, lows, ema_period=20,
-                         direction="SHORT", lookback=6):
-    """
-    Requires a meaningful break/retest/rejection sequence rather than
-    merely touching an EMA channel.
-    """
-    closes = list(map(v13_safe_float, closes))
-    highs = list(map(v13_safe_float, highs))
-    lows = list(map(v13_safe_float, lows))
-
-    if len(closes) < ema_period + lookback + 2:
-        return False
-
-    ema_series = []
-    for i in range(ema_period, len(closes) + 1):
-        ema_series.append(v13_ema(closes[:i], ema_period))
-
-    # align recent section
-    ema = ema_series[-lookback:]
-    c = closes[-lookback:]
-    h = highs[-lookback:]
-    l = lows[-lookback:]
-
-    if direction.upper() == "SHORT":
-        # Break below EMA, then retest from below, then close back below.
-        break_i = None
-        for i in range(lookback - 1):
-            if c[i] < ema[i]:
-                break_i = i
-        if break_i is None or break_i >= lookback - 1:
-            return False
-
-        retest_i = break_i + 1
-        touched = h[retest_i] >= ema[retest_i] * 0.999
-        rejected = c[-1] < ema[-1]
-        return touched and rejected
-
-    # LONG: break above EMA, retest from above, close back above.
-    break_i = None
-    for i in range(lookback - 1):
-        if c[i] > ema[i]:
-            break_i = i
-    if break_i is None or break_i >= lookback - 1:
-        return False
-
-    retest_i = break_i + 1
-    touched = l[retest_i] <= ema[retest_i] * 1.001
-    rejected = c[-1] > ema[-1]
-    return touched and rejected
-
-
-def v13_confluence_score(direction, entry, *,
-                         price_change_pct=0.0,
-                         oi_change_pct=0.0,
-                         volume_ratio=0.0,
-                         volume_pace=0.0,
-                         htf_trend="NEUTRAL",
-                         rsi=None,
-                         macd=None,
-                         macd_signal=None,
-                         funding_rate=None,
-                         support=None,
-                         resistance=None,
-                         compression=False,
-                         rejection=False,
-                         breakout=False):
-    """
-    0-10+ weighted score. The hard signal threshold is V13_MIN_SCORE.
-    Scores above 10 are capped at 10.
-    """
-    direction = direction.upper()
-    score = 0
-    reasons = []
-
-    regime = v13_oi_price_regime(price_change_pct, oi_change_pct)
-
-    if volume_pace >= 1.50:
-        score += 2
-        reasons.append("volume pace strong")
-    elif volume_ratio >= 2.0:
-        score += 1
-        reasons.append("volume elevated")
-
-    if direction == "LONG" and regime == "LONG_BUILDUP":
-        score += 2
-        reasons.append("OI + price long buildup")
-    elif direction == "SHORT" and regime == "SHORT_BUILDUP":
-        score += 2
-        reasons.append("OI + price short buildup")
-    elif direction == "LONG" and regime == "SHORT_COVERING":
-        score += 1
-        reasons.append("short covering")
-    elif direction == "SHORT" and regime == "LONG_LIQUIDATION":
-        score += 1
-        reasons.append("long liquidation")
-
-    if direction == "LONG" and htf_trend in ("UP", "STRONG_UP"):
-        score += 2 if htf_trend == "STRONG_UP" else 1
-        reasons.append("1H trend aligned")
-    elif direction == "SHORT" and htf_trend in ("DOWN", "STRONG_DOWN"):
-        score += 2 if htf_trend == "STRONG_DOWN" else 1
-        reasons.append("1H trend aligned")
-
-    if rejection:
-        score += 1
-        reasons.append("EMA rejection")
-    if compression:
-        score += 1
-        reasons.append("ATR compression")
-    if breakout:
-        score += 1
-        reasons.append("breakout")
-
-    if rsi is not None:
-        r = v13_safe_float(rsi)
-        if direction == "LONG" and 50 <= r < 70:
-            score += 1
-            reasons.append("RSI bullish")
-        elif direction == "SHORT" and 30 < r <= 50:
-            score += 1
-            reasons.append("RSI bearish")
-        # Extreme RSI is deliberately not rewarded; it can mean exhaustion.
-
-    if macd is not None and macd_signal is not None:
-        m = v13_safe_float(macd)
-        ms = v13_safe_float(macd_signal)
-        if direction == "LONG" and m > ms:
-            score += 1
-            reasons.append("MACD bullish")
-        elif direction == "SHORT" and m < ms:
-            score += 1
-            reasons.append("MACD bearish")
-
-    if funding_rate is not None:
-        f = v13_safe_float(funding_rate)
-        # Mildly favorable funding = confluence; extreme funding also indicates
-        # crowded positioning, so it can be used by the caller as squeeze logic.
-        if direction == "LONG" and f < 0:
-            score += 1
-            reasons.append("negative funding")
-        elif direction == "SHORT" and f > 0:
-            score += 1
-            reasons.append("positive funding")
-
-    # S/R is a confluence penalty/bonus rather than a standalone signal.
-    if support is not None and entry:
-        sd = (entry - support) / entry * 100
-        if direction == "SHORT" and sd < 0.40:
-            score -= 1
-            reasons.append("short too close to support")
-    if resistance is not None and entry:
-        rd = (resistance - entry) / entry * 100
-        if direction == "LONG" and rd < 0.40:
-            score -= 1
-            reasons.append("long too close to resistance")
-
-    score = max(0, min(10, score))
-
-    if score >= V13_HIGH_SCORE:
-        label = "HIGH_CONFIDENCE"
-    elif score >= V13_MIN_SCORE:
-        label = "SIGNAL"
-    else:
-        label = "IGNORE"
-
-    return score, label, regime, tuple(reasons)
-
-
-def v13_record_signal(signal: V13Signal):
-    """
-    Append-only outcome journal. No Telegram spam.
-    The journal can later be evaluated at +0.5%, +1%, +2%, etc.
-    """
-    payload = asdict(signal)
-    payload["timestamp"] = int(time.time())
-    try:
-        with V13_OUTCOME_FILE.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-    except OSError:
-        pass
-
-
-def v13_register_outcome(signal_id, outcome, pnl_pct=None):
-    """
-    Call this from a background outcome checker when a tracked signal reaches
-    TP/SL/timeout. It intentionally writes a separate event so the original
-    signal record remains immutable.
-    """
-    payload = {
-        "type": "outcome",
-        "signal_id": signal_id,
-        "outcome": outcome,
-        "pnl_pct": pnl_pct,
-        "timestamp": int(time.time()),
-    }
-    try:
-        with V13_OUTCOME_FILE.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-    except OSError:
-        pass
-
-
-def v13_should_alert(score):
-    return int(score) >= V13_MIN_SCORE
-
-
-# End of V13 signal quality engine.
