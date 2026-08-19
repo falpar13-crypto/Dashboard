@@ -29,13 +29,11 @@ v3 VÁLTOZÁS #3 - IRÁNY + ÚJ ÜZENETFORMÁTUM: az üzenet most zöld/piros po
 és LONG/SHORT címkével jelzi az irányt (élő gyertya open vs. jelenlegi ár
 alapján), a korábbi "szűk oldalazás" szöveg nélkül.
 
-v4 VÁLTOZÁS - AUTOMATIKUS VISSZAIGAZOLÁS: mivel az élő gyertyás jelzés néha
-"hamisnak" bizonyul (a mozgás visszafordul, mire a gyertya lezár), a bot
-mostantól minden jelzéshez elmenti, MELYIK gyertyáról volt szó. Amikor az a
-gyertya ténylegesen lezár, egy MÁSODIK Telegram-üzenetet küld: "✅ Megerősítve"
-vagy "❌ Visszafordult". Ez nem lassítja az eredeti jelzést (az továbbra is
-azonnal megy), csak utólag, automatikusan visszajelez a jelzés minőségéről -
-így idővel kézi munka nélkül is látszik a bot valódi találati aránya.
+v4 VÁLTOZÁS - AUTOMATIKUS VISSZAIGAZOLÁS (v11-BEN ELTÁVOLÍTVA): a v4-v9 között
+a bot minden jelzéshez elmentette, melyik gyertyáról volt szó, és amikor az
+lezárt, egy második "✅ Megerősítve" / "❌ Visszafordult" / "➖ Semleges zárás"
+Telegram-üzenetet is küldött. A felhasználói visszajelzés alapján ez túl sok
+zajt (spam-et) okozott, ezért a v11-ben TELJESEN KIKERÜLT a kódból (lásd lent).
 
 v5 VÁLTOZÁS - MAGASABB IDŐSÍK TREND-SZŰRŐ: mostantól a bot megnézi az adott
 pár 1 órás trendjét (záróár az 1h EMA50-hez képest) is. Az 1h trendet
@@ -47,13 +45,6 @@ szembemenő jelzést egyszerűen NEM küldtük ki. A felhasználói visszajelzé
 alapján ez túl szigorúnak bizonyult - mostantól a jelzés MINDIG kimegy, csak
 egy "⚠️ Trenddel szemben (1h: DOWN/UP)" figyelmeztető sort kap az üzenet, ha
 az irány nem egyezik az 1h trenddel. Így a döntés a felhasználónál marad.
-
-v6 VÁLTOZÁS - VISSZAIGAZOLÁS-KÜSZÖB: kiderült, hogy a visszaigazolás-ellenőrző
-korábban egy nagyon apró (pl. -0.02% vs +0.02%), gyakorlatilag zajszintű
-nyitó->záró mozgást is egyértelmű LONG/SHORT eredménynek vett, ami hibás
-"megerősítve" jelzéseket adott. Mostantól van egy CONFIRMATION_MIN_MOVE_PCT
-küszöb: ha a záró gyertya nyitó->záró mozgása ennél kisebb, a bot "➖ Semleges
-zárás" üzenetet küld megerősítés/cáfolat helyett.
 
 v8 VÁLTOZÁS - TÁMASZ/ELLENÁLLÁS FIGYELMEZTETÉS: a bot most egy egyszerű,
 "N-periódusos csatorna" módszerrel (az utolsó SR_LOOKBACK_PERIOD=60 db lezárt
@@ -68,12 +59,6 @@ trend-szűrőnél, ez SEM blokkolja a jelzést - a jelzés MINDIG kimegy, csak:
 Nincs plusz API-hívás: ugyanabból az 1h lekérésből számol, amit a HTF
 trendhez is használunk.
 
-v9 VÁLTOZÁS - JAVÍTVA A VISSZAIGAZOLÁS PARADOXONA: korábban a "megerősítve/
-visszafordult" döntés a lezáró gyertya SAJÁT nyitó->záró irányát nézte, ami
-paradox üzenetet adhatott (pl. "Megerősítve +1.52%" egy DUMP jelzésnél).
-Mostantól egységesen a JELZÉSKORI árhoz viszonyított tényleges elmozdulás
-dönt - ez mindig konzisztens a kiírt %-kal.
-
 v9 VÁLTOZÁS - RSI + MACD INFÓ: a bot most RSI(14)-et és MACD(12,26,9)-et is
 számol az 5m adatokból (nincs plusz API-hívás, csak nagyobb limit ugyanarra a
 lekérésre). Ez CSAK tájékoztató jellegű sor az üzenetben - nem szűr és nem
@@ -82,6 +67,31 @@ RSI_OVERBOUGHT/RSI_OVERSOLD küszöbök alapján.
 
 v9 VÁLTOZÁS - NCFX KIZÁRVA: az NCSK mellett az NCFX előtagú (szintén nem
 kriptó, tokenizált) termékek is ki vannak zárva a jelöltek közül.
+
+v11 VÁLTOZÁS - KILLZONE, FUNDING RATE, EMA SQUEEZE, SPAM-MENTESÍTÉS:
+  - OI-küszöb 2.5% -> 1.5% (érzékenyebb jelzés).
+  - ÚJ: Killzone (London 07:00-10:00 UTC, New York 13:30-16:00 UTC) infósor
+    az üzenetben - CSAK tájékoztat, nem szűr.
+  - ÚJ: Funding Rate lekérdezés (BingX premiumIndex végpont), Squeeze Vadász
+    figyelmeztetéssel (short/long squeeze), amikor a jelzés iránya a
+    finanszírozási rátával ellentétes pozíciók túlsúlyára utal. A funding
+    rate-et, mivel ritkán (általában óránál ritkábban) változik érdemben,
+    a HTF trendhez hasonlóan CSAK EGYSZER kérdezzük le szimbólumonként egy
+    futáson belül, és memóriában cache-eljük (funding_cache) - így nem nő
+    feleslegesen az API-terhelés minden 30 mp-es körben.
+  - ÚJ: EMA Squeeze (beszorulás) kitörés-riasztás - önálló, a STANDARD/SÁV
+    KITÖRÉS jelzésektől TELJESEN FÜGGETLEN logika, saját cooldown-nal és
+    lazább OI/volumen-küszöbökkel. FONTOS: mivel teljesen független, egy
+    adott élő gyertyára ELVILEG egyszerre mehet ki STANDARD/SÁV KITÖRÉS ÉS
+    EMA SQUEEZE riasztás is (két külön Telegram-üzenet) - ez a kért
+    függetlenség szándékos velejárója.
+  - TÖRÖLVE: automatikus visszaigazolás (lásd v4 fenti megjegyzését) - a bot
+    többé NEM küld "Megerősítve/Visszafordult/Semleges" üzeneteket.
+  - SZELLŐS DIZÁJN: minden kiküldött üzenet elejére/végére egy-egy extra
+    sortörés kerül, hogy Telegramon ne folyjanak össze az egymást követő
+    riasztások.
+  - Az 5m klines lekérés limitje (KLINES_LIMIT) 65 -> 120-ra nőtt, hogy az
+    EMA Squeeze EMA(50) számítása stabilabb (jobban "bemelegedett") legyen.
 
 FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
 JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
@@ -140,6 +150,8 @@ EMA_SQUEEZE_LOOKBACK_CANDLES = 4       # ennyi utolsó LEZÁRT gyertyán nézzü
 EMA_SQUEEZE_MAX_EMA_GAP_PCT = 1.5      # az EMA20 és EMA50 távolsága ennél kisebb legyen
 EMA_SQUEEZE_MIN_OI_INCREASE = 0.8      # a standardnál lazább OI-küszöb (a setup önmagában erős)
 EMA_SQUEEZE_MIN_VOL_MULTIPLIER = 1.3   # a standardnál lazább volumen-küszöb
+EMA_SQUEEZE_MAX_PRICE_CHANGE = 5.0     # felső korlát az élő gyertya ármozgására - egy
+                                        # adathiba/kiugrás miatti extrém "kitörést" szűr ki
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
 TOTAL_RUN_BUDGET_SECONDS = 270   # ~4.5 perc - a szkript ennyi ideig fut egyben
@@ -195,9 +207,13 @@ REQUEST_TIMEOUT = 10
 RETRY_COUNT = 3
 RETRY_BACKOFF = 1.5
 # Kell: 1 élő (nyitott) + VOLUME_MA_PERIOD lezárt gyertya a baseline-hoz, PLUSZ
-# elég előzmény egy stabil RSI(14)/MACD(12,26,9) számításához (~35-40 minimum,
-# biztonsági ráhagyással 65).
-KLINES_LIMIT = 65
+# elég előzmény egy stabil RSI(14)/MACD(12,26,9) számításához (~35-40 minimum),
+# PLUSZ (v11) elég előzmény egy stabilabb 5m EMA(20)/EMA(50) (EMA Squeeze)
+# számításához - span=50-nél minél több adat, annál jobban "bemelegszik" az
+# EMA. 120 gyertya kb. 10 óra 5m adatot ad, jó kompromisszum a pontosság és a
+# lekérdezés mérete/sebessége között (korábban 65 volt, ami az EMA(50)-hez
+# kissé szűkös).
+KLINES_LIMIT = 120
 
 # --- ÚJ: RSI infó-küszöbök (csak megjelenítés, NEM szűr - a felhasználó kérésére) ---
 RSI_OVERBOUGHT = 70
@@ -251,7 +267,6 @@ async def fetch_all_tickers(session):
             continue
         try:
             result[symbol] = {
-                "last_price": float(t.get("lastPrice", 0) or 0),
                 "quote_volume_24h": float(t.get("quoteVolume", 0) or 0),
             }
         except (TypeError, ValueError):
@@ -288,12 +303,33 @@ async def fetch_funding_rate(session, semaphore, symbol):
         await asyncio.sleep(0.03)
         if not data or "data" not in data or not data["data"]:
             return symbol, None
+
+        payload = data["data"]
+        # VÉDEKEZÉS: néhány BingX végpont egyetlen szimbólumra is LISTÁT ad
+        # vissza (nem csak dict-et) - ha ez történne itt is, az első elemet
+        # vesszük. Ha a struktúra egyáltalán nem az elvárt típus, csendben
+        # feladjuk erre a szimbólumra (nem szabad, hogy EGY váratlan válasz
+        # miatt az egész kör/futás elszálljon).
+        if isinstance(payload, list):
+            payload = payload[0] if payload else None
+        if not isinstance(payload, dict):
+            return symbol, None
+
         try:
-            raw = data["data"].get("lastFundingRate")
+            # A pontos mezőnév BingX végpontonként eltérhet - több lehetséges
+            # nevet is megpróbálunk, mielőtt feladnánk.
+            raw = payload.get("lastFundingRate")
+            if raw is None:
+                raw = payload.get("fundingRate")
             if raw is None:
                 return symbol, None
             return symbol, float(raw) * 100  # a BingX tizedes-törtet ad vissza -> %-ra váltjuk
         except (TypeError, ValueError):
+            return symbol, None
+        except Exception:
+            # Bármilyen más, előre nem látott hiba esetén se dőljön el emiatt
+            # az egész kör - egyszerűen nincs funding infó erre a szimbólumra
+            # ebben a körben, a jelzés a hiányzó funding sor nélkül megy ki.
             return symbol, None
 
 
@@ -414,11 +450,6 @@ def get_active_killzone(now: datetime) -> Optional[str]:
 
 
 DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  # belső irány-kód -> megjelenített szöveg
-SIGNAL_TYPE_LABELS = {
-    "STANDARD": "Standard",
-    "RANGE_BREAKOUT": "Sáv kitörés",
-    "EMA_SQUEEZE": "EMA Squeeze",
-}  # A/B teszthez
 
 
 def format_scalp_message(symbol, direction, price, price_change_pct,
@@ -676,11 +707,9 @@ def evaluate_candle(kdf: pd.DataFrame):
         "vol_multiplier": round(float(vol_multiplier), 2),
         "candle_vol_usdt": candle_vol_usdt,
         "direction": direction,
-        "candle_open_ts": live["timestamp"].isoformat(),
         "rsi": rsi_val,
         "macd_status": macd_status,
         "signal_type": signal_type,
-        "range_width_pct": round(range_width_pct, 2) if range_width_pct is not None else None,
         "ema_squeeze_signal": ema_squeeze_signal,
         "ema_gap_pct": ema_gap_pct,
     }
@@ -689,13 +718,13 @@ def evaluate_candle(kdf: pd.DataFrame):
 # EGY KIÉRTÉKELÉSI KÖR (a belső 30 mp-es ciklus egy "üteme")
 # ----------------------------------------------------------------------------
 
-async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: datetime):
+async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding_cache: dict, now: datetime):
     connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
     async with aiohttp.ClientSession(connector=connector) as session:
         tickers = await fetch_all_tickers(session)
         if not tickers:
             print("Nem sikerült ticker adatot lekérni a BingX API-ból, kör kihagyva.")
-            return 0, 0, valid_contracts, htf_cache
+            return 0, 0, valid_contracts, htf_cache, funding_cache
 
         if valid_contracts is None:
             valid_contracts = await fetch_valid_contract_symbols(session)
@@ -712,6 +741,11 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
 
         semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
         missing_htf = [s for s in candidates if s not in htf_cache]
+        # JAVÍTÁS: a funding rate ritkán (jellemzően óránál ritkábban) változik
+        # érdemben, ezért - ugyanúgy, mint a HTF trendet - CSAK EGYSZER kérjük
+        # le szimbólumonként egy futáson belül, nem minden 30 mp-es körben.
+        # Enélkül feleslegesen ~50%-kal nőne az API-hívások száma körönként.
+        missing_funding = [s for s in candidates if s not in funding_cache]
 
         # JAVÍTÁS: korábban az OI, a gyertyák és a HTF-trend lekérdezése 3
         # EGYMÁS UTÁNI (szekvenciális) await-blokkban történt, ami feleslegesen
@@ -719,28 +753,56 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
         # HTF-cache még üres. Mostantól mindhárom EGYSZERRE, egy közös
         # gather()-ben fut, a MAX_CONCURRENT_REQUESTS szemafor így is korlátozza
         # az egyidejű valós hálózati kéréseket, csak nem kell egymásra várniuk.
-        # ÚJ: a Funding Rate lekérdezése is ugyanebbe a gather()-be került, hogy
-        # párhuzamosan fusson és ne lassítsa a kört.
+        # ÚJ: a Funding Rate lekérdezése is ugyanebbe a gather()-be került (csak
+        # a még nem cache-elt szimbólumokra), hogy párhuzamosan fusson és ne
+        # lassítsa/terhelje feleslegesen a kört.
         oi_tasks = [fetch_open_interest(session, semaphore, s) for s in candidates]
         kline_tasks = [fetch_klines(session, semaphore, s, ALERT_TIMEFRAME) for s in candidates]
         htf_tasks = [fetch_htf_trend(session, semaphore, s) for s in missing_htf]
-        funding_tasks = [fetch_funding_rate(session, semaphore, s) for s in candidates]
+        funding_tasks = [fetch_funding_rate(session, semaphore, s) for s in missing_funding]
 
+        # VÉDEKEZÉS: return_exceptions=True, hogy EGY váratlan hiba (pl. egy
+        # előre nem látott API-válasz-formátum egyetlen szimbólumra) ne tudja
+        # elszállítani az egész kört/futást - az érintett feladat eredménye
+        # ilyenkor egy Exception-példány lesz, amit lent egyszerűen kiszűrünk.
         oi_results, kline_results, htf_results, funding_results = await asyncio.gather(
-            asyncio.gather(*oi_tasks),
-            asyncio.gather(*kline_tasks),
-            asyncio.gather(*htf_tasks),
-            asyncio.gather(*funding_tasks),
+            asyncio.gather(*oi_tasks, return_exceptions=True),
+            asyncio.gather(*kline_tasks, return_exceptions=True),
+            asyncio.gather(*htf_tasks, return_exceptions=True),
+            asyncio.gather(*funding_tasks, return_exceptions=True),
         )
 
         if htf_results:
-            for s, htf_data in htf_results:
+            for item in htf_results:
+                if isinstance(item, BaseException):
+                    continue
+                s, htf_data = item
                 if htf_data is not None and htf_data.get("trend") is not None:
                     htf_cache[s] = htf_data
 
-    oi_map = {s: oi for s, oi in oi_results if oi is not None}
-    klines_map = {s: df for s, df in kline_results if df is not None}
-    funding_map = {s: fr for s, fr in funding_results if fr is not None}
+        if funding_results:
+            for item in funding_results:
+                if isinstance(item, BaseException):
+                    continue
+                s, fr = item
+                if fr is not None:
+                    funding_cache[s] = fr
+
+    oi_map = {}
+    for item in oi_results:
+        if isinstance(item, BaseException):
+            continue
+        s, oi = item
+        if oi is not None:
+            oi_map[s] = oi
+
+    klines_map = {}
+    for item in kline_results:
+        if isinstance(item, BaseException):
+            continue
+        s, df = item
+        if df is not None:
+            klines_map[s] = df
 
     alerts_sent = 0
     evaluated = 0
@@ -765,7 +827,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
             continue
 
         oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
-        funding_rate = funding_map.get(symbol)
+        funding_rate = funding_cache.get(symbol)
 
         # --- v6: a magasabb idősík trendje NEM blokkol, csak figyelmeztető
         # sort kap az üzenet, ha a jelzés a trenddel szemben megy. ---
@@ -839,11 +901,13 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
         # --- ÚJ: EMA SQUEEZE (beszorulás) - önálló, a fenti STANDARD/SÁV
         # KITÖRÉS jelzéstől TELJESEN FÜGGETLEN riasztás, saját cooldown-nal,
         # lazább volumen/OI küszöbökkel (a szoros EMA-csatorna kitörése
-        # önmagában is erős setup). ---
+        # önmagában is erős setup), de saját felső ár-mozgás korláttal is
+        # (nehogy egy adathiba/kiugrás extrém "kitörésként" jelentkezzen).
         ema_signal = candle.get("ema_squeeze_signal")
         if ema_signal is not None:
             ema_is_setup = (
-                oi_change_pct >= EMA_SQUEEZE_MIN_OI_INCREASE
+                abs(candle["price_change_pct"]) <= EMA_SQUEEZE_MAX_PRICE_CHANGE
+                and oi_change_pct >= EMA_SQUEEZE_MIN_OI_INCREASE
                 and candle["vol_multiplier"] >= EMA_SQUEEZE_MIN_VOL_MULTIPLIER
                 and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
             )
@@ -854,10 +918,22 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
                     ema_cooldown_ok = False
 
             if ema_is_setup and ema_cooldown_ok:
+                # Az EMA Squeeze iránya (ema_signal) eltérhet a fenti STANDARD
+                # jelzés irányától, ezért a szint-közelséget külön, az EMA
+                # Squeeze SAJÁT irányára nézve számoljuk újra.
+                ema_near_level_risk = (
+                    (ema_signal == "LONG" and near_resistance)
+                    or (ema_signal == "SHORT" and near_support)
+                )
+                ema_bounce_confluence = (
+                    (ema_signal == "LONG" and near_support)
+                    or (ema_signal == "SHORT" and near_resistance)
+                )
                 ema_msg = format_scalp_message(
                     symbol, ema_signal, candle["price"], candle["price_change_pct"],
                     candle["candle_vol_usdt"], candle["vol_multiplier"],
                     oi_now, oi_change_pct, htf_trend=htf_trend,
+                    bounce_confluence=ema_bounce_confluence, near_level_risk=ema_near_level_risk,
                     rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
                     signal_type="EMA_SQUEEZE",
                     funding_rate=funding_rate, now=now,
@@ -873,7 +949,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, now: da
     if sr_warned:
         print(f"  (ebben a körben {sr_warned} kiküldött jelzés ment támasz/ellenállás ellen - figyelmeztetéssel)")
 
-    return alerts_sent, evaluated, valid_contracts, htf_cache
+    return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
 
 # ----------------------------------------------------------------------------
 # FŐ CIKLUS - kb. 4.5 percig fut, 30 mp-enként újra kiértékelve
@@ -919,6 +995,7 @@ async def _run_main_loop(state: dict):
     loop_start = time.monotonic()
     valid_contracts = None
     htf_cache = {}   # symbol -> {"trend":..., "support":..., "resistance":...}, futáson belül újrahasznosítva
+    funding_cache = {}   # symbol -> funding rate (%), futáson belül újrahasznosítva (ritkán változik)
     pass_num = 0
     total_alerts = 0
 
@@ -936,8 +1013,8 @@ async def _run_main_loop(state: dict):
         # válaszol) - így a szkript garantáltan időben, rendesen leáll.
         remaining_budget = max(30.0, TOTAL_RUN_BUDGET_SECONDS - elapsed_total)
         try:
-            alerts, evaluated, valid_contracts, htf_cache = await asyncio.wait_for(
-                run_single_pass(state, valid_contracts, htf_cache, now),
+            alerts, evaluated, valid_contracts, htf_cache, funding_cache = await asyncio.wait_for(
+                run_single_pass(state, valid_contracts, htf_cache, funding_cache, now),
                 timeout=remaining_budget,
             )
         except asyncio.TimeoutError:
