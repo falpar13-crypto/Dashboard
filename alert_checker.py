@@ -93,6 +93,16 @@ v11 VÁLTOZÁS - KILLZONE, FUNDING RATE, EMA SQUEEZE, SPAM-MENTESÍTÉS:
   - Az 5m klines lekérés limitje (KLINES_LIMIT) 65 -> 120-ra nőtt, hogy az
     EMA Squeeze EMA(50) számítása stabilabb (jobban "bemelegedett") legyen.
 
+v12 VÁLTOZÁS - EMA 20 REJECTION (MOZGÓÁTLAG-VISSZAUTASÍTÁS): ÚJ, önálló,
+kizárólag SHORT (DUMP) irányú riasztás-logika, a STANDARD/SÁV KITÖRÉS/EMA
+SQUEEZE jelzésektől TELJESEN FÜGGETLEN, saját cooldown-nal. Setup: korábbi
+UP trend (EMA20 az EMA50 felett) után az ár betört az EMA20 alá, majd
+alulról szorosan visszatesztelte azt, de nem tudott fölé zárni - a szint
+"visszautasította", és az élő gyertya határozottan piros, folytatódó
+beszakadást jelezve. A HTF trend/RSI/MACD/killzone/funding infósorok ennél a
+jelzéstípusnál is megjelennek, csakúgy, mint a többinél. Lazított (60% OI /
+70% volumen) küszöbökkel fut, ugyanúgy, mint az EMA Squeeze.
+
 FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
 JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
 referenciaként, valós időbélyeg alapján keresve a ~5 perces referenciapontot.
@@ -152,6 +162,26 @@ EMA_SQUEEZE_MIN_OI_INCREASE = 0.8      # a standardnál lazább OI-küszöb (a s
 EMA_SQUEEZE_MIN_VOL_MULTIPLIER = 1.3   # a standardnál lazább volumen-küszöb
 EMA_SQUEEZE_MAX_PRICE_CHANGE = 5.0     # felső korlát az élő gyertya ármozgására - egy
                                         # adathiba/kiugrás miatti extrém "kitörést" szűr ki
+
+# --- ÚJ (v12): EMA 20 Rejection (mozgóátlag-visszautasítás) - önálló, a
+# STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN FÜGGETLEN, kizárólag
+# SHORT (DUMP) irányú riasztás-logika. Setup: korábbi UP trend (EMA20>EMA50)
+# után az ár betört az EMA20 alá, majd alulról visszatesztelte azt, de nem
+# tudott fölé zárni - "visszautasítás" (rejection), és az élő gyertya
+# határozottan piros, jelezve a beszakadás folytatódását. ---
+EMA_REJECTION_FAST_PERIOD = 20
+EMA_REJECTION_SLOW_PERIOD = 50
+EMA_REJECTION_LOOKBACK_CANDLES = 6         # "utolsó 3-6 gyertya" - a felső határt vesszük
+EMA_REJECTION_BREAK_BELOW_PCT = 0.1        # ennyivel legyen a close "határozottan" EMA20 alatt (%)
+EMA_REJECTION_RETEST_TOLERANCE_PCT = 0.5   # a visszateszt High-ja ennyi %-on belül érintse az EMA20-at
+EMA_REJECTION_MIN_RED_BODY_PCT = 0.15      # a trigger-gyertya piros teste legalább ennyi % legyen
+                                            # (nyitó->jelenlegi ár), hogy ne zajszintű mozgás triggereljen
+EMA_REJECTION_MAX_PRICE_CHANGE = 5.0       # felső korlát az élő gyertya ármozgására (adathiba-védelem)
+# Lazított OI/volumen-küszöbök, ugyanúgy, mint az EMA Squeeze-nél: a setup
+# önmagában (price action) elég erős, ezért a standardnál engedékenyebb
+# küszöbök is elfogadhatók - itt kifejezetten a kért 60%/70% arányban:
+EMA_REJECTION_MIN_OI_INCREASE = 0.9        # MIN_OI_INCREASE (1.5) 60%-a
+EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.4     # MIN_VOL_MULTIPLIER (2.0) 70%-a
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
 TOTAL_RUN_BUDGET_SECONDS = 270   # ~4.5 perc - a szkript ennyi ideig fut egyben
@@ -462,6 +492,8 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         header = f"🎯 SÁV KITÖRÉS ({action}): <b>{symbol}</b>"
     elif signal_type == "EMA_SQUEEZE":
         header = f"🗜️ EMA SQUEEZE KITÖRÉS ({action}): <b>{symbol}</b>"
+    elif signal_type == "EMA_REJECTION":
+        header = f"📉 EMA REJECTION ({action}): <b>{symbol}</b>"
     else:
         header = f"⚡ STANDARD {action}: <b>{symbol}</b>"
 
@@ -647,6 +679,81 @@ def detect_ema_squeeze(closed: pd.DataFrame, live: pd.Series):
     return None, round(float(ema_gap_pct), 2)
 
 
+# ----------------------------------------------------------------------------
+# ÚJ (v12): EMA 20 REJECTION (MOZGÓÁTLAG-VISSZAUTASÍTÁS) DETEKTÁLÁS - önálló,
+# a STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN FÜGGETLEN, kizárólag
+# SHORT (DUMP) irányú logika. Ugyanazokból a klines adatokból számol, nincs
+# plusz API-hívás.
+# 1) Alap trend: EMA20 az EMA50 felett legyen (a korábbi irány UP volt).
+# 2) Letörés: az utolsó EMA_REJECTION_LOOKBACK_CANDLES db LEZÁRT gyertya közül
+#    legalább egynek a záróára határozottan (EMA_REJECTION_BREAK_BELOW_PCT
+#    %-kal) az akkori EMA20 alatt legyen - tehát a trend megtört.
+# 3) Visszateszt: az utolsó LEZÁRT vagy az ÉLŐ gyertya High-ja alulról szorosan
+#    (EMA_REJECTION_RETEST_TOLERANCE_PCT %-on belül) megközelítse a jelenlegi
+#    EMA20-at.
+# 4) Trigger: az élő gyertya határozottan piros (jelenlegi ár a nyitóár alatt,
+#    minimum EMA_REJECTION_MIN_RED_BODY_PCT %-kal), ÉS a jelenlegi ár már az
+#    EMA20 alatt van - ez igazolja, hogy a szint tényleg visszautasította az
+#    árat.
+# ----------------------------------------------------------------------------
+
+def detect_ema_rejection(closed: pd.DataFrame, live: pd.Series):
+    """Visszaadja "SHORT"-ot, ha teljesül az EMA 20 Rejection setup, egyébként
+    None-t."""
+    min_len = EMA_REJECTION_SLOW_PERIOD + EMA_REJECTION_LOOKBACK_CANDLES
+    if len(closed) < min_len:
+        return None
+
+    ema20 = closed["close"].ewm(span=EMA_REJECTION_FAST_PERIOD, adjust=False).mean()
+    ema50 = closed["close"].ewm(span=EMA_REJECTION_SLOW_PERIOD, adjust=False).mean()
+
+    last_ema20 = ema20.iloc[-1]
+    last_ema50 = ema50.iloc[-1]
+    if pd.isna(last_ema20) or pd.isna(last_ema50) or last_ema20 <= 0:
+        return None
+
+    # 1) Alap trend: EMA20 > EMA50 (korábban UP trend volt).
+    if last_ema20 <= last_ema50:
+        return None
+
+    # 2) Letörés: legalább egy lezárt gyertya close-ja határozottan az akkori
+    # EMA20 alatt zárt (a saját időpontjának megfelelő EMA20-hoz viszonyítva,
+    # nem a jelenlegihez - így a "megtört a trend" pillanatát nézzük).
+    lookback_closed = closed.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
+    lookback_ema20 = ema20.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
+    break_threshold = lookback_ema20 * (1 - EMA_REJECTION_BREAK_BELOW_PCT / 100)
+    broke_below = bool((lookback_closed["close"].values < break_threshold.values).any())
+    if not broke_below:
+        return None
+
+    # 3) Visszateszt: az utolsó LEZÁRT gyertya VAGY az ÉLŐ gyertya High-ja
+    # alulról szorosan megközelítette a (jelenlegi) EMA20-at.
+    tolerance = last_ema20 * (EMA_REJECTION_RETEST_TOLERANCE_PCT / 100)
+    channel_low = last_ema20 - tolerance
+    channel_high = last_ema20 + tolerance
+
+    last_closed_high = float(closed["high"].iloc[-1])
+    live_high = float(live["high"])
+    retested = (channel_low <= last_closed_high <= channel_high) or (channel_low <= live_high <= channel_high)
+    if not retested:
+        return None
+
+    # 4) Trigger: az élő gyertya határozottan piros, ÉS a jelenlegi ár már az
+    # EMA20 alatt van (igazolva, hogy a szint tényleg visszautasított).
+    live_open = float(live["open"])
+    live_close = float(live["close"])
+    if live_open <= 0:
+        return None
+
+    red_body_pct = (live_open - live_close) / live_open * 100
+    if red_body_pct < EMA_REJECTION_MIN_RED_BODY_PCT:
+        return None
+    if live_close >= last_ema20:
+        return None
+
+    return "SHORT"
+
+
 def evaluate_candle(kdf: pd.DataFrame):
     """Az ÉLŐ (még nyitott) gyertyát értékeli ki a megelőző VOLUME_MA_PERIOD db
     LEZÁRT gyertya átlagához képest. Az irányt az élő gyertya nyitó- és
@@ -701,6 +808,10 @@ def evaluate_candle(kdf: pd.DataFrame):
     # ÚJ: EMA Squeeze (beszorulás) kitörés-jelzés - önálló, kiegészítő infó.
     ema_squeeze_signal, ema_gap_pct = detect_ema_squeeze(closed, live)
 
+    # ÚJ (v12): EMA 20 Rejection (mozgóátlag-visszautasítás) - önálló,
+    # kizárólag SHORT irányú kiegészítő jelzés.
+    ema_rejection_signal = detect_ema_rejection(closed, live)
+
     return {
         "price": current_price,
         "price_change_pct": round(float(price_change_pct), 2),
@@ -712,6 +823,7 @@ def evaluate_candle(kdf: pd.DataFrame):
         "signal_type": signal_type,
         "ema_squeeze_signal": ema_squeeze_signal,
         "ema_gap_pct": ema_gap_pct,
+        "ema_rejection_signal": ema_rejection_signal,
     }
 
 # ----------------------------------------------------------------------------
@@ -943,6 +1055,45 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 alerts_sent += 1
                 print(f"JELZÉS küldve: {symbol} [{ema_signal}] [EMA_SQUEEZE] (EMA gap {candle.get('ema_gap_pct')}%, "
                       f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
+
+        # --- ÚJ (v12): EMA 20 REJECTION (mozgóátlag-visszautasítás) - önálló,
+        # a STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN FÜGGETLEN,
+        # kizárólag SHORT (DUMP) irányú riasztás, saját cooldown-nal, lazított
+        # (60% OI / 70% volumen) küszöbökkel - ugyanúgy, mint az EMA Squeeze-nél,
+        # mivel ez is egy erős, önmagában is jól definiált price action setup. ---
+        ema_rejection_signal = candle.get("ema_rejection_signal")
+        if ema_rejection_signal is not None:
+            rejection_is_setup = (
+                abs(candle["price_change_pct"]) <= EMA_REJECTION_MAX_PRICE_CHANGE
+                and oi_change_pct >= EMA_REJECTION_MIN_OI_INCREASE
+                and candle["vol_multiplier"] >= EMA_REJECTION_MIN_VOL_MULTIPLIER
+                and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
+            )
+            rejection_cooldown_ok = True
+            if entry.get("last_ema_rejection_alert_ts"):
+                last_rejection_dt = datetime.fromisoformat(entry["last_ema_rejection_alert_ts"])
+                if (now - last_rejection_dt) < timedelta(minutes=ALERT_COOLDOWN_MINUTES):
+                    rejection_cooldown_ok = False
+
+            if rejection_is_setup and rejection_cooldown_ok:
+                # Az EMA Rejection mindig SHORT irányú, de a szint-közelséget
+                # (mint az EMA Squeeze-nél) erre az irányra nézve számoljuk.
+                rejection_near_level_risk = (ema_rejection_signal == "SHORT" and near_support)
+                rejection_bounce_confluence = (ema_rejection_signal == "SHORT" and near_resistance)
+                rejection_msg = format_scalp_message(
+                    symbol, ema_rejection_signal, candle["price"], candle["price_change_pct"],
+                    candle["candle_vol_usdt"], candle["vol_multiplier"],
+                    oi_now, oi_change_pct, htf_trend=htf_trend,
+                    bounce_confluence=rejection_bounce_confluence, near_level_risk=rejection_near_level_risk,
+                    rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
+                    signal_type="EMA_REJECTION",
+                    funding_rate=funding_rate, now=now,
+                )
+                send_telegram_message(rejection_msg)
+                entry["last_ema_rejection_alert_ts"] = now.isoformat()
+                alerts_sent += 1
+                print(f"JELZÉS küldve: {symbol} [{ema_rejection_signal}] [EMA_REJECTION] "
+                      f"(Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
 
     if htf_warned:
         print(f"  (ebben a körben {htf_warned} kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)")
