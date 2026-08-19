@@ -7,16 +7,16 @@ on:
     
     # 2. Nyári Adatmegjelenés (12:33 UTC -> 14:33 HU) 
     # (3 perccel az adat után fut, hogy a ForexFactory adatbázisa biztosan frissüljön!)
-    - cron: '33 12 * * *'
+    - cron: '31 12 * * *'
     
     # 3. Téli Adatmegjelenés (13:33 UTC -> 14:33 HU)
-    - cron: '33 13 * * *'
+    - cron: '31 13 * * *'
     
     # 4. Nyári FOMC Kamatdöntés (18:03 UTC -> 20:03 HU)
-    - cron: '03 18 * * *'
+    - cron: '01 18 * * *'
     
     # 5. Téli FOMC Kamatdöntés (19:03 UTC -> 20:03 HU)
-    - cron: '03 19 * * *'
+    - cron: '01 19 * * *'
     
   workflow_dispatch: # Kézi indítási lehetőség gombnyomásra
 
