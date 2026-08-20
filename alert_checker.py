@@ -217,7 +217,15 @@ EMA_REJECTION_MIN_OI_INCREASE = 0.7        # korábban 0.9
 EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.2     # korábban 1.4
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
-TOTAL_RUN_BUDGET_SECONDS = 270   # ~4.5 perc - a szkript ennyi ideig fut egyben
+TOTAL_RUN_BUDGET_SECONDS = 280   # v15d: 240 -> 280 (~4m40s). MOST MÁR 6 PERCES
+                                  # külső cron-intervallumhoz igazítva (a
+                                  # cron-job.org beállítást is 5 -> 6 percre kell
+                                  # állítani, lásd a válaszban)! 360s (6 perc) -
+                                  # ~31s körítés - ~49s biztonsági tartalék = ~280s.
+                                  # Ezzel a "vak rés" a ciklusok között gyakorlatilag
+                                  # eltűnik, miközben a torlódás elleni tartalék is
+                                  # bőven megmarad (retry-kkel járó lassabb git push
+                                  # esetére is).
 PASS_INTERVAL_SECONDS = 30       # ennyi mp-enként fut újra a kiértékelés
 
 # ----------------------------------------------------------------------------
