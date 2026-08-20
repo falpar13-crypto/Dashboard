@@ -3,10 +3,13 @@ name: BingX Breakout Alert
 on:
   schedule:
     # TARTALÉK ütemezés - csak arra az esetre, ha a külső cron-szolgáltatás
-    # (cron-job.org) valamiért nem érhető el. A VALÓDI 5 perces ütemezést egy
-    # külső szolgáltatás adja, ami a workflow_dispatch API-n keresztül indítja
-    # el ezt a workflow-t (lásd setup útmutató). A GitHub saját "schedule"
-    # ütemezése nem megbízható elég sűrű (5 perces) futtatáshoz.
+    # (cron-job.org) valamiért nem érhető el. A VALÓDI, mostantól 10 PERCES
+    # ütemezést egy külső szolgáltatás adja (v15: 5 -> 10 perc, mert a
+    # cron-job.org csak kerek perceket enged, és ritkább-de-hosszabb futással
+    # jobb a teljes órás lefedettség - lásd alert_checker.py TOTAL_RUN_BUDGET_SECONDS
+    # kommentjét), ami a workflow_dispatch API-n keresztül indítja el ezt a
+    # workflow-t (lásd setup útmutató). A GitHub saját "schedule" ütemezése nem
+    # megbízható elég sűrű futtatáshoz.
     - cron: "0 * * * *"   # óránként egyszer, csak biztonsági hálóként
   workflow_dispatch: {}   # ezt hívja a külső cron-szolgáltatás API-n keresztül,
                            # és ezzel kézzel is elindítható a "Actions" fülön
