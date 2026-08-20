@@ -32,6 +32,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"                      # v15 JAVÍTÁS: a csomagok (pandas,
+          cache-dependency-path: requirements-alerts.txt  # aiohttp stb.) cache-elése -
+                                             # így nem kell minden futásnál nulláról
+                                             # újratelepíteni őket (ez lehet a 8-9
+                                             # perces futásidő egyik fő oka)
 
       - name: Csomagok telepítése
         run: pip install -r requirements-alerts.txt
