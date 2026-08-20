@@ -51,12 +51,24 @@ jobs:
           # automatikusan a saját (ebben a futásban frissített) verziót tartja meg.
           git config merge.ours.driver true
 
+          # v15 JAVÍTÁS: eddig csak az alert_state.json került mentésre, az
+          # alert_log.jsonl (a napi winrate-összesítőhöz szükséges jelzés-napló)
+          # SOHA nem lett visszaírva a repóba - minden futás egy vadonatúj,
+          # egyszer használatos gépen indul, így a szkript által útközben
+          # létrehozott alert_log.jsonl minden futás végén elveszett, a
+          # következő pedig mindig üres naplóból indult. Emiatt sosem gyűlt
+          # össze benne semmi, és a napi összesítő mindig "nincs mit
+          # összesíteni" ágra futott.
           git add alert_state.json
+          if [ -f alert_log.jsonl ]; then
+            git add alert_log.jsonl
+          fi
+
           if git diff --quiet --cached; then
-            echo "Nincs változás az állapotfájlban, nincs mit commitolni."
+            echo "Nincs változás az állapotfájlokban, nincs mit commitolni."
             exit 0
           fi
-          git commit -m "alert_state frissítve [skip ci]"
+          git commit -m "alert_state / alert_log frissítve [skip ci]"
 
           # Push újrapróbálással, ha közben más futás is írt volna a repóba.
           for i in 1 2 3 4 5; do
