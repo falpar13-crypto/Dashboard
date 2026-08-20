@@ -217,15 +217,19 @@ EMA_REJECTION_MIN_OI_INCREASE = 0.7        # korábban 0.9
 EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.2     # korábban 1.4
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
-TOTAL_RUN_BUDGET_SECONDS = 280   # v15d: 240 -> 280 (~4m40s). MOST MÁR 6 PERCES
-                                  # külső cron-intervallumhoz igazítva (a
-                                  # cron-job.org beállítást is 5 -> 6 percre kell
-                                  # állítani, lásd a válaszban)! 360s (6 perc) -
-                                  # ~31s körítés - ~49s biztonsági tartalék = ~280s.
-                                  # Ezzel a "vak rés" a ciklusok között gyakorlatilag
-                                  # eltűnik, miközben a torlódás elleni tartalék is
-                                  # bőven megmarad (retry-kkel járó lassabb git push
-                                  # esetére is).
+TOTAL_RUN_BUDGET_SECONDS = 520   # v15e: 280 -> 520 (~8m40s). A cron-job.org csak
+                                  # kerek (5/10/15...) perces intervallumot enged,
+                                  # 6 perc nem választható - ezért 10 PERCES külső
+                                  # cron-ütemezésre álltunk át (lásd a válaszban).
+                                  # FONTOS BELÁTÁS: a körítés (~31s) és a biztonsági
+                                  # tartalék (~45s) MINDEN egyes indításnál
+                                  # felemésztődik, függetlenül az intervallum
+                                  # hosszától - ezért RITKÁBB, DE HOSSZABB futás
+                                  # (10 perc) ÖSSZESSÉGÉBEN KEVESEBB "vak" időt ad,
+                                  # mint a gyakoribb, rövidebb (5 perc): óránként
+                                  # feleannyiszor kell megfizetni a fix körítési
+                                  # költséget. 600s ablak - ~31s körítés - ~45s
+                                  # tartalék ≈ 520s.
 PASS_INTERVAL_SECONDS = 30       # ennyi mp-enként fut újra a kiértékelés
 
 # ----------------------------------------------------------------------------
