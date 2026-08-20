@@ -144,6 +144,7 @@ import os
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 from typing import Optional
 
 import aiohttp
@@ -231,9 +232,12 @@ FUNDING_RATE_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/premiumIndex"
 
 STATE_FILE = Path(__file__).parent / "alert_state.json"
 
-# --- "Kis/közepes market cap altcoin" előszűrés (VÁLTOZATLAN) ---
-MIN_VOLUME_USDT = 500_000
-MAX_VOLUME_USDT = 15_000_000
+# --- "Kis/közepes market cap altcoin" előszűrés ---
+# v15: MIN 500k -> 1M (a legilliquidebb mikrocapok kiszűrése), MAX 15M -> 150M
+# (sokkal szélesebb sáv, hogy a nagyobb, likvidebb altcoinok is bekerüljenek
+# a jelöltlistába) - a felhasználó kérésére.
+MIN_VOLUME_USDT = 1_000_000
+MAX_VOLUME_USDT = 150_000_000
 
 # --- Nem-kriptó termékek kiszűrése (VÁLTOZATLAN) ---
 NON_CRYPTO_PREFIXES = ("NCSK", "NCFX")
@@ -263,8 +267,10 @@ HTF_EMA_PERIOD = 50           # EMA(50) az 1h gyertyákon - záróár ehhez kép
 HTF_KLINES_LIMIT = 100        # ennyi 1h gyertyát kérünk le az EMA50 stabilizálásához
 REQUIRE_HTF_ALIGNMENT = True  # False-ra állítva kikapcsolható a szűrő kódtörlés nélkül
 
-MAX_CONCURRENT_REQUESTS = 12   # a MAX_VOLUME_USDT emelése miatt nagyobb lett a
-                                # jelöltlista, ezért itt is emeltünk kicsit (8 -> 12)
+MAX_CONCURRENT_REQUESTS = 16   # v15: 12 -> 16, mert a MAX_VOLUME_USDT nagy
+                                # emelése (15M -> 150M) várhatóan jelentősen
+                                # megnöveli a jelöltlista méretét - érdemes az
+                                # első pár futást figyelni (lásd a válaszban)
 REQUEST_TIMEOUT = 10
 RETRY_COUNT = 3
 RETRY_BACKOFF = 1.5
@@ -298,6 +304,13 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 # a bot egyetlen összesítő Telegram-üzenetben elküldi az előző nap
 # jelzéstípusonkénti darabszámát, W/L/N bontását és winrate-jét.
 SIGNAL_LOG_FILE = Path(__file__).parent / "alert_log.jsonl"
+
+# v15: a NAPI ÖSSZESÍTŐ napváltása és küldési időzítése mostantól ezen a
+# (helyi) időzónán alapul, NEM UTC-n - így "éjfél után" tényleg a te
+# éjfélhez (nem UTC éjfélhez, ami nyáron 2, télen 1 órával később van) igazodik.
+# Minden MÁS időbélyeg (entry_ts, exit_ts, cooldown stb.) a fájlban
+# VÁLTOZATLANUL UTC marad - csak az összesítő naphatára/küldési idő lokális.
+SUMMARY_TIMEZONE = ZoneInfo("Europe/Budapest")
 
 OUTCOME_EVAL_MINUTES = 30       # ennyi idő elteltével értékeljük ki a jelzést
 OUTCOME_WIN_THRESHOLD_PCT = 0.3 # ennyi %-os, a jelzés iránya szerinti elmozdulás
@@ -334,10 +347,10 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str,
         "direction": direction,
         "entry_price": entry_price,
         "entry_ts": now.isoformat(),
-        "entry_date": now.strftime("%Y-%m-%d"),  # UTC dátum - ehhez a naphoz
-                                                    # számít a napi összesítőben,
-                                                    # függetlenül attól, mikor
-                                                    # zárul le ténylegesen
+        "entry_date": now.astimezone(SUMMARY_TIMEZONE).strftime("%Y-%m-%d"),  # v15: helyi (nem UTC)
+                                                    # dátum - ehhez a (helyi) naphoz számít a napi
+                                                    # összesítőben, függetlenül attól, mikor zárul
+                                                    # le ténylegesen a jelzés kiértékelése
         "evaluate_at_ts": (now + timedelta(minutes=OUTCOME_EVAL_MINUTES)).isoformat(),
     })
 
@@ -470,29 +483,31 @@ def _format_daily_summary(date_str: str, entries: list) -> str:
 
 
 def maybe_send_daily_summary(state: dict, now: datetime) -> None:
-    """Ha új UTC nap kezdődött (és eltelt DAILY_SUMMARY_MIN_DELAY_MINUTES
-    perc éjfél óta, hogy az előző nap utolsó jelzései is kiértékelődjenek),
-    elküldi az előző nap winrate-összesítőjét, majd megjegyzi state-ben, hogy
-    a mai napra már küldtünk (ne menjen ki még egyszer ugyanaznap)."""
-    today_str = now.strftime("%Y-%m-%d")
+    """Ha új (HELYI, SUMMARY_TIMEZONE szerinti) nap kezdődött, és eltelt
+    DAILY_SUMMARY_MIN_DELAY_MINUTES perc a helyi éjfél óta (hogy az előző nap
+    utolsó jelzései is kiértékelődjenek), elküldi az előző nap winrate-
+    összesítőjét, majd megjegyzi state-ben, hogy a mai (helyi) napra már
+    küldtünk (ne menjen ki még egyszer ugyanaznap)."""
+    local_now = now.astimezone(SUMMARY_TIMEZONE)
+    today_str = local_now.strftime("%Y-%m-%d")
     last_summary_date = state.get("_last_summary_date")
 
     if last_summary_date is None:
         # Első futás valaha - nincs mit összesíteni, csak megjegyezzük a mai
-        # napot, hogy holnap már legyen mihez képest "új nap".
+        # (helyi) napot, hogy holnap már legyen mihez képest "új nap".
         state["_last_summary_date"] = today_str
         return
 
     if last_summary_date == today_str:
-        return  # ma már küldtünk (vagy még ugyanaz a nap van) - nincs teendő
+        return  # ma már küldtünk (vagy még ugyanaz a helyi nap van) - nincs teendő
 
-    midnight_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    minutes_since_midnight = (now - midnight_today).total_seconds() / 60
-    if minutes_since_midnight < DAILY_SUMMARY_MIN_DELAY_MINUTES:
-        return  # várunk még egy kicsit éjfél után, hogy a tegnapi utolsó
-                 # jelzések is stabilan kiértékelődjenek
+    local_midnight_today = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
+    minutes_since_local_midnight = (local_now - local_midnight_today).total_seconds() / 60
+    if minutes_since_local_midnight < DAILY_SUMMARY_MIN_DELAY_MINUTES:
+        return  # várunk még egy kicsit helyi éjfél után, hogy a tegnapi
+                 # utolsó jelzések is stabilan kiértékelődjenek
 
-    yesterday_str = (now - timedelta(days=1)).strftime("%Y-%m-%d")
+    yesterday_str = (local_now - timedelta(days=1)).strftime("%Y-%m-%d")
     entries = _load_log_entries_for_date(yesterday_str)
     if entries:
         summary_msg = _format_daily_summary(yesterday_str, entries)
