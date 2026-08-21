@@ -798,7 +798,7 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
     # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
     # törölve.
     action = DIRECTION_LABELS.get(direction, direction)
-    header = f"⚡ STANDARD {action}: <b>{symbol}</b>"
+    header = f"⚡ <b>{symbol}</b> {action}"
 
     warning_line = ""
     against_trend = (
