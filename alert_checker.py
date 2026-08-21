@@ -158,13 +158,13 @@ ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashb
                              # idősík-választójától teljesen függetlenül
 MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
-MIN_OI_INCREASE = 2.5       # v18 RÁNCFELVARRÁS: szigorú alapokra vissza -
+MIN_OI_INCREASE = 1.5       # v18 RÁNCFELVARRÁS: szigorú alapokra vissza -
                              # a bot mostantól KIZÁRÓLAG STANDARD jelzést küld,
                              # ehhez markánsan magasabb küszöb kell
 MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimuma
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
-MIN_VOL_MULTIPLIER = 2.5    # v18 RÁNCFELVARRÁS: szigorú alapokra vissza (lásd fent)
+MIN_VOL_MULTIPLIER = 2    # v18 RÁNCFELVARRÁS: szigorú alapokra vissza (lásd fent)
 
 # --- ÚJ: Killzone (tőzsdenyitási időablakok) - UTC időzóna, "HH:MM" formátumban ---
 LONDON_KILLZONE = ("07:00", "10:00")
