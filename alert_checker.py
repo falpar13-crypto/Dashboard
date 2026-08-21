@@ -158,21 +158,13 @@ ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashb
                              # idősík-választójától teljesen függetlenül
 MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
-MIN_OI_INCREASE = 1.2       # v17: VISSZA a lazított (v13) értékre - a korábbi
-                             # "90% használhatatlan" benyomás a mérési módszer
-                             # (fix 30 perc / 0.3%) hibája volt, nem a jelzések
-                             # minőségéé - lásd a v17-es kiértékelési logikát
+MIN_OI_INCREASE = 2.5       # v18 RÁNCFELVARRÁS: szigorú alapokra vissza -
+                             # a bot mostantól KIZÁRÓLAG STANDARD jelzést küld,
+                             # ehhez markánsan magasabb küszöb kell
 MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimuma
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
-MIN_VOL_MULTIPLIER = 1.8    # v17: VISSZA a lazított (v13) értékre (lásd fenti indoklás)
-
-# --- ÚJ (v10): A/B teszt - "Sáv kitörés" jelzéstípus a "Standard" mellé ---
-# Ugyanazok a fő feltételek (OI, volumen, ár) döntik el, hogy egyáltalán menjen-e
-# jelzés - ez a rész csak UTÓLAG CÍMKÉZI a már jóváhagyott jelzést aszerint,
-# hogy egy előzetes szűk sávból való kitöréssel esik-e egybe.
-RANGE_LOOKBACK_PERIOD = 8          # ennyi megelőző lezárt gyertyán nézzük a sáv szélességét (40 perc)
-RANGE_COMPRESSION_THRESHOLD_PCT = 1.5  # a sáv ennél szűkebb legyen ahhoz, hogy "beszűkültnek" számítson
+MIN_VOL_MULTIPLIER = 2.5    # v18 RÁNCFELVARRÁS: szigorú alapokra vissza (lásd fent)
 
 # --- ÚJ: Killzone (tőzsdenyitási időablakok) - UTC időzóna, "HH:MM" formátumban ---
 LONDON_KILLZONE = ("07:00", "10:00")
@@ -181,36 +173,10 @@ NY_KILLZONE = ("13:30", "16:00")
 # --- ÚJ: Funding Rate (Squeeze Vadász) - négyezredszázalékos küszöb (-0.01% / +0.01%) ---
 FUNDING_SQUEEZE_THRESHOLD_PCT = 0.01
 
-# --- ÚJ: EMA Squeeze (beszorulás) - önálló, a STANDARD/SÁV KITÖRÉS jelzésektől
-# teljesen független riasztás-logika ---
-EMA_SQUEEZE_FAST_PERIOD = 20
-EMA_SQUEEZE_SLOW_PERIOD = 50
-EMA_SQUEEZE_LOOKBACK_CANDLES = 4       # ennyi utolsó LEZÁRT gyertyán nézzük a szorítást
-EMA_SQUEEZE_MAX_EMA_GAP_PCT = 1.8      # v17: VISSZA a lazított (v13) értékre
-EMA_SQUEEZE_MIN_OI_INCREASE = 0.7      # v17: VISSZA a lazított (v13) értékre
-EMA_SQUEEZE_MIN_VOL_MULTIPLIER = 1.15  # v17: VISSZA a lazított (v13) értékre
-EMA_SQUEEZE_MAX_PRICE_CHANGE = 5.0     # felső korlát az élő gyertya ármozgására - egy
-                                        # adathiba/kiugrás miatti extrém "kitörést" szűr ki
-
-# --- ÚJ (v12): EMA 20 Rejection (mozgóátlag-visszautasítás) - önálló, a
-# STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN FÜGGETLEN, kizárólag
-# SHORT (DUMP) irányú riasztás-logika. Setup: korábbi UP trend (EMA20>EMA50)
-# után az ár betört az EMA20 alá, majd alulról visszatesztelte azt, de nem
-# tudott fölé zárni - "visszautasítás" (rejection), és az élő gyertya
-# határozottan piros, jelezve a beszakadás folytatódását. ---
-EMA_REJECTION_FAST_PERIOD = 20
-EMA_REJECTION_SLOW_PERIOD = 50
-EMA_REJECTION_LOOKBACK_CANDLES = 8         # v17: VISSZA a lazított (v13) értékre
-EMA_REJECTION_BREAK_BELOW_PCT = 0.08       # v17: VISSZA a lazított (v13) értékre
-EMA_REJECTION_RETEST_TOLERANCE_PCT = 0.7   # v17: VISSZA a lazított (v13) értékre
-EMA_REJECTION_MIN_RED_BODY_PCT = 0.10      # v17: VISSZA a lazított (v13) értékre
-EMA_REJECTION_MAX_PRICE_CHANGE = 5.0       # felső korlát az élő gyertya ármozgására (adathiba-védelem)
-# v16: a v13-as további lazítást (0.7/1.2) visszavontuk - a jelzések ~90%-a
-# nem mozgott a jelzett irányba, úgyhogy visszaálltunk az eredeti,
-# szigorúbb 60%/70% arányra (a STANDARD MIN_OI_INCREASE/MIN_VOL_MULTIPLIER-hez
-# képest), amíg a napi winrate-adatok nem mutatnak pontosabb irányt:
-EMA_REJECTION_MIN_OI_INCREASE = 0.7        # v17: VISSZA a lazított (v13) értékre
-EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.2     # v17: VISSZA a lazított (v13) értékre
+# v18 RÁNCFELVARRÁS: az EMA_SQUEEZE és EMA_REJECTION jelzéstípusok (és a
+# RANGE_BREAKOUT címkézés) teljesen törölve - a bot mostantól KIZÁRÓLAG a
+# ⚡ STANDARD PUMP/DUMP jelzést küldi, szigorúbb küszöbökkel (lásd
+# MIN_OI_INCREASE / MIN_VOL_MULTIPLIER fentebb).
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
 TOTAL_RUN_BUDGET_SECONDS = 520   # v15e: 280 -> 520 (~8m40s). A cron-job.org csak
@@ -321,43 +287,35 @@ SIGNAL_LOG_FILE = Path(__file__).parent / "alert_log.jsonl"
 SUMMARY_TIMEZONE = ZoneInfo("Europe/Budapest")
 
 # ----------------------------------------------------------------------------
-# v17 VÁLTOZÁS: 5 PERCES GYERTYA-ALAPÚ, TÖBBSZINTŰ KIÉRTÉKELÉS
+# v18 RÁNCFELVARRÁS: EGYSZERŰSÍTETT, FIX SL-ES KIÉRTÉKELÉS
 # ----------------------------------------------------------------------------
-# A korábbi (v14) megoldás egy FIX 30 perces várakozás után egyetlen
-# PILLANATNYI ticker-árat nézett meg, és egy apró (0.3%) küszöbbel döntött
-# WIN/LOSS/NEUTRAL között. Egy valódi naplóból (2026-08-20) kiderült, hogy ez
-# NEM tükrözi a jelzések valós piaci potenciálját: sok "LOSS"/"NEUTRAL"
-# bejegyzés valójában egy véletlenszerű pillanatfelvétel volt, miközben az ár
-# közben jóval nagyobbat mozgott a jelzés irányába, mielőtt a 30 perces
-# határidőnél éppen visszahúzódott.
+# A korábbi (v17) megoldás egy ATR + szerkezeti (swing) alapú, egyénileg
+# számolt SL-t használt. Ezt a felhasználó kérésére EGYSZERŰSÍTETTÜK: mostantól
+# egy FIX -1.5%-os elmozdulás jelenti a SL-t (nincs ATR/swing számítás).
 #
-# Az új logika VALÓS TRADE-ET SZIMULÁL:
-# 1) A jelzés pillanatában kiszámol egy STOP LOSS-t (lásd compute_sl_tp() -
-#    az előző lokális mélypont/csúcs, ATR-sávval korlátozva).
-# 2) OUTCOME_EVAL_WINDOW_MINUTES (2 óra) elteltével lekéri az 5 PERCES
+# 1) OUTCOME_EVAL_WINDOW_MINUTES (60 perc) elteltével lekéri az 5 PERCES
 #    GYERTYÁK teljes historikumát a belépéstől a kiértékelésig, és
 #    végigsétál rajtuk időrendben:
 #    - minden gyertyánál frissíti a legjobb elért %-os elmozdulást (a gyertya
 #      KEDVEZŐ irányú High/Low-ja alapján), és megjelöli, mely
-#      OUTCOME_PROFIT_LEVELS_PCT szinteket (+1%, +3%, +5%, +10%, +20%) érte
-#      el ADDIG a pontig
+#      OUTCOME_PROFIT_LEVELS_PCT szinteket (+0.5%, +1%, +2%, +3%) érte el
+#      ADDIG a pontig
 #    - UTÁNA ellenőrzi, hogy a gyertya KEDVEZŐTLEN irányú High/Low-ja
-#      beütötte-e a SL-t - ha igen, a szimuláció itt megáll
+#      beütötte-e a FIX -1.5%-os SL-t - ha igen, a szimuláció itt megáll
 #    DOKUMENTÁLT EGYSZERŰSÍTÉS: tick-szintű adat nélkül nem tudjuk biztosan,
 #    hogy egy gyertyán belül a kedvező vagy a kedvezőtlen irányú mozgás
 #    történt-e előbb. A fenti sorrend (kedvező -> SL) egy ENYHÉN OPTIMISTA
 #    konvenció - a "valós piaci potenciál" bemutatásához megfelelő, de egy
 #    szigorúan konzervatív (tick-pontos) szimuláció ennél valamivel rosszabb
 #    számokat adna.
-# 3) Eredmény: SL-találati arány + minden profitszinthez tartozó "elérte SL
-#    előtt" arány, jelzéstípusonkénti bontásban a napi összesítőben.
+# 2) Eredmény: SL-találati arány + minden profitszinthez tartozó "elérte SL
+#    előtt" arány a napi összesítőben (kizárólag STANDARD jelzésekre).
 # ----------------------------------------------------------------------------
-OUTCOME_EVAL_WINDOW_MINUTES = 120     # ennyi idő (5 perces gyertya-historikum)
+OUTCOME_EVAL_WINDOW_MINUTES = 60      # ennyi idő (5 perces gyertya-historikum)
                                        # alapján értékelünk ki egy jelzést
-OUTCOME_PROFIT_LEVELS_PCT = [1, 3, 5, 10, 20]  # ezeket a szinteket vizsgáljuk
-OUTCOME_PRIMARY_WIN_LEVEL_PCT = 1     # a headline WIN/LOSS/NEUTRAL besoroláshoz
-                                       # ezt a szintet használjuk referenciaként
-                                       # (SL előtt elérte-e a +1%-ot)
+OUTCOME_FIXED_SL_PCT = 1.5            # FIX stop-loss: a jelzés irányával
+                                       # ELLENTÉTES irányú ennyi %-os elmozdulás
+OUTCOME_PROFIT_LEVELS_PCT = [0.5, 1.0, 2.0, 3.0]  # ezeket a szinteket vizsgáljuk
 OUTCOME_MAX_STALE_MINUTES = 60        # ha a kiértékelési ablak lejárta után ENNYI
                                        # idővel sem sikerül klines-adatot szerezni
                                        # a szimbólumhoz, UNKNOWN-ként lezárjuk
@@ -377,13 +335,11 @@ def _log_signal_outcome(record: dict) -> None:
 
 
 def register_pending_signal(state: dict, symbol: str, signal_type: str,
-                             direction: str, entry_price: float, now: datetime,
-                             sl_price=None, stop_distance_pct=None) -> None:
+                             direction: str, entry_price: float, now: datetime) -> None:
     """Egy most kiküldött jelzést berak a 'pending_outcomes' listába - ezt
-    fogja a resolve_pending_signals() a megfelelő időben kiértékelni. A
-    sl_price/stop_distance_pct a compute_sl_tp() eredménye (lehet None, ha
-    nem volt elég adat hozzá - ekkor a szimuláció csak a szintek elérését
-    nézi, SL nélkül)."""
+    fogja a resolve_pending_signals() a megfelelő időben kiértékelni. A SL
+    mostantól mindig a FIX OUTCOME_FIXED_SL_PCT (-1.5%), nem kell külön
+    átadni/tárolni."""
     pending = state.setdefault("pending_outcomes", [])
     pending.append({
         "id": f"{symbol}_{signal_type}_{now.strftime('%Y%m%dT%H%M%S')}",
@@ -391,8 +347,6 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str,
         "signal_type": signal_type,
         "direction": direction,
         "entry_price": entry_price,
-        "sl_price": sl_price,
-        "stop_distance_pct": stop_distance_pct,
         "entry_ts": now.isoformat(),
         "entry_date": now.astimezone(SUMMARY_TIMEZONE).strftime("%Y-%m-%d"),  # helyi (nem UTC)
                                                     # dátum - ehhez a (helyi) naphoz számít a napi
@@ -402,14 +356,19 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str,
     })
 
 
-def _simulate_trade_outcome(direction: str, entry_price: float, sl_price,
-                             candles: pd.DataFrame) -> dict:
+def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.DataFrame) -> dict:
     """Végigsétál az 5 perces gyertyákon (időrendben, a belépés utániakon), és
-    szimulálja, mely profitszinteket érte el az ár a SL beütése ELŐTT. Lásd a
-    fájl elején lévő blokk-kommentet a módszertanról és az egyszerűsítésről."""
+    szimulálja, mely profitszinteket érte el az ár a FIX -1.5%-os SL beütése
+    ELŐTT. Lásd a fájl elején lévő blokk-kommentet a módszertanról és az
+    egyszerűsítésről."""
     levels_reached = {lvl: False for lvl in OUTCOME_PROFIT_LEVELS_PCT}
     max_favorable_pct = 0.0
     sl_hit = False
+
+    if direction == "LONG":
+        sl_price = entry_price * (1 - OUTCOME_FIXED_SL_PCT / 100)
+    else:  # SHORT
+        sl_price = entry_price * (1 + OUTCOME_FIXED_SL_PCT / 100)
 
     for _, row in candles.iterrows():
         high = float(row["high"])
@@ -430,21 +389,12 @@ def _simulate_trade_outcome(direction: str, entry_price: float, sl_price,
             if max_favorable_pct >= lvl:
                 levels_reached[lvl] = True
 
-        if sl_price is not None:
-            hit = (adverse_extreme <= sl_price) if direction == "LONG" else (adverse_extreme >= sl_price)
-            if hit:
-                sl_hit = True
-                break
-
-    if sl_hit:
-        primary_outcome = "LOSS"
-    elif max_favorable_pct >= OUTCOME_PRIMARY_WIN_LEVEL_PCT:
-        primary_outcome = "WIN"
-    else:
-        primary_outcome = "NEUTRAL"
+        hit = (adverse_extreme <= sl_price) if direction == "LONG" else (adverse_extreme >= sl_price)
+        if hit:
+            sl_hit = True
+            break
 
     return {
-        "outcome": primary_outcome,
         "sl_hit": sl_hit,
         "max_favorable_pct": round(max_favorable_pct, 3),
         "levels_reached": {f"level_{lvl}pct": levels_reached[lvl] for lvl in OUTCOME_PROFIT_LEVELS_PCT},
@@ -485,8 +435,7 @@ async def resolve_pending_signals(state: dict, session, semaphore, now: datetime
         if window_candles.empty:
             return item, None
 
-        result = _simulate_trade_outcome(item["direction"], item["entry_price"],
-                                          item.get("sl_price"), window_candles)
+        result = _simulate_trade_outcome(item["direction"], item["entry_price"], window_candles)
         return item, result
 
     results = await asyncio.gather(*[_resolve_one(item) for item in due], return_exceptions=True)
@@ -506,7 +455,8 @@ async def resolve_pending_signals(state: dict, session, semaphore, now: datetime
             else:
                 still_pending.append(item)  # próbáljuk később újra
             continue
-        _log_signal_outcome({**item, **result, "resolved_ts": now.isoformat()})
+        outcome_label = "LOSS" if result["sl_hit"] else "NEUTRAL"
+        _log_signal_outcome({**item, **result, "outcome": outcome_label, "resolved_ts": now.isoformat()})
 
     state["pending_outcomes"] = still_pending
 
@@ -535,48 +485,35 @@ def _load_log_entries_for_date(date_str: str) -> list:
 
 
 def _format_daily_summary(date_str: str, entries: list) -> str:
-    by_type = {}
-    for rec in entries:
-        by_type.setdefault(rec.get("signal_type", "ISMERETLEN"), []).append(rec)
-
-    type_labels = {
-        "STANDARD": "⚡ STANDARD",
-        "RANGE_BREAKOUT": "🎯 SÁV KITÖRÉS",
-        "EMA_SQUEEZE": "🗜️ EMA SQUEEZE",
-        "EMA_REJECTION": "📉 EMA REJECTION",
-    }
-
-    def _summarize(recs: list) -> str:
-        total = len(recs)
-        resolved = [r for r in recs if r.get("outcome") != "UNKNOWN" and r.get("sl_hit") is not None]
-        n = len(resolved)
-        unknown = total - n
-        if n == 0:
-            return f"{total} jelzés (nincs kiértékelhető adat)"
-
-        sl_hits = sum(1 for r in resolved if r.get("sl_hit"))
-        sl_pct = sl_hits / n * 100
-        level_bits = []
-        for lvl in OUTCOME_PROFIT_LEVELS_PCT:
-            key = f"level_{lvl}pct"
-            hit = sum(1 for r in resolved if (r.get("levels_reached") or {}).get(key))
-            level_bits.append(f"+{lvl}%: {hit / n * 100:.0f}%")
-        unknown_note = f" ({unknown} n/a)" if unknown else ""
-        return (f"{total} jelzés{unknown_note} | SL: {sl_pct:.0f}% | " + " | ".join(level_bits))
+    # v18 RÁNCFELVARRÁS: mivel a bot mostantól kizárólag ⚡ STANDARD jelzést
+    # küld, a napi összesítő is egyetlen, egyszerű blokk - nincs többé
+    # jelzéstípusonkénti bontás.
+    total = len(entries)
+    resolved = [r for r in entries if r.get("outcome") != "UNKNOWN" and r.get("sl_hit") is not None]
+    n = len(resolved)
+    unknown = total - n
 
     lines = [
         f"📊 <b>Napi összesítő</b> ({date_str})",
-        "(SL = a stop-loss beütött a kiértékelési ablakban; a %-ok azt mutatják,",
-        "hány jelzés érte el az adott profitszintet a SL ELŐTT)",
+        "(SL = -1.5%-os fix stop-loss beütött a kiértékelési ablakban; a %-ok",
+        "azt mutatják, hány jelzés érte el az adott profitszintet a SL ELŐTT)",
         "━━━━━━━━━━━━━",
     ]
 
-    for sig_type in sorted(by_type.keys()):
-        label = type_labels.get(sig_type, sig_type)
-        lines.append(f"{label}: {_summarize(by_type[sig_type])}")
+    if n == 0:
+        lines.append(f"⚡ STANDARD: {total} jelzés (nincs kiértékelhető adat)")
+        return f"\n{chr(10).join(lines)}\n"
+
+    sl_hits = sum(1 for r in resolved if r.get("sl_hit"))
+    sl_pct = sl_hits / n * 100
+    lines.append(f"⚡ STANDARD: {total} jelzés{f' ({unknown} n/a)' if unknown else ''}")
+    lines.append(f"SL beütve: {sl_hits}/{n} ({sl_pct:.0f}%)")
+    for lvl in OUTCOME_PROFIT_LEVELS_PCT:
+        key = f"level_{lvl}pct"
+        hit = sum(1 for r in resolved if (r.get("levels_reached") or {}).get(key))
+        lines.append(f"+{lvl}% elérve SL előtt: {hit}/{n} ({hit / n * 100:.0f}%)")
 
     lines.append("━━━━━━━━━━━━━")
-    lines.append(f"Összesen: {_summarize(entries)}")
     return f"\n{chr(10).join(lines)}\n"
 
 
@@ -856,19 +793,12 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
                           htf_trend=None, bounce_confluence=False, near_level_risk=False,
                           rsi=None, macd_status=None, signal_type="STANDARD",
-                          funding_rate=None, now=None, ema_rejection_level=None):
+                          funding_rate=None, now=None):
+    # v18 RÁNCFELVARRÁS: a bot mostantól KIZÁRÓLAG ⚡ STANDARD PUMP/DUMP
+    # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
+    # törölve.
     action = DIRECTION_LABELS.get(direction, direction)
-    if signal_type == "RANGE_BREAKOUT":
-        header = f"🎯 SÁV KITÖRÉS ({action}): <b>{symbol}</b>"
-    elif signal_type == "EMA_SQUEEZE":
-        header = f"🗜️ EMA SQUEEZE KITÖRÉS ({action}): <b>{symbol}</b>"
-    elif signal_type == "EMA_REJECTION":
-        # v13: a jelzés most már megmutatja, melyik szintről (EMA20 vagy
-        # EMA50) történt a visszautasítás - lásd detect_ema_rejection().
-        level_note = f" [{ema_rejection_level}]" if ema_rejection_level else ""
-        header = f"📉 EMA REJECTION{level_note} ({action}): <b>{symbol}</b>"
-    else:
-        header = f"⚡ STANDARD {action}: <b>{symbol}</b>"
+    header = f"⚡ STANDARD {action}: <b>{symbol}</b>"
 
     warning_line = ""
     against_trend = (
@@ -997,259 +927,6 @@ def compute_rsi_macd(close_series: pd.Series):
     return rsi_val, macd_status
 
 
-# ----------------------------------------------------------------------------
-# ÚJ: EMA SQUEEZE (BESZORULÁS) DETEKTÁLÁS - önálló, a STANDARD/SÁV KITÖRÉS
-# jelzésektől teljesen független logika. Ugyanazokból a klines adatokból
-# számol, nincs plusz API-hívás.
-# Feltétel 1 (szorítás): az utolsó EMA_SQUEEZE_LOOKBACK_CANDLES db LEZÁRT
-#   gyertya High/Low-ja szorosan az EMA20-EMA50 sáv körül mozgott, ÉS a két
-#   EMA távolsága egymástól legfeljebb EMA_SQUEEZE_MAX_EMA_GAP_PCT %.
-# Feltétel 2 (kitörés): az ÉLŐ gyertya ára határozottan kitör ebből a
-#   csatornából - a két EMA fölé/alá ÉS a lookback-ablak korábbi csúcsa/
-#   mélypontja fölé/alá is.
-# ----------------------------------------------------------------------------
-
-def detect_ema_squeeze(closed: pd.DataFrame, live: pd.Series):
-    """Visszaadja (irány vagy None, ema_gap_pct vagy None) párost."""
-    if len(closed) < EMA_SQUEEZE_SLOW_PERIOD + EMA_SQUEEZE_LOOKBACK_CANDLES:
-        return None, None
-
-    ema_fast = closed["close"].ewm(span=EMA_SQUEEZE_FAST_PERIOD, adjust=False).mean()
-    ema_slow = closed["close"].ewm(span=EMA_SQUEEZE_SLOW_PERIOD, adjust=False).mean()
-    last_fast = ema_fast.iloc[-1]
-    last_slow = ema_slow.iloc[-1]
-    if pd.isna(last_fast) or pd.isna(last_slow) or last_slow <= 0:
-        return None, None
-
-    ema_gap_pct = abs(last_fast - last_slow) / last_slow * 100
-    if ema_gap_pct > EMA_SQUEEZE_MAX_EMA_GAP_PCT:
-        return None, round(float(ema_gap_pct), 2)  # nincs szorítás - de a gap-et infónak visszaadjuk
-
-    lookback = closed.iloc[-EMA_SQUEEZE_LOOKBACK_CANDLES:]
-    band_low = min(last_fast, last_slow)
-    band_high = max(last_fast, last_slow)
-    # kis tolerancia az EMA-sáv "érintésére" - a sáv szélességének fele,
-    # minimum a záróár 0.2%-a (hogy egy szinte 0 szélességű sávnál se legyen
-    # a tolerancia nulla).
-    tolerance = max((band_high - band_low) * 0.5, band_high * 0.002)
-    channel_low = band_low - tolerance
-    channel_high = band_high + tolerance
-
-    prior_high = float(lookback["high"].max())
-    prior_low = float(lookback["low"].min())
-    is_tight = (prior_high <= channel_high) and (prior_low >= channel_low)
-    if not is_tight:
-        return None, round(float(ema_gap_pct), 2)
-
-    current_price = float(live["close"])
-    breakout_up = current_price > band_high and current_price > prior_high
-    breakout_down = current_price < band_low and current_price < prior_low
-
-    if breakout_up:
-        return "LONG", round(float(ema_gap_pct), 2)
-    if breakout_down:
-        return "SHORT", round(float(ema_gap_pct), 2)
-    return None, round(float(ema_gap_pct), 2)
-
-
-# ----------------------------------------------------------------------------
-# ÚJ (v12), KIBŐVÍTVE v13-BAN: EMA 20/50 REJECTION (MOZGÓÁTLAG-VISSZAUTASÍTÁS)
-# DETEKTÁLÁS - önálló, a STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN
-# FÜGGETLEN, kizárólag SHORT (DUMP) irányú logika. Ugyanazokból a klines
-# adatokból számol, nincs plusz API-hívás.
-#
-# v13 VÁLTOZÁS: a felhasználó egy TradingView chart-képernyőképet küldött,
-# amin jól látszik, hogy egy erős dump során az ár EGYMÁS UTÁN, KÉT
-# KÜLÖNBÖZŐ mozgóátlagról (fentről lefelé: előbb a gyorsabb EMA20-ról, majd -
-# ahogy a letörés tovább erősödik és az EMA20 is lekeresztezi az EMA50-et -
-# az EMA50-ről is) pattan vissza lefelé, folytatva a esést. A korábbi (v12)
-# logika ezt csak az EMA20-ra nézte, és a "last_ema20 > last_ema50" feltétel
-# miatt onnantól, hogy a trend teljesen megfordult (EMA20 az EMA50 ALÁ
-# keresztezett), a második, EMA50-ös visszautasítást SOHA nem tudta jelezni -
-# ez volt a hiányzó rész. A kép kérésének megfelelően EGY (a legfelső)
-# HARMADIK, ennél is lejjebb lévő mozgóátlagot (pl. EMA100/200) TUDATOSAN NEM
-# veszünk figyelembe - kizárólag a felső kettő (EMA20/EMA50) számít.
-#
-# Két, egymást kizáró FÁZIS van (mindig csak az egyik releváns az adott
-# pillanatban, "fentről lefelé" haladva):
-#   FÁZIS 1 (EMA20 a szint): amíg EMA20 > EMA50 (a trend csak most kezd
-#     megtörni) - a letörés+visszateszt+elutasítás mintát az EMA20-ra nézzük.
-#   FÁZIS 2 (EMA50 a szint): ha EMA20 <= EMA50 (az EMA20 már lekeresztezte az
-#     EMA50-et, a letörés megerősödött) - innentől ugyanazt a mintát az
-#     EMA50-re nézzük, hiszen a képen látható módon ez lesz a következő
-#     "alsó" szint, amiről az ár visszapattanhat.
-#
-# Az egyes fázisokon belüli lépések (1 szintre, "level_ema"-ra vetítve):
-# 1) Letörés: az utolsó EMA_REJECTION_LOOKBACK_CANDLES db LEZÁRT gyertya közül
-#    legalább egynek a záróára határozottan (EMA_REJECTION_BREAK_BELOW_PCT
-#    %-kal) az akkori level_ema alatt legyen - tehát a trend megtört.
-# 2) Visszateszt: az utolsó LEZÁRT vagy az ÉLŐ gyertya High-ja alulról szorosan
-#    (EMA_REJECTION_RETEST_TOLERANCE_PCT %-on belül) megközelítse a jelenlegi
-#    level_ema-t.
-# 3) Trigger: az élő gyertya határozottan piros (jelenlegi ár a nyitóár alatt,
-#    minimum EMA_REJECTION_MIN_RED_BODY_PCT %-kal), ÉS a jelenlegi ár már a
-#    level_ema alatt van - ez igazolja, hogy a szint tényleg visszautasította
-#    az árat.
-# ----------------------------------------------------------------------------
-
-def _ema_rejection_level_triggered(closed: pd.DataFrame, live: pd.Series,
-                                    level_ema_series: pd.Series, level_ema_now: float) -> bool:
-    """Egy KONKRÉT EMA-szintre (lehet EMA20 vagy EMA50 is - a hívó dönti el)
-    nézi meg a letörés -> visszateszt -> elutasítás hármas mintát. Ugyanazt a
-    lépéssort futtatja le, amit korábban csak az EMA20-ra használtunk, immár
-    újrafelhasználhatóan bármelyik EMA-ra."""
-    if pd.isna(level_ema_now) or level_ema_now <= 0:
-        return False
-
-    # 1) Letörés: legalább egy lezárt gyertya close-ja határozottan az akkori
-    # level_ema alatt zárt (a saját időpontjának megfelelő EMA-hoz
-    # viszonyítva, nem a jelenlegihez - így a "megtört a trend" pillanatát
-    # nézzük).
-    lookback_closed = closed.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
-    lookback_ema = level_ema_series.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
-    break_threshold = lookback_ema * (1 - EMA_REJECTION_BREAK_BELOW_PCT / 100)
-    broke_below = bool((lookback_closed["close"].values < break_threshold.values).any())
-    if not broke_below:
-        return False
-
-    # 2) Visszateszt: az utolsó LEZÁRT gyertya VAGY az ÉLŐ gyertya High-ja
-    # alulról szorosan megközelítette a (jelenlegi) level_ema-t.
-    tolerance = level_ema_now * (EMA_REJECTION_RETEST_TOLERANCE_PCT / 100)
-    channel_low = level_ema_now - tolerance
-    channel_high = level_ema_now + tolerance
-
-    last_closed_high = float(closed["high"].iloc[-1])
-    live_high = float(live["high"])
-    retested = (channel_low <= last_closed_high <= channel_high) or (channel_low <= live_high <= channel_high)
-    if not retested:
-        return False
-
-    # 3) Trigger: az élő gyertya határozottan piros, ÉS a jelenlegi ár már a
-    # level_ema alatt van (igazolva, hogy a szint tényleg visszautasított).
-    live_open = float(live["open"])
-    live_close = float(live["close"])
-    if live_open <= 0:
-        return False
-
-    red_body_pct = (live_open - live_close) / live_open * 100
-    if red_body_pct < EMA_REJECTION_MIN_RED_BODY_PCT:
-        return False
-    if live_close >= level_ema_now:
-        return False
-
-    return True
-
-
-def detect_ema_rejection(closed: pd.DataFrame, live: pd.Series):
-    """Visszaad egy (irány, szint) párost - ("SHORT", "EMA20") vagy
-    ("SHORT", "EMA50") -, ha teljesül az EMA Rejection setup a megfelelő
-    fázisban, egyébként (None, None)-t. Lásd a fenti blokk-kommentet a két
-    fázis (EMA20, majd EMA50) logikájáról."""
-    min_len = EMA_REJECTION_SLOW_PERIOD + EMA_REJECTION_LOOKBACK_CANDLES
-    if len(closed) < min_len:
-        return None, None
-
-    ema20 = closed["close"].ewm(span=EMA_REJECTION_FAST_PERIOD, adjust=False).mean()
-    ema50 = closed["close"].ewm(span=EMA_REJECTION_SLOW_PERIOD, adjust=False).mean()
-
-    last_ema20 = ema20.iloc[-1]
-    last_ema50 = ema50.iloc[-1]
-    if pd.isna(last_ema20) or pd.isna(last_ema50):
-        return None, None
-
-    if last_ema20 > last_ema50:
-        # FÁZIS 1: a trend csak most kezd megtörni - az EMA20 (a "felső",
-        # gyorsabb átlag) a releváns visszautasítási szint.
-        if _ema_rejection_level_triggered(closed, live, ema20, last_ema20):
-            return "SHORT", "EMA20"
-        return None, None
-
-    # FÁZIS 2: az EMA20 már lekeresztezte lefelé az EMA50-et (a letörés
-    # megerősödött) - innentől az EMA50 a releváns, "alsó" szint. Egy
-    # esetleges HARMADIK, még lejjebb lévő mozgóátlagot (a kérésnek
-    # megfelelően) itt sem veszünk figyelembe.
-    if _ema_rejection_level_triggered(closed, live, ema50, last_ema50):
-        return "SHORT", "EMA50"
-
-    return None, None
-
-
-# ----------------------------------------------------------------------------
-# ÚJ (v16): ATR + SZERKEZETI (SWING) SL/TP - a NAPI WINRATE-KÖVETÉS mostantól
-# nem egy fix %-os küszöböt néz egy fix időpontban, hanem egy VALÓS trade-et
-# szimulál: a jelzés pillanatában kiszámol egy SL-t (az előző lokális mélypont/
-# csúcs - "wick" - alapján, ATR-sávval korlátozva, hogy se ne túl szoros, se ne
-# túl tág ne legyen) és egy TP-t (a kockázat RISK_REWARD_RATIO-szorosa, tehát
-# alapból 2R). Utána minden körben megnézi, melyiket érte el ELŐBB az ár.
-# ----------------------------------------------------------------------------
-ATR_PERIOD = 14                    # ennyi lezárt gyertyából számoljuk az ATR-t
-SWING_LOOKBACK_CANDLES = 10        # ennyi lezárt gyertya minimuma/maximuma adja
-                                    # az "előző wick/alj" (LONG-nál mélypont,
-                                    # SHORT-nál csúcs) szerkezeti SL-referenciát
-ATR_MIN_STOP_MULTIPLIER = 0.5      # a stop-távolság MINIMUM ennyi × ATR legyen
-                                    # (védelem túl szoros, "zajban" kiütődő SL ellen)
-ATR_MAX_STOP_MULTIPLIER = 3.0      # a stop-távolság MAXIMUM ennyi × ATR legyen
-                                    # (védelem irreálisan széles, scalp-hez nem
-                                    # illő SL/TP-táv ellen)
-RISK_REWARD_RATIO = 2.0            # TP = SL-távolság × ennyi (alapból 2R)
-
-
-def _compute_atr(closed: pd.DataFrame, period: int = ATR_PERIOD):
-    """Klasszikus ATR (Average True Range) számítás a LEZÁRT gyertyákból,
-    egyszerű mozgóátlaggal (SMA) a True Range-en."""
-    if len(closed) < period + 1:
-        return None
-    high = closed["high"]
-    low = closed["low"]
-    prev_close = closed["close"].shift(1)
-    true_range = pd.concat([
-        (high - low),
-        (high - prev_close).abs(),
-        (low - prev_close).abs(),
-    ], axis=1).max(axis=1)
-    atr = true_range.rolling(window=period).mean().iloc[-1]
-    return float(atr) if pd.notna(atr) and atr > 0 else None
-
-
-def compute_sl_tp(entry_price: float, direction: str, swing_low, swing_high, atr):
-    """Kiszámolja a SL/TP árszinteket egy adott jelzéshez.
-    - SL alapja: az előző SWING_LOOKBACK_CANDLES lezárt gyertya mélypontja
-      (LONG-nál) vagy csúcsa (SHORT-nál) - ez az "előző wick/alj".
-    - Ezt az ATR_MIN/MAX_STOP_MULTIPLIER × ATR sávba szorítjuk, hogy se
-      irreálisan szoros, se irreálisan tág ne legyen.
-    - TP = SL-távolság × RISK_REWARD_RATIO (alapból 2R).
-    Ha nincs elég adat (ATR vagy swing hiányzik), (None, None, None)-t ad
-    vissza - ekkor a hívó nem regisztrálja a jelzést a winrate-követésbe."""
-    if atr is None or atr <= 0 or entry_price <= 0:
-        return None, None, None
-    if swing_low is None or swing_high is None:
-        return None, None, None
-
-    if direction == "LONG":
-        structural_distance = entry_price - swing_low
-    else:  # SHORT
-        structural_distance = swing_high - entry_price
-
-    if structural_distance <= 0:
-        # Ritka szélsőeset (pl. a swing rossz oldalon van) - essünk vissza
-        # tisztán ATR-alapú távolságra.
-        structural_distance = atr
-
-    min_distance = atr * ATR_MIN_STOP_MULTIPLIER
-    max_distance = atr * ATR_MAX_STOP_MULTIPLIER
-    stop_distance = min(max(structural_distance, min_distance), max_distance)
-
-    if direction == "LONG":
-        sl_price = entry_price - stop_distance
-        tp_price = entry_price + stop_distance * RISK_REWARD_RATIO
-    else:
-        sl_price = entry_price + stop_distance
-        tp_price = entry_price - stop_distance * RISK_REWARD_RATIO
-
-    stop_distance_pct = stop_distance / entry_price * 100
-    return round(sl_price, 10), round(tp_price, 10), round(stop_distance_pct, 3)
-
-
 def evaluate_candle(kdf: pd.DataFrame):
     """Az ÉLŐ (még nyitott) gyertyát értékeli ki a megelőző VOLUME_MA_PERIOD db
     LEZÁRT gyertya átlagához képest. Az irányt az élő gyertya nyitó- és
@@ -1282,45 +959,6 @@ def evaluate_candle(kdf: pd.DataFrame):
 
     rsi_val, macd_status = compute_rsi_macd(kdf["close"])
 
-    # --- ÚJ: sáv-beszűkülés (range compression) + kitörés detektálása ---
-    # Az élő gyertyát megelőző RANGE_LOOKBACK_PERIOD db lezárt gyertya
-    # sávszélessége, és hogy az élő ár most kitör-e ebből a sávból.
-    range_window = closed.iloc[-RANGE_LOOKBACK_PERIOD:]
-    signal_type = "STANDARD"
-    range_width_pct = None
-    if len(range_window) >= RANGE_LOOKBACK_PERIOD:
-        range_high = float(range_window["high"].max())
-        range_low = float(range_window["low"].min())
-        if range_low > 0:
-            range_width_pct = (range_high - range_low) / range_low * 100
-            is_tight_range = range_width_pct <= RANGE_COMPRESSION_THRESHOLD_PCT
-            is_breakout = (
-                (direction == "LONG" and current_price > range_high)
-                or (direction == "SHORT" and current_price < range_low)
-            )
-            if is_tight_range and is_breakout:
-                signal_type = "RANGE_BREAKOUT"
-
-    # ÚJ: EMA Squeeze (beszorulás) kitörés-jelzés - önálló, kiegészítő infó.
-    ema_squeeze_signal, ema_gap_pct = detect_ema_squeeze(closed, live)
-
-    # ÚJ (v12, kibővítve v13-ban): EMA 20/50 Rejection (mozgóátlag-
-    # visszautasítás) - önálló, kizárólag SHORT irányú kiegészítő jelzés.
-    # v13-tól kétfázisú: EMA20-ról VAGY (ha a trend már lejjebb tartott)
-    # EMA50-ről való visszautasítást is felismeri - lásd detect_ema_rejection.
-    ema_rejection_signal, ema_rejection_level = detect_ema_rejection(closed, live)
-
-    # ÚJ (v16): ATR + előző lokális mélypont/csúcs ("wick") - ez adja az
-    # alapját a WINRATE-KÖVETÉS SL/TP-alapú kiértékelésének (lásd
-    # compute_sl_tp() és resolve_pending_signals()). Itt csak kiszámoljuk és
-    # visszaadjuk, a tényleges SL/TP-t a konkrét jelzés irányának ismeretében
-    # a küldési pontnál számoljuk (mivel egy candle-ből több, EGYMÁSTÓL
-    # FÜGGETLEN irányú jelzés is születhet - pl. STANDARD LONG + ugyanakkor
-    # EMA_REJECTION SHORT).
-    atr = _compute_atr(closed, ATR_PERIOD)
-    swing_low = float(closed["low"].iloc[-SWING_LOOKBACK_CANDLES:].min()) if len(closed) >= SWING_LOOKBACK_CANDLES else None
-    swing_high = float(closed["high"].iloc[-SWING_LOOKBACK_CANDLES:].max()) if len(closed) >= SWING_LOOKBACK_CANDLES else None
-
     return {
         "price": current_price,
         "price_change_pct": round(float(price_change_pct), 2),
@@ -1329,14 +967,7 @@ def evaluate_candle(kdf: pd.DataFrame):
         "direction": direction,
         "rsi": rsi_val,
         "macd_status": macd_status,
-        "signal_type": signal_type,
-        "ema_squeeze_signal": ema_squeeze_signal,
-        "ema_gap_pct": ema_gap_pct,
-        "ema_rejection_signal": ema_rejection_signal,
-        "ema_rejection_level": ema_rejection_level,
-        "atr": atr,
-        "swing_low": swing_low,
-        "swing_high": swing_high,
+        "signal_type": "STANDARD",
     }
 
 # ----------------------------------------------------------------------------
@@ -1523,121 +1154,17 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
-            # ÚJ (v14, kibővítve v17-ben): a jelzést a napi winrate-
-            # összesítőhöz is regisztráljuk, most már SL-lel együtt (lásd
-            # compute_sl_tp - az előző lokális mélypont/csúcs, ATR-sávval
-            # korlátozva), amit a resolve_pending_signals() az 5 perces
-            # gyertyák mentén szimulálva értékel ki.
-            sig_sl_price, _, sig_stop_pct = compute_sl_tp(
-                candle["price"], candle["direction"], candle.get("swing_low"),
-                candle.get("swing_high"), candle.get("atr"))
-            register_pending_signal(state, symbol, candle.get("signal_type", "STANDARD"),
-                                     candle["direction"], candle["price"], now,
-                                     sl_price=sig_sl_price, stop_distance_pct=sig_stop_pct)
+            # v18: a jelzést a napi winrate-összesítőhöz is regisztráljuk. A
+            # SL mostantól EGYSZERŰ, FIX -1.5%-os elmozdulás (lásd
+            # OUTCOME_FIXED_SL_PCT és resolve_pending_signals) - az előző
+            # ATR/swing-alapú számítást (compute_sl_tp) a felhasználó kérésére
+            # töröltük, a statisztika egyszerűbb és átláthatóbb lett tőle.
+            register_pending_signal(state, symbol, "STANDARD", candle["direction"], candle["price"], now)
             trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
             bounce_note = " 🎯 SZINT-VISSZAPATTANÁS" if bounce_confluence else ""
-            type_note = f" [{candle.get('signal_type', 'STANDARD')}]"
-            print(f"JELZÉS küldve: {symbol} [{candle['direction']}]{type_note} (Ár {candle['price_change_pct']:+.2f}%, "
+            print(f"JELZÉS küldve: {symbol} [{candle['direction']}] (Ár {candle['price_change_pct']:+.2f}%, "
                   f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%, "
                   f"1h trend: {htf_trend or 'ismeretlen'}){trend_note}{bounce_note}")
-
-        # --- ÚJ: EMA SQUEEZE (beszorulás) - önálló, a fenti STANDARD/SÁV
-        # KITÖRÉS jelzéstől TELJESEN FÜGGETLEN riasztás, saját cooldown-nal,
-        # lazább volumen/OI küszöbökkel (a szoros EMA-csatorna kitörése
-        # önmagában is erős setup), de saját felső ár-mozgás korláttal is
-        # (nehogy egy adathiba/kiugrás extrém "kitörésként" jelentkezzen).
-        ema_signal = candle.get("ema_squeeze_signal")
-        if ema_signal is not None:
-            ema_is_setup = (
-                abs(candle["price_change_pct"]) <= EMA_SQUEEZE_MAX_PRICE_CHANGE
-                and oi_change_pct >= EMA_SQUEEZE_MIN_OI_INCREASE
-                and candle["vol_multiplier"] >= EMA_SQUEEZE_MIN_VOL_MULTIPLIER
-                and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
-            )
-            ema_cooldown_ok = True
-            if entry.get("last_ema_squeeze_alert_ts"):
-                last_ema_dt = datetime.fromisoformat(entry["last_ema_squeeze_alert_ts"])
-                if (now - last_ema_dt) < timedelta(minutes=ALERT_COOLDOWN_MINUTES):
-                    ema_cooldown_ok = False
-
-            if ema_is_setup and ema_cooldown_ok:
-                # Az EMA Squeeze iránya (ema_signal) eltérhet a fenti STANDARD
-                # jelzés irányától, ezért a szint-közelséget külön, az EMA
-                # Squeeze SAJÁT irányára nézve számoljuk újra.
-                ema_near_level_risk = (
-                    (ema_signal == "LONG" and near_resistance)
-                    or (ema_signal == "SHORT" and near_support)
-                )
-                ema_bounce_confluence = (
-                    (ema_signal == "LONG" and near_support)
-                    or (ema_signal == "SHORT" and near_resistance)
-                )
-                ema_msg = format_scalp_message(
-                    symbol, ema_signal, candle["price"], candle["price_change_pct"],
-                    candle["candle_vol_usdt"], candle["vol_multiplier"],
-                    oi_now, oi_change_pct, htf_trend=htf_trend,
-                    bounce_confluence=ema_bounce_confluence, near_level_risk=ema_near_level_risk,
-                    rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
-                    signal_type="EMA_SQUEEZE",
-                    funding_rate=funding_rate, now=now,
-                )
-                send_telegram_message(ema_msg)
-                entry["last_ema_squeeze_alert_ts"] = now.isoformat()
-                alerts_sent += 1
-                # ÚJ (v14, kibővítve v17-ben): lásd a STANDARD ág kommentjét.
-                sq_sl_price, _, sq_stop_pct = compute_sl_tp(
-                    candle["price"], ema_signal, candle.get("swing_low"),
-                    candle.get("swing_high"), candle.get("atr"))
-                register_pending_signal(state, symbol, "EMA_SQUEEZE", ema_signal, candle["price"], now,
-                                         sl_price=sq_sl_price, stop_distance_pct=sq_stop_pct)
-                print(f"JELZÉS küldve: {symbol} [{ema_signal}] [EMA_SQUEEZE] (EMA gap {candle.get('ema_gap_pct')}%, "
-                      f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
-
-        # --- ÚJ (v12): EMA 20 REJECTION (mozgóátlag-visszautasítás) - önálló,
-        # a STANDARD/SÁV KITÖRÉS/EMA SQUEEZE jelzésektől TELJESEN FÜGGETLEN,
-        # kizárólag SHORT (DUMP) irányú riasztás, saját cooldown-nal, lazított
-        # (60% OI / 70% volumen) küszöbökkel - ugyanúgy, mint az EMA Squeeze-nél,
-        # mivel ez is egy erős, önmagában is jól definiált price action setup. ---
-        ema_rejection_signal = candle.get("ema_rejection_signal")
-        if ema_rejection_signal is not None:
-            rejection_is_setup = (
-                abs(candle["price_change_pct"]) <= EMA_REJECTION_MAX_PRICE_CHANGE
-                and oi_change_pct >= EMA_REJECTION_MIN_OI_INCREASE
-                and candle["vol_multiplier"] >= EMA_REJECTION_MIN_VOL_MULTIPLIER
-                and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
-            )
-            rejection_cooldown_ok = True
-            if entry.get("last_ema_rejection_alert_ts"):
-                last_rejection_dt = datetime.fromisoformat(entry["last_ema_rejection_alert_ts"])
-                if (now - last_rejection_dt) < timedelta(minutes=ALERT_COOLDOWN_MINUTES):
-                    rejection_cooldown_ok = False
-
-            if rejection_is_setup and rejection_cooldown_ok:
-                # Az EMA Rejection mindig SHORT irányú, de a szint-közelséget
-                # (mint az EMA Squeeze-nél) erre az irányra nézve számoljuk.
-                rejection_near_level_risk = (ema_rejection_signal == "SHORT" and near_support)
-                rejection_bounce_confluence = (ema_rejection_signal == "SHORT" and near_resistance)
-                rejection_msg = format_scalp_message(
-                    symbol, ema_rejection_signal, candle["price"], candle["price_change_pct"],
-                    candle["candle_vol_usdt"], candle["vol_multiplier"],
-                    oi_now, oi_change_pct, htf_trend=htf_trend,
-                    bounce_confluence=rejection_bounce_confluence, near_level_risk=rejection_near_level_risk,
-                    rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
-                    signal_type="EMA_REJECTION",
-                    funding_rate=funding_rate, now=now,
-                    ema_rejection_level=candle.get("ema_rejection_level"),
-                )
-                send_telegram_message(rejection_msg)
-                entry["last_ema_rejection_alert_ts"] = now.isoformat()
-                alerts_sent += 1
-                # ÚJ (v14, kibővítve v17-ben): lásd a STANDARD ág kommentjét.
-                rej_sl_price, _, rej_stop_pct = compute_sl_tp(
-                    candle["price"], ema_rejection_signal, candle.get("swing_low"),
-                    candle.get("swing_high"), candle.get("atr"))
-                register_pending_signal(state, symbol, "EMA_REJECTION", ema_rejection_signal, candle["price"], now,
-                                         sl_price=rej_sl_price, stop_distance_pct=rej_stop_pct)
-                print(f"JELZÉS küldve: {symbol} [{ema_rejection_signal}] [EMA_REJECTION/{candle.get('ema_rejection_level')}] "
-                      f"(Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%)")
 
     if htf_warned:
         print(f"  (ebben a körben {htf_warned} kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)")
