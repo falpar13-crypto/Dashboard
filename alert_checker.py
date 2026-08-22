@@ -24,6 +24,7 @@ import asyncio
 import json
 import logging
 import os
+import re
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -145,6 +146,31 @@ MAX_CONCURRENT_REQUESTS = 16   # v15: 12 -> 16, mert a MAX_VOLUME_USDT nagy
 REQUEST_TIMEOUT = 10
 RETRY_COUNT = 3
 RETRY_BACKOFF = 1.5
+
+# ÚJ: HTF (1h) klines-lekérdezés szakaszolása. Korábban egy friss futás
+# ELSŐ körében az ÖSSZES jelölt szimbólumhoz EGYSZERRE (a szemafor által
+# csak 16-osával korlátozva, de gyakorlatilag egy nagy csomagban) elindult
+# a HTF-trend lekérés - ez a burst rendszeresen belefutott a BingX
+# "endpoint trigger frequency limit" (code 100410) hibájába, ami percekre
+# letiltja az EGÉSZ klines-endpointot minden szimbólumra, nem csak arra,
+# amelyik túllépte a limitet. Mostantól körönként csak ennyi ÚJ (még nem
+# cache-elt) szimbólum HTF-trendjét kérjük le - a többi a következő
+# köveztő körökben pótlódik, mire minden szimbólum cache-elve lesz.
+HTF_FETCH_BATCH_SIZE = 20
+
+# ÚJ: endpoint-szintű "hűtési" nyilvántartás. A BingX code=100410 válasza
+# nem egy adott szimbólumra, hanem az EGÉSZ endpointra vonatkozó, percekig
+# tartó tiltást jelent, és a válasz üzenete tartalmazza a pontos feloldási
+# időt (epoch ms). Ha ezt figyelmen kívül hagynánk és minden szimbólumnál
+# újra és újra megpróbálnánk (mint korábban), az csak feleslegesen
+# terhelné az API-t, és minden egyes hívás úgyis elbukna a tiltás alatt.
+# Ehelyett az első ütközéskor megjegyezzük, MEDDIG tilos ezt az endpointot
+# hívni, és addig a további hívásokat AZONNAL, hálózati kérés nélkül
+# elutasítjuk - ezzel is segítve, hogy a tiltás minél hamarabb feloldódjon.
+_ENDPOINT_COOLDOWN_UNTIL: dict[str, float] = {}
+ENDPOINT_COOLDOWN_MAX_SECONDS = 150  # biztonsági felső korlát, ha a válaszból
+                                       # valamiért irreálisan távoli/hibás
+                                       # időpontot olvasnánk ki
 # Kell: 1 élő (nyitott) + VOLUME_MA_PERIOD lezárt gyertya a baseline-hoz, PLUSZ
 # elég előzmény egy stabil RSI(14)/MACD(12,26,9) számításához (~35-40 minimum),
 # PLUSZ (v11) elég előzmény egy stabilabb 5m EMA(20)/EMA(50) (EMA Squeeze)
@@ -618,7 +644,25 @@ async def _get_json(session, url, params=None):
     BingX válasz "code" mezőjét is ellenőrizzük: az API néha 200 OK
     HTTP-státusszal, de belső hibakóddal válaszol (pl. rossz szimbólum,
     rate-limit belső jelzése) - ezt korábban a resp.raise_for_status()
-    nem vette észre, mert a HTTP réteg szintjén minden rendben volt."""
+    nem vette észre, mert a HTTP réteg szintjén minden rendben volt.
+
+    ÚJ: a code=100410 ("endpoint trigger frequency limit... disabled
+    period") NEM egyetlen kérésre vonatkozó hiba, hanem az egész
+    endpointra kirótt, percekig tartó tiltás - ezt a szokásos rövid
+    RETRY_BACKOFF-fal újrapróbálni értelmetlen (garantáltan megint elbukik)
+    és feleslegesen tovább terheli az amúgy is limitált endpointot. Ehelyett
+    egyetlen próbálkozás után megjegyezzük a válaszból kiolvasott feloldási
+    időt, és minden további, ugyanerre az endpointra irányuló hívást a
+    tiltás lejártáig azonnal, hálózati kérés nélkül elutasítunk."""
+    endpoint_key = url
+
+    cooldown_until = _ENDPOINT_COOLDOWN_UNTIL.get(endpoint_key)
+    if cooldown_until is not None:
+        now_mono = time.monotonic()
+        if now_mono < cooldown_until:
+            return None
+        del _ENDPOINT_COOLDOWN_UNTIL[endpoint_key]
+
     last_error = None
     for attempt in range(RETRY_COUNT):
         try:
@@ -633,7 +677,26 @@ async def _get_json(session, url, params=None):
                 # jelen van és nem 0, az API-szintű hibát jelez, annak
                 # ellenére, hogy a HTTP-válasz 200 OK volt.
                 if isinstance(data, dict) and data.get("code") not in (None, 0):
-                    last_error = f"API code={data.get('code')} msg={data.get('msg')}"
+                    code = data.get("code")
+                    msg = data.get("msg", "")
+                    last_error = f"API code={code} msg={msg}"
+                    if code == 100410:
+                        # A válaszüzenet tartalmazza a feloldás epoch ms
+                        # időpontját ("...unblocked after 1787381257499").
+                        # Ezt kiolvassuk, és a teljes endpointot addig
+                        # hűtjük - további próbálkozás itt és most nem segít.
+                        wait_seconds = ENDPOINT_COOLDOWN_MAX_SECONDS
+                        m = re.search(r"after (\d+)", msg)
+                        if m:
+                            unblock_epoch_ms = int(m.group(1))
+                            wait_seconds = max(0.0, unblock_epoch_ms / 1000 - time.time())
+                            wait_seconds = min(wait_seconds, ENDPOINT_COOLDOWN_MAX_SECONDS)
+                        _ENDPOINT_COOLDOWN_UNTIL[endpoint_key] = time.monotonic() + wait_seconds
+                        logger.warning(
+                            "Endpoint hűtésre kényszerítve %.0f mp-re (code 100410) - %s",
+                            wait_seconds, url,
+                        )
+                        return None
                     await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
                     continue
                 return data
@@ -1076,6 +1139,14 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             candidates.append(s)
 
         missing_htf = [s for s in candidates if s not in htf_cache]
+        # ÚJ: lásd a HTF_FETCH_BATCH_SIZE fenti kommentjét - egy friss futás
+        # ELSŐ körében korábban az ÖSSZES (akár 100+) jelölt HTF-trendje
+        # egyszerre indult el, ami rendszeresen kiváltotta a BingX
+        # endpoint-szintű "trigger frequency limit" tiltását (code 100410).
+        # Mostantól körönként csak egy adagot kérünk le - a maradék a
+        # következő körökben pótlódik, mire a teljes htf_cache feltöltődik.
+        if len(missing_htf) > HTF_FETCH_BATCH_SIZE:
+            missing_htf = missing_htf[:HTF_FETCH_BATCH_SIZE]
         # JAVÍTÁS: a funding rate ritkán (jellemzően óránál ritkábban) változik
         # érdemben, ezért - ugyanúgy, mint a HTF trendet - CSAK EGYSZER kérjük
         # le szimbólumonként egy futáson belül, nem minden 30 mp-es körben.
