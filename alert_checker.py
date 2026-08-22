@@ -176,6 +176,31 @@ HTF_KLINES_LIMIT = 100        # ennyi 1h gyertyát kérünk le az EMA50 stabiliz
 REQUIRE_HTF_ALIGNMENT = True  # False-ra állítva kikapcsolható a szűrő kódtörlés nélkül
 
 MAX_CONCURRENT_REQUESTS = 16   # v15: 12 -> 16, mert a MAX_VOLUME_USDT nagy
+
+# ÚJ: KÜLÖN, SOKKAL SZIGORÚBB szemafor kizárólag a klines-endpointra
+# (fetch_klines + fetch_htf_trend + resolve_pending_signals is ide hívnak).
+# A logokból kiderült, hogy NEM az általános kérésszám (OI, funding, ticker)
+# váltja ki a "trigger frequency limit" (code 100410) tiltást, hanem
+# KIFEJEZETTEN a klines-endpoint - miközben az OI/funding/ticker más
+# endpointokat hív, azok sosem futottak bele ebbe a hibába. A korábbi közös,
+# 16-os szemafor emiatt körönként ~500 klines-kérést zúdított ki nagyjából
+# egyszerre (a HTF- és candidate-lekérések is ugyanabba a szemaforba
+# tartoztak) - ez SZINTE MINDEN körben azonnal újra kiváltotta a tiltást,
+# ami miatt egy teljes futás gyakorlatilag adatlekérés nélkül, néma
+# csendben pörgött (lásd a felhasználó által küldött logrészletet: "0 pár
+# kiértékelve" 8+ egymást követő körön át). A klines-hívásokat ezért
+# jóval szűkebb, önálló szemaforral és lassabb ütemezéssel korlátozzuk,
+# függetlenül az OI/funding/ticker hívásoktól, amik továbbra is a
+# tágabb MAX_CONCURRENT_REQUESTS szemafort használják.
+KLINES_MAX_CONCURRENT_REQUESTS = 4
+KLINES_REQUEST_PACING_SECONDS = 0.2  # minden klines-kérés UTÁN ennyit várunk,
+                                       # mielőtt a szemafor felszabadítaná a
+                                       # helyet a következő kérésnek - ez az
+                                       # tényleges kérés/mp ütemet fogja vissza,
+                                       # amit önmagában a konkurrencia-korlát
+                                       # nem feltétlenül tesz meg (gyors
+                                       # válaszidőknél a 4-es konkurrencia is
+                                       # sok kérést engedne át másodpercenként)
                                 # emelése (15M -> 150M) várhatóan jelentősen
                                 # megnöveli a jelöltlista méretét - érdemes az
                                 # első pár futást figyelni (lásd a válaszban)
@@ -440,7 +465,7 @@ def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.Data
     }
 
 
-async def resolve_pending_signals(state: dict, session, semaphore, now: datetime) -> None:
+async def resolve_pending_signals(state: dict, session, klines_semaphore, now: datetime) -> None:
     """5 perces gyertya-historikum alapján lezárja azokat a függő
     jelzéseket, amelyeknél letelt a kiértékelési ablak
     (OUTCOME_EVAL_WINDOW_MINUTES). Jelzésenként EGYETLEN klines-lekérést
@@ -464,7 +489,7 @@ async def resolve_pending_signals(state: dict, session, semaphore, now: datetime
     async def _resolve_one(item):
         entry_dt = datetime.fromisoformat(item["entry_ts"])
         window_end_dt = datetime.fromisoformat(item["window_end_ts"])
-        symbol, kdf = await fetch_klines(session, semaphore, item["symbol"], ALERT_TIMEFRAME, limit=60)
+        symbol, kdf = await fetch_klines(session, klines_semaphore, item["symbol"], ALERT_TIMEFRAME, limit=60)
         if kdf is None or kdf.empty:
             return item, None
 
@@ -865,7 +890,10 @@ async def fetch_htf_trend(session, semaphore, symbol):
     async with semaphore:
         params = {"symbol": symbol, "interval": HIGHER_TIMEFRAME, "limit": HTF_KLINES_LIMIT}
         data = await _get_json(session, KLINES_ENDPOINT, params=params)
-        await asyncio.sleep(0.03)
+        # ÚJ: a korábbi 0.03 mp-es szünet túl rövid volt ahhoz, hogy
+        # ténylegesen korlátozza a klines-endpointra irányuló kérés/mp
+        # ütemet - lásd a KLINES_REQUEST_PACING_SECONDS fenti kommentjét.
+        await asyncio.sleep(KLINES_REQUEST_PACING_SECONDS)
         empty_result = {"trend": None, "support": None, "resistance": None}
         if not data or "data" not in data or not data["data"]:
             return symbol, empty_result
@@ -909,7 +937,9 @@ async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT)
     async with semaphore:
         params = {"symbol": symbol, "interval": interval, "limit": limit}
         data = await _get_json(session, KLINES_ENDPOINT, params=params)
-        await asyncio.sleep(0.03)
+        # ÚJ: lásd KLINES_REQUEST_PACING_SECONDS fenti kommentjét - a 0.03 mp
+        # túl rövid volt, nem korlátozta ténylegesen a kérés/mp ütemet.
+        await asyncio.sleep(KLINES_REQUEST_PACING_SECONDS)
         if not data or "data" not in data or not data["data"]:
             return symbol, None
         df = pd.DataFrame(data["data"])
@@ -1220,9 +1250,16 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
 # ----------------------------------------------------------------------------
 
 async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding_cache: dict, now: datetime):
-    connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
+    # ÚJ: a connector limit MAX_CONCURRENT_REQUESTS + KLINES_MAX_CONCURRENT_REQUESTS
+    # összegére nőtt, hogy a két KÜLÖN szemafor (általános + klines-specifikus)
+    # ne ütközzön/szűküljön vissza feleslegesen ugyanazon a TCP-kapcsolat-poolon.
+    connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS + KLINES_MAX_CONCURRENT_REQUESTS)
     async with aiohttp.ClientSession(connector=connector) as session:
         semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+        # ÚJ: lásd a KLINES_MAX_CONCURRENT_REQUESTS fenti kommentjét - a
+        # klines-endpoint (5m ÉS 1h HTF is ide tartozik) ÖNÁLLÓ, jóval
+        # szűkebb szemafort kap, függetlenül az OI/funding/ticker hívásoktól.
+        klines_semaphore = asyncio.Semaphore(KLINES_MAX_CONCURRENT_REQUESTS)
 
         tickers = await fetch_all_tickers(session)
         if not tickers:
@@ -1236,7 +1273,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         # kiértékelése - MOST MÁR az 5 perces gyertyák high/low-ját nézve, nem
         # egyetlen pillanatnyi ticker-árat (lásd a resolve_pending_signals()
         # feletti blokk-kommentet a módszertani váltás okáról).
-        await resolve_pending_signals(state, session, semaphore, now)
+        await resolve_pending_signals(state, session, klines_semaphore, now)
 
         candidates = []
         for s, info in tickers.items():
@@ -1273,8 +1310,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         # a még nem cache-elt szimbólumokra), hogy párhuzamosan fusson és ne
         # lassítsa/terhelje feleslegesen a kört.
         oi_tasks = [fetch_open_interest(session, semaphore, s) for s in candidates]
-        kline_tasks = [fetch_klines(session, semaphore, s, ALERT_TIMEFRAME) for s in candidates]
-        htf_tasks = [fetch_htf_trend(session, semaphore, s) for s in missing_htf]
+        kline_tasks = [fetch_klines(session, klines_semaphore, s, ALERT_TIMEFRAME) for s in candidates]
+        htf_tasks = [fetch_htf_trend(session, klines_semaphore, s) for s in missing_htf]
         funding_tasks = [fetch_funding_rate(session, semaphore, s) for s in missing_funding]
 
         # VÉDEKEZÉS: return_exceptions=True, hogy EGY váratlan hiba (pl. egy
