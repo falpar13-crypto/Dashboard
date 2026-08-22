@@ -1,34 +1,67 @@
-name: Daytrade Bot Runner
+name: BingX Daytrade Alert
 
 on:
   schedule:
-    # 10 percenként indul, ahogy a skalp bot is
-    - cron: '*/10 * * * *'
-  workflow_dispatch: # Lehetővé teszi a manuális indítást gombnyomásra
+    - cron: "0 * * * *"   # óránként egyszeri biztonsági háló
+  workflow_dispatch: {}   # ezt hívja majd a külső cron-szolgáltatás (vagy a kézi indítás)
+
+concurrency:
+  group: bingx-daytrade-checker
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # kell, hogy a daytrade state és log fájlok vissza tudjanak mentődni a repóba
 
 jobs:
-  run-daytrade-bot:
+  check:
     runs-on: ubuntu-latest
-    concurrency: 
-      group: daytrade-bot
-      cancel-in-progress: false # A Python kód belső lockja úgyis kezeli az átfedést
-
     steps:
-      - name: Kód letöltése (Checkout)
-        uses: actions/checkout@v3
+      - name: Repó checkout
+        uses: actions/checkout@v4
 
-      - name: Python 3.10 beállítása
-        uses: actions/setup-python@v4
+      - name: Python telepítése
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: requirements-alerts.txt  # ha nincs külön requirements fájlod, a skalpé jó lesz ide is
 
-      - name: Függőségek (csomagok) telepítése
-        run: |
-          python -m pip install --upgrade pip
-          pip install aiohttp pandas requests
+      - name: Csomagok telepítése
+        run: pip install aiohttp pandas requests
 
-      - name: Daytrade Bot futtatása
+      - name: Daytrade Ellenőrzés futtatása
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python daytrade_checker.py
+
+      - name: Daytrade állapotfájl és naplók visszamentése a repóba
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config merge.ours.driver true
+
+          git add daytrade_state.json
+          if [ -f daytrade_alert_log.jsonl ]; then
+            git add daytrade_alert_log.jsonl
+          fi
+          git add daytrade_alert_log_*.jsonl.bak 2>/dev/null || true
+
+          if git diff --quiet --cached; then
+            echo "Nincs változás a daytrade állapotfájlokban, nincs mit commitolni."
+            exit 0
+          fi
+          git commit -m "daytrade_state / daytrade_alert_log frissítve [skip ci]"
+
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Push sikeres."
+              exit 0
+            fi
+            echo "Push ütközött (${i}. próbálkozás) - remote frissítés és újrapróbálás..."
+            git fetch origin main
+            git pull --no-rebase origin main --no-edit
+            sleep $((RANDOM % 6 + 3))
+          done
+          echo "Push végül sem sikerült 5 próbálkozás után."
+
