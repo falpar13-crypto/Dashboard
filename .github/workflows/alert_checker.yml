@@ -1,0 +1,102 @@
+name: BingX Breakout Alert
+
+on:
+  schedule:
+    # TARTALÉK ütemezés - csak arra az esetre, ha a külső cron-szolgáltatás
+    # (cron-job.org) valamiért nem érhető el. A VALÓDI, mostantól 10 PERCES
+    # ütemezést egy külső szolgáltatás adja (v15: 5 -> 10 perc, mert a
+    # cron-job.org csak kerek perceket enged, és ritkább-de-hosszabb futással
+    # jobb a teljes órás lefedettség - lásd alert_checker.py TOTAL_RUN_BUDGET_SECONDS
+    # kommentjét), ami a workflow_dispatch API-n keresztül indítja el ezt a
+    # workflow-t (lásd setup útmutató). A GitHub saját "schedule" ütemezése nem
+    # megbízható elég sűrű futtatáshoz.
+    - cron: "0 * * * *"   # óránként egyszer, csak biztonsági hálóként
+  workflow_dispatch: {}   # ezt hívja a külső cron-szolgáltatás API-n keresztül,
+                           # és ezzel kézzel is elindítható a "Actions" fülön
+
+# Ha egy futás még nem fejeződött be, amikor a következő indulna, az újat
+# sorba állítjuk (nem párhuzamosan futtatjuk) - így nem ütközhet két job az
+# alert_state.json visszaírásakor.
+concurrency:
+  group: bingx-alert-checker
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # kell, hogy a job vissza tudja commitolni az állapotfájlt
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repó checkout
+        uses: actions/checkout@v4
+
+      - name: Python telepítése
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"                      # v15 JAVÍTÁS: a csomagok (pandas,
+          cache-dependency-path: requirements-alerts.txt  # aiohttp stb.) cache-elése -
+                                             # így nem kell minden futásnál nulláról
+                                             # újratelepíteni őket (ez lehet a 8-9
+                                             # perces futásidő egyik fő oka)
+
+      - name: Csomagok telepítése
+        run: pip install -r requirements-alerts.txt
+
+      - name: Ellenőrzés futtatása
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python alert_checker.py
+
+      - name: Állapotfájl visszamentése a repóba
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Az alert_state.json-ra "ours" merge-stratégiát állítunk: ha két futás
+          # véletlenül átfedésbe kerülne, a git NEM hibázik el ütközésnél, hanem
+          # automatikusan a saját (ebben a futásban frissített) verziót tartja meg.
+          git config merge.ours.driver true
+
+          # v15 JAVÍTÁS: eddig csak az alert_state.json került mentésre, az
+          # alert_log.jsonl (a napi winrate-összesítőhöz szükséges jelzés-napló)
+          # SOHA nem lett visszaírva a repóba - minden futás egy vadonatúj,
+          # egyszer használatos gépen indul, így a szkript által útközben
+          # létrehozott alert_log.jsonl minden futás végén elveszett, a
+          # következő pedig mindig üres naplóból indult. Emiatt sosem gyűlt
+          # össze benne semmi, és a napi összesítő mindig "nincs mit
+          # összesíteni" ágra futott.
+          git add alert_state.json
+          if [ -f alert_log.jsonl ]; then
+            git add alert_log.jsonl
+          fi
+
+          # ÚJ: a napló-rotáció (alert_checker.py, _rotate_signal_log) a
+          # napi összesítő elküldése után a 2+ napos jelzéseket havi
+          # archívum-fájlokba (alert_log_YYYY-MM.jsonl.bak) emeli ki az
+          # alert_log.jsonl-ből. Mivel minden futás egy vadonatúj, egyszer
+          # használatos gépen zajlik, ezeket az archívum-fájlokat is vissza
+          # KELL commitolni - különben a gép megsemmisülésekor véglegesen
+          # elvesznének, és pont azt a problémát hoznánk vissza, amit a
+          # fenti v15 javítás (a napló repóba mentése) megoldott.
+          git add alert_log_*.jsonl.bak 2>/dev/null || true
+
+          if git diff --quiet --cached; then
+            echo "Nincs változás az állapotfájlokban, nincs mit commitolni."
+            exit 0
+          fi
+          git commit -m "alert_state / alert_log frissítve [skip ci]"
+
+          # Push újrapróbálással, ha közben más futás is írt volna a repóba.
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Push sikeres."
+              exit 0
+            fi
+            echo "Push ütközött (${i}. próbálkozás) - remote frissítés és újrapróbálás..."
+            git fetch origin main
+            git pull --no-rebase origin main --no-edit
+            sleep $((RANDOM % 6 + 3))
+          done
+          echo "Push végül sem sikerült 5 próbálkozás után - a state ebben a körben elveszhet, de a következő futás újra megpróbálja."
