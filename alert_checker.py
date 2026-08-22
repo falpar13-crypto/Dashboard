@@ -1,155 +1,52 @@
 """
-BingX Perpetual - "Élő Gyertya" Skalp Felhalmozás-figyelő (v4)
+BingX Perpetual - "Élő Gyertya" Skalp Felhalmozás-figyelő (v18)
 ====================================================================
-Ez a szkript NEM a Streamlit dashboard része — teljesen önállóan fut, a
-dashboard-on beállított idősíktól FÜGGETLENÜL mindig az 5 PERCES gyertyákat
-vizsgálja (lásd ALERT_TIMEFRAME lent).
+Önállóan fut (nem a Streamlit dashboard része), mindig az 5 PERCES
+gyertyákat vizsgálja, a dashboard idősík-választójától FÜGGETLENÜL.
 
-v3 VÁLTOZÁS #1 - ÉLŐ GYERTYA: a korábbi verziók mindig eldobták az utolsó,
-még formálódó gyertyát, és csak lezárt gyertyákat hasonlítottak össze. Ez
-biztonságos volt, de KÉSŐN jelzett - mire egy gyertya lezárt, a mozgás nagy
-része már megtörtént. Most a bot a MÉG NYITOTT (élő) gyertyát vizsgálja a
-megelőző N db LEZÁRT gyertya átlagához képest, így már a gyertya kialakulása
-KÖZBEN jelezhet, ha a volumen/OI szokatlanul felpörög.
-Ára van: az élő gyertya adatai a lekérdezés pillanatáig "STOP-kamerázott"
-részleges adatok - a végleges (lezárt) érték eltérhet, és elméletileg egy
-gyors visszapattanás miatt "hamis" jelzés is előfordulhat. Ez a tudatosan
-vállalt ára annak, hogy korábban jelezzen.
+Röviden a jelenlegi (v18) logika:
+  - Az élő (még nyitott) gyertyát hasonlítja a megelőző N db lezárt
+    gyertya átlagához (ár, volumen, Open Interest) - így már a mozgás
+    KIALAKULÁSA közben jelezhet, nem csak lezárás után.
+  - Kizárólag egyetlen jelzéstípust küld: STANDARD PUMP/DUMP.
+  - Kiegészítő (csak tájékoztató, NEM szűrő) infók: 1h HTF trend,
+    támasz/ellenállás-közelség, RSI/MACD, funding rate (squeeze),
+    killzone.
+  - Napi winrate-összesítőt küld (fix -1.5%-os SL-lel szimulálva).
+  - GitHub Actions-ből fut, belső 30 mp-es ciklusban kb. 8m40s-ig,
+    hogy a fix indítási költség (checkout, csomagtelepítés) ne
+    vesszen kárba minden egyes 10 perces cron-hívásnál.
 
-v3 VÁLTOZÁS #2 - BELSŐ 30 MÁSODPERCES CIKLUS: mivel a GitHub Actions indítása
-(gépfoglalás, checkout, csomagtelepítés) önmagában kb. 15-20 másodpercet
-elvesz, ha csak egyszer futtatnánk le a kiértékelést egy Actions-hívásban,
-rengeteg idő veszne kárba "üresjáratban". Ezért a main() most egy belső
-while-ciklusban, kb. 4.5 percig (270 mp) fut, 30 másodpercenként újra
-lekérdezve és kiértékelve az adatokat, majd rendesen leáll - így a következő,
-5 percenkénti külső cron-indítás (cron-job.org) egy friss példányt indít, és
-a lefedettség gyakorlatilag folyamatos.
-
-v3 VÁLTOZÁS #3 - IRÁNY + ÚJ ÜZENETFORMÁTUM: az üzenet most zöld/piros ponttal
-és LONG/SHORT címkével jelzi az irányt (élő gyertya open vs. jelenlegi ár
-alapján), a korábbi "szűk oldalazás" szöveg nélkül.
-
-v4 VÁLTOZÁS - AUTOMATIKUS VISSZAIGAZOLÁS (v11-BEN ELTÁVOLÍTVA): a v4-v9 között
-a bot minden jelzéshez elmentette, melyik gyertyáról volt szó, és amikor az
-lezárt, egy második "✅ Megerősítve" / "❌ Visszafordult" / "➖ Semleges zárás"
-Telegram-üzenetet is küldött. A felhasználói visszajelzés alapján ez túl sok
-zajt (spam-et) okozott, ezért a v11-ben TELJESEN KIKERÜLT a kódból (lásd lent).
-
-v5 VÁLTOZÁS - MAGASABB IDŐSÍK TREND-SZŰRŐ: mostantól a bot megnézi az adott
-pár 1 órás trendjét (záróár az 1h EMA50-hez képest) is. Az 1h trendet
-takarékosan, futásonként csak egyszer (nem minden 30 mp-es körben) kérdezzük
-le és memóriában cache-eljük a futás hátralévő részére.
-
-v6 VÁLTOZÁS - HTF FIGYELMEZTETÉS BLOKKOLÁS HELYETT: a v5-ben a trenddel
-szembemenő jelzést egyszerűen NEM küldtük ki. A felhasználói visszajelzés
-alapján ez túl szigorúnak bizonyult - mostantól a jelzés MINDIG kimegy, csak
-egy "⚠️ Trenddel szemben (1h: DOWN/UP)" figyelmeztető sort kap az üzenet, ha
-az irány nem egyezik az 1h trenddel. Így a döntés a felhasználónál marad.
-
-v8 VÁLTOZÁS - TÁMASZ/ELLENÁLLÁS FIGYELMEZTETÉS: a bot most egy egyszerű,
-"N-periódusos csatorna" módszerrel (az utolsó SR_LOOKBACK_PERIOD=60 db lezárt
-1h gyertya legalacsonyabb mélypontja/legmagasabb csúcsa - NEM chartolvasói
-Order Block, hanem jól definiált matematikai közelítés) megnézi, közel van-e
-az ár egy támaszhoz/ellenálláshoz (±SR_PROXIMITY_PCT%). Csakúgy, mint a HTF
-trend-szűrőnél, ez SEM blokkolja a jelzést - a jelzés MINDIG kimegy, csak:
-  - 🎯 kiemelést kap, ha a jelzés egy szintről való visszapattanással egyezik
-    (PUMP a támasznál, DUMP az ellenállásnál),
-  - ⚠️ figyelmeztetést kap, ha a jelzés egy szint ELLEN menne (DUMP a
-    támasznál, PUMP az ellenállásnál - onnan könnyen visszapattanhat).
-Nincs plusz API-hívás: ugyanabból az 1h lekérésből számol, amit a HTF
-trendhez is használunk.
-
-v9 VÁLTOZÁS - RSI + MACD INFÓ: a bot most RSI(14)-et és MACD(12,26,9)-et is
-számol az 5m adatokból (nincs plusz API-hívás, csak nagyobb limit ugyanarra a
-lekérésre). Ez CSAK tájékoztató jellegű sor az üzenetben - nem szűr és nem
-blokkol semmit. Az RSI mellett "(túlvett)"/"(túladott)" jelölés jelenik meg
-RSI_OVERBOUGHT/RSI_OVERSOLD küszöbök alapján.
-
-v9 VÁLTOZÁS - NCFX KIZÁRVA: az NCSK mellett az NCFX előtagú (szintén nem
-kriptó, tokenizált) termékek is ki vannak zárva a jelöltek közül.
-
-v11 VÁLTOZÁS - KILLZONE, FUNDING RATE, EMA SQUEEZE, SPAM-MENTESÍTÉS:
-  - OI-küszöb 2.5% -> 1.5% (érzékenyebb jelzés).
-  - ÚJ: Killzone (London 07:00-10:00 UTC, New York 13:30-16:00 UTC) infósor
-    az üzenetben - CSAK tájékoztat, nem szűr.
-  - ÚJ: Funding Rate lekérdezés (BingX premiumIndex végpont), Squeeze Vadász
-    figyelmeztetéssel (short/long squeeze), amikor a jelzés iránya a
-    finanszírozási rátával ellentétes pozíciók túlsúlyára utal. A funding
-    rate-et, mivel ritkán (általában óránál ritkábban) változik érdemben,
-    a HTF trendhez hasonlóan CSAK EGYSZER kérdezzük le szimbólumonként egy
-    futáson belül, és memóriában cache-eljük (funding_cache) - így nem nő
-    feleslegesen az API-terhelés minden 30 mp-es körben.
-  - ÚJ: EMA Squeeze (beszorulás) kitörés-riasztás - önálló, a STANDARD/SÁV
-    KITÖRÉS jelzésektől TELJESEN FÜGGETLEN logika, saját cooldown-nal és
-    lazább OI/volumen-küszöbökkel. FONTOS: mivel teljesen független, egy
-    adott élő gyertyára ELVILEG egyszerre mehet ki STANDARD/SÁV KITÖRÉS ÉS
-    EMA SQUEEZE riasztás is (két külön Telegram-üzenet) - ez a kért
-    függetlenség szándékos velejárója.
-  - TÖRÖLVE: automatikus visszaigazolás (lásd v4 fenti megjegyzését) - a bot
-    többé NEM küld "Megerősítve/Visszafordult/Semleges" üzeneteket.
-  - SZELLŐS DIZÁJN: minden kiküldött üzenet elejére/végére egy-egy extra
-    sortörés kerül, hogy Telegramon ne folyjanak össze az egymást követő
-    riasztások.
-  - Az 5m klines lekérés limitje (KLINES_LIMIT) 65 -> 120-ra nőtt, hogy az
-    EMA Squeeze EMA(50) számítása stabilabb (jobban "bemelegedett") legyen.
-
-v12 VÁLTOZÁS - EMA 20 REJECTION (MOZGÓÁTLAG-VISSZAUTASÍTÁS): ÚJ, önálló,
-kizárólag SHORT (DUMP) irányú riasztás-logika, a STANDARD/SÁV KITÖRÉS/EMA
-SQUEEZE jelzésektől TELJESEN FÜGGETLEN, saját cooldown-nal. Setup: korábbi
-UP trend (EMA20 az EMA50 felett) után az ár betört az EMA20 alá, majd
-alulról szorosan visszatesztelte azt, de nem tudott fölé zárni - a szint
-"visszautasította", és az élő gyertya határozottan piros, folytatódó
-beszakadást jelezve. A HTF trend/RSI/MACD/killzone/funding infósorok ennél a
-jelzéstípusnál is megjelennek, csakúgy, mint a többinél. Lazított (60% OI /
-70% volumen) küszöbökkel fut, ugyanúgy, mint az EMA Squeeze.
-
-v13 VÁLTOZÁS - EMA 20/50 REJECTION KÉTFÁZISÚVÁ BŐVÍTVE + LAZÍTOTT KÜSZÖBÖK:
-az EMA Rejection korábban csak addig működött, amíg EMA20 > EMA50 volt (csak
-az EMA20-ról való visszapattanást ismerte fel). Mostantól, ha a letörés már
-annyira megerősödött, hogy az EMA20 lekeresztezte az EMA50-et, a logika
-automatikusan az EMA50-re, mint "alsó" szintre vált - ugyanazzal a letörés->
-visszateszt->elutasítás mintával. Emellett a STANDARD/EMA SQUEEZE/EMA
-REJECTION küszöbök (OI%, volumen-szorzó, visszateszt-tolerancia stb.) kicsit
-lazábbak lettek, hogy több valós jelzés menjen ki.
-
-v14 VÁLTOZÁS - NAPI WINRATE-ÖSSZESÍTŐ: minden kiküldött jelzést (típustól
-függetlenül) a bot mostantól "megjegyez" (state-ben, "pending_outcomes" néven)
-a belépő árral együtt, és OUTCOME_EVAL_MINUTES (30) perc múlva - a soron
-következő körben, a már úgyis lekért ticker-árak alapján, TEHÁT NINCS PLUSZ
-API-HÍVÁS - kiértékeli: a jelzés iránya szerint mozdult-e az ár legalább
-OUTCOME_WIN_THRESHOLD_PCT (0.3%) %-ot (WIN), az ellenkező irányba (LOSS), vagy
-egyik sem (NEUTRAL). Ezt egy önálló, append-only naplófájlba (alert_log.jsonl)
-írja. Minden nap, kicsivel éjfél UTC után (hogy az előző nap utolsó jelzései
-is stabilan kiértékelődjenek), egyetlen összesítő Telegram-üzenetben elküldi
-az előző nap jelzéstípusonkénti darabszámát, W/L/N bontását és winrate-jét.
-Ismert korlát: ha egy adott naphoz tartozó jelzés csak a nap váltása UTÁN,
-a DAILY_SUMMARY_MIN_DELAY_MINUTES ablakon túl értékelődik ki (ritka, csak
-akkor fordulhat elő, ha a szimbólum közben kikerül a jelöltlistából és
-OUTCOME_MAX_STALE_MINUTES-ig nem sikerül árat találni hozzá), az az adott nap
-összesítőjéből technikailag kimaradhat - ez egy tudatosan vállalt, apró
-pontatlanság egy személyes használatra szánt eszköznél.
-
-FONTOS: az OI-hoz (aminek nincs nyilvános historikus API-ja) továbbra is egy
-JSON állapotfájlban (alert_state.json) tárolt pillanatképet használunk
-referenciaként, valós időbélyeg alapján keresve a ~5 perces referenciapontot.
-A cooldown-mechanizmus (alert_state.json alapú, per-szimbólum "last_alert_ts")
-VÁLTOZATLAN maradt - ez védi ki, hogy egy élő gyertyán belül (amit a 30
-másodperces belső ciklus miatt akár 10x is megvizsgálunk) többször riasszon
-ugyanarra a mozgásra.
+A teljes, verziónkénti indoklástörténet a CHANGELOG.md fájlban van.
 """
 
 import asyncio
 import json
+import logging
 import os
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
-from typing import Optional
+from typing import Optional, TypedDict
 
 import aiohttp
 import pandas as pd
 import requests
+
+# ----------------------------------------------------------------------------
+# LOGGOLÁS - eddig print()-ekkel ment minden kimenet, időbélyeg/szint nélkül.
+# GitHub Actions logokban ez megnehezítette egy adott hiba visszakeresését.
+# Mostantól logging modult használunk: időbélyeg + szint (INFO/WARNING/ERROR)
+# minden sorban, és HIBA-jellegű üzenetek explicit logger.error()-ral mennek,
+# hogy CI logfeldolgozó eszközökkel is könnyen szűrhetők legyenek.
+# ----------------------------------------------------------------------------
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("alert_checker")
 
 # ----------------------------------------------------------------------------
 # 1) SKALP PARAMÉTEREK - fix (hardkódolt) globális változók
@@ -158,13 +55,13 @@ ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashb
                              # idősík-választójától teljesen függetlenül
 MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
-MIN_OI_INCREASE = 1.5       # v18 RÁNCFELVARRÁS: szigorú alapokra vissza -
+MIN_OI_INCREASE = 2.5       # v18 RÁNCFELVARRÁS: szigorú alapokra vissza -
                              # a bot mostantól KIZÁRÓLAG STANDARD jelzést küld,
                              # ehhez markánsan magasabb küszöb kell
 MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimuma
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
-MIN_VOL_MULTIPLIER = 2    # v18 RÁNCFELVARRÁS: szigorú alapokra vissza (lásd fent)
+MIN_VOL_MULTIPLIER = 2.5    # v18 RÁNCFELVARRÁS: szigorú alapokra vissza (lásd fent)
 
 # --- ÚJ: Killzone (tőzsdenyitási időablakok) - UTC időzóna, "HH:MM" formátumban ---
 LONDON_KILLZONE = ("07:00", "10:00")
@@ -324,6 +221,84 @@ DAILY_SUMMARY_MIN_DELAY_MINUTES = 35  # ennyivel helyi éjfél után küldjük a
                                         # előző napi összesítőt
 
 
+# ----------------------------------------------------------------------------
+# TypedDict-ek - ÚJ, csak dokumentációs/típusellenőrzési célra (futásidőben
+# semmit nem változtatnak, a kódban továbbra is sima dict-eket adunk vissza/
+# kapunk). Korábban ezek a struktúrák "meztelen" dict-ekként éltek a
+# kódban, ami olvashatóbb IDE-támogatás és statikus ellenőrzés (mypy/pyright)
+# nélkül könnyen elgépelt kulcsnevekhez vezethetett (pl. "vol_multiplier" vs
+# "volume_multiplier") anélkül, hogy ez futásidőben azonnal kiderült volna.
+# ----------------------------------------------------------------------------
+class CandleEval(TypedDict):
+    price: float
+    price_change_pct: float
+    vol_multiplier: float
+    candle_vol_usdt: float
+    direction: str          # "LONG" | "SHORT"
+    rsi: Optional[float]
+    macd_status: Optional[str]
+    signal_type: str        # jelenleg mindig "STANDARD"
+
+
+class OiBaseline(TypedDict):
+    ts: str
+    oi: float
+
+
+def _rotate_signal_log(before_date_str: str) -> None:
+    """ÚJ: napló-rotáció. Az alert_log.jsonl korábban append-only volt,
+    rotáció nélkül - hónapok/évek alatt korlátlanul nőhetett. Mostantól a
+    napi összesítő elküldése UTÁN (tehát csak azután, hogy a tegnapi
+    jelzéseket már felhasználtuk!) minden `before_date_str`-nél (kizárólag)
+    KORÁBBI 'entry_date'-ű sort kiemelünk a fő naplóból, és a hónapjuk
+    szerinti archívum-fájlba (alert_log_YYYY-MM.jsonl.bak) fűzzük hozzá.
+    Ez biztonságos: a kiértékelési ablak (OUTCOME_EVAL_WINDOW_MINUTES +
+    OUTCOME_MAX_STALE_MINUTES, összesen legfeljebb 2 óra) miatt egy nappal
+    régebbi bejegyzés MINDIG már véglegesen kiértékelt (WIN/LOSS/UNKNOWN),
+    így archiválás után sem a resolve_pending_signals, sem a napi
+    összesítő nem hivatkozik rá többé."""
+    if not SIGNAL_LOG_FILE.exists():
+        return
+    try:
+        keep_lines = []
+        archive_by_month: dict[str, list[str]] = {}
+        with SIGNAL_LOG_FILE.open("r", encoding="utf-8") as f:
+            for line in f:
+                stripped = line.strip()
+                if not stripped:
+                    continue
+                try:
+                    rec = json.loads(stripped)
+                except json.JSONDecodeError:
+                    keep_lines.append(line)  # sérült sort inkább megtartjuk, mint elveszítjük
+                    continue
+                entry_date = rec.get("entry_date")
+                if entry_date and entry_date < before_date_str:
+                    month_key = entry_date[:7]  # "YYYY-MM"
+                    archive_by_month.setdefault(month_key, []).append(line)
+                else:
+                    keep_lines.append(line)
+
+        if not archive_by_month:
+            return  # nincs mit archiválni
+
+        for month_key, lines in archive_by_month.items():
+            archive_path = SIGNAL_LOG_FILE.parent / f"alert_log_{month_key}.jsonl.bak"
+            with archive_path.open("a", encoding="utf-8") as f:
+                f.writelines(lines)
+
+        tmp_path = SIGNAL_LOG_FILE.with_suffix(SIGNAL_LOG_FILE.suffix + ".tmp")
+        with tmp_path.open("w", encoding="utf-8") as f:
+            f.writelines(keep_lines)
+        os.replace(tmp_path, SIGNAL_LOG_FILE)
+
+        archived_count = sum(len(v) for v in archive_by_month.values())
+        logger.info("Napló-rotáció: %d régi bejegyzés archiválva (%d hónapos fájlba).",
+                    archived_count, len(archive_by_month))
+    except OSError as e:
+        logger.error("Napló-rotáció sikertelen: %s", e)
+
+
 def _log_signal_outcome(record: dict) -> None:
     """Egyetlen sort ír a napló (JSONL) fájlba - append-only, soha nem
     módosítunk/törlünk belőle korábbi sort."""
@@ -331,7 +306,7 @@ def _log_signal_outcome(record: dict) -> None:
         with SIGNAL_LOG_FILE.open("a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
     except OSError as e:
-        print(f"HIBA: nem sikerült írni a jelzés-naplóba: {e}")
+        logger.error("Nem sikerült írni a jelzés-naplóba: %s", e)
 
 
 def register_pending_signal(state: dict, symbol: str, signal_type: str,
@@ -442,7 +417,7 @@ async def resolve_pending_signals(state: dict, session, semaphore, now: datetime
 
     for outcome_pair in results:
         if isinstance(outcome_pair, Exception):
-            print(f"HIBA a jelzés kiértékelése közben: {outcome_pair}")
+            logger.error("Hiba a jelzés kiértékelése közben: %s", outcome_pair)
             continue
         item, result = outcome_pair
         if result is None:
@@ -480,7 +455,7 @@ def _load_log_entries_for_date(date_str: str) -> list:
                 if rec.get("entry_date") == date_str:
                     entries.append(rec)
     except OSError as e:
-        print(f"HIBA: nem sikerült beolvasni a jelzés-naplót: {e}")
+        logger.error("Nem sikerült beolvasni a jelzés-naplót: %s", e)
     return entries
 
 
@@ -517,7 +492,43 @@ def _format_daily_summary(date_str: str, entries: list) -> str:
     return f"\n{chr(10).join(lines)}\n"
 
 
-def maybe_send_daily_summary(state: dict, now: datetime) -> None:
+STATE_CLEANUP_STALE_DAYS = 14  # ennyi napja nem látott (pl. delistázott)
+                                 # szimbólum bejegyzését töröljük a state-ből
+
+
+def _cleanup_stale_state_entries(state: dict, now: datetime) -> None:
+    """ÚJ: a state fájl per-szimbólum bejegyzései korábban SOSEM törlődtek
+    (csak a bennük lévő oi_history lista elemei öregedtek ki) - ha egy
+    tokent delistáztak vagy kikerült a jelöltlistából, a bejegyzése
+    örökre bent maradt, feleslegesen növelve a fájlt. Mostantól minden
+    olyan szimbólum-bejegyzést törlünk, amit STATE_CLEANUP_STALE_DAYS
+    napja nem láttunk (a run_single_pass minden kiértékelt szimbólumnál
+    frissíti a "last_seen" mezőt). A belső ("_"-tal kezdődő) kulcsokat
+    (pl. "_run_lock", "_last_summary_date") ez nem érinti."""
+    cutoff = now - timedelta(days=STATE_CLEANUP_STALE_DAYS)
+    stale_symbols = []
+    for key, entry in state.items():
+        if key.startswith("_") or not isinstance(entry, dict):
+            continue
+        last_seen = entry.get("last_seen")
+        if last_seen is None:
+            continue  # régebbi, "last_seen" mező nélküli bejegyzés - hagyjuk békén
+        try:
+            last_seen_dt = datetime.fromisoformat(last_seen)
+        except ValueError:
+            continue
+        if last_seen_dt < cutoff:
+            stale_symbols.append(key)
+
+    for key in stale_symbols:
+        del state[key]
+
+    if stale_symbols:
+        logger.info("State-takarítás: %d elavult (>%d napja nem látott) szimbólum törölve (%s).",
+                    len(stale_symbols), STATE_CLEANUP_STALE_DAYS, ", ".join(stale_symbols[:10]))
+
+
+async def maybe_send_daily_summary(state: dict, now: datetime) -> None:
     """Ha új (HELYI, SUMMARY_TIMEZONE szerinti) nap kezdődött, és eltelt
     DAILY_SUMMARY_MIN_DELAY_MINUTES perc a helyi éjfél óta (hogy az előző nap
     utolsó jelzései is kiértékelődjenek), elküldi az előző nap winrate-
@@ -546,12 +557,16 @@ def maybe_send_daily_summary(state: dict, now: datetime) -> None:
     entries = _load_log_entries_for_date(yesterday_str)
     if entries:
         summary_msg = _format_daily_summary(yesterday_str, entries)
-        send_telegram_message(summary_msg)
-        print(f"Napi winrate-összesítő elküldve ({yesterday_str}, {len(entries)} jelzés).")
+        await send_telegram_message(summary_msg)
+        logger.info("Napi winrate-összesítő elküldve (%s, %d jelzés).", yesterday_str, len(entries))
     else:
-        print(f"Nem volt jelzés {yesterday_str}-n - napi összesítő kihagyva.")
+        logger.info("Nem volt jelzés %s-n - napi összesítő kihagyva.", yesterday_str)
 
     state["_last_summary_date"] = today_str
+    # A tegnapi (yesterday_str) bejegyzéseket már felhasználtuk fent - minden,
+    # ami ennél is régebbi, biztonságosan archiválható.
+    _rotate_signal_log(yesterday_str)
+    _cleanup_stale_state_entries(state, now)
 
 # ----------------------------------------------------------------------------
 # ÁLLAPOT (JSON fájl) KEZELÉSE
@@ -567,23 +582,67 @@ def load_state() -> dict:
 
 
 def save_state(state: dict) -> None:
-    STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    """ÚJ: ATOMI írás. A korábbi write_text() közvetlenül az élő state
+    fájlba írt - ha a folyamat pont írás KÖZBEN szakadt meg (pl. GitHub
+    Actions timeout, OOM-kill, áramkimaradás), sérült/félbehagyott JSON
+    maradhatott a lemezen, amit a load_state() csendben eldob és üres
+    dict-ként kezel - ez ELVESZTI az összes cooldown-, OI-history- és
+    pending_outcomes-adatot. Mostantól egy ideiglenes fájlba írunk, majd
+    os.replace()-szel (POSIX-on atomi) cseréljük le vele az eredetit -
+    így a state fájl minden pillanatban vagy a régi, vagy a teljesen új,
+    érvényes tartalmat tartalmazza, sosem félkészet."""
+    tmp_path = STATE_FILE.with_suffix(STATE_FILE.suffix + ".tmp")
+    try:
+        tmp_path.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+        os.replace(tmp_path, STATE_FILE)
+    except OSError as e:
+        logger.error("Nem sikerült elmenteni a state fájlt: %s", e)
+        # Takarítás: ha a tmp fájl létrejött, de a replace elszállt, ne
+        # maradjon ott árva ideiglenes fájl.
+        try:
+            tmp_path.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 # ----------------------------------------------------------------------------
 # BINGX API HÍVÁSOK
 # ----------------------------------------------------------------------------
 
 async def _get_json(session, url, params=None):
+    """JAVÍTÁS: korábban MINDEN hibát csendben elnyelt (`except Exception:
+    pass`), a konkrét okot sosem logolta - ha egy endpoint tartósan
+    hibázott, ebből semmi nem látszott a logban, csak annyi, hogy "nincs
+    adat". Mostantól minden sikertelen próbálkozásnál logoljuk a hiba
+    típusát/üzenetét (utolsó próbálkozásnál WARNING szinten, hogy ne
+    árasszon el a log, ha csak átmeneti hálózati hiba volt). Emellett a
+    BingX válasz "code" mezőjét is ellenőrizzük: az API néha 200 OK
+    HTTP-státusszal, de belső hibakóddal válaszol (pl. rossz szimbólum,
+    rate-limit belső jelzése) - ezt korábban a resp.raise_for_status()
+    nem vette észre, mert a HTTP réteg szintjén minden rendben volt."""
+    last_error = None
     for attempt in range(RETRY_COUNT):
         try:
             async with session.get(url, params=params, timeout=REQUEST_TIMEOUT) as resp:
                 if resp.status == 429:
+                    last_error = "HTTP 429 (rate limit)"
                     await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
                     continue
                 resp.raise_for_status()
-                return await resp.json()
-        except Exception:
+                data = await resp.json()
+                # BingX konvenció: code == 0 jelenti a sikert. Ha a mező
+                # jelen van és nem 0, az API-szintű hibát jelez, annak
+                # ellenére, hogy a HTTP-válasz 200 OK volt.
+                if isinstance(data, dict) and data.get("code") not in (None, 0):
+                    last_error = f"API code={data.get('code')} msg={data.get('msg')}"
+                    await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
+                    continue
+                return data
+        except Exception as e:
+            last_error = f"{type(e).__name__}: {e}"
             await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
+    if last_error is not None:
+        logger.warning("Sikertelen API-hívás (%s próbálkozás után) - %s | url=%s params=%s",
+                        RETRY_COUNT, last_error, url, params)
     return None
 
 
@@ -749,9 +808,11 @@ async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT)
 # TELEGRAM ÉRTESÍTÉS
 # ----------------------------------------------------------------------------
 
-def send_telegram_message(text: str) -> None:
+def _send_telegram_message_sync(text: str) -> None:
+    """A tényleges (szinkron, requests-alapú) HTTP-hívás. NE hívd
+    közvetlenül async kódból - lásd send_telegram_message()."""
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        print("HIBA: hiányzik a TELEGRAM_BOT_TOKEN vagy TELEGRAM_CHAT_ID env változó.")
+        logger.error("Hiányzik a TELEGRAM_BOT_TOKEN vagy TELEGRAM_CHAT_ID env változó.")
         return
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     try:
@@ -761,9 +822,20 @@ def send_telegram_message(text: str) -> None:
             timeout=10,
         )
         if resp.status_code != 200:
-            print(f"Telegram hiba ({resp.status_code}): {resp.text}")
+            logger.error("Telegram hiba (%s): %s", resp.status_code, resp.text)
     except Exception as e:
-        print(f"Telegram küldési hiba: {e}")
+        logger.error("Telegram küldési hiba: %s", e)
+
+
+async def send_telegram_message(text: str) -> None:
+    """JAVÍTÁS: korábban ez egy szinkron `requests.post()` hívás volt,
+    ami - annak ellenére, hogy egy asyncio event loop-ban futunk - a
+    hívó szálat (és így a TELJES 30 mp-es ciklust) blokkolta a hálózati
+    kérés idejére. Mostantól `asyncio.to_thread()`-del egy külön szálon
+    fut, hogy a loop eközben más feladatokat (API-hívások a következő
+    körhöz stb.) is végezhessen. A hívó oldalon ezért `await` szükséges -
+    lásd a hívási pontokat lent."""
+    await asyncio.to_thread(_send_telegram_message_sync, text)
 
 
 # --- ÚJ: Killzone (tőzsdenyitási időablakok) detektálása ---
@@ -870,7 +942,7 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
 # OI REFERENCIAPONT KERESÉSE (VÁLTOZATLAN)
 # ----------------------------------------------------------------------------
 
-def find_oi_baseline(history_without_current, now):
+def find_oi_baseline(history_without_current: list, now: datetime) -> Optional["OiBaseline"]:
     best, best_diff = None, None
     for h in history_without_current:
         age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
@@ -927,7 +999,7 @@ def compute_rsi_macd(close_series: pd.Series):
     return rsi_val, macd_status
 
 
-def evaluate_candle(kdf: pd.DataFrame):
+def evaluate_candle(kdf: pd.DataFrame) -> Optional["CandleEval"]:
     """Az ÉLŐ (még nyitott) gyertyát értékeli ki a megelőző VOLUME_MA_PERIOD db
     LEZÁRT gyertya átlagához képest. Az irányt az élő gyertya nyitó- és
     jelenlegi ára határozza meg."""
@@ -981,7 +1053,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
 
         tickers = await fetch_all_tickers(session)
         if not tickers:
-            print("Nem sikerült ticker adatot lekérni a BingX API-ból, kör kihagyva.")
+            logger.warning("Nem sikerült ticker adatot lekérni a BingX API-ból, kör kihagyva.")
             return 0, 0, valid_contracts, htf_cache, funding_cache
 
         if valid_contracts is None:
@@ -1084,6 +1156,11 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         entry["oi_history"] = [
             h for h in entry["oi_history"] if datetime.fromisoformat(h["ts"]) >= cutoff
         ]
+        # ÚJ: "utoljára látva" időbélyeg minden kiértékelt szimbólumhoz -
+        # ezt használja a _cleanup_stale_state_entries(), hogy a listáról
+        # (pl. delistázás miatt) lekerült szimbólumok bejegyzései ne
+        # maradjanak örökre a state fájlban.
+        entry["last_seen"] = now.isoformat()
 
         oi_baseline = find_oi_baseline(entry["oi_history"][:-1], now)
         if oi_baseline is None or oi_baseline["oi"] <= 0:
@@ -1151,7 +1228,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 signal_type=candle.get("signal_type", "STANDARD"),
                 funding_rate=funding_rate, now=now,
             )
-            send_telegram_message(msg)
+            await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
             # v18: a jelzést a napi winrate-összesítőhöz is regisztráljuk. A
@@ -1162,20 +1239,21 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             register_pending_signal(state, symbol, "STANDARD", candle["direction"], candle["price"], now)
             trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
             bounce_note = " 🎯 SZINT-VISSZAPATTANÁS" if bounce_confluence else ""
-            print(f"JELZÉS küldve: {symbol} [{candle['direction']}] (Ár {candle['price_change_pct']:+.2f}%, "
-                  f"Vol {candle['vol_multiplier']:.1f}x átlag, OI {oi_change_pct:+.2f}%, "
-                  f"1h trend: {htf_trend or 'ismeretlen'}){trend_note}{bounce_note}")
+            logger.info("JELZÉS küldve: %s [%s] (Ár %+.2f%%, Vol %.1fx átlag, OI %+.2f%%, 1h trend: %s)%s%s",
+                        symbol, candle["direction"], candle["price_change_pct"],
+                        candle["vol_multiplier"], oi_change_pct, htf_trend or "ismeretlen",
+                        trend_note, bounce_note)
 
     if htf_warned:
-        print(f"  (ebben a körben {htf_warned} kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)")
+        logger.info("  (ebben a körben %d kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)", htf_warned)
     if sr_warned:
-        print(f"  (ebben a körben {sr_warned} kiküldött jelzés ment támasz/ellenállás ellen - figyelmeztetéssel)")
+        logger.info("  (ebben a körben %d kiküldött jelzés ment támasz/ellenállás ellen - figyelmeztetéssel)", sr_warned)
 
     # ÚJ (v14): ha új UTC nap kezdődött (és eltelt egy kis idő éjfél óta),
     # elküldi az előző nap winrate-összesítőjét. A state-alapú gate miatt
     # (lásd maybe_send_daily_summary) naponta csak egyszer megy ki, akárhány
     # 30 mp-es körben is fut le ez a függvény.
-    maybe_send_daily_summary(state, now)
+    await maybe_send_daily_summary(state, now)
 
     return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
 
@@ -1202,11 +1280,12 @@ async def main():
         except (ValueError, TypeError):
             lock_age_minutes = None
         if lock_age_minutes is not None and lock_age_minutes < RUN_LOCK_STALE_MINUTES:
-            print(f"Egy másik futás már aktívnak tűnik (zár kora: {lock_age_minutes:.1f} perc) - "
-                  f"ez a példány csendben kilép, hogy elkerüljük az átfedést/dupla riasztást.")
+            logger.warning("Egy másik futás már aktívnak tűnik (zár kora: %.1f perc) - "
+                            "ez a példány csendben kilép, hogy elkerüljük az átfedést/dupla riasztást.",
+                            lock_age_minutes)
             return
         else:
-            print("A talált zár elavultnak (beragadtnak) tűnik - felülírjuk és folytatjuk.")
+            logger.warning("A talált zár elavultnak (beragadtnak) tűnik - felülírjuk és folytatjuk.")
 
     state["_run_lock"] = now_start.isoformat()
     save_state(state)  # azonnal mentjük, hogy egy majdnem egyidőben induló futás is lássa
@@ -1246,16 +1325,17 @@ async def _run_main_loop(state: dict):
                 timeout=remaining_budget,
             )
         except asyncio.TimeoutError:
-            print(f"[{pass_num}. kör] Túllépte az időkeretet ({remaining_budget:.0f} mp), megszakítva. "
-                  f"A state addig elért állapotát elmentjük, a ciklus leáll.")
+            logger.warning("[%d. kör] Túllépte az időkeretet (%.0f mp), megszakítva. "
+                            "A state addig elért állapotát elmentjük, a ciklus leáll.",
+                            pass_num, remaining_budget)
             save_state(state)
             break
 
         total_alerts += alerts
         save_state(state)  # minden kör után mentünk, ne vesszen el adat félbeszakadás esetén
 
-        print(f"[{pass_num}. kör] {evaluated} pár kiértékelve, {alerts} riasztás "
-              f"(összesen eddig: {total_alerts} riasztás).")
+        logger.info("[%d. kör] %d pár kiértékelve, %d riasztás (összesen eddig: %d riasztás).",
+                    pass_num, evaluated, alerts, total_alerts)
 
         pass_elapsed = time.monotonic() - pass_start
         remaining_total = TOTAL_RUN_BUDGET_SECONDS - (time.monotonic() - loop_start)
@@ -1267,12 +1347,13 @@ async def _run_main_loop(state: dict):
         if sleep_time > 0:
             await asyncio.sleep(sleep_time)
 
-    print(f"Ciklus vége: {pass_num} kör lefutott, összesen {total_alerts} riasztás. "
-          f"A szkript rendesen leáll - a következő külső cron-hívás friss példányt indít.")
+    logger.info("Ciklus vége: %d kör lefutott, összesen %d riasztás. "
+                "A szkript rendesen leáll - a következő külső cron-hívás friss példányt indít.",
+                pass_num, total_alerts)
 
 
 if __name__ == "__main__":
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        print("FIGYELEM: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID nincs beállítva - "
-              "az értesítés küldése ki lesz hagyva, csak a state fájl frissül.")
+        logger.warning("TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID nincs beállítva - "
+                        "az értesítés küldése ki lesz hagyva, csak a state fájl frissül.")
     asyncio.run(main())
