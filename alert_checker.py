@@ -54,6 +54,8 @@ logger = logging.getLogger("alert_checker")
 # ----------------------------------------------------------------------------
 ALERT_TIMEFRAME = "5m"      # a háttér-figyelő MINDIG ezt vizsgálja, a dashboard
                              # idősík-választójától teljesen függetlenül
+CANDLE_DURATION_SECONDS = 300  # 5m gyertya hossza másodpercben - a pace-alapú
+                                 # (EARLY) vetítéshez kell, lásd evaluate_candle()
 MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
 MIN_OI_INCREASE = 2.5       # v18 RÁNCFELVARRÁS: szigorú alapokra vissza -
@@ -63,6 +65,40 @@ MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimu
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
 MIN_VOL_MULTIPLIER = 2.5    # v18 RÁNCFELVARRÁS: szigorú alapokra vissza (lásd fent)
+
+# ----------------------------------------------------------------------------
+# ÚJ: EARLY (gyorsulás-alapú) jelzés paraméterei
+# ----------------------------------------------------------------------------
+# A STANDARD jelzés definíció szerint csak akkor tud kimenni, ha a mozgás
+# már "felhalmozódott" (a teljes eddigi gyertya-volumen eléri a 2.5x-öt) -
+# ez sok esetben azt jelenti, hogy a mozgás nagy része már megtörtént, mire
+# a jelzés kimegy. Az EARLY jelzés ehelyett a mozgás ÜTEMÉT (sebességét)
+# nézi: ha a volumen/OI az elmúlt néhány másodpercben/percben SOKKAL
+# gyorsabban nő, mint amit a teljes gyertyára extrapolálva várnánk, azt
+# már a mozgás KIALAKULÁSA közben jelzi - jóval a STANDARD küszöb elérése
+# előtt. Cserébe zajosabb (rövidebb mérési ablak), ezért szigorúbb OI- és
+# pace-küszöböt igényel, és csak akkor tüzel, ha a STANDARD (még) nem
+# tüzelt ugyanarra a mozgásra (lásd is_setup_early a fő ciklusban).
+EARLY_MIN_PACE_VOL_MULT = 5.0    # a TELJES gyertyára vetített volumen-szorzó
+                                   # küszöbe (magasabb, mint a STANDARD 2.5x-e,
+                                   # mert ez egy zajosabb, korai becslés)
+EARLY_MIN_ELAPSED_FRACTION = 0.07  # kb. 20 mp - ennél korábban túl zajos a mérés
+EARLY_MAX_ELAPSED_FRACTION = 0.6   # a gyertya 60%-a után már nincs sok előnye
+                                     # az EARLY jelzésnek a STANDARD-hoz képest -
+                                     # onnantól inkább hagyjuk, hogy a STANDARD
+                                     # logika döntsön
+EARLY_MIN_CANDLE_VOL_USDT = 8_000  # alacsonyabb, mint a STANDARD-nál (MIN_CANDLE_VOL_USDT),
+                                     # hiszen itt még csak a gyertya elején/közepén
+                                     # tartunk - kevesebb abszolút volumen várható
+# --- OI "gyors ablak" - lásd find_oi_baseline() opcionális paraméterei ---
+OI_FAST_TARGET_WINDOW_MINUTES = 2
+OI_FAST_MIN_WINDOW_MINUTES = 1
+OI_FAST_MAX_WINDOW_MINUTES = 4
+EARLY_MIN_OI_FAST_INCREASE = 1.5   # az OI ennyi %-kal nőjön a "gyors" (kb. 2
+                                     # perces) ablakban - alacsonyabb abszolút
+                                     # szám, mint a STANDARD MIN_OI_INCREASE
+                                     # (2.5%), de jóval RÖVIDEBB idő alatt, tehát
+                                     # gyorsabb ütemet jelent
 
 # --- ÚJ: Killzone (tőzsdenyitási időablakok) - UTC időzóna, "HH:MM" formátumban ---
 LONDON_KILLZONE = ("07:00", "10:00")
@@ -263,7 +299,9 @@ class CandleEval(TypedDict):
     direction: str          # "LONG" | "SHORT"
     rsi: Optional[float]
     macd_status: Optional[str]
-    signal_type: str        # jelenleg mindig "STANDARD"
+    signal_type: str        # "STANDARD" | "EARLY"
+    elapsed_fraction: Optional[float]      # ÚJ: az élő gyertya hány hányada telt el (0-1)
+    pace_vol_multiplier: Optional[float]   # ÚJ: a teljes gyertyára vetített volumen-szorzó
 
 
 class OiBaseline(TypedDict):
@@ -486,13 +524,13 @@ def _load_log_entries_for_date(date_str: str) -> list:
 
 
 def _format_daily_summary(date_str: str, entries: list) -> str:
-    # v18 RÁNCFELVARRÁS: mivel a bot mostantól kizárólag ⚡ STANDARD jelzést
-    # küld, a napi összesítő is egyetlen, egyszerű blokk - nincs többé
-    # jelzéstípusonkénti bontás.
-    total = len(entries)
-    resolved = [r for r in entries if r.get("outcome") != "UNKNOWN" and r.get("sl_hit") is not None]
-    n = len(resolved)
-    unknown = total - n
+    # ÚJ: az EARLY jelzéstípus visszahozatalával a napi összesítő ismét
+    # TÍPUSONKÉNT bontva mutatja a statisztikát - enélkül nem lehetne
+    # összehasonlítani, hogy a két logika közül melyik teljesít jobban
+    # (ami pont a cél: eldönteni, megéri-e az EARLY jelzés a nagyobb
+    # zajszintet).
+    SIGNAL_TYPE_ORDER = ["STANDARD", "EARLY"]
+    SIGNAL_TYPE_LABELS = {"STANDARD": "⚡ STANDARD", "EARLY": "🌱 EARLY (korai)"}
 
     lines = [
         f"📊 <b>Napi összesítő</b> ({date_str})",
@@ -501,20 +539,38 @@ def _format_daily_summary(date_str: str, entries: list) -> str:
         "━━━━━━━━━━━━━",
     ]
 
-    if n == 0:
-        lines.append(f"⚡ STANDARD: {total} jelzés (nincs kiértékelhető adat)")
+    if not entries:
+        lines.append("Nem volt jelzés.")
         return f"\n{chr(10).join(lines)}\n"
 
-    sl_hits = sum(1 for r in resolved if r.get("sl_hit"))
-    sl_pct = sl_hits / n * 100
-    lines.append(f"⚡ STANDARD: {total} jelzés{f' ({unknown} n/a)' if unknown else ''}")
-    lines.append(f"SL beütve: {sl_hits}/{n} ({sl_pct:.0f}%)")
-    for lvl in OUTCOME_PROFIT_LEVELS_PCT:
-        key = f"level_{lvl}pct"
-        hit = sum(1 for r in resolved if (r.get("levels_reached") or {}).get(key))
-        lines.append(f"+{lvl}% elérve SL előtt: {hit}/{n} ({hit / n * 100:.0f}%)")
+    types_present = sorted(
+        {r.get("signal_type", "STANDARD") for r in entries},
+        key=lambda t: SIGNAL_TYPE_ORDER.index(t) if t in SIGNAL_TYPE_ORDER else 99,
+    )
 
-    lines.append("━━━━━━━━━━━━━")
+    for sig_type in types_present:
+        type_entries = [r for r in entries if r.get("signal_type", "STANDARD") == sig_type]
+        total = len(type_entries)
+        resolved = [r for r in type_entries if r.get("outcome") != "UNKNOWN" and r.get("sl_hit") is not None]
+        n = len(resolved)
+        unknown = total - n
+        label = SIGNAL_TYPE_LABELS.get(sig_type, sig_type)
+
+        if n == 0:
+            lines.append(f"{label}: {total} jelzés (nincs kiértékelhető adat)")
+            lines.append("━━━━━━━━━━━━━")
+            continue
+
+        sl_hits = sum(1 for r in resolved if r.get("sl_hit"))
+        sl_pct = sl_hits / n * 100
+        lines.append(f"{label}: {total} jelzés{f' ({unknown} n/a)' if unknown else ''}")
+        lines.append(f"SL beütve: {sl_hits}/{n} ({sl_pct:.0f}%)")
+        for lvl in OUTCOME_PROFIT_LEVELS_PCT:
+            key = f"level_{lvl}pct"
+            hit = sum(1 for r in resolved if (r.get("levels_reached") or {}).get(key))
+            lines.append(f"+{lvl}% elérve SL előtt: {hit}/{n} ({hit / n * 100:.0f}%)")
+        lines.append("━━━━━━━━━━━━━")
+
     return f"\n{chr(10).join(lines)}\n"
 
 
@@ -928,12 +984,27 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
                           htf_trend=None, bounce_confluence=False, near_level_risk=False,
                           rsi=None, macd_status=None, signal_type="STANDARD",
-                          funding_rate=None, now=None):
+                          funding_rate=None, now=None,
+                          pace_vol_multiplier=None, elapsed_fraction=None):
     # v18 RÁNCFELVARRÁS: a bot mostantól KIZÁRÓLAG ⚡ STANDARD PUMP/DUMP
     # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
     # törölve.
+    # ÚJ: EARLY (gyorsulás-alapú) jelzéstípus visszahozva, más fejléccel és
+    # egy figyelmeztető sorral - lásd az EARLY paraméterek blokk-kommentjét.
     action = DIRECTION_LABELS.get(direction, direction)
-    header = f"⚡ <b>{symbol}</b> {action}"
+    if signal_type == "EARLY":
+        header = f"🌱 <b>{symbol}</b> {action} (KORAI)"
+    else:
+        header = f"⚡ <b>{symbol}</b> {action}"
+
+    early_line = ""
+    if signal_type == "EARLY":
+        pace_note = f", vetített ütem: {pace_vol_multiplier:.1f}x" if pace_vol_multiplier is not None else ""
+        elapsed_note = f" (a gyertya ~{elapsed_fraction * 100:.0f}%-ánál)" if elapsed_fraction is not None else ""
+        early_line = (
+            f"\n🔬 Korai (gyorsulás-alapú) jelzés{pace_note}{elapsed_note}"
+            f"\n⚠️ Nagyobb a hamis jelzés esélye, mint a szokásos jelzésnél"
+        )
 
     warning_line = ""
     against_trend = (
@@ -989,6 +1060,7 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
+        f"{early_line}"
         f"{indicator_line}"
         f"{funding_line}"
         f"{warning_line}"
@@ -1005,12 +1077,22 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
 # OI REFERENCIAPONT KERESÉSE (VÁLTOZATLAN)
 # ----------------------------------------------------------------------------
 
-def find_oi_baseline(history_without_current: list, now: datetime) -> Optional["OiBaseline"]:
+def find_oi_baseline(history_without_current: list, now: datetime,
+                      target_minutes: float = None, min_minutes: float = None,
+                      max_minutes: float = None) -> Optional["OiBaseline"]:
+    """ÚJ: opcionális target/min/max paraméterek - alapértelmezésben a
+    globális OI_TARGET/MIN/MAX_WINDOW_MINUTES értékeket használja
+    (VÁLTOZATLAN viselkedés a STANDARD jelzéshez), de az EARLY jelzés egy
+    RÖVIDEBB ("gyors") ablakkal is meghívja ugyanezt a függvényt, hogy az
+    OI ütemét (nem csak az 5 perces szintjét) is meg tudja nézni."""
+    target = OI_TARGET_WINDOW_MINUTES if target_minutes is None else target_minutes
+    min_w = OI_MIN_WINDOW_MINUTES if min_minutes is None else min_minutes
+    max_w = OI_MAX_WINDOW_MINUTES if max_minutes is None else max_minutes
     best, best_diff = None, None
     for h in history_without_current:
         age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
-        if OI_MIN_WINDOW_MINUTES <= age_min <= OI_MAX_WINDOW_MINUTES:
-            diff = abs(age_min - OI_TARGET_WINDOW_MINUTES)
+        if min_w <= age_min <= max_w:
+            diff = abs(age_min - target)
             if best_diff is None or diff < best_diff:
                 best, best_diff = h, diff
     return best
@@ -1062,10 +1144,20 @@ def compute_rsi_macd(close_series: pd.Series):
     return rsi_val, macd_status
 
 
-def evaluate_candle(kdf: pd.DataFrame) -> Optional["CandleEval"]:
+def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Optional["CandleEval"]:
     """Az ÉLŐ (még nyitott) gyertyát értékeli ki a megelőző VOLUME_MA_PERIOD db
     LEZÁRT gyertya átlagához képest. Az irányt az élő gyertya nyitó- és
-    jelenlegi ára határozza meg."""
+    jelenlegi ára határozza meg.
+
+    ÚJ: 'pace_vol_multiplier' és 'elapsed_fraction' - a "gyorsulás-alapú"
+    (EARLY) jelzéshez. A korábbi (STANDARD) vol_multiplier az élő gyertya
+    EDDIG összegyűlt teljes volumenét hasonlítja az átlaghoz - ez definíció
+    szerint csak akkor éri el a küszöböt, ha a gyertya idejének nagy része
+    már eltelt (a volumen "fel kellett gyűljön"). A pace_vol_multiplier
+    ehelyett AZT vetíti előre: "ha a mostani ütem (volumen/eltelt idő)
+    kitart a gyertya hátralévő részében is, hányszorosa lenne az átlagnak
+    a teljes gyertya?" - így egy hirtelen beindulást akár a gyertya
+    elején/közepén is jelezhet, nem kell megvárni a teljes felhalmozódást."""
     if kdf is None or len(kdf) < VOLUME_MA_PERIOD + 1:
         return None
 
@@ -1094,6 +1186,22 @@ def evaluate_candle(kdf: pd.DataFrame) -> Optional["CandleEval"]:
 
     rsi_val, macd_status = compute_rsi_macd(kdf["close"])
 
+    elapsed_fraction = None
+    pace_vol_multiplier = None
+    if now is not None and "timestamp" in kdf.columns:
+        try:
+            live_open_ts = live["timestamp"].to_pydatetime().replace(tzinfo=timezone.utc)
+            now_utc = now.astimezone(timezone.utc)
+            elapsed_seconds = (now_utc - live_open_ts).total_seconds()
+            # Alsó korlát: 20 másodperc alatt a mérés túl zajos ahhoz, hogy
+            # belőle egy teljes gyertyára extrapoláljunk - ilyenkor nem
+            # számolunk pace-értéket (marad None, az EARLY szűrő ezt kihagyja).
+            if elapsed_seconds >= 20:
+                elapsed_fraction = min(1.0, elapsed_seconds / CANDLE_DURATION_SECONDS)
+                pace_vol_multiplier = vol_multiplier / elapsed_fraction
+        except (TypeError, ValueError, OverflowError):
+            pass
+
     return {
         "price": current_price,
         "price_change_pct": round(float(price_change_pct), 2),
@@ -1103,6 +1211,8 @@ def evaluate_candle(kdf: pd.DataFrame) -> Optional["CandleEval"]:
         "rsi": rsi_val,
         "macd_status": macd_status,
         "signal_type": "STANDARD",
+        "elapsed_fraction": round(elapsed_fraction, 3) if elapsed_fraction is not None else None,
+        "pace_vol_multiplier": round(pace_vol_multiplier, 2) if pace_vol_multiplier is not None else None,
     }
 
 # ----------------------------------------------------------------------------
@@ -1215,7 +1325,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     htf_warned = 0
     sr_warned = 0
     for symbol in candidates:
-        candle = evaluate_candle(klines_map.get(symbol))
+        candle = evaluate_candle(klines_map.get(symbol), now=now)
         oi_now = oi_map.get(symbol)
         if candle is None or oi_now is None:
             continue
@@ -1278,6 +1388,33 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
         )
 
+        # ÚJ: EARLY (gyorsulás-alapú) jelzés - lásd a fájl elején az
+        # "EARLY (gyorsulás-alapú) jelzés paraméterei" blokk-kommentet.
+        # Csak akkor vizsgáljuk, ha a STANDARD (még) nem tüzelt ugyanerre a
+        # mozgásra - így nem kap a felhasználó két jelzést ugyanarról.
+        is_setup_early = False
+        oi_fast_change_pct = None
+        if not is_setup:
+            elapsed_fraction = candle.get("elapsed_fraction")
+            pace_vol_multiplier = candle.get("pace_vol_multiplier")
+            if (
+                elapsed_fraction is not None
+                and EARLY_MIN_ELAPSED_FRACTION <= elapsed_fraction <= EARLY_MAX_ELAPSED_FRACTION
+                and pace_vol_multiplier is not None
+                and pace_vol_multiplier >= EARLY_MIN_PACE_VOL_MULT
+                and candle["candle_vol_usdt"] >= EARLY_MIN_CANDLE_VOL_USDT
+                and abs(candle["price_change_pct"]) <= MAX_PRICE_CHANGE
+            ):
+                oi_fast_baseline = find_oi_baseline(
+                    entry["oi_history"][:-1], now,
+                    target_minutes=OI_FAST_TARGET_WINDOW_MINUTES,
+                    min_minutes=OI_FAST_MIN_WINDOW_MINUTES,
+                    max_minutes=OI_FAST_MAX_WINDOW_MINUTES,
+                )
+                if oi_fast_baseline is not None and oi_fast_baseline["oi"] > 0:
+                    oi_fast_change_pct = (oi_now - oi_fast_baseline["oi"]) / oi_fast_baseline["oi"] * 100
+                    is_setup_early = oi_fast_change_pct >= EARLY_MIN_OI_FAST_INCREASE
+
         if against_trend:
             htf_warned += 1
         if near_level_risk:
@@ -1289,15 +1426,23 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             if (now - last_alert_dt) < timedelta(minutes=ALERT_COOLDOWN_MINUTES):
                 cooldown_ok = False
 
-        if is_setup and cooldown_ok:
+        fired_signal_type = "STANDARD" if is_setup else ("EARLY" if is_setup_early else None)
+
+        if fired_signal_type and cooldown_ok:
+            # EARLY jelzésnél az oi_change_pct helyett a "gyors" (rövidebb
+            # ablakos) OI-változást mutatjuk az üzenetben - ez tükrözi
+            # ténylegesen, mi váltotta ki a jelzést.
+            display_oi_change_pct = oi_fast_change_pct if fired_signal_type == "EARLY" else oi_change_pct
             msg = format_scalp_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
-                oi_now, oi_change_pct, htf_trend=htf_trend,
+                oi_now, display_oi_change_pct, htf_trend=htf_trend,
                 bounce_confluence=bounce_confluence, near_level_risk=near_level_risk,
                 rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
-                signal_type=candle.get("signal_type", "STANDARD"),
+                signal_type=fired_signal_type,
                 funding_rate=funding_rate, now=now,
+                pace_vol_multiplier=candle.get("pace_vol_multiplier"),
+                elapsed_fraction=candle.get("elapsed_fraction"),
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
@@ -1307,12 +1452,12 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # OUTCOME_FIXED_SL_PCT és resolve_pending_signals) - az előző
             # ATR/swing-alapú számítást (compute_sl_tp) a felhasználó kérésére
             # töröltük, a statisztika egyszerűbb és átláthatóbb lett tőle.
-            register_pending_signal(state, symbol, "STANDARD", candle["direction"], candle["price"], now)
+            register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
             trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
             bounce_note = " 🎯 SZINT-VISSZAPATTANÁS" if bounce_confluence else ""
-            logger.info("JELZÉS küldve: %s [%s] (Ár %+.2f%%, Vol %.1fx átlag, OI %+.2f%%, 1h trend: %s)%s%s",
-                        symbol, candle["direction"], candle["price_change_pct"],
-                        candle["vol_multiplier"], oi_change_pct, htf_trend or "ismeretlen",
+            logger.info("JELZÉS küldve [%s]: %s [%s] (Ár %+.2f%%, Vol %.1fx átlag, OI %+.2f%%, 1h trend: %s)%s%s",
+                        fired_signal_type, symbol, candle["direction"], candle["price_change_pct"],
+                        candle["vol_multiplier"], display_oi_change_pct, htf_trend or "ismeretlen",
                         trend_note, bounce_note)
 
     if htf_warned:
