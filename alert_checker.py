@@ -4,14 +4,15 @@ BingX Perpetual - "Élő Gyertya" Skalp Felhalmozás-figyelő (v18)
 Önállóan fut (nem a Streamlit dashboard része), mindig az 5 PERCES
 gyertyákat vizsgálja, a dashboard idősík-választójától FÜGGETLENÜL.
 
-Röviden a jelenlegi (v18) logika:
+Röviden a jelenlegi logika:
   - Az élő (még nyitott) gyertyát hasonlítja a megelőző N db lezárt
     gyertya átlagához (ár, volumen, Open Interest) - így már a mozgás
     KIALAKULÁSA közben jelezhet, nem csak lezárás után.
-  - Kizárólag egyetlen jelzéstípust küld: STANDARD PUMP/DUMP.
+  - Két jelzéstípust küld: STANDARD (a "felgyűlt" volumen/OI alapján) és
+    EARLY (gyorsulás-alapú, a mozgás elején, lásd a fájlban lentebb az
+    EARLY paraméterek blokk-kommentjét).
   - Kiegészítő (csak tájékoztató, NEM szűrő) infók: 1h HTF trend,
-    támasz/ellenállás-közelség, RSI/MACD, funding rate (squeeze),
-    killzone.
+    támasz/ellenállás-közelség, RSI/MACD, funding rate (squeeze).
   - Napi winrate-összesítőt küld (fix -1.5%-os SL-lel szimulálva).
   - GitHub Actions-ből fut, belső 30 mp-es ciklusban kb. 8m40s-ig,
     hogy a fix indítási költség (checkout, csomagtelepítés) ne
@@ -99,10 +100,6 @@ EARLY_MIN_OI_FAST_INCREASE = 1.5   # az OI ennyi %-kal nőjön a "gyors" (kb. 2
                                      # szám, mint a STANDARD MIN_OI_INCREASE
                                      # (2.5%), de jóval RÖVIDEBB idő alatt, tehát
                                      # gyorsabb ütemet jelent
-
-# --- ÚJ: Killzone (tőzsdenyitási időablakok) - UTC időzóna, "HH:MM" formátumban ---
-LONDON_KILLZONE = ("07:00", "10:00")
-NY_KILLZONE = ("13:30", "16:00")
 
 # --- ÚJ: Funding Rate (Squeeze Vadász) - négyezredszázalékos küszöb (-0.01% / +0.01%) ---
 FUNDING_SQUEEZE_THRESHOLD_PCT = 0.01
@@ -987,26 +984,6 @@ async def send_telegram_message(text: str) -> None:
     await asyncio.to_thread(_send_telegram_message_sync, text)
 
 
-# --- ÚJ: Killzone (tőzsdenyitási időablakok) detektálása ---
-def _parse_hhmm(hhmm: str) -> tuple:
-    h, m = hhmm.split(":")
-    return int(h), int(m)
-
-
-def get_active_killzone(now: datetime) -> Optional[str]:
-    """Visszaadja az aktuális UTC időhöz tartozó killzone nevét ("London" /
-    "New York"), vagy None-t, ha egyik ablakba sem esik bele."""
-    current_minutes = now.hour * 60 + now.minute
-    for name, (start, end) in (("London", LONDON_KILLZONE), ("New York", NY_KILLZONE)):
-        sh, sm = _parse_hhmm(start)
-        eh, em = _parse_hhmm(end)
-        start_minutes = sh * 60 + sm
-        end_minutes = eh * 60 + em
-        if start_minutes <= current_minutes <= end_minutes:
-            return name
-    return None
-
-
 DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  # belső irány-kód -> megjelenített szöveg
 
 
@@ -1014,7 +991,7 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct,
                           htf_trend=None, bounce_confluence=False, near_level_risk=False,
                           rsi=None, macd_status=None, signal_type="STANDARD",
-                          funding_rate=None, now=None,
+                          funding_rate=None,
                           pace_vol_multiplier=None, elapsed_fraction=None):
     # v18 RÁNCFELVARRÁS: a bot mostantól KIZÁRÓLAG ⚡ STANDARD PUMP/DUMP
     # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
@@ -1078,13 +1055,6 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         elif direction == "SHORT" and funding_rate >= FUNDING_SQUEEZE_THRESHOLD_PCT:
             funding_line += " 💥 LONG SQUEEZE (Túl sok a longos!)"
 
-    # ÚJ: Killzone (tőzsdenyitási időablak) sor.
-    killzone_line = ""
-    if now is not None:
-        active_kz = get_active_killzone(now)
-        if active_kz:
-            killzone_line = f"\n⏰ Időszak: {active_kz} Killzone"
-
     body = (
         f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
@@ -1096,7 +1066,6 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
-        f"{killzone_line}"
     )
     # ÚJ (szellős dizájn): extra sortörés az elején és a végén, hogy a
     # Telegramon a riasztások ne folyjanak össze.
@@ -1452,11 +1421,6 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     oi_fast_change_pct = (oi_now - oi_fast_baseline["oi"]) / oi_fast_baseline["oi"] * 100
                     is_setup_early = oi_fast_change_pct >= EARLY_MIN_OI_FAST_INCREASE
 
-        if against_trend:
-            htf_warned += 1
-        if near_level_risk:
-            sr_warned += 1
-
         cooldown_ok = True
         if entry.get("last_alert_ts"):
             last_alert_dt = datetime.fromisoformat(entry["last_alert_ts"])
@@ -1466,6 +1430,22 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         fired_signal_type = "STANDARD" if is_setup else ("EARLY" if is_setup_early else None)
 
         if fired_signal_type and cooldown_ok:
+            # JAVÍTÁS: a htf_warned/sr_warned számlálókat korábban FÜGGETLENÜL
+            # növeltük attól, hogy tényleg kiment-e bármilyen jelzés - ez azt
+            # eredményezte, hogy a log "X kiküldött jelzés ment trenddel
+            # szemben" üzenete FÉLREVEZETŐ volt: a "kiküldött jelzés" szó
+            # ellenére valójában egyetlen olyan szimbólumot számolt, amelynek
+            # az élő gyertya iránya épp szemben állt a HTF trenddel - TELJESEN
+            # függetlenül attól, hogy egyáltalán tüzelt-e a STANDARD/EARLY
+            # feltétel. Emiatt a log akár 60+ "figyelmeztetést" is mutathatott
+            # ugyanabban a körben, amikor a ténylegesen kiküldött jelzések
+            # száma (alerts_sent) 0 volt - pontosan ez okozta a most látott
+            # "0 riasztás, de 65 kiküldött jelzés trenddel szemben" ellentmondást.
+            # Mostantól a számláló CSAK a ténylegesen elküldött jelzéseknél nő.
+            if against_trend:
+                htf_warned += 1
+            if near_level_risk:
+                sr_warned += 1
             # EARLY jelzésnél az oi_change_pct helyett a "gyors" (rövidebb
             # ablakos) OI-változást mutatjuk az üzenetben - ez tükrözi
             # ténylegesen, mi váltotta ki a jelzést.
@@ -1477,7 +1457,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 bounce_confluence=bounce_confluence, near_level_risk=near_level_risk,
                 rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
                 signal_type=fired_signal_type,
-                funding_rate=funding_rate, now=now,
+                funding_rate=funding_rate,
                 pace_vol_multiplier=candle.get("pace_vol_multiplier"),
                 elapsed_fraction=candle.get("elapsed_fraction"),
             )
