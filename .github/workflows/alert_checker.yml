@@ -72,6 +72,16 @@ jobs:
             git add alert_log.jsonl
           fi
 
+          # ÚJ: a napló-rotáció (alert_checker.py, _rotate_signal_log) a
+          # napi összesítő elküldése után a 2+ napos jelzéseket havi
+          # archívum-fájlokba (alert_log_YYYY-MM.jsonl.bak) emeli ki az
+          # alert_log.jsonl-ből. Mivel minden futás egy vadonatúj, egyszer
+          # használatos gépen zajlik, ezeket az archívum-fájlokat is vissza
+          # KELL commitolni - különben a gép megsemmisülésekor véglegesen
+          # elvesznének, és pont azt a problémát hoznánk vissza, amit a
+          # fenti v15 javítás (a napló repóba mentése) megoldott.
+          git add alert_log_*.jsonl.bak 2>/dev/null || true
+
           if git diff --quiet --cached; then
             echo "Nincs változás az állapotfájlokban, nincs mit commitolni."
             exit 0
