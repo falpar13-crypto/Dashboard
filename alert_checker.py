@@ -11,8 +11,9 @@ Röviden a jelenlegi logika:
   - Két jelzéstípust küld: STANDARD (a "felgyűlt" volumen/OI alapján) és
     EARLY (gyorsulás-alapú, a mozgás elején, lásd a fájlban lentebb az
     EARLY paraméterek blokk-kommentjét).
-  - Kiegészítő (csak tájékoztató, NEM szűrő) infók: 1h HTF trend,
-    támasz/ellenállás-közelség, RSI/MACD, funding rate (squeeze).
+  - Kiegészítő (csak tájékoztató, NEM szűrő) infók: 1h HTF trend (HH/HL/LH/LL
+    swing-struktúra alapján, nem EMA - lásd a SWING_FRACTAL_LEGS blokk-
+    kommentjét), támasz/ellenállás-közelség, RSI/MACD, funding rate (squeeze).
   - Napi winrate-összesítőt küld (fix -1.5%-os SL-lel szimulálva).
   - GitHub Actions-ből fut, belső 30 mp-es ciklusban kb. 8m40s-ig,
     hogy a fix indítási költség (checkout, csomagtelepítés) ne
@@ -168,9 +169,33 @@ ALERT_COOLDOWN_MINUTES = 30
 
 # --- ÚJ (v5): magasabb idősík trend-szűrő ---
 HIGHER_TIMEFRAME = "1h"       # ezen az idősíkon nézzük a fő trendet
-HTF_EMA_PERIOD = 50           # EMA(50) az 1h gyertyákon - záróár ehhez képest = trend
-HTF_KLINES_LIMIT = 100        # ennyi 1h gyertyát kérünk le az EMA50 stabilizálásához
+HTF_KLINES_LIMIT = 100        # ennyi 1h gyertyát kérünk le a swing-struktúra
+                                # kereséséhez (bőven elég a legutóbbi néhány
+                                # swing csúcs/mélypont megtalálásához)
 REQUIRE_HTF_ALIGNMENT = True  # False-ra állítva kikapcsolható a szűrő kódtörlés nélkül
+
+# ----------------------------------------------------------------------------
+# ÚJ: HH/HL/LH/LL (swing-struktúra) alapú trendfelismerés - LECSERÉLI az
+# EMA(50)-alapú módszert. Az EMA(50) 1h gyertyákon definíció szerint LASSÚ:
+# 50 óra kell, mire stabilizálódik, és egy trendváltás után is hosszan
+# "elmarad" a valós ártól - a záróár simán átbillenhet az EMA fölé/alá
+# anélkül, hogy a piac szerkezete ténylegesen megfordult volna (és fordítva:
+# egy már megfordult piacon az EMA még sokáig a régi irányt mutathatja).
+# A price-action ("swing-struktúra") megközelítés ehelyett a tényleges
+# csúcsokat és mélypontokat nézi:
+#   - Emelkedő trend (UP): az utolsó két swing csúcs EGYRE MAGASABB (Higher
+#     High) ÉS az utolsó két swing mélypont EGYRE MAGASABB (Higher Low).
+#   - Csökkenő trend (DOWN): az utolsó két swing csúcs EGYRE ALACSONYABB
+#     (Lower High) ÉS az utolsó két swing mélypont EGYRE ALACSONYABB
+#     (Lower Low).
+#   - Minden más eset (pl. HH+LL vagy LH+HL - vegyes szerkezet) NEUTRAL,
+#     ami gyakorlatilag oldalazást/átmenetet jelent.
+# Ez lényegesen GYORSABBAN reagál egy valódi trendváltásra, mert elég 2-3
+# swing (nem 50 gyertya) ahhoz, hogy a szerkezet átbillenjen.
+SWING_FRACTAL_LEGS = 2   # ennyi gyertyát nézünk MINDKÉT oldalon egy swing
+                            # csúcs/mélypont azonosításához (2-2 = "5 gyertyás
+                            # fraktál" - a piacelemzésben jól bevált, kellően
+                            # zajszűrő, de még elég érzékeny méret)
 
 MAX_CONCURRENT_REQUESTS = 16   # v15: 12 -> 16, mert a MAX_VOLUME_USDT nagy
 
@@ -875,11 +900,72 @@ SR_LOOKBACK_PERIOD = 60     # ennyi lezárt 1h gyertya alapján számoljuk a szi
 SR_PROXIMITY_PCT = 0.5      # ennyi %-on belül számít "a szint közelének"
 
 
+def _find_swing_points(closed: pd.DataFrame, legs: int = SWING_FRACTAL_LEGS) -> list:
+    """Fraktál-alapú swing csúcs/mélypont keresés: az i. gyertya akkor
+    számít swing csúcsnak, ha a high-ja SZIGORÚAN a legmagasabb a
+    [i-legs, i+legs] ablakban (hasonlóan a mélypontra a low-val). Egyedi
+    (nem holtversenyes) szélsőértéket keresünk, hogy ne kapjunk kétértelmű
+    "lapos" csúcsokat. Visszatér: [(index, ár, 'H'|'L'), ...] időrendben."""
+    highs = closed["high"].to_numpy()
+    lows = closed["low"].to_numpy()
+    n = len(highs)
+    points = []
+    for i in range(legs, n - legs):
+        h_window = highs[i - legs:i + legs + 1]
+        if highs[i] == h_window.max() and (h_window == highs[i]).sum() == 1:
+            points.append((i, float(highs[i]), "H"))
+        l_window = lows[i - legs:i + legs + 1]
+        if lows[i] == l_window.min() and (l_window == lows[i]).sum() == 1:
+            points.append((i, float(lows[i]), "L"))
+    points.sort(key=lambda p: p[0])
+    return points
+
+
+def _build_zigzag(swing_points: list) -> list:
+    """A nyers swing-pontokból (amik egymás után akár AZONOS típusúak is
+    lehetnek, pl. két egymást követő magasabb csúcs, köztes mélypont
+    nélkül) egy váltakozó (H, L, H, L, ...) zigzag-sorozatot épít: ha két
+    egymást követő pont ugyanolyan típusú, csak a SZÉLSŐSÉGESEBBET tartjuk
+    meg (a magasabb csúcsot, ill. a mélyebb mélypontot) - ez a szokásos
+    price-action zigzag-építési szabály."""
+    zigzag = []
+    for idx, price, typ in swing_points:
+        if zigzag and zigzag[-1][2] == typ:
+            if typ == "H" and price > zigzag[-1][1]:
+                zigzag[-1] = (idx, price, typ)
+            elif typ == "L" and price < zigzag[-1][1]:
+                zigzag[-1] = (idx, price, typ)
+            # egyébként: a meglévő (szélsőségesebb) swing marad, ezt eldobjuk
+        else:
+            zigzag.append((idx, price, typ))
+    return zigzag
+
+
+def _classify_structure_trend(zigzag: list) -> Optional[str]:
+    """Az utolsó két swing csúcsot és az utolsó két swing mélypontot nézve
+    dönti el a trendet - lásd a fájl elején a HH/HL/LH/LL blokk-kommentet."""
+    swing_highs = [price for _, price, typ in zigzag if typ == "H"]
+    swing_lows = [price for _, price, typ in zigzag if typ == "L"]
+    if len(swing_highs) < 2 or len(swing_lows) < 2:
+        return None  # nincs elég azonosított swing egy megbízható döntéshez
+
+    higher_high = swing_highs[-1] > swing_highs[-2]
+    higher_low = swing_lows[-1] > swing_lows[-2]
+    lower_high = swing_highs[-1] < swing_highs[-2]
+    lower_low = swing_lows[-1] < swing_lows[-2]
+
+    if higher_high and higher_low:
+        return "UP"
+    if lower_high and lower_low:
+        return "DOWN"
+    return "NEUTRAL"  # vegyes szerkezet (pl. HH+LL vagy LH+HL) - oldalazás/átmenet
+
+
 async def fetch_htf_trend(session, semaphore, symbol):
     """Az 1 órás (HIGHER_TIMEFRAME) trend + támasz/ellenállás meghatározása,
     UGYANABBÓL az egyetlen lekérésből (nincs plusz API-hívás):
-    - trend: az utolsó LEZÁRT 1h gyertya záróára az EMA(50) fölött (UP) vagy
-      alatta (DOWN) van-e
+    - trend: HH/HL/LH/LL (swing-struktúra) alapú - lásd a fájl elején a
+      blokk-kommentet arról, miért ez váltotta le a korábbi EMA(50)-et.
     - support/resistance: az utolsó SR_LOOKBACK_PERIOD db lezárt 1h gyertya
       legalacsonyabb mélypontja / legmagasabb csúcsa (egyszerű, jól definiált
       "N-periódusos csatorna" módszer - nem chartolvasói/szubjektív szint)
@@ -904,20 +990,12 @@ async def fetch_htf_trend(session, semaphore, symbol):
         df = df.sort_values("timestamp").reset_index(drop=True)
 
         closed = df.iloc[:-1]  # az élő 1h gyertyát itt is eldobjuk
-        if len(closed) < HTF_EMA_PERIOD:
-            return symbol, empty_result  # nincs elég adat egy megbízható EMA(50)-hez
-
-        ema = closed["close"].ewm(span=HTF_EMA_PERIOD, adjust=False).mean()
-        last_close = closed["close"].iloc[-1]
-        last_ema = ema.iloc[-1]
+        min_candles_needed = SWING_FRACTAL_LEGS * 2 + 1
         trend = None
-        if not pd.isna(last_ema):
-            if last_close > last_ema:
-                trend = "UP"
-            elif last_close < last_ema:
-                trend = "DOWN"
-            else:
-                trend = "NEUTRAL"
+        if len(closed) >= min_candles_needed:
+            swing_points = _find_swing_points(closed, legs=SWING_FRACTAL_LEGS)
+            zigzag = _build_zigzag(swing_points)
+            trend = _classify_structure_trend(zigzag)
 
         support = resistance = None
         sr_window = closed.iloc[-SR_LOOKBACK_PERIOD:]
