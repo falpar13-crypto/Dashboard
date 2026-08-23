@@ -1,3 +1,8 @@
 alert_state.json merge=ours
 alert_log.jsonl merge=ours
+alert_log_*.jsonl.bak merge=ours
+
+daytrade_state.json merge=ours
+daytrade_alert_log.jsonl merge=ours
+daytrade_alert_log_*.jsonl.bak merge=ours
 
