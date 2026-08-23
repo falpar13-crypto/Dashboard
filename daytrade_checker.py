@@ -30,22 +30,33 @@ logger = logging.getLogger("daytrade_checker")
 # ----------------------------------------------------------------------------
 ALERT_TIMEFRAME = "1h"      
 CANDLE_DURATION_SECONDS = 3600  
-MAX_PRICE_CHANGE = 7.0      
-MIN_OI_INCREASE = 3.0       
-MIN_CANDLE_VOL_USDT = 50_000  
+# SZIGORÍTVA: 7.0 -> 5.0 - kevésbé engedjük be a már jócskán kifutott mozgásokat
+MAX_PRICE_CHANGE = 5.0      
+# SZIGORÍTVA: 3.0 -> 4.0 - nagyobb OI-elmozdulás kell a valódi felhalmozáshoz
+MIN_OI_INCREASE = 4.0       
+# SZIGORÍTVA: 50 000 -> 75 000 - arányosan a MIN_VOL_MULTIPLIER emeléséhez
+MIN_CANDLE_VOL_USDT = 75_000  
 
 VOLUME_MA_PERIOD = 12       
-MIN_VOL_MULTIPLIER = 1.8    
+# SZIGORÍTVA: 1.8 -> 2.5 - ez volt a leggyengébb pont; a scalp botban is 2.5x
+# a bevált, szigorú küszöb, és semmi nem indokolta, hogy itt lazább legyen
+MIN_VOL_MULTIPLIER = 2.5    
 
-EARLY_MIN_PACE_VOL_MULT = 3.5    
+# SZIGORÍTVA: 3.5 -> 5.0 - az EARLY egy VETÍTETT (extrapolált) szám, tehát
+# eleve zajosabb, mint a STANDARD - alacsony küszöbbel könnyen "belövi"
+# magát egy random kilengés is egy 1 órás gyertya elején. A scalp botban is
+# 5.0x a bevált érték ugyanerre a célra.
+EARLY_MIN_PACE_VOL_MULT = 5.0    
 EARLY_MIN_ELAPSED_FRACTION = 0.1  
 EARLY_MAX_ELAPSED_FRACTION = 0.5   
-EARLY_MIN_CANDLE_VOL_USDT = 20_000  
+# SZIGORÍTVA: 20 000 -> 35 000 - arányosan a MIN_CANDLE_VOL_USDT emeléséhez
+EARLY_MIN_CANDLE_VOL_USDT = 35_000  
 
 OI_FAST_TARGET_WINDOW_MINUTES = 15
 OI_FAST_MIN_WINDOW_MINUTES = 5
 OI_FAST_MAX_WINDOW_MINUTES = 30
-EARLY_MIN_OI_FAST_INCREASE = 1.5   
+# SZIGORÍTVA: 1.5 -> 2.0
+EARLY_MIN_OI_FAST_INCREASE = 2.0   
 
 FUNDING_SQUEEZE_THRESHOLD_PCT = 0.01
 
@@ -83,7 +94,10 @@ OI_MIN_WINDOW_MINUTES = 30
 OI_MAX_WINDOW_MINUTES = 120
 MAX_HISTORY_AGE_MINUTES = 360
 
-ALERT_COOLDOWN_MINUTES = 120
+# SZIGORÍTVA: 120 -> 240 perc (4 óra) - egy napon belüli mozgás sokáig
+# tarthat, nem akarunk 2 óránként újra jelzést kapni ugyanarra a folytatódó
+# trendre (ez is hozzájárulhatott a "sok jelzés" érzethez)
+ALERT_COOLDOWN_MINUTES = 240
 
 HIGHER_TIMEFRAME = "4h"       
 HTF_KLINES_LIMIT = 100        
