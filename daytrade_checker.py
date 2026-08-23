@@ -86,9 +86,22 @@ MAX_HISTORY_AGE_MINUTES = 360
 ALERT_COOLDOWN_MINUTES = 120
 
 HIGHER_TIMEFRAME = "4h"       
-HTF_EMA_PERIOD = 50           
 HTF_KLINES_LIMIT = 100        
 REQUIRE_HTF_ALIGNMENT = True  
+
+# ÚJ: HH/HL/LH/LL (swing-struktúra) alapú trendfelismerés - LECSERÉLI az
+# EMA(50)-alapú módszert (ugyanaz a csere, mint a scalp botban/alert_checker.py-
+# ban). Az EMA(50) 4h gyertyákon LASSÚ: 50*4h = 200 óra (kb. 8.3 nap) kell,
+# mire stabilizálódik, és egy trendváltás után is hosszan "elmarad" a valós
+# ártól. A price-action (swing-struktúra) megközelítés a tényleges
+# csúcsokat/mélypontokat nézi:
+#   - UP: az utolsó két swing csúcs egyre magasabb (Higher High) ÉS az
+#     utolsó két swing mélypont egyre magasabb (Higher Low).
+#   - DOWN: az utolsó két swing csúcs egyre alacsonyabb (Lower High) ÉS az
+#     utolsó két swing mélypont egyre alacsonyabb (Lower Low).
+#   - Minden más eset (pl. HH+LL vagy LH+HL - vegyes szerkezet) NEUTRAL.
+SWING_FRACTAL_LEGS = 2   # ennyi gyertyát nézünk MINDKÉT oldalon egy swing
+                           # csúcs/mélypont azonosításához ("5 gyertyás fraktál")
 
 MAX_CONCURRENT_REQUESTS = 16   
 KLINES_MAX_CONCURRENT_REQUESTS = 4
@@ -437,10 +450,12 @@ async def _get_json(session, url, params=None):
             return None
         del _ENDPOINT_COOLDOWN_UNTIL[endpoint_key]
 
+    last_error = None
     for attempt in range(RETRY_COUNT):
         try:
             async with session.get(url, params=params, timeout=REQUEST_TIMEOUT) as resp:
                 if resp.status == 429:
+                    last_error = "HTTP 429 (rate limit)"
                     await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
                     continue
                 resp.raise_for_status()
@@ -448,6 +463,7 @@ async def _get_json(session, url, params=None):
                 if isinstance(data, dict) and data.get("code") not in (None, 0):
                     code = data.get("code")
                     msg = data.get("msg", "")
+                    last_error = f"API code={code} msg={msg}"
                     if code == 100410:
                         wait_seconds = ENDPOINT_COOLDOWN_MAX_SECONDS
                         m = re.search(r"after (\d+)", msg)
@@ -456,12 +472,18 @@ async def _get_json(session, url, params=None):
                             wait_seconds = max(0.0, unblock_epoch_ms / 1000 - time.time())
                             wait_seconds = min(wait_seconds, ENDPOINT_COOLDOWN_MAX_SECONDS)
                         _ENDPOINT_COOLDOWN_UNTIL[endpoint_key] = time.monotonic() + wait_seconds
+                        logger.warning("Endpoint hűtésre kényszerítve %.0f mp-re (code 100410) - %s",
+                                        wait_seconds, url)
                         return None
                     await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
                     continue
                 return data
-        except Exception:
+        except Exception as e:
+            last_error = f"{type(e).__name__}: {e}"
             await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
+    if last_error is not None:
+        logger.warning("Sikertelen API-hívás (%s próbálkozás után) - %s | url=%s params=%s",
+                        RETRY_COUNT, last_error, url, params)
     return None
 
 async def fetch_all_tickers(session):
@@ -526,6 +548,64 @@ async def fetch_funding_rate(session, semaphore, symbol):
 SR_LOOKBACK_PERIOD = 60     
 SR_PROXIMITY_PCT = 1.0      
 
+
+def _find_swing_points(closed: pd.DataFrame, legs: int = SWING_FRACTAL_LEGS) -> list:
+    """Fraktál-alapú swing csúcs/mélypont keresés: az i. gyertya akkor
+    számít swing csúcsnak, ha a high-ja SZIGORÚAN a legmagasabb a
+    [i-legs, i+legs] ablakban (hasonlóan a mélypontra a low-val). Egyedi
+    (nem holtversenyes) szélsőértéket keresünk. Visszatér:
+    [(index, ár, 'H'|'L'), ...] időrendben."""
+    highs = closed["high"].to_numpy()
+    lows = closed["low"].to_numpy()
+    n = len(highs)
+    points = []
+    for i in range(legs, n - legs):
+        h_window = highs[i - legs:i + legs + 1]
+        if highs[i] == h_window.max() and (h_window == highs[i]).sum() == 1:
+            points.append((i, float(highs[i]), "H"))
+        l_window = lows[i - legs:i + legs + 1]
+        if lows[i] == l_window.min() and (l_window == lows[i]).sum() == 1:
+            points.append((i, float(lows[i]), "L"))
+    points.sort(key=lambda p: p[0])
+    return points
+
+
+def _build_zigzag(swing_points: list) -> list:
+    """A nyers swing-pontokból váltakozó (H, L, H, L, ...) zigzag-sorozatot
+    épít: ha két egymást követő pont ugyanolyan típusú, csak a
+    SZÉLSŐSÉGESEBBET tartjuk meg."""
+    zigzag = []
+    for idx, price, typ in swing_points:
+        if zigzag and zigzag[-1][2] == typ:
+            if typ == "H" and price > zigzag[-1][1]:
+                zigzag[-1] = (idx, price, typ)
+            elif typ == "L" and price < zigzag[-1][1]:
+                zigzag[-1] = (idx, price, typ)
+        else:
+            zigzag.append((idx, price, typ))
+    return zigzag
+
+
+def _classify_structure_trend(zigzag: list) -> Optional[str]:
+    """Az utolsó két swing csúcsot és az utolsó két swing mélypontot nézve
+    dönti el a trendet."""
+    swing_highs = [price for _, price, typ in zigzag if typ == "H"]
+    swing_lows = [price for _, price, typ in zigzag if typ == "L"]
+    if len(swing_highs) < 2 or len(swing_lows) < 2:
+        return None  # nincs elég azonosított swing egy megbízható döntéshez
+
+    higher_high = swing_highs[-1] > swing_highs[-2]
+    higher_low = swing_lows[-1] > swing_lows[-2]
+    lower_high = swing_highs[-1] < swing_highs[-2]
+    lower_low = swing_lows[-1] < swing_lows[-2]
+
+    if higher_high and higher_low:
+        return "UP"
+    if lower_high and lower_low:
+        return "DOWN"
+    return "NEUTRAL"  # vegyes szerkezet (pl. HH+LL vagy LH+HL) - oldalazás/átmenet
+
+
 async def fetch_htf_trend(session, semaphore, symbol):
     async with semaphore:
         params = {"symbol": symbol, "interval": HIGHER_TIMEFRAME, "limit": HTF_KLINES_LIMIT}
@@ -543,21 +623,13 @@ async def fetch_htf_trend(session, semaphore, symbol):
         df["timestamp"] = pd.to_datetime(df["time"], unit="ms")
         df = df.sort_values("timestamp").reset_index(drop=True)
 
-        closed = df.iloc[:-1]  
-        if len(closed) < HTF_EMA_PERIOD:
-            return symbol, empty_result  
-
-        ema = closed["close"].ewm(span=HTF_EMA_PERIOD, adjust=False).mean()
-        last_close = closed["close"].iloc[-1]
-        last_ema = ema.iloc[-1]
+        closed = df.iloc[:-1]
+        min_candles_needed = SWING_FRACTAL_LEGS * 2 + 1
         trend = None
-        if not pd.isna(last_ema):
-            if last_close > last_ema:
-                trend = "UP"
-            elif last_close < last_ema:
-                trend = "DOWN"
-            else:
-                trend = "NEUTRAL"
+        if len(closed) >= min_candles_needed:
+            swing_points = _find_swing_points(closed, legs=SWING_FRACTAL_LEGS)
+            zigzag = _build_zigzag(swing_points)
+            trend = _classify_structure_trend(zigzag)
 
         support = resistance = None
         sr_window = closed.iloc[-SR_LOOKBACK_PERIOD:]
@@ -587,12 +659,15 @@ async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT)
 
 def _send_telegram_message_sync(text: str) -> None:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        logger.error("Hiányzik a TELEGRAM_BOT_TOKEN vagy TELEGRAM_CHAT_ID env változó.")
         return
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     try:
-        requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
-    except Exception:
-        pass
+        resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
+        if resp.status_code != 200:
+            logger.error("Telegram hiba (%s): %s", resp.status_code, resp.text)
+    except Exception as e:
+        logger.error("Telegram küldési hiba: %s", e)
 
 async def send_telegram_message(text: str) -> None:
     await asyncio.to_thread(_send_telegram_message_sync, text)
@@ -770,6 +845,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
 
         tickers = await fetch_all_tickers(session)
         if not tickers:
+            logger.warning("Nem sikerült ticker adatot lekérni a BingX API-ból, kör kihagyva.")
             return 0, 0, valid_contracts, htf_cache, funding_cache
 
         if valid_contracts is None:
@@ -932,7 +1008,11 @@ async def main():
         except (ValueError, TypeError):
             lock_age_minutes = None
         if lock_age_minutes is not None and lock_age_minutes < RUN_LOCK_STALE_MINUTES:
+            logger.warning("Egy másik futás már aktívnak tűnik (zár kora: %.1f perc) - "
+                            "ez a példány csendben kilép.", lock_age_minutes)
             return
+        else:
+            logger.warning("A talált zár elavultnak (beragadtnak) tűnik - felülírjuk és folytatjuk.")
     state["_run_lock"] = now_start.isoformat()
     save_state(state)
 
@@ -952,6 +1032,7 @@ async def _run_main_loop(state: dict):
         elapsed_total = time.monotonic() - loop_start
         if elapsed_total >= TOTAL_RUN_BUDGET_SECONDS:
             break
+        pass_start = time.monotonic()
         now = datetime.now(timezone.utc)
         remaining_budget = max(30.0, TOTAL_RUN_BUDGET_SECONDS - elapsed_total)
         try:
@@ -960,10 +1041,20 @@ async def _run_main_loop(state: dict):
                 timeout=remaining_budget,
             )
         except asyncio.TimeoutError:
+            logger.warning("Túllépte az időkeretet (%.0f mp), megszakítva.", remaining_budget)
             save_state(state)
             break
         save_state(state)
-        pass_elapsed = time.monotonic() - (time.monotonic() - remaining_budget)
+        logger.info("Kör kész: %d pár kiértékelve, %d riasztás.", evaluated, alerts)
+        # JAVÍTÁS: a korábbi "pass_elapsed = time.monotonic() - (time.monotonic() - remaining_budget)"
+        # matematikailag mindig kb. remaining_budget-tal volt egyenlő (a két
+        # time.monotonic() hívás közti különbség elhanyagolható), ami mivel
+        # remaining_budget sosem kisebb 30-nál, azt eredményezte, hogy
+        # PASS_INTERVAL_SECONDS - pass_elapsed MINDIG <= 0 volt -> sleep_time
+        # MINDIG 0 -> a ciklus SOHA nem várt, szünet nélkül pörgött, ami
+        # azonnal rate-limitbe futtatta a botot. A helyes számítás a kör
+        # TÉNYLEGES időtartamát nézi (pass_start-tól máig).
+        pass_elapsed = time.monotonic() - pass_start
         remaining_total = TOTAL_RUN_BUDGET_SECONDS - (time.monotonic() - loop_start)
         if remaining_total <= 0:
             break
