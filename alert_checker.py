@@ -1030,12 +1030,17 @@ async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
         data = await _get_json(session, TRADES_ENDPOINT, params={"symbol": symbol, "limit": CVD_LOOKBACK_TRADES})
         await asyncio.sleep(0.03)
 
+    # ÚJ: minden meghiúsulási pontnál logolunk, hogy a GitHub Actions logban
+    # kereshető legyen ("CVD" kulcsszóra) - eddig ez teljesen néma volt, nem
+    # lehetett megkülönböztetni "sikertelen lekérés"-t "valóban semleges"-től.
     if not data or "data" not in data or not data["data"]:
+        logger.info("CVD: nincs adat a válaszban (%s) - kihagyva.", symbol)
         return None
     trades = data["data"]
     if isinstance(trades, dict):
         trades = trades.get("trades") or trades.get("list") or []
     if not isinstance(trades, list) or not trades:
+        logger.info("CVD: a 'data' mező nem a várt lista formátumú (%s) - kihagyva.", symbol)
         return None
 
     taker_buy_vol = 0.0
@@ -1075,14 +1080,20 @@ async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
                 taker_sell_vol += qty  # a vevő volt a maker -> az eladó volt az agresszív fél
             else:
                 taker_buy_vol += qty   # a vevő volt az agresszív (taker) fél
-    except (TypeError, ValueError):
+    except (TypeError, ValueError) as e:
+        logger.warning("CVD: hiba a trade-ek feldolgozása közben (%s): %s | minta: %s",
+                        symbol, e, trades[0] if trades else None)
         return None
 
     total_vol = taker_buy_vol + taker_sell_vol
     if total_vol <= 0:
+        logger.info("CVD: 0 összvolumen a feldolgozás után (%s) - a mezőnevek nem egyeztek "
+                    "egyik ismert formátummal sem. Minta sor: %s", symbol, trades[0] if trades else None)
         return None
 
     buy_ratio = taker_buy_vol / total_vol
+    logger.info("CVD kiszámolva (%s, irány=%s): buy_ratio=%.2f (vétel=%.2f, eladás=%.2f)",
+                symbol, direction, buy_ratio, taker_buy_vol, taker_sell_vol)
 
     if direction == "LONG":
         if buy_ratio >= CVD_CONFIRM_RATIO:
