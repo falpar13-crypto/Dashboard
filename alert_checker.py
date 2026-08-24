@@ -134,6 +134,9 @@ TICKER_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/ticker"
 OI_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/openInterest"
 CONTRACTS_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/contracts"
 KLINES_ENDPOINT = f"{BASE_URL}/openApi/swap/v3/quote/klines"
+# ÚJ: CVD (Cumulative Volume Delta) megerősítéshez - lásd a CVD-blokk-kommentet
+# lentebb. Ugyanaz a "súlyú" (rate-limit költségű) végpont, mint a többi.
+TRADES_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/trades"
 FUNDING_RATE_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/premiumIndex"
 
 STATE_FILE = Path(__file__).parent / "alert_state.json"
@@ -329,6 +332,57 @@ OUTCOME_MAX_STALE_MINUTES = 60        # ha a kiértékelési ablak lejárta utá
 DAILY_SUMMARY_MIN_DELAY_MINUTES = 35  # ennyivel helyi éjfél után küldjük az
                                         # előző napi összesítőt
 
+# ----------------------------------------------------------------------------
+# ÚJ: DAYTRADE-PARAMÉTEREK - a scalp (5m, élő gyertya) logika mellett futó,
+# TESTVÉR-jelzéstípus, 15 PERCES, LEZÁRT gyertyákon.
+# ----------------------------------------------------------------------------
+# FONTOS ARCHITEKTÚRA-KÜLÖNBSÉG: a scalp logika az ÉLŐ (formálódó) gyertyát
+# értékeli ki minden 30 mp-es belső körben - ez azért működik, mert a
+# ciklus sokkal SŰRŰBBEN fut, mint amilyen hosszú egy gyertya (30 mp << 5
+# perc). A daytrade logika viszont csak DAYTRADE_MIN_RUN_GAP_MINUTES
+# (~15 perc) gyakorisággal fut ténylegesen (lásd run_daytrade_check() elején
+# a időkapu-ellenőrzést) - ha ilyenkor is az élő gyertyát néznénk, szinte
+# mindig egy ÉPP CSAK MEGNYÍLT gyertyát látnánk, alig felgyűlt volumennel,
+# a küszöbök sosem teljesülnének. Ezért a daytrade logika a LEGUTÓBB LEZÁRT
+# 15m gyertyát értékeli ki (lásd evaluate_closed_candle()) - ez egyben azt
+# is jelenti, hogy nincs "EARLY" (gyorsulás-alapú) daytrade jelzéstípus,
+# csak egyetlen "DAYTRADE" jelzés van.
+DAYTRADE_TIMEFRAME = "15m"
+DAYTRADE_MIN_RUN_GAP_MINUTES = 15   # a daytrade kiértékelés TÉNYLEGESEN csak
+                                      # ennyi percenként fut - a köztes (30
+                                      # mp-es) belső köröknél azonnal kilép,
+                                      # nem indít extra API-hívást
+DAYTRADE_VOLUME_MA_PERIOD = 10      # 10 db 15m gyertya ≈ 2.5 óra bázis-időszak
+DAYTRADE_MAX_PRICE_CHANGE = 6.0     # DAYTRADE: a scalp 3.0%-hoz képest tágabb -
+                                      # egy 15m gyertyán belüli lendület
+                                      # természetesen nagyobb %-ot is felhalmozhat
+DAYTRADE_MIN_OI_INCREASE = 3.5      # DAYTRADE: magasabb küszöb, mert 15 perc
+                                      # alatt nagyobb az OI természetes ingadozása is
+DAYTRADE_MIN_VOL_MULTIPLIER = 2.5   # arány (nem abszolút szám), idősík-független
+DAYTRADE_MIN_CANDLE_VOL_USDT = 45_000  # a scalp 15 000-hez képest kb. 3x (mert
+                                          # a 15m gyertya 3x annyi ideig gyűjt)
+DAYTRADE_OI_TARGET_WINDOW_MINUTES = 15  # az OI-t kb. 1 daytrade-futással
+DAYTRADE_OI_MIN_WINDOW_MINUTES = 10     # korábbi állapothoz hasonlítjuk - a
+DAYTRADE_OI_MAX_WINDOW_MINUTES = 45     # meglévő (sűrűn mintavételezett)
+                                          # oi_history-t használja, NEM kell
+                                          # külön mintavételezés hozzá
+DAYTRADE_ALERT_COOLDOWN_MINUTES = 240   # 4 óra - egy napon belüli mozgás
+                                          # sokáig tarthat, nem akarunk 15
+                                          # percenként újra jelzést ugyanarra
+DAYTRADE_HIGHER_TIMEFRAME = "4h"    # a napon belüli kontextushoz a scalp 1h-ja
+                                      # helyett 4h illik jobban
+DAYTRADE_HTF_KLINES_LIMIT = 100     # 100*4h ≈ 16.5 nap, bőven elég a swing-kereséshez
+DAYTRADE_SR_LOOKBACK_PERIOD = 60    # 60*4h = 10 nap - napon belüli kereskedéshez
+                                      # releváns, "friss" csatorna-hossz
+DAYTRADE_HTF_FETCH_BATCH_SIZE = 20  # lásd HTF_FETCH_BATCH_SIZE - ugyanaz az
+                                      # elv, önálló (4h-s) gyorsítótárra
+# --- Kimenet-szimuláció (SL/profit-szintek) - DAYTRADE: jóval szélesebb SL
+# és profitszintek, hosszabb kiértékelési ablak, mint a scalpnál. ---
+DAYTRADE_OUTCOME_EVAL_WINDOW_MINUTES = 480   # 8 óra
+DAYTRADE_OUTCOME_FIXED_SL_PCT = 3.0
+DAYTRADE_OUTCOME_PROFIT_LEVELS_PCT = [1.0, 2.0, 4.0, 6.0]
+DAYTRADE_OUTCOME_MAX_STALE_MINUTES = 240     # +4 óra türelmi idő
+
 
 # ----------------------------------------------------------------------------
 # TypedDict-ek - ÚJ, csak dokumentációs/típusellenőrzési célra (futásidőben
@@ -421,11 +475,20 @@ def _log_signal_outcome(record: dict) -> None:
 
 
 def register_pending_signal(state: dict, symbol: str, signal_type: str,
-                             direction: str, entry_price: float, now: datetime) -> None:
+                             direction: str, entry_price: float, now: datetime,
+                             eval_window_minutes: float = None, sl_pct: float = None,
+                             profit_levels_pct: list = None, max_stale_minutes: float = None) -> None:
     """Egy most kiküldött jelzést berak a 'pending_outcomes' listába - ezt
-    fogja a resolve_pending_signals() a megfelelő időben kiértékelni. A SL
-    mostantól mindig a FIX OUTCOME_FIXED_SL_PCT (-1.5%), nem kell külön
-    átadni/tárolni."""
+    fogja a resolve_pending_signals() a megfelelő időben kiértékelni.
+
+    ÚJ: opcionális eval_window_minutes/sl_pct/profit_levels_pct/
+    max_stale_minutes paraméterek - ha nincs megadva, a scalp-jelzés
+    (STANDARD/EARLY) globális alapértékeit használja (VÁLTOZATLAN
+    viselkedés). A DAYTRADE jelzés ezeket EXPLICITEN, saját (szélesebb SL-t
+    és profitszinteket, hosszabb kiértékelési ablakot használó) értékekkel
+    adja át - így egyetlen kiértékelő/napi-összesítő logika (lásd lentebb)
+    szolgálja ki mindkét jelzéstípust, a paraméterek magával a jelzéssel
+    együtt vannak eltárolva."""
     pending = state.setdefault("pending_outcomes", [])
     pending.append({
         "id": f"{symbol}_{signal_type}_{now.strftime('%Y%m%dT%H%M%S')}",
@@ -438,23 +501,36 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str,
                                                     # dátum - ehhez a (helyi) naphoz számít a napi
                                                     # összesítőben, függetlenül attól, mikor zárul
                                                     # le ténylegesen a jelzés kiértékelése
-        "window_end_ts": (now + timedelta(minutes=OUTCOME_EVAL_WINDOW_MINUTES)).isoformat(),
+        "window_end_ts": (now + timedelta(
+            minutes=OUTCOME_EVAL_WINDOW_MINUTES if eval_window_minutes is None else eval_window_minutes
+        )).isoformat(),
+        "sl_pct": OUTCOME_FIXED_SL_PCT if sl_pct is None else sl_pct,
+        "profit_levels_pct": OUTCOME_PROFIT_LEVELS_PCT if profit_levels_pct is None else profit_levels_pct,
+        "max_stale_minutes": OUTCOME_MAX_STALE_MINUTES if max_stale_minutes is None else max_stale_minutes,
     })
 
 
-def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.DataFrame) -> dict:
+def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.DataFrame,
+                             sl_pct: float = None, profit_levels_pct: list = None) -> dict:
     """Végigsétál az 5 perces gyertyákon (időrendben, a belépés utániakon), és
-    szimulálja, mely profitszinteket érte el az ár a FIX -1.5%-os SL beütése
-    ELŐTT. Lásd a fájl elején lévő blokk-kommentet a módszertanról és az
-    egyszerűsítésről."""
-    levels_reached = {lvl: False for lvl in OUTCOME_PROFIT_LEVELS_PCT}
+    szimulálja, mely profitszinteket érte el az ár a FIX SL beütése ELŐTT.
+    Lásd a fájl elején lévő blokk-kommentet a módszertanról és az
+    egyszerűsítésről.
+
+    ÚJ: opcionális sl_pct/profit_levels_pct - ha nincs megadva, a scalp-
+    jelzés globális alapértékeit használja (VÁLTOZATLAN viselkedés). A
+    DAYTRADE jelzés saját, szélesebb értékekkel hívja."""
+    sl_pct = OUTCOME_FIXED_SL_PCT if sl_pct is None else sl_pct
+    profit_levels_pct = OUTCOME_PROFIT_LEVELS_PCT if profit_levels_pct is None else profit_levels_pct
+
+    levels_reached = {lvl: False for lvl in profit_levels_pct}
     max_favorable_pct = 0.0
     sl_hit = False
 
     if direction == "LONG":
-        sl_price = entry_price * (1 - OUTCOME_FIXED_SL_PCT / 100)
+        sl_price = entry_price * (1 - sl_pct / 100)
     else:  # SHORT
-        sl_price = entry_price * (1 + OUTCOME_FIXED_SL_PCT / 100)
+        sl_price = entry_price * (1 + sl_pct / 100)
 
     for _, row in candles.iterrows():
         high = float(row["high"])
@@ -471,7 +547,7 @@ def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.Data
 
         if favorable_pct > max_favorable_pct:
             max_favorable_pct = favorable_pct
-        for lvl in OUTCOME_PROFIT_LEVELS_PCT:
+        for lvl in profit_levels_pct:
             if max_favorable_pct >= lvl:
                 levels_reached[lvl] = True
 
@@ -483,16 +559,21 @@ def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.Data
     return {
         "sl_hit": sl_hit,
         "max_favorable_pct": round(max_favorable_pct, 3),
-        "levels_reached": {f"level_{lvl}pct": levels_reached[lvl] for lvl in OUTCOME_PROFIT_LEVELS_PCT},
+        "levels_reached": {f"level_{lvl}pct": levels_reached[lvl] for lvl in profit_levels_pct},
     }
 
 
 async def resolve_pending_signals(state: dict, session, klines_semaphore, now: datetime) -> None:
     """5 perces gyertya-historikum alapján lezárja azokat a függő
-    jelzéseket, amelyeknél letelt a kiértékelési ablak
-    (OUTCOME_EVAL_WINDOW_MINUTES). Jelzésenként EGYETLEN klines-lekérést
-    végez, csak amikor tényleg esedékes - a köztes köröknél nincs plusz
-    terhelés."""
+    jelzéseket, amelyeknél letelt a kiértékelési ablak (jelzésenként
+    egyénileg tárolt eval_window_minutes - lásd register_pending_signal()).
+    Jelzésenként EGYETLEN klines-lekérést végez, csak amikor tényleg
+    esedékes - a köztes köröknél nincs plusz terhelés.
+
+    ÚJ: a klines limit DINAMIKUS - a DAYTRADE jelzések (8 órás kiértékelési
+    ablak) sokkal TÖBB 5m gyertyát igényelnek, mint a scalp jelzések (60
+    perces ablak) - korábban ez egy fix limit=60 volt, ami elegendő volt a
+    scalphoz, de messze nem lett volna elég egy 8 órás daytrade-ablakhoz."""
     pending = state.get("pending_outcomes", [])
     if not pending:
         return
@@ -511,7 +592,11 @@ async def resolve_pending_signals(state: dict, session, klines_semaphore, now: d
     async def _resolve_one(item):
         entry_dt = datetime.fromisoformat(item["entry_ts"])
         window_end_dt = datetime.fromisoformat(item["window_end_ts"])
-        symbol, kdf = await fetch_klines(session, klines_semaphore, item["symbol"], ALERT_TIMEFRAME, limit=60)
+        eval_minutes = (window_end_dt - entry_dt).total_seconds() / 60
+        # +20% biztonsági ráhagyás, minimum 60 gyertya (a korábbi, scalpra
+        # jól bevált fix érték), hogy a kerekítés/csúszás se okozzon hiányt.
+        klines_limit = max(60, int(eval_minutes / 5 * 1.2) + 5)
+        symbol, kdf = await fetch_klines(session, klines_semaphore, item["symbol"], ALERT_TIMEFRAME, limit=klines_limit)
         if kdf is None or kdf.empty:
             return item, None
 
@@ -521,7 +606,10 @@ async def resolve_pending_signals(state: dict, session, klines_semaphore, now: d
         if window_candles.empty:
             return item, None
 
-        result = _simulate_trade_outcome(item["direction"], item["entry_price"], window_candles)
+        result = _simulate_trade_outcome(
+            item["direction"], item["entry_price"], window_candles,
+            sl_pct=item.get("sl_pct"), profit_levels_pct=item.get("profit_levels_pct"),
+        )
         return item, result
 
     results = await asyncio.gather(*[_resolve_one(item) for item in due], return_exceptions=True)
@@ -534,7 +622,10 @@ async def resolve_pending_signals(state: dict, session, klines_semaphore, now: d
         if result is None:
             entry_dt = datetime.fromisoformat(item["entry_ts"])
             age_minutes = (now - entry_dt).total_seconds() / 60
-            if age_minutes >= OUTCOME_EVAL_WINDOW_MINUTES + OUTCOME_MAX_STALE_MINUTES:
+            window_end_dt = datetime.fromisoformat(item["window_end_ts"])
+            eval_minutes = (window_end_dt - entry_dt).total_seconds() / 60
+            max_stale = item.get("max_stale_minutes", OUTCOME_MAX_STALE_MINUTES)
+            if age_minutes >= eval_minutes + max_stale:
                 _log_signal_outcome({**item, "outcome": "UNKNOWN", "sl_hit": None,
                                       "max_favorable_pct": None, "levels_reached": None,
                                       "resolved_ts": now.isoformat()})
@@ -895,6 +986,103 @@ async def fetch_funding_rate(session, semaphore, symbol):
             return symbol, None
 
 
+# ----------------------------------------------------------------------------
+# ÚJ: CVD (Cumulative Volume Delta) megerősítés - CSAK a végső jelölteknél
+# ----------------------------------------------------------------------------
+# A CVD azt méri, hogy a friss kereskedések agresszív VÉTELKÉNT vagy
+# ELADÁSKÉNT teljesültek-e (nem a gyertya záróárát nézi, mint a sima
+# piros/zöld volumen-oszlop) - ez felfedheti a "rejtett" felhalmozást vagy
+# elnyelést (pl. piros gyertya, de valójában agresszív vétel dominál alatta).
+#
+# FONTOS: ezt SZÁNDÉKOSAN NEM az univerzum-szűrésnél (mind az ~500 jelöltnél
+# minden körben) használjuk, hanem KIZÁRÓLAG a jelzés kiküldése ELŐTTI,
+# utolsó lépésként, a már úgyis leszűkített, ritka jelölteknél. A BingX
+# trades-végpontja (quote/trades) egy ÚJ, a klines-től független végpont -
+# ha ezt minden jelöltre lekérnénk minden körben, az egy teljesen új,
+# komoly terhelésű hívás-forrás lenne, pontosan az a fajta dolog, ami
+# korábban a klines-endpoint rate-limit problémáját okozta. Mivel viszont
+# csak a ritka, valódi jelölteknél fut le, a hozzáadott terhelés
+# elhanyagolható.
+CVD_LOOKBACK_TRADES = 500        # ennyi legutóbbi kereskedést nézünk
+CVD_CONFIRM_RATIO = 0.55         # a taker-vétel aránya ENNÉL magasabb kell
+                                   # legyen LONG megerősítéshez (és fordítva
+                                   # SHORT-nál, a taker-eladás arányára)
+CVD_DIVERGENCE_RATIO = 0.55      # ha a jelzés irányával ELLENTÉTES oldal
+                                   # aránya eléri ezt, "divergál" figyelmeztetés
+
+
+async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
+    """Lekéri a legutóbbi CVD_LOOKBACK_TRADES db kereskedést, és kiszámolja,
+    hogy a taker-vétel vagy taker-eladás dominál-e. A BingX válaszban a "m"
+    (buyerMaker) mező jelzi, hogy a VEVŐ volt-e a piacon várakozó (maker)
+    fél - ha igen, az ELADÓ volt az agresszív (taker) fél, tehát ez egy
+    agresszív ELADÁS; ha nem, a VEVŐ volt az agresszív fél, tehát agresszív
+    VÉTEL.
+
+    Visszatér: "confirm" (a jelzés irányát megerősíti), "diverge" (azzal
+    ELLENTÉTES nyomás dominál - lásd a felhasználóval megbeszélt "piros
+    gyertya + zöld CVD" abszorpciós mintát), "neutral" (nincs egyértelmű
+    túlsúly), vagy None (nem sikerült lekérni/feldolgozni - ilyenkor a
+    jelzés a CVD-sor nélkül megy ki, NEM blokkoljuk emiatt)."""
+    async with semaphore:
+        data = await _get_json(session, TRADES_ENDPOINT, params={"symbol": symbol, "limit": CVD_LOOKBACK_TRADES})
+        await asyncio.sleep(0.03)
+
+    if not data or "data" not in data or not data["data"]:
+        return None
+    trades = data["data"]
+    if isinstance(trades, dict):
+        trades = trades.get("trades") or trades.get("list") or []
+    if not isinstance(trades, list) or not trades:
+        return None
+
+    taker_buy_vol = 0.0
+    taker_sell_vol = 0.0
+    try:
+        for t in trades:
+            qty = t.get("qty")
+            if qty is None:
+                qty = t.get("q")
+            if qty is None:
+                qty = t.get("volume")
+            if qty is None:
+                continue
+            qty = float(qty)
+
+            is_buyer_maker = t.get("buyerMaker")
+            if is_buyer_maker is None:
+                is_buyer_maker = t.get("isBuyerMaker")
+            if is_buyer_maker is None:
+                is_buyer_maker = t.get("m")
+            if is_buyer_maker is None:
+                continue
+
+            if is_buyer_maker:
+                taker_sell_vol += qty  # a vevő volt a maker -> az eladó volt az agresszív fél
+            else:
+                taker_buy_vol += qty   # a vevő volt az agresszív (taker) fél
+    except (TypeError, ValueError):
+        return None
+
+    total_vol = taker_buy_vol + taker_sell_vol
+    if total_vol <= 0:
+        return None
+
+    buy_ratio = taker_buy_vol / total_vol
+
+    if direction == "LONG":
+        if buy_ratio >= CVD_CONFIRM_RATIO:
+            return "confirm"
+        if (1 - buy_ratio) >= CVD_DIVERGENCE_RATIO:
+            return "diverge"
+    else:  # SHORT
+        if (1 - buy_ratio) >= CVD_CONFIRM_RATIO:
+            return "confirm"
+        if buy_ratio >= CVD_DIVERGENCE_RATIO:
+            return "diverge"
+    return "neutral"
+
+
 # --- ÚJ (v7): egyszerű "N-periódusos csatorna" támasz/ellenállás ---
 SR_LOOKBACK_PERIOD = 60     # ennyi lezárt 1h gyertya alapján számoljuk a szinteket
 SR_PROXIMITY_PCT = 0.5      # ennyi %-on belül számít "a szint közelének"
@@ -961,17 +1149,26 @@ def _classify_structure_trend(zigzag: list) -> Optional[str]:
     return "NEUTRAL"  # vegyes szerkezet (pl. HH+LL vagy LH+HL) - oldalazás/átmenet
 
 
-async def fetch_htf_trend(session, semaphore, symbol):
-    """Az 1 órás (HIGHER_TIMEFRAME) trend + támasz/ellenállás meghatározása,
-    UGYANABBÓL az egyetlen lekérésből (nincs plusz API-hívás):
+async def fetch_htf_trend(session, semaphore, symbol, timeframe=None, klines_limit=None, sr_lookback=None):
+    """A HIGHER_TIMEFRAME trend + támasz/ellenállás meghatározása, UGYANABBÓL
+    az egyetlen lekérésből (nincs plusz API-hívás):
     - trend: HH/HL/LH/LL (swing-struktúra) alapú - lásd a fájl elején a
       blokk-kommentet arról, miért ez váltotta le a korábbi EMA(50)-et.
-    - support/resistance: az utolsó SR_LOOKBACK_PERIOD db lezárt 1h gyertya
+    - support/resistance: az utolsó sr_lookback db lezárt gyertya
       legalacsonyabb mélypontja / legmagasabb csúcsa (egyszerű, jól definiált
       "N-periódusos csatorna" módszer - nem chartolvasói/szubjektív szint)
-    Csak lezárt gyertyákat használ mindenhol."""
+    Csak lezárt gyertyákat használ mindenhol.
+
+    ÚJ: opcionális timeframe/klines_limit/sr_lookback paraméterek - alapból
+    a globális HIGHER_TIMEFRAME/HTF_KLINES_LIMIT/SR_LOOKBACK_PERIOD értékeket
+    használja (VÁLTOZATLAN viselkedés a scalp-jelzéshez), de a DAYTRADE
+    logika egy MAGASABB idősíkkal (4h) is meghívja ugyanezt a függvényt -
+    lásd run_daytrade_check()."""
+    timeframe = HIGHER_TIMEFRAME if timeframe is None else timeframe
+    klines_limit = HTF_KLINES_LIMIT if klines_limit is None else klines_limit
+    sr_lookback = SR_LOOKBACK_PERIOD if sr_lookback is None else sr_lookback
     async with semaphore:
-        params = {"symbol": symbol, "interval": HIGHER_TIMEFRAME, "limit": HTF_KLINES_LIMIT}
+        params = {"symbol": symbol, "interval": timeframe, "limit": klines_limit}
         data = await _get_json(session, KLINES_ENDPOINT, params=params)
         # ÚJ: a korábbi 0.03 mp-es szünet túl rövid volt ahhoz, hogy
         # ténylegesen korlátozza a klines-endpointra irányuló kérés/mp
@@ -989,7 +1186,7 @@ async def fetch_htf_trend(session, semaphore, symbol):
         df["timestamp"] = pd.to_datetime(df["time"], unit="ms")
         df = df.sort_values("timestamp").reset_index(drop=True)
 
-        closed = df.iloc[:-1]  # az élő 1h gyertyát itt is eldobjuk
+        closed = df.iloc[:-1]  # az élő gyertyát itt is eldobjuk
         min_candles_needed = SWING_FRACTAL_LEGS * 2 + 1
         trend = None
         if len(closed) >= min_candles_needed:
@@ -998,8 +1195,8 @@ async def fetch_htf_trend(session, semaphore, symbol):
             trend = _classify_structure_trend(zigzag)
 
         support = resistance = None
-        sr_window = closed.iloc[-SR_LOOKBACK_PERIOD:]
-        if len(sr_window) >= SR_LOOKBACK_PERIOD:
+        sr_window = closed.iloc[-sr_lookback:]
+        if len(sr_window) >= sr_lookback:
             support = float(sr_window["low"].min())
             resistance = float(sr_window["high"].max())
 
@@ -1070,7 +1267,8 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           htf_trend=None, bounce_confluence=False, near_level_risk=False,
                           rsi=None, macd_status=None, signal_type="STANDARD",
                           funding_rate=None,
-                          pace_vol_multiplier=None, elapsed_fraction=None):
+                          pace_vol_multiplier=None, elapsed_fraction=None,
+                          cvd_status=None):
     # v18 RÁNCFELVARRÁS: a bot mostantól KIZÁRÓLAG ⚡ STANDARD PUMP/DUMP
     # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
     # törölve.
@@ -1133,6 +1331,17 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         elif direction == "SHORT" and funding_rate >= FUNDING_SQUEEZE_THRESHOLD_PCT:
             funding_line += " 💥 LONG SQUEEZE (Túl sok a longos!)"
 
+    # ÚJ: CVD (Cumulative Volume Delta) megerősítő/figyelmeztető sor - lásd
+    # a fetch_cvd_confirmation() blokk-kommentjét. Csak akkor jelenik meg
+    # sor, ha sikerült lekérni (cvd_status nem None); a "neutral" esetben
+    # sincs sor, hogy ne zsúfoljuk az üzenetet érdemi infó nélkül.
+    cvd_line = ""
+    if cvd_status == "diverge":
+        divergence_note = "eladási" if direction == "LONG" else "vételi"
+        cvd_line = f"\n⚠️ CVD divergál (rejtett {divergence_note} nyomás a felszín alatt)"
+    elif cvd_status == "confirm":
+        cvd_line = "\n✅ CVD megerősíti az irányt"
+
     body = (
         f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
@@ -1141,6 +1350,7 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         f"{early_line}"
         f"{indicator_line}"
         f"{funding_line}"
+        f"{cvd_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
@@ -1290,6 +1500,56 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
         "signal_type": "STANDARD",
         "elapsed_fraction": round(elapsed_fraction, 3) if elapsed_fraction is not None else None,
         "pace_vol_multiplier": round(pace_vol_multiplier, 2) if pace_vol_multiplier is not None else None,
+    }
+
+
+def evaluate_closed_candle(kdf: pd.DataFrame, volume_ma_period: int = VOLUME_MA_PERIOD) -> Optional["CandleEval"]:
+    """DAYTRADE: a LEGUTÓBB LEZÁRT gyertyát értékeli ki a megelőző
+    volume_ma_period db lezárt gyertya átlagához képest - NEM az élő
+    (formálódó) gyertyát, ellentétben az evaluate_candle()-lel!
+
+    Ennek oka: a daytrade kiértékelés csak DAYTRADE_MIN_RUN_GAP_MINUTES
+    (~15 perc) gyakorisággal fut, ami NAGYJÁBÓL MEGEGYEZIK a 15m gyertya
+    hosszával - ha ilyenkor az élő gyertyát néznénk, szinte minden egyes
+    futáskor egy ÉPP CSAK MEGNYÍLT gyertyát látnánk (elenyésző felgyűlt
+    volumennel), a küszöbök gyakorlatilag sosem teljesülnének. Emiatt
+    nincs "EARLY" (pace-alapú) változata sem - az kifejezetten a scalp
+    logika SŰRŰ (30 mp-enkénti) mintavételezésére lett tervezve."""
+    if kdf is None or len(kdf) < volume_ma_period + 2:
+        return None
+
+    signal_candle = kdf.iloc[-2]               # a legutóbb LEZÁRT gyertya
+    baseline_window = kdf.iloc[-(volume_ma_period + 2):-2]  # az előtte lezárt N gyertya
+    if len(baseline_window) < volume_ma_period:
+        return None
+
+    prev_close = kdf.iloc[-3]["close"]          # az ezt megelőző lezárt gyertya záróára
+    if prev_close <= 0 or signal_candle["open"] <= 0:
+        return None
+
+    avg_vol = baseline_window["volume"].mean()
+    if avg_vol is None or pd.isna(avg_vol) or avg_vol <= 0:
+        return None
+
+    current_price = float(signal_candle["close"])
+    price_change_pct = (current_price - prev_close) / prev_close * 100
+    vol_multiplier = signal_candle["volume"] / avg_vol
+    candle_vol_usdt = float(signal_candle["volume"] * current_price)
+    direction = "LONG" if current_price >= signal_candle["open"] else "SHORT"
+
+    rsi_val, macd_status = compute_rsi_macd(kdf["close"].iloc[:-1])
+
+    return {
+        "price": current_price,
+        "price_change_pct": round(float(price_change_pct), 2),
+        "vol_multiplier": round(float(vol_multiplier), 2),
+        "candle_vol_usdt": candle_vol_usdt,
+        "direction": direction,
+        "rsi": rsi_val,
+        "macd_status": macd_status,
+        "signal_type": "DAYTRADE",
+        "elapsed_fraction": None,
+        "pace_vol_multiplier": None,
     }
 
 # ----------------------------------------------------------------------------
@@ -1528,6 +1788,11 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # ablakos) OI-változást mutatjuk az üzenetben - ez tükrözi
             # ténylegesen, mi váltotta ki a jelzést.
             display_oi_change_pct = oi_fast_change_pct if fired_signal_type == "EARLY" else oi_change_pct
+            # ÚJ: CVD-megerősítés - CSAK itt, a végső jelöltnél kérjük le
+            # (lásd fetch_cvd_confirmation() blokk-kommentjét). Ha bármi
+            # okból nem sikerül, cvd_status None marad, és a jelzés a
+            # CVD-sor nélkül megy ki - EZ SOSEM blokkolja/késlelteti a jelzést.
+            cvd_status = await fetch_cvd_confirmation(session, semaphore, symbol, candle["direction"])
             msg = format_scalp_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
@@ -1538,6 +1803,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 funding_rate=funding_rate,
                 pace_vol_multiplier=candle.get("pace_vol_multiplier"),
                 elapsed_fraction=candle.get("elapsed_fraction"),
+                cvd_status=cvd_status,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
