@@ -1013,17 +1013,19 @@ CVD_DIVERGENCE_RATIO = 0.55      # ha a jelzés irányával ELLENTÉTES oldal
 
 async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
     """Lekéri a legutóbbi CVD_LOOKBACK_TRADES db kereskedést, és kiszámolja,
-    hogy a taker-vétel vagy taker-eladás dominál-e. A BingX válaszban a "m"
-    (buyerMaker) mező jelzi, hogy a VEVŐ volt-e a piacon várakozó (maker)
-    fél - ha igen, az ELADÓ volt az agresszív (taker) fél, tehát ez egy
-    agresszív ELADÁS; ha nem, a VEVŐ volt az agresszív fél, tehát agresszív
-    VÉTEL.
+    hogy a taker-vétel vagy taker-eladás dominál-e.
 
-    Visszatér: "confirm" (a jelzés irányát megerősíti), "diverge" (azzal
-    ELLENTÉTES nyomás dominál - lásd a felhasználóval megbeszélt "piros
-    gyertya + zöld CVD" abszorpciós mintát), "neutral" (nincs egyértelmű
-    túlsúly), vagy None (nem sikerült lekérni/feldolgozni - ilyenkor a
-    jelzés a CVD-sor nélkül megy ki, NEM blokkoljuk emiatt)."""
+    JAVÍTÁS: az eredeti verzió egy Binance-stílusú "buyerMaker" logikai
+    mezőt keresett a válaszban - ez a BingX quote/trades válaszában NEM
+    létezik. A valódi válasz egy KÖZVETLEN "side": "buy"/"sell" mezőt ad
+    (élő minta: {"instId": "BTC-USDT-SWAP", "side": "buy", "sz": "1.06",
+    "px": "...", "tradeId": "...", "ts": "..."}). Emiatt a korábbi kód
+    MINDEN egyes trade-et átugrott (a buyerMaker mező hiányában), a
+    total_vol mindig 0 maradt, a függvény GARANTÁLTAN mindig None-t adott
+    vissza - ez az oka, hogy a CVD-sor egyszer sem jelent meg a
+    jelzésekben. Mostantól elsődlegesen a "side" mezőt nézi (a régi
+    buyerMaker-alapú logikát csak biztonsági fallbackként tartjuk meg, ha
+    egy jövőbeli API-változás visszahozná azt a formát is)."""
     async with semaphore:
         data = await _get_json(session, TRADES_ENDPOINT, params={"symbol": symbol, "limit": CVD_LOOKBACK_TRADES})
         await asyncio.sleep(0.03)
@@ -1040,7 +1042,9 @@ async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
     taker_sell_vol = 0.0
     try:
         for t in trades:
-            qty = t.get("qty")
+            qty = t.get("sz")  # a valódi BingX mező neve ("size")
+            if qty is None:
+                qty = t.get("qty")
             if qty is None:
                 qty = t.get("q")
             if qty is None:
@@ -1049,6 +1053,17 @@ async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
                 continue
             qty = float(qty)
 
+            side = t.get("side")  # elsődleges: közvetlen "buy"/"sell" mező
+            if side is not None:
+                side_str = str(side).strip().lower()
+                if side_str in ("buy", "bid", "1"):
+                    taker_buy_vol += qty
+                elif side_str in ("sell", "ask", "2"):
+                    taker_sell_vol += qty
+                continue
+
+            # Fallback: Binance-stílusú "buyerMaker" logikai mező (ha egy
+            # jövőbeli API-verzió esetleg ezt a formát adná vissza).
             is_buyer_maker = t.get("buyerMaker")
             if is_buyer_maker is None:
                 is_buyer_maker = t.get("isBuyerMaker")
@@ -1056,7 +1071,6 @@ async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
                 is_buyer_maker = t.get("m")
             if is_buyer_maker is None:
                 continue
-
             if is_buyer_maker:
                 taker_sell_vol += qty  # a vevő volt a maker -> az eladó volt az agresszív fél
             else:
