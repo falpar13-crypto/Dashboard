@@ -2,18 +2,13 @@ name: BingX Daytrade Alert
 
 on:
   schedule:
-    # JAVÍTÁS: a GitHub saját cron-ütemezése NEM megbízható 5-10 perces
-    # intervallumoknál (a GitHub dokumentációja is jelzi, hogy magas
-    # terhelés esetén a scheduled workflow-k késhetnek vagy ki is
-    # maradhatnak) - ez volt a legvalószínűbb oka annak, hogy ez a workflow
-    # "nem indult el" a "*/10 * * * *" ütemezéssel. A VALÓDI, 10 perces
-    # ütemezést egy külső cron-szolgáltatásnak (pl. cron-job.org - ugyanaz,
-    # amit az alert_checker.py scalp workflow-ja is használ) kell adnia,
-    # ami a workflow_dispatch API-n keresztül indítja ezt a workflow-t. A
-    # GitHub saját "schedule"-je itt csak ÓRÁNKÉNTI BIZTONSÁGI HÁLÓ.
-    - cron: "0 * * * *"   # óránként egyszer, csak biztonsági hálóként
-  workflow_dispatch: {}   # ezt hívja a külső cron-szolgáltatás API-n keresztül,
-                           # és ezzel kézzel is elindítható az "Actions" fülön
+    # A GitHub saját cron-ütemezése NEM megbízható 5-10 perces
+    # intervallumoknál - a VALÓDI 10 perces ütemezést egy külső
+    # cron-szolgáltatásnak (cron-job.org) kell adnia, workflow_dispatch-en
+    # keresztül. A GitHub saját "schedule"-je itt csak ÓRÁNKÉNTI
+    # BIZTONSÁGI HÁLÓ.
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
 
 concurrency:
   group: bingx-daytrade-checker
@@ -21,6 +16,13 @@ concurrency:
 
 permissions:
   contents: write
+
+# ÚJ: lásd az alert_checker.yml-ben lévő azonos blokk-kommentet - mindkét
+# bot KÜLÖN branch-re ír (ez itt: state-daytrade), hogy a git PUSH-szintű
+# ütközések a két, egymástól független bot között megszűnjenek.
+
+env:
+  STATE_BRANCH: state-daytrade
 
 jobs:
   check:
@@ -39,38 +41,65 @@ jobs:
       - name: Csomagok telepítése
         run: pip install aiohttp pandas requests
 
+      - name: Állapotfájlok betöltése a ${{ env.STATE_BRANCH }} branch-ről
+        run: |
+          if git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$STATE_BRANCH"
+            git worktree add --detach /tmp/state-load "origin/$STATE_BRANCH"
+            find /tmp/state-load -maxdepth 1 -type f \( -name '*.json' -o -name '*.jsonl' -o -name '*.jsonl.bak' \) -exec cp {} . \;
+            git worktree remove /tmp/state-load --force
+            echo "Állapot betöltve a $STATE_BRANCH branch-ről."
+          else
+            echo "Még nincs $STATE_BRANCH branch - első futás, üres állapotból indulunk."
+          fi
+
       - name: Daytrade Ellenőrzés futtatása
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python daytrade_checker.py
 
-      - name: Daytrade állapotfájl és naplók visszamentése a repóba
+      - name: Állapotfájlok visszamentése a ${{ env.STATE_BRANCH }} branch-re
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config merge.ours.driver true
-
-          git add daytrade_state.json
-          if [ -f daytrade_alert_log.jsonl ]; then
-            git add daytrade_alert_log.jsonl
-          fi
-          git add daytrade_alert_log_*.jsonl.bak 2>/dev/null || true
-
-          if git diff --quiet --cached; then
-            echo "Nincs változás a daytrade állapotfájlokban, nincs mit commitolni."
-            exit 0
-          fi
-          git commit -m "daytrade_state / daytrade_alert_log frissítve [skip ci]"
 
           for i in 1 2 3 4 5; do
-            if git push origin HEAD:main; then
-              echo "Push sikeres."
+            rm -rf /tmp/state-save
+            if git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null 2>&1; then
+              git fetch origin "$STATE_BRANCH"
+              git worktree add --detach /tmp/state-save "origin/$STATE_BRANCH"
+            else
+              git worktree add --detach /tmp/state-save
+              (cd /tmp/state-save && git checkout --orphan "$STATE_BRANCH" && git rm -rf . >/dev/null 2>&1 || true)
+            fi
+
+            cp daytrade_state.json /tmp/state-save/ 2>/dev/null || true
+            [ -f daytrade_alert_log.jsonl ] && cp daytrade_alert_log.jsonl /tmp/state-save/
+            for f in daytrade_alert_log_*.jsonl.bak; do
+              [ -f "$f" ] && cp "$f" /tmp/state-save/
+            done
+
+            cd /tmp/state-save
+            git add -A
+            if git diff --quiet --cached; then
+              echo "Nincs változás a daytrade állapotfájlokban, nincs mit commitolni."
+              cd "$GITHUB_WORKSPACE"
+              git worktree remove /tmp/state-save --force
               exit 0
             fi
-            echo "Push ütközött (${i}. próbálkozás) - remote frissítés és újrapróbálás..."
-            git fetch origin main
-            git pull --no-rebase origin main --no-edit
+            git commit -m "daytrade_state / daytrade_alert_log frissítve [skip ci]"
+
+            if git push origin "HEAD:$STATE_BRANCH"; then
+              echo "Push sikeres."
+              cd "$GITHUB_WORKSPACE"
+              git worktree remove /tmp/state-save --force
+              exit 0
+            fi
+
+            echo "Push ütközött (${i}. próbálkozás) - újrapróbálás..."
+            cd "$GITHUB_WORKSPACE"
+            git worktree remove /tmp/state-save --force
             sleep $((RANDOM % 6 + 3))
           done
           echo "Push végül sem sikerült 5 próbálkozás után."
