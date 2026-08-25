@@ -340,55 +340,15 @@ DAILY_SUMMARY_MIN_DELAY_MINUTES = 35  # ennyivel helyi éjfél után küldjük a
                                         # előző napi összesítőt
 
 # ----------------------------------------------------------------------------
-# ÚJ: DAYTRADE-PARAMÉTEREK - a scalp (5m, élő gyertya) logika mellett futó,
-# TESTVÉR-jelzéstípus, 15 PERCES, LEZÁRT gyertyákon.
+# MEGJEGYZÉS: a daytrade jelzéstípus NEM ebben a fájlban él - lásd a
+# különálló daytrade_checker.py szkriptet (saját state/log fájlokkal, saját
+# workflow-val). Itt korábban volt egy DAYTRADE_* konstans-blokk és egy
+# evaluate_closed_candle() függvény is, de ezeket semmi nem hívta meg (a
+# kommentek egy soha nem létezett run_daytrade_check()-re hivatkoztak), és
+# az bennük szereplő értékek NEM egyeztek a ténylegesen futó
+# daytrade_checker.py értékeivel - megtévesztő "halott kód" volt, ezért
+# JAVÍTÁSKÉNT eltávolítottuk.
 # ----------------------------------------------------------------------------
-# FONTOS ARCHITEKTÚRA-KÜLÖNBSÉG: a scalp logika az ÉLŐ (formálódó) gyertyát
-# értékeli ki minden 30 mp-es belső körben - ez azért működik, mert a
-# ciklus sokkal SŰRŰBBEN fut, mint amilyen hosszú egy gyertya (30 mp << 5
-# perc). A daytrade logika viszont csak DAYTRADE_MIN_RUN_GAP_MINUTES
-# (~15 perc) gyakorisággal fut ténylegesen (lásd run_daytrade_check() elején
-# a időkapu-ellenőrzést) - ha ilyenkor is az élő gyertyát néznénk, szinte
-# mindig egy ÉPP CSAK MEGNYÍLT gyertyát látnánk, alig felgyűlt volumennel,
-# a küszöbök sosem teljesülnének. Ezért a daytrade logika a LEGUTÓBB LEZÁRT
-# 15m gyertyát értékeli ki (lásd evaluate_closed_candle()) - ez egyben azt
-# is jelenti, hogy nincs "EARLY" (gyorsulás-alapú) daytrade jelzéstípus,
-# csak egyetlen "DAYTRADE" jelzés van.
-DAYTRADE_TIMEFRAME = "15m"
-DAYTRADE_MIN_RUN_GAP_MINUTES = 15   # a daytrade kiértékelés TÉNYLEGESEN csak
-                                      # ennyi percenként fut - a köztes (30
-                                      # mp-es) belső köröknél azonnal kilép,
-                                      # nem indít extra API-hívást
-DAYTRADE_VOLUME_MA_PERIOD = 10      # 10 db 15m gyertya ≈ 2.5 óra bázis-időszak
-DAYTRADE_MAX_PRICE_CHANGE = 6.0     # DAYTRADE: a scalp 3.0%-hoz képest tágabb -
-                                      # egy 15m gyertyán belüli lendület
-                                      # természetesen nagyobb %-ot is felhalmozhat
-DAYTRADE_MIN_OI_INCREASE = 3.5      # DAYTRADE: magasabb küszöb, mert 15 perc
-                                      # alatt nagyobb az OI természetes ingadozása is
-DAYTRADE_MIN_VOL_MULTIPLIER = 2.5   # arány (nem abszolút szám), idősík-független
-DAYTRADE_MIN_CANDLE_VOL_USDT = 45_000  # a scalp 15 000-hez képest kb. 3x (mert
-                                          # a 15m gyertya 3x annyi ideig gyűjt)
-DAYTRADE_OI_TARGET_WINDOW_MINUTES = 15  # az OI-t kb. 1 daytrade-futással
-DAYTRADE_OI_MIN_WINDOW_MINUTES = 10     # korábbi állapothoz hasonlítjuk - a
-DAYTRADE_OI_MAX_WINDOW_MINUTES = 45     # meglévő (sűrűn mintavételezett)
-                                          # oi_history-t használja, NEM kell
-                                          # külön mintavételezés hozzá
-DAYTRADE_ALERT_COOLDOWN_MINUTES = 240   # 4 óra - egy napon belüli mozgás
-                                          # sokáig tarthat, nem akarunk 15
-                                          # percenként újra jelzést ugyanarra
-DAYTRADE_HIGHER_TIMEFRAME = "4h"    # a napon belüli kontextushoz a scalp 1h-ja
-                                      # helyett 4h illik jobban
-DAYTRADE_HTF_KLINES_LIMIT = 100     # 100*4h ≈ 16.5 nap, bőven elég a swing-kereséshez
-DAYTRADE_SR_LOOKBACK_PERIOD = 60    # 60*4h = 10 nap - napon belüli kereskedéshez
-                                      # releváns, "friss" csatorna-hossz
-DAYTRADE_HTF_FETCH_BATCH_SIZE = 20  # lásd HTF_FETCH_BATCH_SIZE - ugyanaz az
-                                      # elv, önálló (4h-s) gyorsítótárra
-# --- Kimenet-szimuláció (SL/profit-szintek) - DAYTRADE: jóval szélesebb SL
-# és profitszintek, hosszabb kiértékelési ablak, mint a scalpnál. ---
-DAYTRADE_OUTCOME_EVAL_WINDOW_MINUTES = 480   # 8 óra
-DAYTRADE_OUTCOME_FIXED_SL_PCT = 3.0
-DAYTRADE_OUTCOME_PROFIT_LEVELS_PCT = [1.0, 2.0, 4.0, 6.0]
-DAYTRADE_OUTCOME_MAX_STALE_MINUTES = 240     # +4 óra türelmi idő
 
 
 # ----------------------------------------------------------------------------
@@ -1208,9 +1168,9 @@ async def fetch_htf_trend(session, semaphore, symbol, timeframe=None, klines_lim
 
     ÚJ: opcionális timeframe/klines_limit/sr_lookback paraméterek - alapból
     a globális HIGHER_TIMEFRAME/HTF_KLINES_LIMIT/SR_LOOKBACK_PERIOD értékeket
-    használja (VÁLTOZATLAN viselkedés a scalp-jelzéshez), de a DAYTRADE
-    logika egy MAGASABB idősíkkal (4h) is meghívja ugyanezt a függvényt -
-    lásd run_daytrade_check()."""
+    használja (VÁLTOZATLAN viselkedés a scalp-jelzéshez). A daytrade bot
+    (különálló daytrade_checker.py) egy saját, magasabb idősíkkal (4h)
+    hívja meg a saját, ide nem tartozó fetch_htf_trend()-jét."""
     timeframe = HIGHER_TIMEFRAME if timeframe is None else timeframe
     klines_limit = HTF_KLINES_LIMIT if klines_limit is None else klines_limit
     sr_lookback = SR_LOOKBACK_PERIOD if sr_lookback is None else sr_lookback
@@ -1549,55 +1509,6 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
         "pace_vol_multiplier": round(pace_vol_multiplier, 2) if pace_vol_multiplier is not None else None,
     }
 
-
-def evaluate_closed_candle(kdf: pd.DataFrame, volume_ma_period: int = VOLUME_MA_PERIOD) -> Optional["CandleEval"]:
-    """DAYTRADE: a LEGUTÓBB LEZÁRT gyertyát értékeli ki a megelőző
-    volume_ma_period db lezárt gyertya átlagához képest - NEM az élő
-    (formálódó) gyertyát, ellentétben az evaluate_candle()-lel!
-
-    Ennek oka: a daytrade kiértékelés csak DAYTRADE_MIN_RUN_GAP_MINUTES
-    (~15 perc) gyakorisággal fut, ami NAGYJÁBÓL MEGEGYEZIK a 15m gyertya
-    hosszával - ha ilyenkor az élő gyertyát néznénk, szinte minden egyes
-    futáskor egy ÉPP CSAK MEGNYÍLT gyertyát látnánk (elenyésző felgyűlt
-    volumennel), a küszöbök gyakorlatilag sosem teljesülnének. Emiatt
-    nincs "EARLY" (pace-alapú) változata sem - az kifejezetten a scalp
-    logika SŰRŰ (30 mp-enkénti) mintavételezésére lett tervezve."""
-    if kdf is None or len(kdf) < volume_ma_period + 2:
-        return None
-
-    signal_candle = kdf.iloc[-2]               # a legutóbb LEZÁRT gyertya
-    baseline_window = kdf.iloc[-(volume_ma_period + 2):-2]  # az előtte lezárt N gyertya
-    if len(baseline_window) < volume_ma_period:
-        return None
-
-    prev_close = kdf.iloc[-3]["close"]          # az ezt megelőző lezárt gyertya záróára
-    if prev_close <= 0 or signal_candle["open"] <= 0:
-        return None
-
-    avg_vol = baseline_window["volume"].mean()
-    if avg_vol is None or pd.isna(avg_vol) or avg_vol <= 0:
-        return None
-
-    current_price = float(signal_candle["close"])
-    price_change_pct = (current_price - prev_close) / prev_close * 100
-    vol_multiplier = signal_candle["volume"] / avg_vol
-    candle_vol_usdt = float(signal_candle["volume"] * current_price)
-    direction = "LONG" if current_price >= signal_candle["open"] else "SHORT"
-
-    rsi_val, macd_status = compute_rsi_macd(kdf["close"].iloc[:-1])
-
-    return {
-        "price": current_price,
-        "price_change_pct": round(float(price_change_pct), 2),
-        "vol_multiplier": round(float(vol_multiplier), 2),
-        "candle_vol_usdt": candle_vol_usdt,
-        "direction": direction,
-        "rsi": rsi_val,
-        "macd_status": macd_status,
-        "signal_type": "DAYTRADE",
-        "elapsed_fraction": None,
-        "pace_vol_multiplier": None,
-    }
 
 # ----------------------------------------------------------------------------
 # EGY KIÉRTÉKELÉSI KÖR (a belső 30 mp-es ciklus egy "üteme")
