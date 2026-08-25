@@ -111,19 +111,22 @@ FUNDING_SQUEEZE_THRESHOLD_PCT = 0.01
 # MIN_OI_INCREASE / MIN_VOL_MULTIPLIER fentebb).
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
-TOTAL_RUN_BUDGET_SECONDS = 520   # v15e: 280 -> 520 (~8m40s). A cron-job.org csak
-                                  # kerek (5/10/15...) perces intervallumot enged,
-                                  # 6 perc nem választható - ezért 10 PERCES külső
-                                  # cron-ütemezésre álltunk át (lásd a válaszban).
-                                  # FONTOS BELÁTÁS: a körítés (~31s) és a biztonsági
-                                  # tartalék (~45s) MINDEN egyes indításnál
-                                  # felemésztődik, függetlenül az intervallum
-                                  # hosszától - ezért RITKÁBB, DE HOSSZABB futás
-                                  # (10 perc) ÖSSZESSÉGÉBEN KEVESEBB "vak" időt ad,
-                                  # mint a gyakoribb, rövidebb (5 perc): óránként
-                                  # feleannyiszor kell megfizetni a fix körítési
-                                  # költséget. 600s ablak - ~31s körítés - ~45s
-                                  # tartalék ≈ 520s.
+TOTAL_RUN_BUDGET_SECONDS = 420   # SZIGORÍTVA: 520 -> 420 (~7 perc). A push-lépés
+                                   # (git fetch/pull/push, retry-kkal) az utóbbi
+                                   # időben egyre gyakrabban 3+ percig tartott,
+                                   # valószínűleg a daytrade bot párhuzamos
+                                   # push-jaival való ütközés miatt (lásd a
+                                   # .gitattributes-t is - az a TARTALMI
+                                   # ütközést oldja meg, de a git PUSH-szintű
+                                   # "non-fast-forward" elutasítást nem). Ez a
+                                   # csökkentés nagyobb biztonsági puffert hagy
+                                   # a 10 perces cron-ablakon belül, hogy a teljes
+                                   # job (checkout+pip+szkript+push) megbízhatóan
+                                   # a következő cron-hívás előtt befejeződjön.
+                                   # (A korábbi 520s eredetileg egy 10 perces
+                                   # cron-ütemezésre lett kalibrálva: 600s ablak
+                                   # - ~31s körítés - ~45s tartalék ≈ 520s - most
+                                   # ezt csökkentjük tovább a push-lassulás miatt.)
 PASS_INTERVAL_SECONDS = 30       # ennyi mp-enként fut újra a kiértékelés
 
 # ----------------------------------------------------------------------------
@@ -1026,9 +1029,24 @@ async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
     jelzésekben. Mostantól elsődlegesen a "side" mezőt nézi (a régi
     buyerMaker-alapú logikát csak biztonsági fallbackként tartjuk meg, ha
     egy jövőbeli API-változás visszahozná azt a formát is)."""
-    async with semaphore:
-        data = await _get_json(session, TRADES_ENDPOINT, params={"symbol": symbol, "limit": CVD_LOOKBACK_TRADES})
-        await asyncio.sleep(0.03)
+    # JAVÍTÁS: korábban a _get_json() teljes (3x, visszalépéses) újrapróbálkozási
+    # logikáján ment keresztül - ez a KRITIKUS adatoknak (OI/klines) van
+    # optimalizálva, ahol tényleg megéri várni/újrapróbálkozni. A CVD viszont
+    # csak KIEGÉSZÍTŐ, nem kritikus infó (lásd a fájl elején a blokk-
+    # kommentet) - ha meghiúsul (pl. egy ritka "Session is closed" race
+    # condition a kör végén), nincs értelme 3x, ~9 mp-es backoff-fal
+    # újrapróbálkozni, ez csak feleslegesen húzza az egész kör futásidejét.
+    # Mostantól EGYETLEN, gyors próbálkozás, saját hibakezeléssel - ha nem
+    # sikerül, egyszerűen kihagyjuk (a jelzés CVD-sor nélkül megy ki).
+    try:
+        async with semaphore:
+            async with session.get(TRADES_ENDPOINT, params={"symbol": symbol, "limit": CVD_LOOKBACK_TRADES},
+                                    timeout=REQUEST_TIMEOUT) as resp:
+                resp.raise_for_status()
+                data = await resp.json()
+    except Exception as e:
+        logger.info("CVD: sikertelen lekérés (%s) - kihagyva. Ok: %s: %s", symbol, type(e).__name__, e)
+        return None
 
     # ÚJ: minden meghiúsulási pontnál logolunk, hogy a GitHub Actions logban
     # kereshető legyen ("CVD" kulcsszóra) - eddig ez teljesen néma volt, nem
@@ -1817,7 +1835,15 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # (lásd fetch_cvd_confirmation() blokk-kommentjét). Ha bármi
             # okból nem sikerül, cvd_status None marad, és a jelzés a
             # CVD-sor nélkül megy ki - EZ SOSEM blokkolja/késlelteti a jelzést.
-            cvd_status = await fetch_cvd_confirmation(session, semaphore, symbol, candle["direction"])
+            # A try/except itt egy MÁSODIK védelmi réteg - a
+            # fetch_cvd_confirmation() belül is elkap mindent, de ha egy
+            # váratlan hiba mégis kiszökne onnan, az itteni háló garantálja,
+            # hogy a jelzés akkor is kimegy.
+            try:
+                cvd_status = await fetch_cvd_confirmation(session, semaphore, symbol, candle["direction"])
+            except Exception as e:
+                logger.info("CVD: váratlan hiba (%s) - kihagyva. Ok: %s: %s", symbol, type(e).__name__, e)
+                cvd_status = None
             msg = format_scalp_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
