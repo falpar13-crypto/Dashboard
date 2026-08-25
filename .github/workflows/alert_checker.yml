@@ -2,27 +2,30 @@ name: BingX Breakout Alert
 
 on:
   schedule:
-    # TARTALÉK ütemezés - csak arra az esetre, ha a külső cron-szolgáltatás
-    # (cron-job.org) valamiért nem érhető el. A VALÓDI, mostantól 10 PERCES
-    # ütemezést egy külső szolgáltatás adja (v15: 5 -> 10 perc, mert a
-    # cron-job.org csak kerek perceket enged, és ritkább-de-hosszabb futással
-    # jobb a teljes órás lefedettség - lásd alert_checker.py TOTAL_RUN_BUDGET_SECONDS
-    # kommentjét), ami a workflow_dispatch API-n keresztül indítja el ezt a
-    # workflow-t (lásd setup útmutató). A GitHub saját "schedule" ütemezése nem
-    # megbízható elég sűrű futtatáshoz.
     - cron: "0 * * * *"   # óránként egyszer, csak biztonsági hálóként
   workflow_dispatch: {}   # ezt hívja a külső cron-szolgáltatás API-n keresztül,
                            # és ezzel kézzel is elindítható a "Actions" fülön
 
-# Ha egy futás még nem fejeződött be, amikor a következő indulna, az újat
-# sorba állítjuk (nem párhuzamosan futtatjuk) - így nem ütközhet két job az
-# alert_state.json visszaírásakor.
 concurrency:
   group: bingx-alert-checker
   cancel-in-progress: false
 
 permissions:
-  contents: write   # kell, hogy a job vissza tudja commitolni az állapotfájlt
+  contents: write
+
+# ÚJ: mostantól az állapot- és naplófájlok NEM a main branch-re mennek,
+# hanem egy KÜLÖN, kizárólag ehhez a workflow-hoz tartozó "state-scalp"
+# branch-re. Ennek oka: mind a scalp, mind a daytrade bot ugyanabba a
+# repóba, korábban ugyanarra a main branch-re pusholt - ez azt jelentette,
+# hogy ha a két bot időben közel próbált commitolni, a git PUSH-szintű
+# "non-fast-forward" elutasítás miatt (nem tartalmi ütközés, hanem "valaki
+# már pusholt közben") mindegyiknek végig kellett futnia a fetch+pull+retry
+# ciklusán, ami akár 3+ percet is elvitt egy-egy futásból. Mivel a
+# state-scalp branch-et KIZÁRÓLAG ez a workflow írja, ez a fajta ütközés
+# mostantól gyakorlatilag megszűnik.
+
+env:
+  STATE_BRANCH: state-scalp
 
 jobs:
   check:
@@ -35,14 +38,23 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"                      # v15 JAVÍTÁS: a csomagok (pandas,
-          cache-dependency-path: requirements-alerts.txt  # aiohttp stb.) cache-elése -
-                                             # így nem kell minden futásnál nulláról
-                                             # újratelepíteni őket (ez lehet a 8-9
-                                             # perces futásidő egyik fő oka)
+          cache: "pip"
+          cache-dependency-path: requirements-alerts.txt
 
       - name: Csomagok telepítése
         run: pip install -r requirements-alerts.txt
+
+      - name: Állapotfájlok betöltése a ${{ env.STATE_BRANCH }} branch-ről
+        run: |
+          if git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$STATE_BRANCH"
+            git worktree add --detach /tmp/state-load "origin/$STATE_BRANCH"
+            find /tmp/state-load -maxdepth 1 -type f \( -name '*.json' -o -name '*.jsonl' -o -name '*.jsonl.bak' \) -exec cp {} . \;
+            git worktree remove /tmp/state-load --force
+            echo "Állapot betöltve a $STATE_BRANCH branch-ről."
+          else
+            echo "Még nincs $STATE_BRANCH branch - első futás, üres állapotból indulunk."
+          fi
 
       - name: Ellenőrzés futtatása
         env:
@@ -50,53 +62,53 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python alert_checker.py
 
-      - name: Állapotfájl visszamentése a repóba
+      - name: Állapotfájlok visszamentése a ${{ env.STATE_BRANCH }} branch-re
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Az alert_state.json-ra "ours" merge-stratégiát állítunk: ha két futás
-          # véletlenül átfedésbe kerülne, a git NEM hibázik el ütközésnél, hanem
-          # automatikusan a saját (ebben a futásban frissített) verziót tartja meg.
-          git config merge.ours.driver true
 
-          # v15 JAVÍTÁS: eddig csak az alert_state.json került mentésre, az
-          # alert_log.jsonl (a napi winrate-összesítőhöz szükséges jelzés-napló)
-          # SOHA nem lett visszaírva a repóba - minden futás egy vadonatúj,
-          # egyszer használatos gépen indul, így a szkript által útközben
-          # létrehozott alert_log.jsonl minden futás végén elveszett, a
-          # következő pedig mindig üres naplóból indult. Emiatt sosem gyűlt
-          # össze benne semmi, és a napi összesítő mindig "nincs mit
-          # összesíteni" ágra futott.
-          git add alert_state.json
-          if [ -f alert_log.jsonl ]; then
-            git add alert_log.jsonl
-          fi
-
-          # ÚJ: a napló-rotáció (alert_checker.py, _rotate_signal_log) a
-          # napi összesítő elküldése után a 2+ napos jelzéseket havi
-          # archívum-fájlokba (alert_log_YYYY-MM.jsonl.bak) emeli ki az
-          # alert_log.jsonl-ből. Mivel minden futás egy vadonatúj, egyszer
-          # használatos gépen zajlik, ezeket az archívum-fájlokat is vissza
-          # KELL commitolni - különben a gép megsemmisülésekor véglegesen
-          # elvesznének, és pont azt a problémát hoznánk vissza, amit a
-          # fenti v15 javítás (a napló repóba mentése) megoldott.
-          git add alert_log_*.jsonl.bak 2>/dev/null || true
-
-          if git diff --quiet --cached; then
-            echo "Nincs változás az állapotfájlokban, nincs mit commitolni."
-            exit 0
-          fi
-          git commit -m "alert_state / alert_log frissítve [skip ci]"
-
-          # Push újrapróbálással, ha közben más futás is írt volna a repóba.
           for i in 1 2 3 4 5; do
-            if git push origin HEAD:main; then
-              echo "Push sikeres."
+            rm -rf /tmp/state-save
+            if git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null 2>&1; then
+              git fetch origin "$STATE_BRANCH"
+              git worktree add --detach /tmp/state-save "origin/$STATE_BRANCH"
+            else
+              git worktree add --detach /tmp/state-save
+              (cd /tmp/state-save && git checkout --orphan "$STATE_BRANCH" && git rm -rf . >/dev/null 2>&1 || true)
+            fi
+
+            # A friss (a szkript által az ELŐBB frissített) állapotfájlokat
+            # másoljuk a worktree-be - ez felülírja, amit a worktree a
+            # remote-ról hozott, tehát MINDIG a mi friss verziónk kerül be,
+            # függetlenül attól, mi volt korábban ott (ez helyettesíti a
+            # korábbi ".gitattributes merge=ours" trükköt - itt nincs is
+            # rá szükség, mert nem MERGE-elünk, hanem felülírunk).
+            cp alert_state.json /tmp/state-save/ 2>/dev/null || true
+            [ -f alert_log.jsonl ] && cp alert_log.jsonl /tmp/state-save/
+            for f in alert_log_*.jsonl.bak; do
+              [ -f "$f" ] && cp "$f" /tmp/state-save/
+            done
+
+            cd /tmp/state-save
+            git add -A
+            if git diff --quiet --cached; then
+              echo "Nincs változás az állapotfájlokban, nincs mit commitolni."
+              cd "$GITHUB_WORKSPACE"
+              git worktree remove /tmp/state-save --force
               exit 0
             fi
-            echo "Push ütközött (${i}. próbálkozás) - remote frissítés és újrapróbálás..."
-            git fetch origin main
-            git pull --no-rebase origin main --no-edit
+            git commit -m "alert_state / alert_log frissítve [skip ci]"
+
+            if git push origin "HEAD:$STATE_BRANCH"; then
+              echo "Push sikeres."
+              cd "$GITHUB_WORKSPACE"
+              git worktree remove /tmp/state-save --force
+              exit 0
+            fi
+
+            echo "Push ütközött (${i}. próbálkozás) - újrapróbálás..."
+            cd "$GITHUB_WORKSPACE"
+            git worktree remove /tmp/state-save --force
             sleep $((RANDOM % 6 + 3))
           done
           echo "Push végül sem sikerült 5 próbálkozás után - a state ebben a körben elveszhet, de a következő futás újra megpróbálja."
