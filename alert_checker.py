@@ -111,22 +111,26 @@ FUNDING_SQUEEZE_THRESHOLD_PCT = 0.01
 # MIN_OI_INCREASE / MIN_VOL_MULTIPLIER fentebb).
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
-TOTAL_RUN_BUDGET_SECONDS = 420   # SZIGORÍTVA: 520 -> 420 (~7 perc). A push-lépés
-                                   # (git fetch/pull/push, retry-kkal) az utóbbi
-                                   # időben egyre gyakrabban 3+ percig tartott,
-                                   # valószínűleg a daytrade bot párhuzamos
-                                   # push-jaival való ütközés miatt (lásd a
-                                   # .gitattributes-t is - az a TARTALMI
-                                   # ütközést oldja meg, de a git PUSH-szintű
-                                   # "non-fast-forward" elutasítást nem). Ez a
-                                   # csökkentés nagyobb biztonsági puffert hagy
-                                   # a 10 perces cron-ablakon belül, hogy a teljes
-                                   # job (checkout+pip+szkript+push) megbízhatóan
-                                   # a következő cron-hívás előtt befejeződjön.
-                                   # (A korábbi 520s eredetileg egy 10 perces
-                                   # cron-ütemezésre lett kalibrálva: 600s ablak
-                                   # - ~31s körítés - ~45s tartalék ≈ 520s - most
-                                   # ezt csökkentjük tovább a push-lassulás miatt.)
+TOTAL_RUN_BUDGET_SECONDS = 480   # ÚJRA FELEMELVE: 420 -> 480 (~8 perc). Az
+                                   # előző csökkentés (520 -> 420) azért kellett,
+                                   # mert a git push lépés a másik (daytrade)
+                                   # bottal való branch-ütközés miatt akár 3+
+                                   # percig is elhúzódott. Mivel mostantól a két
+                                   # bot KÜLÖN branch-re ír (state-scalp /
+                                   # state-daytrade - lásd a workflow-t), ez az
+                                   # ütközés gyakorlatilag megszűnt, ezért nem
+                                   # indokolt ekkora biztonsági puffert tartani -
+                                   # az csak felesleges "lefedetlen" holtidőt
+                                   # hagyott a 10 perces cron-ablakon belül. A 480s
+                                   # (8 perc) így számol: 600s ablak - kb. 60-90s
+                                   # körítés (checkout, pip, ÚJ: állapot-
+                                   # betöltés/mentés worktree-művelettel, ami a
+                                   # korábbi egyszerű git add/commit/push-nál
+                                   # kicsit többe kerül) - kb. 30-60s tartalék.
+                                   # Ha a logokban azt látod, hogy a teljes job
+                                   # (checkout-tól a push végéig) tartósan 9
+                                   # percnél rövidebb, ez az érték még feljebb
+                                   # vehető, közelebb az eredeti 520-hoz.
 PASS_INTERVAL_SECONDS = 30       # ennyi mp-enként fut újra a kiértékelés
 
 # ----------------------------------------------------------------------------
