@@ -57,6 +57,14 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # ÚJ: websocket élő gyertya-figyelő ki/be kapcsolója - lásd az
+          # alert_checker.yml azonos kommentjét. Repository Variable-ként
+          # állítható: Settings -> Secrets and variables -> Actions ->
+          # Variables fül -> USE_WEBSOCKET_KLINES = true / false. Ha a
+          # Variable nincs beállítva, üres stringet ad vissza, amit a
+          # szkript "false"-ként kezel - tehát amíg nem hozod létre
+          # kifejezetten, a bot változatlanul REST-alapon fut.
+          USE_WEBSOCKET_KLINES: ${{ vars.USE_WEBSOCKET_KLINES }}
         run: python daytrade_checker.py
 
       - name: Állapotfájlok visszamentése a ${{ env.STATE_BRANCH }} branch-re
