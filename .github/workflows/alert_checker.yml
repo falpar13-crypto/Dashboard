@@ -60,6 +60,14 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # ÚJ: websocket élő gyertya-figyelő ki/be kapcsolója. Repository
+          # Variable-ként (NEM Secret, mert nem érzékeny adat) állítható:
+          # Settings -> Secrets and variables -> Actions -> Variables fül ->
+          # USE_WEBSOCKET_KLINES = true / false. Ha a Variable nincs
+          # beállítva, a ${{ vars.USE_WEBSOCKET_KLINES }} üres stringet ad
+          # vissza, a szkript pedig ezt "false"-ként kezeli - tehát amíg
+          # nem hozod létre a Variable-t, a bot változatlanul REST-alapon fut.
+          USE_WEBSOCKET_KLINES: ${{ vars.USE_WEBSOCKET_KLINES }}
         run: python alert_checker.py
 
       - name: Állapotfájlok visszamentése a ${{ env.STATE_BRANCH }} branch-re
