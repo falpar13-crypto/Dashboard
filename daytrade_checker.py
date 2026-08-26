@@ -766,31 +766,58 @@ class LiveKlineStore:
         return self._data.get(symbol)
 
 
-async def _handle_ws_kline_message(payload: dict, store: LiveKlineStore) -> None:
-    """A BingX kline push-üzenetének feldolgozása. Várt alak (a hivatalos
-    doksi példája alapján):
-    {"data": {"K": {"t":.., "T":.., "o":.., "h":.., "l":.., "c":.., "v":.., "q":..}, ...},
-     "dataType": "BTC-USDT@kline_1h"}"""
-    data_type = payload.get("dataType", "")
-    if "@kline_" not in data_type:
-        return
-    symbol = data_type.split("@", 1)[0]
-    k = (payload.get("data") or {}).get("K")
-    if not k:
-        return
-    try:
-        candle = {
-            "open": float(k.get("o")),
-            "high": float(k.get("h")),
-            "low": float(k.get("l")),
-            "close": float(k.get("c")),
-            "volume_base": float(k.get("v") or 0),
-            "open_time_ms": int(k.get("t")),
-            "received_at_ms": time.time() * 1000,
-        }
-    except (TypeError, ValueError):
-        return
-    await store.update(symbol, candle)
+def _extract_kline_updates(parsed) -> list:
+    """A BingX néha nem a doksi-példa szerinti (egyetlen dict, "data"-ban
+    egy "K" kulcsú dict) alakban küldi az üzenetet - éles futásban
+    ('list' object has no attribute 'get' hiba) kiderült, hogy a "data"
+    mező (vagy akár a teljes üzenet) néha LISTA. Ez a függvény minden
+    ismert/valószínű alakot normalizál egy egységes
+    [(symbol, kline_mezők_dict), ...] listává:
+      - parsed lehet dict VAGY lista (több üzenet egy keretben)
+      - "data" lehet dict VAGY lista
+      - a kline mezők lehetnek "data"/"data"[i] alatt egy "K" kulcs
+        alatt, VAGY közvetlenül "data"/"data"[i] szintjén (K nélkül)
+    Bármi, ami nem illeszkedik egyik alakra sem, csendben kimarad -
+    ez itt egy BEST-EFFORT parser, nem szabad, hogy egy váratlan alak
+    miatt az egész kapcsolat összeomoljon."""
+    results = []
+    items = parsed if isinstance(parsed, list) else [parsed]
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        data_type = item.get("dataType", "")
+        if "@kline_" not in data_type:
+            continue
+        symbol = data_type.split("@", 1)[0]
+        data = item.get("data")
+        if data is None:
+            continue
+        data_items = data if isinstance(data, list) else [data]
+        for d in data_items:
+            if not isinstance(d, dict):
+                continue
+            k = d.get("K") if isinstance(d.get("K"), dict) else d
+            results.append((symbol, k))
+    return results
+
+
+async def _handle_ws_kline_message(payload, store: LiveKlineStore) -> None:
+    """A BingX kline push-üzenetének feldolgozása - lásd
+    _extract_kline_updates() kommentjét a rugalmas alak-kezelésről."""
+    for symbol, k in _extract_kline_updates(payload):
+        try:
+            candle = {
+                "open": float(k.get("o")),
+                "high": float(k.get("h")),
+                "low": float(k.get("l")),
+                "close": float(k.get("c")),
+                "volume_base": float(k.get("v") or 0),
+                "open_time_ms": int(k.get("t")),
+                "received_at_ms": time.time() * 1000,
+            }
+        except (TypeError, ValueError, AttributeError):
+            continue
+        await store.update(symbol, candle)
 
 
 async def _ws_kline_listener(symbols: list, store: LiveKlineStore, stop_event: asyncio.Event) -> None:
@@ -837,7 +864,16 @@ async def _ws_kline_listener(symbols: list, store: LiveKlineStore, stop_event: a
                             parsed = json.loads(text)
                         except json.JSONDecodeError:
                             continue
-                        await _handle_ws_kline_message(parsed, store)
+                        # ÚJ: egy-egy üzenet feldolgozási hibája (pl. egy
+                        # váratlan, eddig nem látott üzenet-alak) NE dobja
+                        # szét a TELJES kapcsolatot - csak azt az egy
+                        # üzenetet hagyjuk ki, a kapcsolat és a többi
+                        # symbol feliratkozása élve marad.
+                        try:
+                            await _handle_ws_kline_message(parsed, store)
+                        except Exception as e:
+                            logger.debug("WS üzenet feldolgozási hiba (kihagyva): %s", e)
+                            continue
         except asyncio.CancelledError:
             raise
         except Exception as e:
