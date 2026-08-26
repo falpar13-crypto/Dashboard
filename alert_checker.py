@@ -1874,6 +1874,12 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     evaluated = 0
     htf_warned = 0
     sr_warned = 0
+    # ÚJ (diagnosztika): a kör legnagyobb mozgású jelöltjeit gyűjtjük össze,
+    # FÜGGETLENÜL attól, hogy tüzeltek-e - a kör végén logoljuk, PONTOSAN
+    # megmutatva, melyik küszöbön buktak el. Ez NEM befolyásolja a jelzés-
+    # küldést, csak láthatóvá teszi a log-ban, hogy egy adott piaci mozgás
+    # miért (nem) váltott ki jelzést.
+    pass_diagnostics = []
     for symbol in candidates:
         candle = evaluate_candle(klines_map.get(symbol), now=now)
         oi_now = oi_map.get(symbol)
@@ -1982,6 +1988,30 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 cooldown_ok = False
 
         fired_signal_type = "STANDARD" if is_setup else ("EARLY" if is_setup_early else None)
+
+        # ÚJ (diagnosztika): ha NEM tüzelt, feljegyezzük, PONTOSAN melyik
+        # STANDARD-küszöb(ök)ön bukott el - ez a kör végén, a legnagyobb
+        # mozgású jelölteknél kerül logolásra (lásd lentebb).
+        if fired_signal_type is None:
+            failed_conditions = []
+            if abs(candle["price_change_pct"]) > MAX_PRICE_CHANGE:
+                failed_conditions.append(f"ár-mozgás túl nagy ({candle['price_change_pct']:+.2f}%, max {MAX_PRICE_CHANGE}%)")
+            if oi_change_pct < MIN_OI_INCREASE:
+                failed_conditions.append(f"OI-növekedés túl kicsi ({oi_change_pct:+.2f}%, min {MIN_OI_INCREASE}%)")
+            if candle["vol_multiplier"] < MIN_VOL_MULTIPLIER:
+                failed_conditions.append(f"Vol-szorzó túl kicsi ({candle['vol_multiplier']:.2f}x, min {MIN_VOL_MULTIPLIER}x)")
+            if candle["candle_vol_usdt"] < MIN_CANDLE_VOL_USDT:
+                failed_conditions.append(f"gyertya-volumen túl kicsi ({candle['candle_vol_usdt']:,.0f} USDT, min {MIN_CANDLE_VOL_USDT:,.0f})")
+            if not failed_conditions:
+                failed_conditions.append("cooldown alatt" if not cooldown_ok else "ismeretlen (minden STANDARD-küszöb teljesült?)")
+            pass_diagnostics.append({
+                "symbol": symbol,
+                "price_change_pct": candle["price_change_pct"],
+                "oi_change_pct": oi_change_pct,
+                "vol_multiplier": candle["vol_multiplier"],
+                "candle_vol_usdt": candle["candle_vol_usdt"],
+                "failed": failed_conditions,
+            })
 
         if fired_signal_type and cooldown_ok:
             # JAVÍTÁS: a htf_warned/sr_warned számlálókat korábban FÜGGETLENÜL
@@ -2133,6 +2163,17 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         logger.info("  (ebben a körben %d kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)", htf_warned)
     if sr_warned:
         logger.info("  (ebben a körben %d kiküldött jelzés ment támasz/ellenállás ellen - figyelmeztetéssel)", sr_warned)
+
+    # ÚJ (diagnosztika): a kör 3 legnagyobb (abszolút) ár-mozgású, mégsem
+    # tüzelő jelöltje - PONTOSAN megmutatja, melyik küszöbön buktak el.
+    # Ha egy a felhasználó által TradingView-n látott mozgás nem küldött
+    # jelzést, ez a log-sor megmondja, melyik feltétel hiányzott.
+    if pass_diagnostics:
+        pass_diagnostics.sort(key=lambda d: abs(d["price_change_pct"]), reverse=True)
+        for d in pass_diagnostics[:3]:
+            logger.info("  [nem tüzelt] %s: ár %+.2f%%, OI %+.2f%%, vol %.1fx, gyertya-vol %.0f USDT -> %s",
+                        d["symbol"], d["price_change_pct"], d["oi_change_pct"], d["vol_multiplier"],
+                        d["candle_vol_usdt"], "; ".join(d["failed"]))
 
     # ÚJ (v14): ha új UTC nap kezdődött (és eltelt egy kis idő éjfél óta),
     # elküldi az előző nap winrate-összesítőjét. A state-alapú gate miatt

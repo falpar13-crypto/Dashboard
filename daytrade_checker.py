@@ -1189,6 +1189,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     alerts_sent = 0
     accum_alerts_this_pass = 0   # JAVÍTÁS: lásd ACCUM_MAX_ALERTS_PER_PASS kommentjét
     evaluated = 0
+    # ÚJ (diagnosztika): lásd az alert_checker.py azonos blokk-kommentjét.
+    pass_diagnostics = []
 
     for symbol in candidates:
         candle = evaluate_candle(klines_map.get(symbol), now=now)
@@ -1268,6 +1270,27 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 cooldown_ok = False
 
         fired_signal_type = "STANDARD" if is_setup else ("EARLY" if is_setup_early else None)
+
+        if fired_signal_type is None:
+            failed_conditions = []
+            if abs(candle["price_change_pct"]) > MAX_PRICE_CHANGE:
+                failed_conditions.append(f"ár-mozgás túl nagy ({candle['price_change_pct']:+.2f}%, max {MAX_PRICE_CHANGE}%)")
+            if oi_change_pct < MIN_OI_INCREASE:
+                failed_conditions.append(f"OI-növekedés túl kicsi ({oi_change_pct:+.2f}%, min {MIN_OI_INCREASE}%)")
+            if candle["vol_multiplier"] < MIN_VOL_MULTIPLIER:
+                failed_conditions.append(f"Vol-szorzó túl kicsi ({candle['vol_multiplier']:.2f}x, min {MIN_VOL_MULTIPLIER}x)")
+            if candle["candle_vol_usdt"] < MIN_CANDLE_VOL_USDT:
+                failed_conditions.append(f"gyertya-volumen túl kicsi ({candle['candle_vol_usdt']:,.0f} USDT, min {MIN_CANDLE_VOL_USDT:,.0f})")
+            if not failed_conditions:
+                failed_conditions.append("cooldown alatt" if not cooldown_ok else "ismeretlen (minden STANDARD-küszöb teljesült?)")
+            pass_diagnostics.append({
+                "symbol": symbol,
+                "price_change_pct": candle["price_change_pct"],
+                "oi_change_pct": oi_change_pct,
+                "vol_multiplier": candle["vol_multiplier"],
+                "candle_vol_usdt": candle["candle_vol_usdt"],
+                "failed": failed_conditions,
+            })
 
         if fired_signal_type and cooldown_ok:
             display_oi_change_pct = oi_fast_change_pct if fired_signal_type == "EARLY" else oi_change_pct
@@ -1352,6 +1375,13 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     accum_alerts_this_pass += 1
                     logger.info("FELHALMOZÁS jelzés küldve (daytrade): %s (OI %+.2f%%, ár %+.2f%%, CVD buy_ratio: %s)",
                                 symbol, oi_change_pct, candle["price_change_pct"], accum_cvd_buy_ratio)
+
+    if pass_diagnostics:
+        pass_diagnostics.sort(key=lambda d: abs(d["price_change_pct"]), reverse=True)
+        for d in pass_diagnostics[:3]:
+            logger.info("  [nem tüzelt] %s: ár %+.2f%%, OI %+.2f%%, vol %.1fx, gyertya-vol %.0f USDT -> %s",
+                        d["symbol"], d["price_change_pct"], d["oi_change_pct"], d["vol_multiplier"],
+                        d["candle_vol_usdt"], "; ".join(d["failed"]))
 
     await maybe_send_daily_summary(state, now)
     return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
