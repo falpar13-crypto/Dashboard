@@ -703,7 +703,7 @@ async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
         if older_ratio is not None and newer_ratio is not None:
             delta = round(newer_ratio - older_ratio, 3)
 
-    return {"status": status, "delta": delta}
+    return {"status": status, "delta": delta, "buy_ratio": round(buy_ratio, 3)}
 
 
 def _find_swing_points(closed: pd.DataFrame, legs: int = SWING_FRACTAL_LEGS) -> list:
@@ -985,7 +985,8 @@ def format_confluence_line(earned: int, available: int, factors: list) -> str:
 # alert_checker.py azonos nevű függvényének blokk-kommentjét.
 # ----------------------------------------------------------------------------
 def format_accumulation_message(symbol, oi_value, oi_change_pct, price_change_pct,
-                                 rsi=None, macd_status=None, funding_rate=None):
+                                 rsi=None, macd_status=None, funding_rate=None,
+                                 cvd_buy_ratio=None):
     indicator_line = ""
     if rsi is not None or macd_status is not None:
         parts = []
@@ -997,12 +998,22 @@ def format_accumulation_message(symbol, oi_value, oi_change_pct, price_change_pc
 
     funding_line = f"\n💸 Funding: {funding_rate:+.4f}%" if funding_rate is not None else ""
 
+    direction_line = "\n🧭 Irány: egyelőre bizonytalan (nincs elég taker-adat)"
+    if cvd_buy_ratio is not None:
+        if cvd_buy_ratio >= CVD_CONFIRM_RATIO:
+            direction_line = f"\n🧭 Valószínű irány: 🟢 LONG (taker-vétel túlsúly, {cvd_buy_ratio * 100:.0f}%)"
+        elif (1 - cvd_buy_ratio) >= CVD_CONFIRM_RATIO:
+            direction_line = f"\n🧭 Valószínű irány: 🔴 SHORT (taker-eladás túlsúly, {(1 - cvd_buy_ratio) * 100:.0f}%)"
+        else:
+            direction_line = f"\n🧭 Irány: egyelőre kiegyensúlyozott (taker-vétel {cvd_buy_ratio * 100:.0f}%)"
+
     body = (
         f"👀 <b>[DAYTRADE] {symbol}</b> FELHALMOZÁS (1H)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%) - az ár szinte "
         f"változatlan ({price_change_pct:+.2f}%)"
         f"{indicator_line}"
-        f"{funding_line}\n"
+        f"{funding_line}"
+        f"{direction_line}\n"
         f"ℹ️ Ez MÉG NEM kereskedési jelzés - valaki pozíciót épít, mielőtt "
         f"az ár elindulna. Ha ár + volumen is beindul, jön a rendes jelzés."
     )
@@ -1315,16 +1326,25 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     if (now - last_accum_dt) < timedelta(minutes=ACCUM_ALERT_COOLDOWN_MINUTES):
                         accum_cooldown_ok = False
                 if accum_cooldown_ok:
+                    try:
+                        accum_cvd_result = await fetch_cvd_confirmation(session, semaphore, symbol, "LONG")
+                    except Exception as e:
+                        logger.info("CVD (FELHALMOZÁS): váratlan hiba (%s) - kihagyva. Ok: %s: %s",
+                                    symbol, type(e).__name__, e)
+                        accum_cvd_result = None
+                    accum_cvd_buy_ratio = accum_cvd_result.get("buy_ratio") if accum_cvd_result else None
+
                     accum_msg = format_accumulation_message(
                         symbol, oi_now, oi_change_pct, candle["price_change_pct"],
                         rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
                         funding_rate=funding_rate,
+                        cvd_buy_ratio=accum_cvd_buy_ratio,
                     )
                     await send_telegram_message(accum_msg)
                     entry["last_accum_alert_ts"] = now.isoformat()
                     alerts_sent += 1
-                    logger.info("FELHALMOZÁS jelzés küldve (daytrade): %s (OI %+.2f%%, ár %+.2f%%)",
-                                symbol, oi_change_pct, candle["price_change_pct"])
+                    logger.info("FELHALMOZÁS jelzés küldve (daytrade): %s (OI %+.2f%%, ár %+.2f%%, CVD buy_ratio: %s)",
+                                symbol, oi_change_pct, candle["price_change_pct"], accum_cvd_buy_ratio)
 
     await maybe_send_daily_summary(state, now)
     return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
