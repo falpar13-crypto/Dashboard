@@ -74,7 +74,12 @@ EARLY_MIN_CANDLE_VOL_USDT = 12_000
 # lezajló események - ha a kaszkád folytatódik, érdemes újra jelezni.
 ALERT_COOLDOWN_MINUTES = 15
 
-TOTAL_RUN_BUDGET_SECONDS = 480
+TOTAL_RUN_BUDGET_SECONDS = 520      # 10 perces külső cron esetén ez hagy
+                                      # kb. 80 mp-et checkout/push overhead-re
+                                      # (ez a bot nem tölt HTF/funding cache-t,
+                                      # tehát a rezsije kisebb, mint a másik
+                                      # két botnak - jobban ki lehet tölteni
+                                      # a 10 perces ablakot)
 PASS_INTERVAL_SECONDS = 15          # rövidebb, mint a másik két botnál
                                       # (10s/15s), mert 1 perces gyertyánál
                                       # a 30s-es pass-intervallum már maga
