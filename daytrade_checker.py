@@ -60,6 +60,18 @@ EARLY_MIN_OI_FAST_INCREASE = 2.0
 
 FUNDING_SQUEEZE_THRESHOLD_PCT = 0.01
 
+# ÚJ: Funding rate DELTA (gyorsulás-figyelő). A fenti statikus küszöb csak
+# azt nézi, hogy a funding rate ÉPP MOST szélsőséges-e. Ez itt azt méri,
+# MENNYIT MOZDULT egy rövid ablakban - egy gyorsan negatívba forduló
+# funding rate (rövid idő alatt) short-squeeze előjele lehet MÉG AKKOR IS,
+# ha az abszolút érték önmagában még nem érné el a statikus küszöböt. Ez
+# csak TÁJÉKOZTATÓ kiegészítés az üzenetben, nem szűrőfeltétel - ugyanúgy,
+# ahogy a bounce_confluence/near_level_risk sem blokkol semmit.
+FUNDING_HISTORY_TARGET_MINUTES = 60
+FUNDING_HISTORY_MIN_MINUTES = 20
+FUNDING_HISTORY_MAX_MINUTES = 180
+FUNDING_ACCEL_THRESHOLD_PCT = 0.015   # ennyi előjeles %-pontot mozduljon a fenti ablakban, hogy kiemeljük
+
 TOTAL_RUN_BUDGET_SECONDS = 520   
 PASS_INTERVAL_SECONDS = 30       
 
@@ -689,7 +701,7 @@ async def send_telegram_message(text: str) -> None:
 DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  
 
 
-def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None):
+def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None):
     action = DIRECTION_LABELS.get(direction, direction)
     if signal_type == "EARLY":
         header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H)"
@@ -738,6 +750,12 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
             funding_line += " 💥 SHORT SQUEEZE"
         elif direction == "SHORT" and funding_rate >= FUNDING_SQUEEZE_THRESHOLD_PCT:
             funding_line += " 💥 LONG SQUEEZE"
+        # ÚJ: funding rate gyorsulás - ha a rate az elmúlt kb.
+        # FUNDING_HISTORY_TARGET_MINUTES alatt legalább FUNDING_ACCEL_THRESHOLD_PCT
+        # %-pontot mozdult, kiemeljük (tájékoztató jelleggel, nem szűr).
+        if funding_delta_pct is not None and abs(funding_delta_pct) >= FUNDING_ACCEL_THRESHOLD_PCT:
+            arrow = "↓" if funding_delta_pct < 0 else "↑"
+            funding_line += f" | ⚡ gyorsuló ({arrow}{abs(funding_delta_pct):.4f}%pont/~{FUNDING_HISTORY_TARGET_MINUTES}p)"
 
     body = (
         f"{header}\n"
@@ -759,6 +777,22 @@ def find_oi_baseline(history_without_current: list, now: datetime, target_minute
     target = OI_TARGET_WINDOW_MINUTES if target_minutes is None else target_minutes
     min_w = OI_MIN_WINDOW_MINUTES if min_minutes is None else min_minutes
     max_w = OI_MAX_WINDOW_MINUTES if max_minutes is None else max_minutes
+    best, best_diff = None, None
+    for h in history_without_current:
+        age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
+        if min_w <= age_min <= max_w:
+            diff = abs(age_min - target)
+            if best_diff is None or diff < best_diff:
+                best, best_diff = h, diff
+    return best
+
+def find_funding_baseline(history_without_current: list, now: datetime, target_minutes: float = None, min_minutes: float = None, max_minutes: float = None) -> Optional[dict]:
+    """A find_oi_baseline() funding-rate megfelelője: a target_minutes-hez
+    legközelebbi, [min_minutes, max_minutes] ablakba eső korábbi funding
+    rate bejegyzést adja vissza, amiből a delta (gyorsulás) számolható."""
+    target = FUNDING_HISTORY_TARGET_MINUTES if target_minutes is None else target_minutes
+    min_w = FUNDING_HISTORY_MIN_MINUTES if min_minutes is None else min_minutes
+    max_w = FUNDING_HISTORY_MAX_MINUTES if max_minutes is None else max_minutes
     best, best_diff = None, None
     for h in history_without_current:
         age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
@@ -906,6 +940,13 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 if htf_data is not None and htf_data.get("trend") is not None:
                     htf_cache[s] = htf_data
 
+        # ÚJ: nyomon követjük, mely szimbólumoknál kaptunk FRISS (ebben a
+        # körben most lekért) funding rate-et - a funding_history-ba csak
+        # ezeket írjuk be, különben a 30 mp-enkénti pass-ok a state-ben
+        # feleslegesen (és a cache miatt szinte mindig azonos értékkel)
+        # duplikálnák a bejegyzéseket, mert a funding_cache egy teljes
+        # futáson (kb. 8 percen) belül újrahasznosított.
+        funding_freshly_fetched = set()
         if funding_results:
             for item in funding_results:
                 if isinstance(item, BaseException):
@@ -913,6 +954,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 s, fr = item
                 if fr is not None:
                     funding_cache[s] = fr
+                    funding_freshly_fetched.add(s)
 
     oi_map = {item[0]: item[1] for item in oi_results if not isinstance(item, BaseException) and item[1] is not None}
     klines_map = {item[0]: item[1] for item in kline_results if not isinstance(item, BaseException) and item[1] is not None}
@@ -941,6 +983,24 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
 
         oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
         funding_rate = funding_cache.get(symbol)
+
+        # ÚJ: funding rate history + delta (gyorsulás). Csak akkor írunk a
+        # history-ba, ha ebben a körben FRISSEN kaptuk a funding rate-et
+        # (lásd funding_freshly_fetched fentebb) - így a history kb.
+        # futásonként (10 percenként) egyszer bővül, nem 30 mp-enként.
+        entry.setdefault("funding_history", [])
+        if symbol in funding_freshly_fetched and funding_rate is not None:
+            entry["funding_history"].append({"ts": now.isoformat(), "rate": funding_rate})
+            entry["funding_history"] = [h for h in entry["funding_history"] if datetime.fromisoformat(h["ts"]) >= cutoff]
+
+        funding_delta_pct = None
+        if funding_rate is not None and entry["funding_history"]:
+            # ha most FRISSEN raktuk be a jelenlegi pontot, azt ki kell
+            # zárni a baseline-keresésből (ő maga nem lehet a saját múltja)
+            hist_for_baseline = entry["funding_history"][:-1] if symbol in funding_freshly_fetched else entry["funding_history"]
+            funding_baseline = find_funding_baseline(hist_for_baseline, now)
+            if funding_baseline is not None:
+                funding_delta_pct = funding_rate - funding_baseline["rate"]
 
         htf_data = htf_cache.get(symbol, {})
         htf_trend = htf_data.get("trend")
@@ -1027,6 +1087,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 funding_rate=funding_rate,
                 pace_vol_multiplier=candle.get("pace_vol_multiplier"),
                 elapsed_fraction=candle.get("elapsed_fraction"),
+                funding_delta_pct=funding_delta_pct,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
