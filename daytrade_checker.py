@@ -84,6 +84,15 @@ OI_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/openInterest"
 CONTRACTS_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/contracts"
 KLINES_ENDPOINT = f"{BASE_URL}/openApi/swap/v3/quote/klines"
 FUNDING_RATE_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/premiumIndex"
+DEPTH_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/depth"
+
+# ÚJ: Orderbook imbalance (vékony ask/bid oldal figyelő). Csak akkor
+# kérdezzük le, amikor egy jelzés éppen kimenne (lásd fetch_orderbook_imbalance
+# hívási pontját a fő ciklusban) - NEM minden jelöltre minden pass-ban -,
+# mert ez egy viszonylag "drágább" hívás, és ritkán van rá szükség (csak a
+# ténylegesen kiküldött jelzéseknél). Tisztán tájékoztató, nem szűr.
+ORDERBOOK_LEVELS_LIMIT = 20
+ORDERBOOK_IMBALANCE_THRESHOLD = 1.8   # bid/ask notional-arány, ami felett/alatt kiemeljük
 
 STATE_FILE = Path(__file__).parent / "daytrade_state.json"
 SIGNAL_LOG_FILE = Path(__file__).parent / "daytrade_alert_log.jsonl"
@@ -571,6 +580,32 @@ async def fetch_funding_rate(session, semaphore, symbol):
         except (TypeError, ValueError, Exception):
             return symbol, None
 
+async def fetch_orderbook_imbalance(symbol: str, limit: int = ORDERBOOK_LEVELS_LIMIT) -> Optional[dict]:
+    """Csak akkor hívjuk, amikor egy jelzés éppen kimenne (ritka), ezért
+    egy rövid életű, ÖNÁLLÓ session-t nyit - nem éri meg emiatt megnyújtani
+    a fő pass session élettartamát, ami minden candidate-re lefutna.
+    Visszaadja a bid/ask notional (ár*mennyiség) arányát a legfelső `limit`
+    orderbook-szinten, vagy None-t hiba esetén."""
+    try:
+        async with aiohttp.ClientSession() as session:
+            data = await _get_json(session, DEPTH_ENDPOINT, params={"symbol": symbol, "limit": str(limit)})
+    except Exception as e:
+        logger.warning("Orderbook lekérési hiba (%s): %s", symbol, e)
+        return None
+    if not data or "data" not in data or not data["data"]:
+        return None
+    payload = data["data"]
+    try:
+        bids = payload.get("bids", []) or []
+        asks = payload.get("asks", []) or []
+        bid_notional = sum(float(p) * float(q) for p, q in bids[:limit])
+        ask_notional = sum(float(p) * float(q) for p, q in asks[:limit])
+        if bid_notional <= 0 or ask_notional <= 0:
+            return None
+        return {"bid_ask_ratio": bid_notional / ask_notional, "bid_notional": bid_notional, "ask_notional": ask_notional}
+    except (TypeError, ValueError):
+        return None
+
 SR_LOOKBACK_PERIOD = 60     
 SR_PROXIMITY_PCT = 1.0      
 
@@ -701,7 +736,7 @@ async def send_telegram_message(text: str) -> None:
 DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  
 
 
-def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None):
+def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None):
     action = DIRECTION_LABELS.get(direction, direction)
     if signal_type == "EARLY":
         header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H)"
@@ -757,6 +792,20 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
             arrow = "↓" if funding_delta_pct < 0 else "↑"
             funding_line += f" | ⚡ gyorsuló ({arrow}{abs(funding_delta_pct):.4f}%pont/~{FUNDING_HISTORY_TARGET_MINUTES}p)"
 
+    # ÚJ: Orderbook imbalance sor - csak akkor van adat, ha ténylegesen
+    # lekértük (lásd fetch_orderbook_imbalance hívási pontját). Tisztán
+    # tájékoztató, nem szűr.
+    orderbook_line = ""
+    if orderbook_info is not None:
+        ratio = orderbook_info["bid_ask_ratio"]
+        if ratio >= ORDERBOOK_IMBALANCE_THRESHOLD:
+            note = " ✅ egyezik az iránnyal" if direction == "LONG" else " ⚠️ iránnyal szemben (erős vétel a shorttal szemben)"
+            orderbook_line = f"\n📗 Orderbook: vékony ask / vastag bid ({ratio:.1f}x){note}"
+        elif ratio <= 1 / ORDERBOOK_IMBALANCE_THRESHOLD:
+            inv_ratio = 1 / ratio
+            note = " ✅ egyezik az iránnyal" if direction == "SHORT" else " ⚠️ iránnyal szemben (erős eladás a longgal szemben)"
+            orderbook_line = f"\n📕 Orderbook: vékony bid / vastag ask ({inv_ratio:.1f}x){note}"
+
     body = (
         f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
@@ -765,6 +814,7 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         f"{early_line}"
         f"{indicator_line}"
         f"{funding_line}"
+        f"{orderbook_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
@@ -1077,6 +1127,10 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
 
         if fired_signal_type and cooldown_ok:
             display_oi_change_pct = oi_fast_change_pct if fired_signal_type == "EARLY" else oi_change_pct
+            # ÚJ: orderbook imbalance csak MOST, a ténylegesen kimenő
+            # jelzéshez kérdezzük le - lásd fetch_orderbook_imbalance
+            # kommentjét arról, miért nem minden candidate-re fut le ez.
+            orderbook_info = await fetch_orderbook_imbalance(symbol)
             msg = format_daytrade_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
@@ -1088,6 +1142,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 pace_vol_multiplier=candle.get("pace_vol_multiplier"),
                 elapsed_fraction=candle.get("elapsed_fraction"),
                 funding_delta_pct=funding_delta_pct,
+                orderbook_info=orderbook_info,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
