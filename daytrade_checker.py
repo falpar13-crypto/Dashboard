@@ -134,6 +134,27 @@ KLINES_LIMIT = 120
 RSI_OVERBOUGHT = 70
 RSI_OVERSOLD = 30
 
+# ÚJ: CVD (Cumulative Volume Delta) - lásd az alert_checker.py-ban lévő
+# fetch_cvd_confirmation() blokk-kommentjét, ide azonos logikával került át.
+TRADES_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/trades"
+CVD_LOOKBACK_TRADES = 500
+CVD_CONFIRM_RATIO = 0.55
+CVD_DIVERGENCE_RATIO = 0.55
+CVD_TREND_DELTA_THRESHOLD = 0.03
+
+# ÚJ: MEGBÍZHATÓSÁGI (confluence) pontszám - lásd az alert_checker.py azonos
+# blokk-kommentjét. NEM szűr, NEM blokkol, csak összegzi a fejléc alá.
+FUNDING_MOMENTUM_THRESHOLD_PCT = 0.002
+
+# ÚJ: FELHALMOZÁS (accumulation-only) figyelmeztető jelzés - lásd az
+# alert_checker.py azonos blokk-kommentjét. A daytrade (1h) idősíkhoz
+# igazított, szélesebb küszöbökkel.
+ACCUM_MAX_PRICE_CHANGE = 1.0        # 1h gyertyán belül ennél kevesebb mozgás
+ACCUM_MIN_OI_INCREASE = 5.0         # magasabb, mint a MIN_OI_INCREASE, mert
+                                       # itt nincs ár-/volumen-megerősítés
+ACCUM_MIN_CANDLE_VOL_USDT = 20_000
+ACCUM_ALERT_COOLDOWN_MINUTES = 180  # 3 óra - napon belüli mozgás lassabb
+
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
@@ -210,7 +231,8 @@ def _log_signal_outcome(record: dict) -> None:
     except OSError as e:
         logger.error("Nem sikerült írni a jelzés-naplóba: %s", e)
 
-def register_pending_signal(state: dict, symbol: str, signal_type: str, direction: str, entry_price: float, now: datetime) -> None:
+def register_pending_signal(state: dict, symbol: str, signal_type: str, direction: str, entry_price: float, now: datetime,
+                             confluence_earned: int = None, confluence_available: int = None) -> None:
     pending = state.setdefault("pending_outcomes", [])
     pending.append({
         "id": f"{symbol}_{signal_type}_{now.strftime('%Y%m%dT%H%M%S')}",
@@ -221,6 +243,8 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str, directio
         "entry_ts": now.isoformat(),
         "entry_date": now.astimezone(SUMMARY_TIMEZONE).strftime("%Y-%m-%d"), 
         "window_end_ts": (now + timedelta(minutes=OUTCOME_EVAL_WINDOW_MINUTES)).isoformat(),
+        "confluence_earned": confluence_earned,
+        "confluence_available": confluence_available,
     })
 
 def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.DataFrame) -> dict:
@@ -563,6 +587,125 @@ SR_LOOKBACK_PERIOD = 60
 SR_PROXIMITY_PCT = 1.0      
 
 
+async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
+    """CVD (Cumulative Volume Delta) megerősítés - az alert_checker.py-ban
+    lévő azonos nevű függvény ide átemelt, változatlan logikával (lásd ott
+    a részletes blokk-kommentet). Visszatér: {"status": "confirm"/"diverge"/
+    "neutral", "delta": float|None} vagy None, ha a lekérés meghiúsul.
+    A "delta" a lekért trade-ablak időrendi első/második felében mért
+    taker-vétel arány különbsége - PLUSZ API-hívás nélkül, ugyanabból az
+    egy lekérésből (erősödő/gyengülő nyomás jelzésére, csak a
+    megbízhatósági pontszámhoz használjuk)."""
+    try:
+        async with semaphore:
+            async with session.get(TRADES_ENDPOINT, params={"symbol": symbol, "limit": CVD_LOOKBACK_TRADES},
+                                    timeout=REQUEST_TIMEOUT) as resp:
+                resp.raise_for_status()
+                data = await resp.json()
+    except Exception as e:
+        logger.info("CVD: sikertelen lekérés (%s) - kihagyva. Ok: %s: %s", symbol, type(e).__name__, e)
+        return None
+
+    if not data or "data" not in data or not data["data"]:
+        return None
+    trades = data["data"]
+    if isinstance(trades, dict):
+        trades = trades.get("trades") or trades.get("list") or []
+    if not isinstance(trades, list) or not trades:
+        return None
+
+    taker_buy_vol = 0.0
+    taker_sell_vol = 0.0
+    parsed_trades = []
+    try:
+        for t in trades:
+            qty = t.get("sz")
+            if qty is None:
+                qty = t.get("qty")
+            if qty is None:
+                qty = t.get("q")
+            if qty is None:
+                qty = t.get("volume")
+            if qty is None:
+                continue
+            qty = float(qty)
+
+            ts_raw = t.get("ts") or t.get("time") or t.get("T")
+            try:
+                ts_val = int(ts_raw) if ts_raw is not None else None
+            except (TypeError, ValueError):
+                ts_val = None
+
+            side = t.get("side")
+            if side is not None:
+                side_str = str(side).strip().lower()
+                if side_str in ("buy", "bid", "1"):
+                    taker_buy_vol += qty
+                    parsed_trades.append((ts_val, True, qty))
+                elif side_str in ("sell", "ask", "2"):
+                    taker_sell_vol += qty
+                    parsed_trades.append((ts_val, False, qty))
+                continue
+
+            is_buyer_maker = t.get("buyerMaker")
+            if is_buyer_maker is None:
+                is_buyer_maker = t.get("isBuyerMaker")
+            if is_buyer_maker is None:
+                is_buyer_maker = t.get("m")
+            if is_buyer_maker is None:
+                continue
+            if is_buyer_maker:
+                taker_sell_vol += qty
+                parsed_trades.append((ts_val, False, qty))
+            else:
+                taker_buy_vol += qty
+                parsed_trades.append((ts_val, True, qty))
+    except (TypeError, ValueError) as e:
+        logger.warning("CVD: hiba a trade-ek feldolgozása közben (%s): %s", symbol, e)
+        return None
+
+    total_vol = taker_buy_vol + taker_sell_vol
+    if total_vol <= 0:
+        return None
+
+    buy_ratio = taker_buy_vol / total_vol
+
+    if direction == "LONG":
+        if buy_ratio >= CVD_CONFIRM_RATIO:
+            status = "confirm"
+        elif (1 - buy_ratio) >= CVD_DIVERGENCE_RATIO:
+            status = "diverge"
+        else:
+            status = "neutral"
+    else:
+        if (1 - buy_ratio) >= CVD_CONFIRM_RATIO:
+            status = "confirm"
+        elif buy_ratio >= CVD_DIVERGENCE_RATIO:
+            status = "diverge"
+        else:
+            status = "neutral"
+
+    delta = None
+    timestamped = [p for p in parsed_trades if p[0] is not None]
+    if len(timestamped) >= 20 and len(timestamped) >= 0.8 * len(parsed_trades):
+        timestamped.sort(key=lambda p: p[0])
+        mid = len(timestamped) // 2
+        older, newer = timestamped[:mid], timestamped[mid:]
+
+        def _buy_ratio(chunk):
+            buy = sum(q for _, is_buy, q in chunk if is_buy)
+            sell = sum(q for _, is_buy, q in chunk if not is_buy)
+            tot = buy + sell
+            return (buy / tot) if tot > 0 else None
+
+        older_ratio = _buy_ratio(older)
+        newer_ratio = _buy_ratio(newer)
+        if older_ratio is not None and newer_ratio is not None:
+            delta = round(newer_ratio - older_ratio, 3)
+
+    return {"status": status, "delta": delta}
+
+
 def _find_swing_points(closed: pd.DataFrame, legs: int = SWING_FRACTAL_LEGS) -> list:
     """Fraktál-alapú swing csúcs/mélypont keresés: az i. gyertya akkor
     számít swing csúcsnak, ha a high-ja SZIGORÚAN a legmagasabb a
@@ -688,12 +831,17 @@ async def send_telegram_message(text: str) -> None:
 
 DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  
 
-def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None):
+def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, cvd_status=None, confluence_line=""):
     action = DIRECTION_LABELS.get(direction, direction)
     if signal_type == "EARLY":
         header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H)"
     else:
         header = f"🦅 <b>[DAYTRADE] {symbol}</b> {action} (STANDARD 1H)"
+
+    # ÚJ: megbízhatósági (confluence) pontszám - EGYETLEN plusz sor a fejléc
+    # alatt, lásd compute_confluence_score()/format_confluence_line(). Minden
+    # más sor (RSI/MACD/Vol/OI/funding/CVD/HTF/S-R) VÁLTOZATLAN marad.
+    confluence_block = f"\n{confluence_line}" if confluence_line else ""
 
     early_line = ""
     if signal_type == "EARLY":
@@ -738,19 +886,129 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         elif direction == "SHORT" and funding_rate >= FUNDING_SQUEEZE_THRESHOLD_PCT:
             funding_line += " 💥 LONG SQUEEZE"
 
+    # ÚJ: CVD (Cumulative Volume Delta) sor - lásd fetch_cvd_confirmation().
+    cvd_line = ""
+    if cvd_status == "diverge":
+        divergence_note = "eladási" if direction == "LONG" else "vételi"
+        cvd_line = f"\n⚠️ CVD divergál (rejtett {divergence_note} nyomás a felszín alatt)"
+    elif cvd_status == "confirm":
+        cvd_line = "\n✅ CVD megerősíti az irányt"
+
     body = (
-        f"{header}\n"
+        f"{header}"
+        f"{confluence_block}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
         f"{early_line}"
         f"{indicator_line}"
         f"{funding_line}"
+        f"{cvd_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
     )
     return f"\n{body}\n"
+
+
+# ----------------------------------------------------------------------------
+# ÚJ: MEGBÍZHATÓSÁGI (confluence) PONTSZÁM - lásd az alert_checker.py azonos
+# nevű függvényének blokk-kommentjét, ide változatlan logikával átemelve.
+# ----------------------------------------------------------------------------
+def compute_confluence_score(direction, htf_trend=None, near_level_risk=False,
+                              has_sr_data=False, cvd_status=None, cvd_delta=None,
+                              rsi=None, funding_rate=None, funding_momentum=None):
+    factors = []
+
+    if htf_trend is not None:
+        against_trend = (
+            (direction == "LONG" and htf_trend == "DOWN")
+            or (direction == "SHORT" and htf_trend == "UP")
+        )
+        factors.append(("HTF", not against_trend))
+
+    if has_sr_data:
+        factors.append(("S/R", not near_level_risk))
+
+    if cvd_status is not None:
+        factors.append(("CVD", cvd_status == "confirm"))
+
+    if cvd_delta is not None:
+        if direction == "LONG":
+            trend_ok = cvd_delta >= CVD_TREND_DELTA_THRESHOLD
+        else:
+            trend_ok = cvd_delta <= -CVD_TREND_DELTA_THRESHOLD
+        factors.append(("CVDΔ", trend_ok))
+
+    if rsi is not None:
+        rsi_ok = (
+            (direction == "LONG" and rsi < RSI_OVERBOUGHT)
+            or (direction == "SHORT" and rsi > RSI_OVERSOLD)
+        )
+        factors.append(("RSI", rsi_ok))
+
+    if funding_rate is not None:
+        funding_ok = (
+            (direction == "LONG" and funding_rate <= FUNDING_SQUEEZE_THRESHOLD_PCT)
+            or (direction == "SHORT" and funding_rate >= -FUNDING_SQUEEZE_THRESHOLD_PCT)
+        )
+        factors.append(("Fund", funding_ok))
+
+    if funding_momentum is not None:
+        momentum_ok = (
+            (direction == "LONG" and funding_momentum <= -FUNDING_MOMENTUM_THRESHOLD_PCT)
+            or (direction == "SHORT" and funding_momentum >= FUNDING_MOMENTUM_THRESHOLD_PCT)
+        )
+        factors.append(("FundΔ", momentum_ok))
+
+    earned = sum(1 for _, ok in factors if ok)
+    available = len(factors)
+    return earned, available, factors
+
+
+def format_confluence_line(earned: int, available: int, factors: list) -> str:
+    if available == 0:
+        return ""
+    ratio = earned / available
+    if ratio >= 0.8:
+        emoji = "🔥"
+    elif ratio >= 0.5:
+        emoji = "⚖️"
+    else:
+        emoji = "⚠️"
+    breakdown = " ".join(f"{label}{'✅' if ok else '❌'}" for label, ok in factors)
+    return f"{emoji} Megbízhatóság: {earned}/{available} ({breakdown})"
+
+
+# ----------------------------------------------------------------------------
+# ÚJ: FELHALMOZÁS (accumulation-only) FIGYELMEZTETŐ ÜZENET - lásd az
+# alert_checker.py azonos nevű függvényének blokk-kommentjét.
+# ----------------------------------------------------------------------------
+def format_accumulation_message(symbol, oi_value, oi_change_pct, price_change_pct,
+                                 rsi=None, macd_status=None, funding_rate=None):
+    indicator_line = ""
+    if rsi is not None or macd_status is not None:
+        parts = []
+        if rsi is not None:
+            parts.append(f"RSI: {rsi:.1f}")
+        if macd_status is not None:
+            parts.append(f"MACD: {macd_status}")
+        indicator_line = f"\n📐 {' | '.join(parts)}"
+
+    funding_line = f"\n💸 Funding: {funding_rate:+.4f}%" if funding_rate is not None else ""
+
+    body = (
+        f"👀 <b>[DAYTRADE] {symbol}</b> FELHALMOZÁS (1H)\n"
+        f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%) - az ár szinte "
+        f"változatlan ({price_change_pct:+.2f}%)"
+        f"{indicator_line}"
+        f"{funding_line}\n"
+        f"ℹ️ Ez MÉG NEM kereskedési jelzés - valaki pozíciót épít, mielőtt "
+        f"az ár elindulna. Ha ár + volumen is beindul, jön a rendes jelzés."
+    )
+    return f"\n{body}\n"
+
+
 
 def find_oi_baseline(history_without_current: list, now: datetime, target_minutes: float = None, min_minutes: float = None, max_minutes: float = None) -> Optional["OiBaseline"]:
     target = OI_TARGET_WINDOW_MINUTES if target_minutes is None else target_minutes
@@ -937,6 +1195,13 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
         funding_rate = funding_cache.get(symbol)
 
+        prev_funding_rate = entry.get("prev_funding_rate")
+        funding_momentum = None
+        if funding_rate is not None and prev_funding_rate is not None:
+            funding_momentum = funding_rate - prev_funding_rate
+        if funding_rate is not None:
+            entry["prev_funding_rate"] = funding_rate
+
         htf_data = htf_cache.get(symbol, {})
         htf_trend = htf_data.get("trend")
         support = htf_data.get("support")
@@ -991,6 +1256,28 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
 
         if fired_signal_type and cooldown_ok:
             display_oi_change_pct = oi_fast_change_pct if fired_signal_type == "EARLY" else oi_change_pct
+
+            try:
+                cvd_result = await fetch_cvd_confirmation(session, semaphore, symbol, candle["direction"])
+            except Exception as e:
+                logger.info("CVD: váratlan hiba (%s) - kihagyva. Ok: %s: %s", symbol, type(e).__name__, e)
+                cvd_result = None
+            cvd_status = cvd_result.get("status") if cvd_result else None
+            cvd_delta = cvd_result.get("delta") if cvd_result else None
+
+            conf_earned, conf_available, conf_factors = compute_confluence_score(
+                direction=candle["direction"],
+                htf_trend=htf_trend,
+                near_level_risk=near_level_risk,
+                has_sr_data=(support is not None and resistance is not None),
+                cvd_status=cvd_status,
+                cvd_delta=cvd_delta,
+                rsi=candle.get("rsi"),
+                funding_rate=funding_rate,
+                funding_momentum=funding_momentum,
+            )
+            confluence_line = format_confluence_line(conf_earned, conf_available, conf_factors)
+
             msg = format_daytrade_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
@@ -1001,11 +1288,43 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 funding_rate=funding_rate,
                 pace_vol_multiplier=candle.get("pace_vol_multiplier"),
                 elapsed_fraction=candle.get("elapsed_fraction"),
+                cvd_status=cvd_status,
+                confluence_line=confluence_line,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
-            register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
+            register_pending_signal(
+                state, symbol, fired_signal_type, candle["direction"], candle["price"], now,
+                confluence_earned=conf_earned, confluence_available=conf_available,
+            )
+
+        # ÚJ: FELHALMOZÁS (accumulation-only) figyelmeztető jelzés - lásd az
+        # alert_checker.py azonos blokk-kommentjét. Csak ha ebben a körben
+        # sem STANDARD, sem EARLY nem tüzelt; saját, külön cooldown-nal.
+        if fired_signal_type is None:
+            is_accum_setup = (
+                abs(candle["price_change_pct"]) <= ACCUM_MAX_PRICE_CHANGE
+                and oi_change_pct >= ACCUM_MIN_OI_INCREASE
+                and candle["candle_vol_usdt"] >= ACCUM_MIN_CANDLE_VOL_USDT
+            )
+            if is_accum_setup:
+                accum_cooldown_ok = True
+                if entry.get("last_accum_alert_ts"):
+                    last_accum_dt = datetime.fromisoformat(entry["last_accum_alert_ts"])
+                    if (now - last_accum_dt) < timedelta(minutes=ACCUM_ALERT_COOLDOWN_MINUTES):
+                        accum_cooldown_ok = False
+                if accum_cooldown_ok:
+                    accum_msg = format_accumulation_message(
+                        symbol, oi_now, oi_change_pct, candle["price_change_pct"],
+                        rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
+                        funding_rate=funding_rate,
+                    )
+                    await send_telegram_message(accum_msg)
+                    entry["last_accum_alert_ts"] = now.isoformat()
+                    alerts_sent += 1
+                    logger.info("FELHALMOZÁS jelzés küldve (daytrade): %s (OI %+.2f%%, ár %+.2f%%)",
+                                symbol, oi_change_pct, candle["price_change_pct"])
 
     await maybe_send_daily_summary(state, now)
     return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
