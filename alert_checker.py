@@ -60,13 +60,16 @@ CANDLE_DURATION_SECONDS = 300  # 5m gyertya hossza másodpercben - a pace-alapú
                                  # (EARLY) vetítéshez kell, lásd evaluate_candle()
 MAX_PRICE_CHANGE = 3.0      # max. %-os ármozgás az élő gyertyában (a legutóbbi
                              # lezárt gyertya záróárához képest)
-MIN_OI_INCREASE = 2.5       # v18 RÁNCFELVARRÁS: szigorú alapokra vissza -
-                             # a bot mostantól KIZÁRÓLAG STANDARD jelzést küld,
-                             # ehhez markánsan magasabb küszöb kell
-MIN_CANDLE_VOL_USDT = 15_000  # az élő gyertya eddigi USDT-forgalmának minimuma
+# JAVÍTÁS (lazítás): a v18 "RÁNCFELVARRÁS" túl szigorúra állította ezt a két
+# küszöböt - a felhasználó visszajelzése szerint órákon át egyáltalán nem
+# jött jelzés emiatt. Enyhén lazítva (2.5 -> 2.0, ill. 2.5x -> 2.0x), hogy
+# több, de még mindig érdemi jelzés jusson át - ha még mindig túl kevés/sok,
+# innen tovább finomhangolható.
+MIN_OI_INCREASE = 2.0
+MIN_CANDLE_VOL_USDT = 10_000  # 15 000 -> 10 000, ugyanazon okból
 
 VOLUME_MA_PERIOD = 10       # ennyi megelőző LEZÁRT gyertya átlagához viszonyítunk
-MIN_VOL_MULTIPLIER = 2.5    # v18 RÁNCFELVARRÁS: szigorú alapokra vissza (lásd fent)
+MIN_VOL_MULTIPLIER = 2.0    # 2.5x -> 2.0x, lásd a MIN_OI_INCREASE melletti kommentet
 
 # ----------------------------------------------------------------------------
 # ÚJ: EARLY (gyorsulás-alapú) jelzés paraméterei
@@ -141,9 +144,6 @@ TICKER_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/ticker"
 OI_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/openInterest"
 CONTRACTS_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/contracts"
 KLINES_ENDPOINT = f"{BASE_URL}/openApi/swap/v3/quote/klines"
-# ÚJ: CVD (Cumulative Volume Delta) megerősítéshez - lásd a CVD-blokk-kommentet
-# lentebb. Ugyanaz a "súlyú" (rate-limit költségű) végpont, mint a többi.
-TRADES_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/trades"
 FUNDING_RATE_ENDPOINT = f"{BASE_URL}/openApi/swap/v2/quote/premiumIndex"
 
 STATE_FILE = Path(__file__).parent / "alert_state.json"
@@ -276,54 +276,6 @@ KLINES_LIMIT = 120
 # --- ÚJ: RSI infó-küszöbök (csak megjelenítés, NEM szűr - a felhasználó kérésére) ---
 RSI_OVERBOUGHT = 70
 RSI_OVERSOLD = 30
-
-# ----------------------------------------------------------------------------
-# ÚJ: MEGBÍZHATÓSÁGI (confluence) PONTSZÁM
-# ----------------------------------------------------------------------------
-# NEM szűr, NEM blokkol semmit - a már úgyis meglévő infókat (HTF trend,
-# támasz/ellenállás, CVD, RSI, funding-momentum) egyetlen összesítő sorba
-# sűríti a fejléc alá, hogy egy pillantásra eldönthető legyen, mennyi
-# megerősítő tényező áll a jelzés mögött. A pontszám nevezője DINAMIKUS:
-# csak azok a tényezők számítanak bele, amikhez ténylegesen van adat
-# (pl. ha egy vadonatúj szimbólumnál még nincs HTF-cache, az 5 helyett csak
-# 4 a nevező, nem "hiányzik" egy pont feleslegesen).
-CVD_TREND_DELTA_THRESHOLD = 0.03    # a kereskedések időrendi első/második
-                                       # felében mért taker-vétel arány
-                                       # különbsége - ennél nagyobb elmozdulás
-                                       # számít "erősödő/gyengülő nyomásnak"
-FUNDING_MOMENTUM_THRESHOLD_PCT = 0.002  # ennél nagyobb funding-elmozdulás két
-                                           # egymást követő kör között számít
-                                           # "elmozdulásnak" (irány számít)
-
-# ----------------------------------------------------------------------------
-# ÚJ: FELHALMOZÁS (accumulation-only) FIGYELMEZTETŐ JELZÉS
-# ----------------------------------------------------------------------------
-# NEM kereskedési jelzés (nincs LONG/SHORT iránya, nem kerül be a napi
-# winrate-statisztikába) - kifejezetten a "korai elkapás" célját szolgálja:
-# jelzi, ha az OI (nyitott pozíciók száma) érdemben nő, miközben az ár még
-# szinte alig mozdult - ez a klasszikus "valaki épp pozíciót épít, mielőtt a
-# mozgás elindulna" mintázat. Ha utána tényleg beindul az ár/volumen is,
-# jön a rendes STANDARD/EARLY jelzés - ez csak egy korai "figyeld ezt" jel.
-ACCUM_MAX_PRICE_CHANGE = 0.5        # az élő gyertya ártartománya ennél
-                                       # szűkebb kell legyen ("még nem mozdult")
-ACCUM_MIN_OI_INCREASE = 4.0         # magasabb, mint a STANDARD MIN_OI_INCREASE,
-                                       # mert itt NINCS ár-/volumen-megerősítés,
-                                       # ami a STANDARD-nál csökkenti a zajt
-ACCUM_MIN_CANDLE_VOL_USDT = 5_000   # alacsony küszöb - itt még nem a
-                                       # volumenkitörésen van a hangsúly
-ACCUM_ALERT_COOLDOWN_MINUTES = 45   # külön cooldown, független a STANDARD/
-                                       # EARLY jelzésekétől
-# JAVÍTÁS: kritikus korlát - FELHALMOZÁS-gyanús szimbólumból (OI ugrás,
-# lapos ár) egyetlen körben akár TÖBB TUCAT is lehet egyszerre (volatilis
-# piacon ez nem ritka mintázat), és mindegyikhez EXTRA hálózati hívás
-# tartozna (CVD - lásd fetch_cvd_confirmation()). Ez, korlátozás NÉLKÜL,
-# könnyen rate-limitbe futtatja a BingX API-t - UGYANAZON a végponton,
-# amit a rendes STANDARD/EARLY jelzésekhez szükséges OI/gyertya-lekérések
-# is használnak - ami a VALÓDI jelzések kimaradását okozhatja. Ez a korlát
-# körönként (nem futásonként!) maximálja a FELHALMOZÁS-hoz tartozó CVD-
-# hívások (és üzenetek) számát, függetlenül attól, hány szimbólum felel
-# meg a feltételnek.
-ACCUM_MAX_ALERTS_PER_PASS = 3
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
@@ -492,8 +444,7 @@ def _log_signal_outcome(record: dict) -> None:
 def register_pending_signal(state: dict, symbol: str, signal_type: str,
                              direction: str, entry_price: float, now: datetime,
                              eval_window_minutes: float = None, sl_pct: float = None,
-                             profit_levels_pct: list = None, max_stale_minutes: float = None,
-                             confluence_earned: int = None, confluence_available: int = None) -> None:
+                             profit_levels_pct: list = None, max_stale_minutes: float = None) -> None:
     """Egy most kiküldött jelzést berak a 'pending_outcomes' listába - ezt
     fogja a resolve_pending_signals() a megfelelő időben kiértékelni.
 
@@ -504,12 +455,7 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str,
     és profitszinteket, hosszabb kiértékelési ablakot használó) értékekkel
     adja át - így egyetlen kiértékelő/napi-összesítő logika (lásd lentebb)
     szolgálja ki mindkét jelzéstípust, a paraméterek magával a jelzéssel
-    együtt vannak eltárolva.
-
-    ÚJ: confluence_earned/confluence_available - a jelzés kiküldésekor
-    számolt megbízhatósági pontszám (lásd compute_confluence_score()),
-    csak ELTÁROLVA a későbbi elemzéshez (pl. napi összesítő szintenkénti
-    bontása) - a kiértékelés menetét NEM befolyásolja."""
+    együtt vannak eltárolva."""
     pending = state.setdefault("pending_outcomes", [])
     pending.append({
         "id": f"{symbol}_{signal_type}_{now.strftime('%Y%m%dT%H%M%S')}",
@@ -528,8 +474,6 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str,
         "sl_pct": OUTCOME_FIXED_SL_PCT if sl_pct is None else sl_pct,
         "profit_levels_pct": OUTCOME_PROFIT_LEVELS_PCT if profit_levels_pct is None else profit_levels_pct,
         "max_stale_minutes": OUTCOME_MAX_STALE_MINUTES if max_stale_minutes is None else max_stale_minutes,
-        "confluence_earned": confluence_earned,
-        "confluence_available": confluence_available,
     })
 
 
@@ -1009,190 +953,6 @@ async def fetch_funding_rate(session, semaphore, symbol):
             return symbol, None
 
 
-# ----------------------------------------------------------------------------
-# ÚJ: CVD (Cumulative Volume Delta) megerősítés - CSAK a végső jelölteknél
-# ----------------------------------------------------------------------------
-# A CVD azt méri, hogy a friss kereskedések agresszív VÉTELKÉNT vagy
-# ELADÁSKÉNT teljesültek-e (nem a gyertya záróárát nézi, mint a sima
-# piros/zöld volumen-oszlop) - ez felfedheti a "rejtett" felhalmozást vagy
-# elnyelést (pl. piros gyertya, de valójában agresszív vétel dominál alatta).
-#
-# FONTOS: ezt SZÁNDÉKOSAN NEM az univerzum-szűrésnél (mind az ~500 jelöltnél
-# minden körben) használjuk, hanem KIZÁRÓLAG a jelzés kiküldése ELŐTTI,
-# utolsó lépésként, a már úgyis leszűkített, ritka jelölteknél. A BingX
-# trades-végpontja (quote/trades) egy ÚJ, a klines-től független végpont -
-# ha ezt minden jelöltre lekérnénk minden körben, az egy teljesen új,
-# komoly terhelésű hívás-forrás lenne, pontosan az a fajta dolog, ami
-# korábban a klines-endpoint rate-limit problémáját okozta. Mivel viszont
-# csak a ritka, valódi jelölteknél fut le, a hozzáadott terhelés
-# elhanyagolható.
-CVD_LOOKBACK_TRADES = 500        # ennyi legutóbbi kereskedést nézünk
-CVD_CONFIRM_RATIO = 0.55         # a taker-vétel aránya ENNÉL magasabb kell
-                                   # legyen LONG megerősítéshez (és fordítva
-                                   # SHORT-nál, a taker-eladás arányára)
-CVD_DIVERGENCE_RATIO = 0.55      # ha a jelzés irányával ELLENTÉTES oldal
-                                   # aránya eléri ezt, "divergál" figyelmeztetés
-
-
-async def fetch_cvd_confirmation(session, semaphore, symbol, direction: str):
-    """Lekéri a legutóbbi CVD_LOOKBACK_TRADES db kereskedést, és kiszámolja,
-    hogy a taker-vétel vagy taker-eladás dominál-e.
-
-    JAVÍTÁS: az eredeti verzió egy Binance-stílusú "buyerMaker" logikai
-    mezőt keresett a válaszban - ez a BingX quote/trades válaszában NEM
-    létezik. A valódi válasz egy KÖZVETLEN "side": "buy"/"sell" mezőt ad
-    (élő minta: {"instId": "BTC-USDT-SWAP", "side": "buy", "sz": "1.06",
-    "px": "...", "tradeId": "...", "ts": "..."}). Emiatt a korábbi kód
-    MINDEN egyes trade-et átugrott (a buyerMaker mező hiányában), a
-    total_vol mindig 0 maradt, a függvény GARANTÁLTAN mindig None-t adott
-    vissza - ez az oka, hogy a CVD-sor egyszer sem jelent meg a
-    jelzésekben. Mostantól elsődlegesen a "side" mezőt nézi (a régi
-    buyerMaker-alapú logikát csak biztonsági fallbackként tartjuk meg, ha
-    egy jövőbeli API-változás visszahozná azt a formát is).
-
-    ÚJ: a visszatérési érték mostantól egy dict: {"status": ..., "delta": ...}.
-    A "status" VÁLTOZATLAN ("confirm"/"diverge"/"neutral") - a látható CVD-sor
-    továbbra is ebből épül fel, nem változik. A "delta" ÚJ: a már úgyis
-    lekért CVD_LOOKBACK_TRADES db kereskedést időrendben KÉT FÉLRE bontja
-    (korábbi/újabb fél), és a taker-vétel arány változását adja vissza a két
-    fél között - ez egy "erősödik/gyengül a nyomás" trendjelzés, PLUSZ API-
-    hívás NÉLKÜL (ugyanabból az egy lekérésből). Csak a megbízhatósági
-    pontszámhoz (compute_confluence_score) használjuk, a látható CVD-sort
-    nem módosítja."""
-    # JAVÍTÁS: korábban a _get_json() teljes (3x, visszalépéses) újrapróbálkozási
-    # logikáján ment keresztül - ez a KRITIKUS adatoknak (OI/klines) van
-    # optimalizálva, ahol tényleg megéri várni/újrapróbálkozni. A CVD viszont
-    # csak KIEGÉSZÍTŐ, nem kritikus infó (lásd a fájl elején a blokk-
-    # kommentet) - ha meghiúsul (pl. egy ritka "Session is closed" race
-    # condition a kör végén), nincs értelme 3x, ~9 mp-es backoff-fal
-    # újrapróbálkozni, ez csak feleslegesen húzza az egész kör futásidejét.
-    # Mostantól EGYETLEN, gyors próbálkozás, saját hibakezeléssel - ha nem
-    # sikerül, egyszerűen kihagyjuk (a jelzés CVD-sor nélkül megy ki).
-    try:
-        async with semaphore:
-            async with session.get(TRADES_ENDPOINT, params={"symbol": symbol, "limit": CVD_LOOKBACK_TRADES},
-                                    timeout=REQUEST_TIMEOUT) as resp:
-                resp.raise_for_status()
-                data = await resp.json()
-    except Exception as e:
-        logger.info("CVD: sikertelen lekérés (%s) - kihagyva. Ok: %s: %s", symbol, type(e).__name__, e)
-        return None
-
-    # ÚJ: minden meghiúsulási pontnál logolunk, hogy a GitHub Actions logban
-    # kereshető legyen ("CVD" kulcsszóra) - eddig ez teljesen néma volt, nem
-    # lehetett megkülönböztetni "sikertelen lekérés"-t "valóban semleges"-től.
-    if not data or "data" not in data or not data["data"]:
-        logger.info("CVD: nincs adat a válaszban (%s) - kihagyva.", symbol)
-        return None
-    trades = data["data"]
-    if isinstance(trades, dict):
-        trades = trades.get("trades") or trades.get("list") or []
-    if not isinstance(trades, list) or not trades:
-        logger.info("CVD: a 'data' mező nem a várt lista formátumú (%s) - kihagyva.", symbol)
-        return None
-
-    taker_buy_vol = 0.0
-    taker_sell_vol = 0.0
-    parsed_trades = []   # ÚJ: (ts_or_None, side_is_buy, qty) - a trend-delta számításához
-    try:
-        for t in trades:
-            qty = t.get("sz")  # a valódi BingX mező neve ("size")
-            if qty is None:
-                qty = t.get("qty")
-            if qty is None:
-                qty = t.get("q")
-            if qty is None:
-                qty = t.get("volume")
-            if qty is None:
-                continue
-            qty = float(qty)
-
-            ts_raw = t.get("ts") or t.get("time") or t.get("T")
-            try:
-                ts_val = int(ts_raw) if ts_raw is not None else None
-            except (TypeError, ValueError):
-                ts_val = None
-
-            side = t.get("side")  # elsődleges: közvetlen "buy"/"sell" mező
-            if side is not None:
-                side_str = str(side).strip().lower()
-                if side_str in ("buy", "bid", "1"):
-                    taker_buy_vol += qty
-                    parsed_trades.append((ts_val, True, qty))
-                elif side_str in ("sell", "ask", "2"):
-                    taker_sell_vol += qty
-                    parsed_trades.append((ts_val, False, qty))
-                continue
-
-            # Fallback: Binance-stílusú "buyerMaker" logikai mező (ha egy
-            # jövőbeli API-verzió esetleg ezt a formát adná vissza).
-            is_buyer_maker = t.get("buyerMaker")
-            if is_buyer_maker is None:
-                is_buyer_maker = t.get("isBuyerMaker")
-            if is_buyer_maker is None:
-                is_buyer_maker = t.get("m")
-            if is_buyer_maker is None:
-                continue
-            if is_buyer_maker:
-                taker_sell_vol += qty  # a vevő volt a maker -> az eladó volt az agresszív fél
-                parsed_trades.append((ts_val, False, qty))
-            else:
-                taker_buy_vol += qty   # a vevő volt az agresszív (taker) fél
-                parsed_trades.append((ts_val, True, qty))
-    except (TypeError, ValueError) as e:
-        logger.warning("CVD: hiba a trade-ek feldolgozása közben (%s): %s | minta: %s",
-                        symbol, e, trades[0] if trades else None)
-        return None
-
-    total_vol = taker_buy_vol + taker_sell_vol
-    if total_vol <= 0:
-        logger.info("CVD: 0 összvolumen a feldolgozás után (%s) - a mezőnevek nem egyeztek "
-                    "egyik ismert formátummal sem. Minta sor: %s", symbol, trades[0] if trades else None)
-        return None
-
-    buy_ratio = taker_buy_vol / total_vol
-    logger.info("CVD kiszámolva (%s, irány=%s): buy_ratio=%.2f (vétel=%.2f, eladás=%.2f)",
-                symbol, direction, buy_ratio, taker_buy_vol, taker_sell_vol)
-
-    if direction == "LONG":
-        if buy_ratio >= CVD_CONFIRM_RATIO:
-            status = "confirm"
-        elif (1 - buy_ratio) >= CVD_DIVERGENCE_RATIO:
-            status = "diverge"
-        else:
-            status = "neutral"
-    else:  # SHORT
-        if (1 - buy_ratio) >= CVD_CONFIRM_RATIO:
-            status = "confirm"
-        elif buy_ratio >= CVD_DIVERGENCE_RATIO:
-            status = "diverge"
-        else:
-            status = "neutral"
-
-    # ÚJ: trend-delta - csak akkor számoljuk, ha a trade-ek TÖBBSÉGÉHEZ van
-    # használható időbélyeg (ha nincs elég, félrevezető lenne "időrendi"
-    # felezést csinálni a lista sorrendjéből, aminek az iránya API-tól függ).
-    delta = None
-    timestamped = [p for p in parsed_trades if p[0] is not None]
-    if len(timestamped) >= 20 and len(timestamped) >= 0.8 * len(parsed_trades):
-        timestamped.sort(key=lambda p: p[0])
-        mid = len(timestamped) // 2
-        older, newer = timestamped[:mid], timestamped[mid:]
-
-        def _buy_ratio(chunk):
-            buy = sum(q for _, is_buy, q in chunk if is_buy)
-            sell = sum(q for _, is_buy, q in chunk if not is_buy)
-            tot = buy + sell
-            return (buy / tot) if tot > 0 else None
-
-        older_ratio = _buy_ratio(older)
-        newer_ratio = _buy_ratio(newer)
-        if older_ratio is not None and newer_ratio is not None:
-            delta = round(newer_ratio - older_ratio, 3)  # pozitív = erősödő vételi nyomás
-
-    return {"status": status, "delta": delta, "buy_ratio": round(buy_ratio, 3)}
-
-
 # --- ÚJ (v7): egyszerű "N-periódusos csatorna" támasz/ellenállás ---
 SR_LOOKBACK_PERIOD = 60     # ennyi lezárt 1h gyertya alapján számoljuk a szinteket
 SR_PROXIMITY_PCT = 0.5      # ennyi %-on belül számít "a szint közelének"
@@ -1377,8 +1137,7 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           htf_trend=None, bounce_confluence=False, near_level_risk=False,
                           rsi=None, macd_status=None, signal_type="STANDARD",
                           funding_rate=None,
-                          pace_vol_multiplier=None, elapsed_fraction=None,
-                          cvd_status=None, confluence_line=""):
+                          pace_vol_multiplier=None, elapsed_fraction=None):
     # v18 RÁNCFELVARRÁS: a bot mostantól KIZÁRÓLAG ⚡ STANDARD PUMP/DUMP
     # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
     # törölve.
@@ -1389,13 +1148,6 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         header = f"🌱 <b>{symbol}</b> {action} (KORAI)"
     else:
         header = f"⚡ <b>{symbol}</b> {action}"
-
-    # ÚJ: a MEGBÍZHATÓSÁGI (confluence) pontszám - EGYETLEN plusz sor
-    # közvetlenül a fejléc alatt (lásd compute_confluence_score() és
-    # format_confluence_line()). Minden más sor (RSI/MACD/Vol/OI/funding/
-    # CVD/HTF/S-R) VÁLTOZATLAN marad - ez csak összegzi, amit azok már
-    # úgyis mutatnak, nem helyettesíti őket.
-    confluence_block = f"\n{confluence_line}" if confluence_line else ""
 
     early_line = ""
     if signal_type == "EARLY":
@@ -1448,169 +1200,20 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         elif direction == "SHORT" and funding_rate >= FUNDING_SQUEEZE_THRESHOLD_PCT:
             funding_line += " 💥 LONG SQUEEZE (Túl sok a longos!)"
 
-    # ÚJ: CVD (Cumulative Volume Delta) megerősítő/figyelmeztető sor - lásd
-    # a fetch_cvd_confirmation() blokk-kommentjét. Csak akkor jelenik meg
-    # sor, ha sikerült lekérni (cvd_status nem None); a "neutral" esetben
-    # sincs sor, hogy ne zsúfoljuk az üzenetet érdemi infó nélkül.
-    cvd_line = ""
-    if cvd_status == "diverge":
-        divergence_note = "eladási" if direction == "LONG" else "vételi"
-        cvd_line = f"\n⚠️ CVD divergál (rejtett {divergence_note} nyomás a felszín alatt)"
-    elif cvd_status == "confirm":
-        cvd_line = "\n✅ CVD megerősíti az irányt"
-
     body = (
-        f"{header}"
-        f"{confluence_block}\n"
+        f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
         f"{early_line}"
         f"{indicator_line}"
         f"{funding_line}"
-        f"{cvd_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
     )
     # ÚJ (szellős dizájn): extra sortörés az elején és a végén, hogy a
     # Telegramon a riasztások ne folyjanak össze.
-    return f"\n{body}\n"
-
-
-# ----------------------------------------------------------------------------
-# ÚJ: MEGBÍZHATÓSÁGI (confluence) PONTSZÁM SZÁMÍTÁSA
-# ----------------------------------------------------------------------------
-# NEM szűr, NEM blokkol semmit - csak összegzi egyetlen sorba azt, amit az
-# üzenet többi sora (HTF trend, S/R-közelség, CVD, RSI, funding) már úgyis
-# külön-külön megmutat. A nevező DINAMIKUS: csak azok a tényezők számítanak
-# bele, amikhez ténylegesen van adat ebben a körben.
-def compute_confluence_score(direction, htf_trend=None, near_level_risk=False,
-                              has_sr_data=False, cvd_status=None, cvd_delta=None,
-                              rsi=None, funding_rate=None, funding_momentum=None):
-    """Visszatér: (megszerzett_pont, elérhető_pont, [(címke, pozitív?), ...])."""
-    factors = []
-
-    # 1) HTF (1h) trend - pont, ha NEM megy szemben a trenddel
-    if htf_trend is not None:
-        against_trend = (
-            (direction == "LONG" and htf_trend == "DOWN")
-            or (direction == "SHORT" and htf_trend == "UP")
-        )
-        factors.append(("HTF", not against_trend))
-
-    # 2) Támasz/ellenállás-közelség - pont, ha NEM megy a szint ellen
-    if has_sr_data:
-        factors.append(("S/R", not near_level_risk))
-
-    # 3) CVD (taker vétel/eladás dominancia) - pont, ha megerősíti az irányt.
-    # A "neutral" állapotot is figyelembe vesszük (nincs pont, de "elérhető"),
-    # mert ilyenkor tényleg volt adat, csak nem egyértelmű.
-    if cvd_status is not None:
-        factors.append(("CVD", cvd_status == "confirm"))
-
-    # 3b) CVD-TREND (ÚJ) - erősödik/gyengül-e a taker-vételi nyomás a
-    # lekért trade-ablakon belül (lásd fetch_cvd_confirmation()).
-    if cvd_delta is not None:
-        if direction == "LONG":
-            trend_ok = cvd_delta >= CVD_TREND_DELTA_THRESHOLD
-        else:
-            trend_ok = cvd_delta <= -CVD_TREND_DELTA_THRESHOLD
-        factors.append(("CVDΔ", trend_ok))
-
-    # 4) RSI - pont, ha nincs a jelzés irányával szemben "túlfűtve"
-    if rsi is not None:
-        rsi_ok = (
-            (direction == "LONG" and rsi < RSI_OVERBOUGHT)
-            or (direction == "SHORT" and rsi > RSI_OVERSOLD)
-        )
-        factors.append(("RSI", rsi_ok))
-
-    # 5) Funding szint - pont, ha nem a jelzéssel ELLENTÉTES squeeze-kockázat áll fenn
-    if funding_rate is not None:
-        funding_ok = (
-            (direction == "LONG" and funding_rate <= FUNDING_SQUEEZE_THRESHOLD_PCT)
-            or (direction == "SHORT" and funding_rate >= -FUNDING_SQUEEZE_THRESHOLD_PCT)
-        )
-        factors.append(("Fund", funding_ok))
-
-    # 5b) Funding-MOMENTUM (ÚJ) - merre mozdul a funding két kör között, nem
-    # csak a pillanatnyi szintje. LONG-nál kedvező, ha csökken (a shortosok
-    # egyre inkább fizetnek -> squeeze épül felfelé), SHORT-nál fordítva.
-    if funding_momentum is not None:
-        momentum_ok = (
-            (direction == "LONG" and funding_momentum <= -FUNDING_MOMENTUM_THRESHOLD_PCT)
-            or (direction == "SHORT" and funding_momentum >= FUNDING_MOMENTUM_THRESHOLD_PCT)
-        )
-        factors.append(("FundΔ", momentum_ok))
-
-    earned = sum(1 for _, ok in factors if ok)
-    available = len(factors)
-    return earned, available, factors
-
-
-def format_confluence_line(earned: int, available: int, factors: list) -> str:
-    """Az EGYETLEN plusz sor, ami a fejléc alá kerül. Ha egyáltalán nincs
-    egyetlen kiértékelhető tényező sem (pl. vadonatúj szimbólum, még nincs
-    HTF-cache/CVD/RSI), üres stringet ad vissza - ilyenkor nem jelenik meg
-    sor, ahelyett hogy "0/0"-t mutatna."""
-    if available == 0:
-        return ""
-    ratio = earned / available
-    if ratio >= 0.8:
-        emoji = "🔥"
-    elif ratio >= 0.5:
-        emoji = "⚖️"
-    else:
-        emoji = "⚠️"
-    breakdown = " ".join(f"{label}{'✅' if ok else '❌'}" for label, ok in factors)
-    return f"{emoji} Megbízhatóság: {earned}/{available} ({breakdown})"
-
-
-# ----------------------------------------------------------------------------
-# ÚJ: FELHALMOZÁS (accumulation-only) FIGYELMEZTETŐ ÜZENET
-# ----------------------------------------------------------------------------
-# NEM kereskedési jelzés - nincs LONG/SHORT iránya (az OI-növekedés önmagában
-# nem mondja meg, merre indul majd az ár). Célja kifejezetten a korai
-# "valaki épp pozíciót épít" mintázat jelzése, MIELŐTT a rendes STANDARD/
-# EARLY jelzés (ami már ár-/volumen-megerősítést is kér) egyáltalán
-# elsülhetne.
-def format_accumulation_message(symbol, oi_value, oi_change_pct, price_change_pct,
-                                 rsi=None, macd_status=None, funding_rate=None,
-                                 cvd_buy_ratio=None):
-    indicator_line = ""
-    if rsi is not None or macd_status is not None:
-        parts = []
-        if rsi is not None:
-            parts.append(f"RSI: {rsi:.1f}")
-        if macd_status is not None:
-            parts.append(f"MACD: {macd_status}")
-        indicator_line = f"\n📐 {' | '.join(parts)}"
-
-    funding_line = f"\n💸 Funding: {funding_rate:+.4f}%" if funding_rate is not None else ""
-
-    # ÚJ: az OI-emelkedés ÖNMAGÁBAN NEM mond irányt (új pozíció nyílhat
-    # LONG-on és SHORT-on is) - ezért a CVD taker-vétel/eladás arányából
-    # adunk egy VALÓSZÍNŰ irányt. Ez NEM garancia, csak "erre hajlik jobban".
-    direction_line = "\n🧭 Irány: egyelőre bizonytalan (nincs elég taker-adat)"
-    if cvd_buy_ratio is not None:
-        if cvd_buy_ratio >= CVD_CONFIRM_RATIO:
-            direction_line = f"\n🧭 Valószínű irány: 🟢 LONG (taker-vétel túlsúly, {cvd_buy_ratio * 100:.0f}%)"
-        elif (1 - cvd_buy_ratio) >= CVD_CONFIRM_RATIO:
-            direction_line = f"\n🧭 Valószínű irány: 🔴 SHORT (taker-eladás túlsúly, {(1 - cvd_buy_ratio) * 100:.0f}%)"
-        else:
-            direction_line = f"\n🧭 Irány: egyelőre kiegyensúlyozott (taker-vétel {cvd_buy_ratio * 100:.0f}%)"
-
-    body = (
-        f"👀 <b>{symbol}</b> FELHALMOZÁS\n"
-        f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%) - az ár szinte "
-        f"változatlan ({price_change_pct:+.2f}%)"
-        f"{indicator_line}"
-        f"{funding_line}"
-        f"{direction_line}\n"
-        f"ℹ️ Ez MÉG NEM kereskedési jelzés - valaki pozíciót épít, mielőtt "
-        f"az ár elindulna. Ha ár + volumen is beindul, jön a rendes jelzés."
-    )
     return f"\n{body}\n"
 
 
@@ -1870,7 +1473,6 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             klines_map[s] = df
 
     alerts_sent = 0
-    accum_alerts_this_pass = 0   # JAVÍTÁS: lásd ACCUM_MAX_ALERTS_PER_PASS kommentjét
     evaluated = 0
     htf_warned = 0
     sr_warned = 0
@@ -1905,16 +1507,6 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
 
         oi_change_pct = (oi_now - oi_baseline["oi"]) / oi_baseline["oi"] * 100
         funding_rate = funding_cache.get(symbol)
-
-        # ÚJ: funding-MOMENTUM - nem csak a pillanatnyi szint, hanem hogy
-        # merre mozdult az előző kiértékelt körhöz képest. Csak a
-        # megbízhatósági pontszámhoz használjuk (lásd compute_confluence_score()).
-        prev_funding_rate = entry.get("prev_funding_rate")
-        funding_momentum = None
-        if funding_rate is not None and prev_funding_rate is not None:
-            funding_momentum = funding_rate - prev_funding_rate
-        if funding_rate is not None:
-            entry["prev_funding_rate"] = funding_rate
 
         # --- v6: a magasabb idősík trendje NEM blokkol, csak figyelmeztető
         # sort kap az üzenet, ha a jelzés a trenddel szemben megy. ---
@@ -2034,38 +1626,6 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # ablakos) OI-változást mutatjuk az üzenetben - ez tükrözi
             # ténylegesen, mi váltotta ki a jelzést.
             display_oi_change_pct = oi_fast_change_pct if fired_signal_type == "EARLY" else oi_change_pct
-            # ÚJ: CVD-megerősítés - CSAK itt, a végső jelöltnél kérjük le
-            # (lásd fetch_cvd_confirmation() blokk-kommentjét). Ha bármi
-            # okból nem sikerül, cvd_status None marad, és a jelzés a
-            # CVD-sor nélkül megy ki - EZ SOSEM blokkolja/késlelteti a jelzést.
-            # A try/except itt egy MÁSODIK védelmi réteg - a
-            # fetch_cvd_confirmation() belül is elkap mindent, de ha egy
-            # váratlan hiba mégis kiszökne onnan, az itteni háló garantálja,
-            # hogy a jelzés akkor is kimegy.
-            try:
-                cvd_result = await fetch_cvd_confirmation(session, semaphore, symbol, candle["direction"])
-            except Exception as e:
-                logger.info("CVD: váratlan hiba (%s) - kihagyva. Ok: %s: %s", symbol, type(e).__name__, e)
-                cvd_result = None
-            cvd_status = cvd_result.get("status") if cvd_result else None
-            cvd_delta = cvd_result.get("delta") if cvd_result else None
-
-            # ÚJ: megbízhatósági (confluence) pontszám - lásd
-            # compute_confluence_score()/format_confluence_line(). Ez az
-            # EGYETLEN plusz sor, ami a header alá kerül - minden más sor
-            # (RSI/MACD/Vol/OI/funding/CVD/HTF/S-R) VÁLTOZATLAN marad.
-            conf_earned, conf_available, conf_factors = compute_confluence_score(
-                direction=candle["direction"],
-                htf_trend=htf_trend,
-                near_level_risk=near_level_risk,
-                has_sr_data=(support is not None and resistance is not None),
-                cvd_status=cvd_status,
-                cvd_delta=cvd_delta,
-                rsi=candle.get("rsi"),
-                funding_rate=funding_rate,
-                funding_momentum=funding_momentum,
-            )
-            confluence_line = format_confluence_line(conf_earned, conf_available, conf_factors)
 
             msg = format_scalp_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
@@ -2077,8 +1637,6 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 funding_rate=funding_rate,
                 pace_vol_multiplier=candle.get("pace_vol_multiplier"),
                 elapsed_fraction=candle.get("elapsed_fraction"),
-                cvd_status=cvd_status,
-                confluence_line=confluence_line,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
@@ -2088,76 +1646,14 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # OUTCOME_FIXED_SL_PCT és resolve_pending_signals) - az előző
             # ATR/swing-alapú számítást (compute_sl_tp) a felhasználó kérésére
             # töröltük, a statisztika egyszerűbb és átláthatóbb lett tőle.
-            # ÚJ: a confluence-pontszámot is eltároljuk a jelzés mellé -
-            # ebből később (napi összesítő) kimutatható, hogy a magasabb
-            # pontszámú jelzések ténylegesen jobban teljesítenek-e.
-            register_pending_signal(
-                state, symbol, fired_signal_type, candle["direction"], candle["price"], now,
-                confluence_earned=conf_earned, confluence_available=conf_available,
-            )
+            register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
             trend_note = " ⚠️ TRENDDEL SZEMBEN" if against_trend else ""
             bounce_note = " 🎯 SZINT-VISSZAPATTANÁS" if bounce_confluence else ""
-            logger.info("JELZÉS küldve [%s]: %s [%s] (Ár %+.2f%%, Vol %.1fx átlag, OI %+.2f%%, 1h trend: %s, "
-                        "megbízhatóság: %d/%d)%s%s",
+            logger.info("JELZÉS küldve [%s]: %s [%s] (Ár %+.2f%%, Vol %.1fx átlag, OI %+.2f%%, 1h trend: %s)%s%s",
                         fired_signal_type, symbol, candle["direction"], candle["price_change_pct"],
                         candle["vol_multiplier"], display_oi_change_pct, htf_trend or "ismeretlen",
-                        conf_earned, conf_available, trend_note, bounce_note)
+                        trend_note, bounce_note)
 
-        # ----------------------------------------------------------------
-        # ÚJ: FELHALMOZÁS (accumulation-only) FIGYELMEZTETŐ JELZÉS
-        # ----------------------------------------------------------------
-        # Csak akkor vizsgáljuk, ha ebben a körben SEM STANDARD, SEM EARLY
-        # nem tüzelt (fired_signal_type is None) - így nem kap a felhasználó
-        # két, egymásnak ellentmondó üzenetet ugyanarra a szimbólumra.
-        # Saját, KÜLÖN cooldown-nal fut (entry["last_accum_alert_ts"]),
-        # független a STANDARD/EARLY cooldown-tól, és NEM kerül be a napi
-        # winrate-statisztikába (nincs iránya, nem "kereskedési jelzés").
-        # JAVÍTÁS: körönként legfeljebb ACCUM_MAX_ALERTS_PER_PASS jelzés/
-        # CVD-hívás mehet ki - enélkül volatilis piacon egyetlen kör alatt
-        # tucatnyi extra CVD-hálózati hívás indulhatna el, ami rate-limitbe
-        # futtatja az API-t és ELLEHETETLENÍTI a VALÓDI (STANDARD/EARLY)
-        # jelzések adatgyűjtését is. A cap elérése után a maradék jelölteket
-        # egyszerűen kihagyjuk ebben a körben - a következő körben (30 mp
-        # múlva) újra megvizsgáljuk őket.
-        if fired_signal_type is None and accum_alerts_this_pass < ACCUM_MAX_ALERTS_PER_PASS:
-            is_accum_setup = (
-                abs(candle["price_change_pct"]) <= ACCUM_MAX_PRICE_CHANGE
-                and oi_change_pct >= ACCUM_MIN_OI_INCREASE
-                and candle["candle_vol_usdt"] >= ACCUM_MIN_CANDLE_VOL_USDT
-            )
-            if is_accum_setup:
-                accum_cooldown_ok = True
-                if entry.get("last_accum_alert_ts"):
-                    last_accum_dt = datetime.fromisoformat(entry["last_accum_alert_ts"])
-                    if (now - last_accum_dt) < timedelta(minutes=ACCUM_ALERT_COOLDOWN_MINUTES):
-                        accum_cooldown_ok = False
-                if accum_cooldown_ok:
-                    # ÚJ: CVD-lekérés a FELHALMOZÁS jelzéshez is - itt NEM
-                    # egy adott irányt "erősítünk meg" (nincs is még irány),
-                    # hanem a nyers taker-vétel/eladás arányból (buy_ratio)
-                    # magát az irányt próbáljuk megbecsülni. A "direction"
-                    # paraméter itt csak formális (a "status" mezőt úgysem
-                    # használjuk), a buy_ratio irány-független.
-                    try:
-                        accum_cvd_result = await fetch_cvd_confirmation(session, semaphore, symbol, "LONG")
-                    except Exception as e:
-                        logger.info("CVD (FELHALMOZÁS): váratlan hiba (%s) - kihagyva. Ok: %s: %s",
-                                    symbol, type(e).__name__, e)
-                        accum_cvd_result = None
-                    accum_cvd_buy_ratio = accum_cvd_result.get("buy_ratio") if accum_cvd_result else None
-
-                    accum_msg = format_accumulation_message(
-                        symbol, oi_now, oi_change_pct, candle["price_change_pct"],
-                        rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
-                        funding_rate=funding_rate,
-                        cvd_buy_ratio=accum_cvd_buy_ratio,
-                    )
-                    await send_telegram_message(accum_msg)
-                    entry["last_accum_alert_ts"] = now.isoformat()
-                    accum_alerts_this_pass += 1
-                    alerts_sent += 1
-                    logger.info("FELHALMOZÁS jelzés küldve: %s (OI %+.2f%%, ár %+.2f%%, CVD buy_ratio: %s)",
-                                symbol, oi_change_pct, candle["price_change_pct"], accum_cvd_buy_ratio)
 
     if htf_warned:
         logger.info("  (ebben a körben %d kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)", htf_warned)
