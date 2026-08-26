@@ -1324,35 +1324,40 @@ async def _start_ws_kline_listeners(stop_event: asyncio.Event):
     return store, tasks
 
 
-def _patch_live_candle_with_ws(kdf: pd.DataFrame, symbol: str, store: Optional["LiveKlineStore"]) -> pd.DataFrame:
+def _patch_live_candle_with_ws(kdf: pd.DataFrame, symbol: str, store: Optional["LiveKlineStore"]) -> tuple:
     """Ha van elég friss (lásd WS_MAX_STALENESS_SECONDS) websocket-adat
     erre a symbolra, ÉS az ugyanarra a gyertya-periódusra vonatkozik (a
     nyitási időbélyeg egyezik, különben rossz gyertyát patchelnénk egy
     időszak-váltás pillanatában), felülírja a DataFrame UTOLSÓ (élő)
     sorának close/high/low/volume mezőit a frissebb WS-értékekkel. A
     lezárt gyertyák és a timestamp VÁLTOZATLANOK maradnak, tehát az
-    evaluate_candle() logikáján semmit nem kell módosítani ehhez."""
+    evaluate_candle() logikáján semmit nem kell módosítani ehhez.
+
+    Visszatér: (kdf, patched: bool) - a bool-t a run_single_pass() a
+    kör végi diagnosztikai összesítőhöz (log-sor) használja, hogy
+    látszódjon, ténylegesen hat-e a WS-adat a kiértékelésre, nem csak
+    csatlakozik a kapcsolat."""
     if store is None or kdf is None or len(kdf) == 0:
-        return kdf
+        return kdf, False
     live_ws = store.get(symbol)
     if live_ws is None:
-        return kdf
+        return kdf, False
 
     age_seconds = (time.time() * 1000 - live_ws["received_at_ms"]) / 1000
     if age_seconds > WS_MAX_STALENESS_SECONDS:
-        return kdf
+        return kdf, False
 
     last_idx = kdf.index[-1]
     try:
         last_ts = kdf.loc[last_idx, "timestamp"].to_pydatetime().replace(tzinfo=timezone.utc)
         ws_open_dt = datetime.fromtimestamp(live_ws["open_time_ms"] / 1000, tz=timezone.utc)
     except (TypeError, ValueError, OverflowError):
-        return kdf
+        return kdf, False
     if abs((last_ts - ws_open_dt).total_seconds()) > 5:
         # a WS és a REST nem ugyanarra a gyertya-periódusra mutat (pl.
         # épp most zárult le/nyílt egy új gyertya) - inkább kihagyjuk,
         # mint hogy rossz sort patcheljünk
-        return kdf
+        return kdf, False
 
     kdf = kdf.copy()
     # Védekezés: ha a REST-forrás DataFrame-ben ezek az oszlopok bármiért
@@ -1368,7 +1373,8 @@ def _patch_live_candle_with_ws(kdf: pd.DataFrame, symbol: str, store: Optional["
     if live_ws["low"] < kdf.loc[last_idx, "low"]:
         kdf.loc[last_idx, "low"] = live_ws["low"]
     kdf.loc[last_idx, "volume"] = live_ws["volume_base"]
-    return kdf
+    return kdf, True
+
 
 # ----------------------------------------------------------------------------
 # TELEGRAM ÉRTESÍTÉS
@@ -1798,6 +1804,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     # küldést, csak láthatóvá teszi a log-ban, hogy egy adott piaci mozgás
     # miért (nem) váltott ki jelzést.
     pass_diagnostics = []
+    ws_patched_count = 0  # ÚJ (ideiglenes debug): hányszor patchelt ténylegesen a WS-adat ebben a körben
     for symbol in candidates:
         kdf = klines_map.get(symbol)
         # ÚJ: ha van rá friss websocket-adat, az élő (utolsó, még nyitott)
@@ -1805,7 +1812,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         # cseréljük - lásd _patch_live_candle_with_ws() kommentjét. Ha nincs
         # WS-adat (vagy ki van kapcsolva), ez nem csinál semmit, minden
         # marad a jelenlegi, REST-alapú viselkedésen.
-        kdf = _patch_live_candle_with_ws(kdf, symbol, ws_store)
+        kdf, ws_patched = _patch_live_candle_with_ws(kdf, symbol, ws_store)
+        if ws_patched:
+            ws_patched_count += 1
         candle = evaluate_candle(kdf, now=now)
         oi_now = oi_map.get(symbol)
         if candle is None or oi_now is None:
@@ -2002,6 +2011,16 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         logger.info("  (ebben a körben %d kiküldött jelzés ment trenddel szemben - figyelmeztetéssel)", htf_warned)
     if sr_warned:
         logger.info("  (ebben a körben %d kiküldött jelzés ment támasz/ellenállás ellen - figyelmeztetéssel)", sr_warned)
+
+    # ÚJ (IDEIGLENES DEBUG): mutatja, hogy a websocket-adat ténylegesen
+    # HATOTT-e a kiértékelésre ebben a körben, nem csak csatlakozott a
+    # kapcsolat. Ha USE_WEBSOCKET_KLINES=false, ez a sor nem jelenik meg
+    # (ws_store None, evaluated csak akkor >0 ha volt candidate). Ha
+    # bejáratottnak érzed a websocket-funkciót, ez a blokk bátran
+    # törölhető - nem befolyásol semmilyen jelzési logikát.
+    if ws_store is not None and evaluated > 0:
+        logger.info("  [WS debug] élő gyertya websocket-adattal frissítve: %d/%d symbolnál.",
+                    ws_patched_count, evaluated)
 
     # ÚJ (diagnosztika): a kör 3 legnagyobb (abszolút) ár-mozgású, mégsem
     # tüzelő jelöltje - PONTOSAN megmutatja, melyik küszöbön buktak el.

@@ -4,6 +4,7 @@ BingX Perpetual - Daytrade Felhalmozás-figyelő (1h idősík)
 """
 
 import asyncio
+import gzip
 import json
 import logging
 import os
@@ -74,6 +75,32 @@ FUNDING_ACCEL_THRESHOLD_PCT = 0.015   # ennyi előjeles %-pontot mozduljon a fen
 
 TOTAL_RUN_BUDGET_SECONDS = 520   
 PASS_INTERVAL_SECONDS = 30       
+
+# ----------------------------------------------------------------------------
+# ÚJ: WEBSOCKET ÉLŐ GYERTYA-FIGYELŐ (opcionális, kapcsolható)
+# ----------------------------------------------------------------------------
+# Lásd az alert_checker.py azonos blokk-kommentjét a teljes indoklásért.
+# Rövid összefoglaló: a REST-polling (30 mp-enkénti lekérdezés) helyett/
+# mellett a BingX websocket-jén keresztül szinte valós időben kapjuk az
+# élő (még nyitott) 1h gyertya adatait - főleg az EARLY jelzésnek segít.
+#
+# BIZTONSÁGI KAPCSOLÓ: alapértelmezetten KIKAPCSOLVA. Bekapcsolás: GitHub
+# Actions Variable USE_WEBSOCKET_KLINES=true (lásd a workflow yml-t).
+USE_WEBSOCKET_KLINES = os.environ.get("USE_WEBSOCKET_KLINES", "false").strip().lower() in ("1", "true", "yes")
+WS_URL = "wss://open-api-swap.bingx.com/swap-market"
+WS_KLINE_INTERVAL_MAP = {
+    "1m": "1min", "3m": "3min", "5m": "5min", "15m": "15min", "30m": "30min",
+    "1h": "1h", "2h": "2h", "4h": "4h", "6h": "6h", "12h": "12h",
+    "1d": "1day", "3d": "3day", "1w": "1week", "1M": "1month",
+}
+WS_KLINE_INTERVAL = WS_KLINE_INTERVAL_MAP.get(ALERT_TIMEFRAME, "1h")
+WS_SYMBOLS_PER_CONNECTION = 190   # a BingX doksik szerinti feliratkozási limit alatt tartva
+WS_CONNECT_TIMEOUT_SECONDS = 15
+WS_RECONNECT_DELAY_SECONDS = 3
+# ha ennél régebbi a legutóbb kapott WS-adat egy symbolra, inkább a
+# REST-fetch-elt (kicsit "régebbi", de megbízható) élő gyertyát használjuk
+WS_MAX_STALENESS_SECONDS = 20
+
 
 # ----------------------------------------------------------------------------
 # 0) ÁLTALÁNOS BEÁLLÍTÁSOK
@@ -718,6 +745,200 @@ async def fetch_klines(session, semaphore, symbol, interval, limit=KLINES_LIMIT)
         df = df.sort_values("timestamp").reset_index(drop=True)
         return symbol, df
 
+# ----------------------------------------------------------------------------
+# ÚJ: WEBSOCKET ÉLŐ GYERTYA-FIGYELŐ - implementáció
+# (azonos logika, mint az alert_checker.py-ban, csak az 1h idősíkra)
+# ----------------------------------------------------------------------------
+
+class LiveKlineStore:
+    """Symbol -> legfrissebb, websocketen kapott ÉLŐ (még nyitott) gyertya
+    adatait tárolja. Egyetlen event loop-ban fut, de a lock a jövőbeli
+    biztonság kedvéért (pl. ha valaha több taszkból is írnánk) került be."""
+    def __init__(self):
+        self._data: dict[str, dict] = {}
+        self._lock = asyncio.Lock()
+
+    async def update(self, symbol: str, candle: dict):
+        async with self._lock:
+            self._data[symbol] = candle
+
+    def get(self, symbol: str) -> Optional[dict]:
+        return self._data.get(symbol)
+
+
+async def _handle_ws_kline_message(payload: dict, store: LiveKlineStore) -> None:
+    """A BingX kline push-üzenetének feldolgozása. Várt alak (a hivatalos
+    doksi példája alapján):
+    {"data": {"K": {"t":.., "T":.., "o":.., "h":.., "l":.., "c":.., "v":.., "q":..}, ...},
+     "dataType": "BTC-USDT@kline_1h"}"""
+    data_type = payload.get("dataType", "")
+    if "@kline_" not in data_type:
+        return
+    symbol = data_type.split("@", 1)[0]
+    k = (payload.get("data") or {}).get("K")
+    if not k:
+        return
+    try:
+        candle = {
+            "open": float(k.get("o")),
+            "high": float(k.get("h")),
+            "low": float(k.get("l")),
+            "close": float(k.get("c")),
+            "volume_base": float(k.get("v") or 0),
+            "open_time_ms": int(k.get("t")),
+            "received_at_ms": time.time() * 1000,
+        }
+    except (TypeError, ValueError):
+        return
+    await store.update(symbol, candle)
+
+
+async def _ws_kline_listener(symbols: list, store: LiveKlineStore, stop_event: asyncio.Event) -> None:
+    """Egyetlen websocket-kapcsolatot tart fent a megadott symbol-listára,
+    a gyertya-adatokat a store-ba írja. Kapcsolat-megszakadás esetén
+    automatikusan újracsatlakozik, amíg a stop_event be nem áll (a futás
+    végén a _run_main_loop állítja be)."""
+    while not stop_event.is_set():
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.ws_connect(WS_URL, timeout=WS_CONNECT_TIMEOUT_SECONDS) as ws:
+                    for sym in symbols:
+                        sub_msg = {
+                            "id": f"sub-{sym}-{WS_KLINE_INTERVAL}",
+                            "reqType": "sub",
+                            "dataType": f"{sym}@kline_{WS_KLINE_INTERVAL}",
+                        }
+                        await ws.send_json(sub_msg)
+                        await asyncio.sleep(0.02)  # ne zúduljon rá egyszerre a szerverre
+
+                    async for msg in ws:
+                        if stop_event.is_set():
+                            break
+                        text = None
+                        if msg.type == aiohttp.WSMsgType.BINARY:
+                            try:
+                                text = gzip.decompress(msg.data).decode("utf-8")
+                            except Exception:
+                                continue
+                        elif msg.type == aiohttp.WSMsgType.TEXT:
+                            text = msg.data
+                        elif msg.type in (aiohttp.WSMsgType.CLOSED, aiohttp.WSMsgType.ERROR):
+                            break
+                        else:
+                            continue
+
+                        if text is None:
+                            continue
+                        if text == "Ping":
+                            await ws.send_str("Pong")
+                            continue
+
+                        try:
+                            parsed = json.loads(text)
+                        except json.JSONDecodeError:
+                            continue
+                        await _handle_ws_kline_message(parsed, store)
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            logger.warning("WS kline-figyelő megszakadt (%d symbol) - %.0f mp múlva újracsatlakozás: %s",
+                            len(symbols), WS_RECONNECT_DELAY_SECONDS, e)
+        if stop_event.is_set():
+            break
+        await asyncio.sleep(WS_RECONNECT_DELAY_SECONDS)
+
+
+async def _start_ws_kline_listeners(stop_event: asyncio.Event):
+    """Egyszeri, futás-eleji candidate-lista lekérdezés, majd a listát
+    WS_SYMBOLS_PER_CONNECTION-es darabokra bontva egy-egy websocket-
+    kapcsolatot (taszkot) indít mindegyikre. A candidate-lista a futás
+    TELJES idejére rögzített marad - ha közben egy új symbol lépne be a
+    24h volumen-szűrőn, arra nem lesz élő WS-adat ebben a futásban (a
+    REST-alapú útra esik vissza, ami a jelenlegi, változatlan viselkedés)."""
+    try:
+        connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
+        async with aiohttp.ClientSession(connector=connector) as session:
+            tickers = await fetch_all_tickers(session)
+            valid_contracts = await fetch_valid_contract_symbols(session)
+    except Exception as e:
+        logger.warning("WS-figyelőhöz szükséges candidate-lista lekérése sikertelen - WS kikapcsolva ebben a futásban: %s", e)
+        return None, []
+
+    if not tickers:
+        return None, []
+
+    candidates = []
+    for s, info in tickers.items():
+        if not (MIN_VOLUME_USDT <= info["quote_volume_24h"] <= MAX_VOLUME_USDT):
+            continue
+        if not is_probably_crypto(s):
+            continue
+        if valid_contracts is not None and s not in valid_contracts:
+            continue
+        candidates.append(s)
+
+    if not candidates:
+        return None, []
+
+    store = LiveKlineStore()
+    tasks = []
+    for i in range(0, len(candidates), WS_SYMBOLS_PER_CONNECTION):
+        chunk = candidates[i:i + WS_SYMBOLS_PER_CONNECTION]
+        tasks.append(asyncio.create_task(_ws_kline_listener(chunk, store, stop_event)))
+
+    logger.info("WS kline-figyelő elindítva: %d symbol, %d kapcsolat (%s idősík).",
+                len(candidates), len(tasks), WS_KLINE_INTERVAL)
+    return store, tasks
+
+
+def _patch_live_candle_with_ws(kdf: pd.DataFrame, symbol: str, store: Optional["LiveKlineStore"]) -> tuple:
+    """Ha van elég friss (lásd WS_MAX_STALENESS_SECONDS) websocket-adat
+    erre a symbolra, ÉS az ugyanarra a gyertya-periódusra vonatkozik (a
+    nyitási időbélyeg egyezik, különben rossz gyertyát patchelnénk egy
+    időszak-váltás pillanatában), felülírja a DataFrame UTOLSÓ (élő)
+    sorának close/high/low/volume mezőit a frissebb WS-értékekkel. A
+    lezárt gyertyák és a timestamp VÁLTOZATLANOK maradnak, tehát az
+    evaluate_candle() logikáján semmit nem kell módosítani ehhez.
+
+    Visszatér: (kdf, patched: bool) - a bool-t a run_single_pass() a
+    kör végi diagnosztikai összesítőhöz (log-sor) használja."""
+    if store is None or kdf is None or len(kdf) == 0:
+        return kdf, False
+    live_ws = store.get(symbol)
+    if live_ws is None:
+        return kdf, False
+
+    age_seconds = (time.time() * 1000 - live_ws["received_at_ms"]) / 1000
+    if age_seconds > WS_MAX_STALENESS_SECONDS:
+        return kdf, False
+
+    last_idx = kdf.index[-1]
+    try:
+        last_ts = kdf.loc[last_idx, "timestamp"].to_pydatetime().replace(tzinfo=timezone.utc)
+        ws_open_dt = datetime.fromtimestamp(live_ws["open_time_ms"] / 1000, tz=timezone.utc)
+    except (TypeError, ValueError, OverflowError):
+        return kdf, False
+    if abs((last_ts - ws_open_dt).total_seconds()) > 5:
+        # a WS és a REST nem ugyanarra a gyertya-periódusra mutat (pl.
+        # épp most zárult le/nyílt egy új gyertya) - inkább kihagyjuk,
+        # mint hogy rossz sort patcheljünk
+        return kdf, False
+
+    kdf = kdf.copy()
+    # Védekezés: ha a REST-forrás DataFrame-ben ezek az oszlopok bármiért
+    # nem float dtype-ok lennének, a WS-ből jövő float érték beírása
+    # pandas-hibát dobna ("Invalid value for dtype int64") - ezért itt
+    # explicit float64-re kényszerítjük ezt a négy oszlopot.
+    for col in ("close", "high", "low", "volume"):
+        kdf[col] = kdf[col].astype("float64")
+    kdf.loc[last_idx, "close"] = live_ws["close"]
+    if live_ws["high"] > kdf.loc[last_idx, "high"]:
+        kdf.loc[last_idx, "high"] = live_ws["high"]
+    if live_ws["low"] < kdf.loc[last_idx, "low"]:
+        kdf.loc[last_idx, "low"] = live_ws["low"]
+    kdf.loc[last_idx, "volume"] = live_ws["volume_base"]
+    return kdf, True
+
 def _send_telegram_message_sync(text: str) -> None:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         logger.error("Hiányzik a TELEGRAM_BOT_TOKEN vagy TELEGRAM_CHAT_ID env változó.")
@@ -938,7 +1159,7 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
         "pace_vol_multiplier": round(pace_vol_multiplier, 2) if pace_vol_multiplier is not None else None,
     }
 
-async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding_cache: dict, now: datetime):
+async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding_cache: dict, now: datetime, ws_store: Optional["LiveKlineStore"] = None):
     connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS + KLINES_MAX_CONCURRENT_REQUESTS)
     async with aiohttp.ClientSession(connector=connector) as session:
         semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
@@ -1013,9 +1234,17 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     evaluated = 0
     # ÚJ (diagnosztika): lásd az alert_checker.py azonos blokk-kommentjét.
     pass_diagnostics = []
+    ws_patched_count = 0  # ÚJ (ideiglenes debug): hányszor patchelt ténylegesen a WS-adat ebben a körben
 
     for symbol in candidates:
-        candle = evaluate_candle(klines_map.get(symbol), now=now)
+        kdf = klines_map.get(symbol)
+        # ÚJ: ha van rá friss websocket-adat, az élő (utolsó, még nyitott)
+        # gyertya sorát frissebb, valós idejű close/high/low/volume értékekre
+        # cseréljük - lásd _patch_live_candle_with_ws() kommentjét.
+        kdf, ws_patched = _patch_live_candle_with_ws(kdf, symbol, ws_store)
+        if ws_patched:
+            ws_patched_count += 1
+        candle = evaluate_candle(kdf, now=now)
         oi_now = oi_map.get(symbol)
         if candle is None or oi_now is None:
             continue
@@ -1149,6 +1378,14 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             alerts_sent += 1
             register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
 
+    # ÚJ (IDEIGLENES DEBUG): mutatja, hogy a websocket-adat ténylegesen
+    # HATOTT-e a kiértékelésre ebben a körben - lásd az alert_checker.py
+    # azonos blokk-kommentjét. Ha bejáratottnak érzed a funkciót, ez a
+    # blokk bátran törölhető - nem befolyásol semmilyen jelzési logikát.
+    if ws_store is not None and evaluated > 0:
+        logger.info("  [WS debug] élő gyertya websocket-adattal frissítve: %d/%d symbolnál.",
+                    ws_patched_count, evaluated)
+
     if pass_diagnostics:
         pass_diagnostics.sort(key=lambda d: abs(d["price_change_pct"]), reverse=True)
         for d in pass_diagnostics[:3]:
@@ -1191,40 +1428,61 @@ async def _run_main_loop(state: dict):
     htf_cache = {}
     funding_cache = {}
 
-    while True:
-        elapsed_total = time.monotonic() - loop_start
-        if elapsed_total >= TOTAL_RUN_BUDGET_SECONDS:
-            break
-        pass_start = time.monotonic()
-        now = datetime.now(timezone.utc)
-        remaining_budget = max(30.0, TOTAL_RUN_BUDGET_SECONDS - elapsed_total)
+    # ÚJ: websocket élő gyertya-figyelő indítása (ha USE_WEBSOCKET_KLINES=true).
+    # Lásd az alert_checker.py azonos blokk-kommentjét a teljes indoklásért.
+    ws_store = None
+    ws_tasks: list = []
+    ws_stop_event = asyncio.Event()
+    if USE_WEBSOCKET_KLINES:
         try:
-            alerts, evaluated, valid_contracts, htf_cache, funding_cache = await asyncio.wait_for(
-                run_single_pass(state, valid_contracts, htf_cache, funding_cache, now),
-                timeout=remaining_budget,
-            )
-        except asyncio.TimeoutError:
-            logger.warning("Túllépte az időkeretet (%.0f mp), megszakítva.", remaining_budget)
+            ws_store, ws_tasks = await _start_ws_kline_listeners(ws_stop_event)
+        except Exception as e:
+            logger.warning("WS-figyelő indítása sikertelen, REST-polling-ra esünk vissza: %s", e)
+            ws_store, ws_tasks = None, []
+
+    try:
+        while True:
+            elapsed_total = time.monotonic() - loop_start
+            if elapsed_total >= TOTAL_RUN_BUDGET_SECONDS:
+                break
+            pass_start = time.monotonic()
+            now = datetime.now(timezone.utc)
+            remaining_budget = max(30.0, TOTAL_RUN_BUDGET_SECONDS - elapsed_total)
+            try:
+                alerts, evaluated, valid_contracts, htf_cache, funding_cache = await asyncio.wait_for(
+                    run_single_pass(state, valid_contracts, htf_cache, funding_cache, now, ws_store=ws_store),
+                    timeout=remaining_budget,
+                )
+            except asyncio.TimeoutError:
+                logger.warning("Túllépte az időkeretet (%.0f mp), megszakítva.", remaining_budget)
+                save_state(state)
+                break
             save_state(state)
-            break
-        save_state(state)
-        logger.info("Kör kész: %d pár kiértékelve, %d riasztás.", evaluated, alerts)
-        # JAVÍTÁS: a korábbi "pass_elapsed = time.monotonic() - (time.monotonic() - remaining_budget)"
-        # matematikailag mindig kb. remaining_budget-tal volt egyenlő (a két
-        # time.monotonic() hívás közti különbség elhanyagolható), ami mivel
-        # remaining_budget sosem kisebb 30-nál, azt eredményezte, hogy
-        # PASS_INTERVAL_SECONDS - pass_elapsed MINDIG <= 0 volt -> sleep_time
-        # MINDIG 0 -> a ciklus SOHA nem várt, szünet nélkül pörgött, ami
-        # azonnal rate-limitbe futtatta a botot. A helyes számítás a kör
-        # TÉNYLEGES időtartamát nézi (pass_start-tól máig).
-        pass_elapsed = time.monotonic() - pass_start
-        remaining_total = TOTAL_RUN_BUDGET_SECONDS - (time.monotonic() - loop_start)
-        if remaining_total <= 0:
-            break
-        sleep_time = max(0.0, PASS_INTERVAL_SECONDS - pass_elapsed)
-        sleep_time = min(sleep_time, remaining_total)
-        if sleep_time > 0:
-            await asyncio.sleep(sleep_time)
+            logger.info("Kör kész: %d pár kiértékelve, %d riasztás.", evaluated, alerts)
+            # JAVÍTÁS: a korábbi "pass_elapsed = time.monotonic() - (time.monotonic() - remaining_budget)"
+            # matematikailag mindig kb. remaining_budget-tal volt egyenlő (a két
+            # time.monotonic() hívás közti különbség elhanyagolható), ami mivel
+            # remaining_budget sosem kisebb 30-nál, azt eredményezte, hogy
+            # PASS_INTERVAL_SECONDS - pass_elapsed MINDIG <= 0 volt -> sleep_time
+            # MINDIG 0 -> a ciklus SOHA nem várt, szünet nélkül pörgött, ami
+            # azonnal rate-limitbe futtatta a botot. A helyes számítás a kör
+            # TÉNYLEGES időtartamát nézi (pass_start-tól máig).
+            pass_elapsed = time.monotonic() - pass_start
+            remaining_total = TOTAL_RUN_BUDGET_SECONDS - (time.monotonic() - loop_start)
+            if remaining_total <= 0:
+                break
+            sleep_time = max(0.0, PASS_INTERVAL_SECONDS - pass_elapsed)
+            sleep_time = min(sleep_time, remaining_total)
+            if sleep_time > 0:
+                await asyncio.sleep(sleep_time)
+    finally:
+        # ÚJ: a WS-taszkokat MINDIG leállítjuk, még hiba/timeout esetén is,
+        # nehogy "árva" kapcsolatok maradjanak nyitva a folyamat leállása után.
+        if ws_tasks:
+            ws_stop_event.set()
+            for t in ws_tasks:
+                t.cancel()
+            await asyncio.gather(*ws_tasks, return_exceptions=True)
 
 if __name__ == "__main__":
     asyncio.run(main())
