@@ -313,6 +313,17 @@ ACCUM_MIN_CANDLE_VOL_USDT = 5_000   # alacsony küszöb - itt még nem a
                                        # volumenkitörésen van a hangsúly
 ACCUM_ALERT_COOLDOWN_MINUTES = 45   # külön cooldown, független a STANDARD/
                                        # EARLY jelzésekétől
+# JAVÍTÁS: kritikus korlát - FELHALMOZÁS-gyanús szimbólumból (OI ugrás,
+# lapos ár) egyetlen körben akár TÖBB TUCAT is lehet egyszerre (volatilis
+# piacon ez nem ritka mintázat), és mindegyikhez EXTRA hálózati hívás
+# tartozna (CVD - lásd fetch_cvd_confirmation()). Ez, korlátozás NÉLKÜL,
+# könnyen rate-limitbe futtatja a BingX API-t - UGYANAZON a végponton,
+# amit a rendes STANDARD/EARLY jelzésekhez szükséges OI/gyertya-lekérések
+# is használnak - ami a VALÓDI jelzések kimaradását okozhatja. Ez a korlát
+# körönként (nem futásonként!) maximálja a FELHALMOZÁS-hoz tartozó CVD-
+# hívások (és üzenetek) számát, függetlenül attól, hány szimbólum felel
+# meg a feltételnek.
+ACCUM_MAX_ALERTS_PER_PASS = 3
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
@@ -1859,6 +1870,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             klines_map[s] = df
 
     alerts_sent = 0
+    accum_alerts_this_pass = 0   # JAVÍTÁS: lásd ACCUM_MAX_ALERTS_PER_PASS kommentjét
     evaluated = 0
     htf_warned = 0
     sr_warned = 0
@@ -2070,7 +2082,14 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         # Saját, KÜLÖN cooldown-nal fut (entry["last_accum_alert_ts"]),
         # független a STANDARD/EARLY cooldown-tól, és NEM kerül be a napi
         # winrate-statisztikába (nincs iránya, nem "kereskedési jelzés").
-        if fired_signal_type is None:
+        # JAVÍTÁS: körönként legfeljebb ACCUM_MAX_ALERTS_PER_PASS jelzés/
+        # CVD-hívás mehet ki - enélkül volatilis piacon egyetlen kör alatt
+        # tucatnyi extra CVD-hálózati hívás indulhatna el, ami rate-limitbe
+        # futtatja az API-t és ELLEHETETLENÍTI a VALÓDI (STANDARD/EARLY)
+        # jelzések adatgyűjtését is. A cap elérése után a maradék jelölteket
+        # egyszerűen kihagyjuk ebben a körben - a következő körben (30 mp
+        # múlva) újra megvizsgáljuk őket.
+        if fired_signal_type is None and accum_alerts_this_pass < ACCUM_MAX_ALERTS_PER_PASS:
             is_accum_setup = (
                 abs(candle["price_change_pct"]) <= ACCUM_MAX_PRICE_CHANGE
                 and oi_change_pct >= ACCUM_MIN_OI_INCREASE
@@ -2105,6 +2124,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     )
                     await send_telegram_message(accum_msg)
                     entry["last_accum_alert_ts"] = now.isoformat()
+                    accum_alerts_this_pass += 1
                     alerts_sent += 1
                     logger.info("FELHALMOZÁS jelzés küldve: %s (OI %+.2f%%, ár %+.2f%%, CVD buy_ratio: %s)",
                                 symbol, oi_change_pct, candle["price_change_pct"], accum_cvd_buy_ratio)

@@ -154,6 +154,9 @@ ACCUM_MIN_OI_INCREASE = 5.0         # magasabb, mint a MIN_OI_INCREASE, mert
                                        # itt nincs ár-/volumen-megerősítés
 ACCUM_MIN_CANDLE_VOL_USDT = 20_000
 ACCUM_ALERT_COOLDOWN_MINUTES = 180  # 3 óra - napon belüli mozgás lassabb
+# JAVÍTÁS: lásd az alert_checker.py azonos konstansának blokk-kommentjét -
+# ugyanaz a rate-limit védelem, körönkénti korlát.
+ACCUM_MAX_ALERTS_PER_PASS = 3
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
@@ -1184,6 +1187,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     klines_map = {item[0]: item[1] for item in kline_results if not isinstance(item, BaseException) and item[1] is not None}
 
     alerts_sent = 0
+    accum_alerts_this_pass = 0   # JAVÍTÁS: lásd ACCUM_MAX_ALERTS_PER_PASS kommentjét
     evaluated = 0
 
     for symbol in candidates:
@@ -1313,7 +1317,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         # ÚJ: FELHALMOZÁS (accumulation-only) figyelmeztető jelzés - lásd az
         # alert_checker.py azonos blokk-kommentjét. Csak ha ebben a körben
         # sem STANDARD, sem EARLY nem tüzelt; saját, külön cooldown-nal.
-        if fired_signal_type is None:
+        # JAVÍTÁS: lásd ACCUM_MAX_ALERTS_PER_PASS - körönkénti korlát a
+        # rate-limit elleni védelemhez.
+        if fired_signal_type is None and accum_alerts_this_pass < ACCUM_MAX_ALERTS_PER_PASS:
             is_accum_setup = (
                 abs(candle["price_change_pct"]) <= ACCUM_MAX_PRICE_CHANGE
                 and oi_change_pct >= ACCUM_MIN_OI_INCREASE
@@ -1343,6 +1349,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     await send_telegram_message(accum_msg)
                     entry["last_accum_alert_ts"] = now.isoformat()
                     alerts_sent += 1
+                    accum_alerts_this_pass += 1
                     logger.info("FELHALMOZÁS jelzés küldve (daytrade): %s (OI %+.2f%%, ár %+.2f%%, CVD buy_ratio: %s)",
                                 symbol, oi_change_pct, candle["price_change_pct"], accum_cvd_buy_ratio)
 
