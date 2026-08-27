@@ -36,3 +36,8 @@
 {"ts": "2026-08-27T18:36:39.566443+00:00", "symbol": "WIF-USDT", "direction": "LONG", "cumulative_change_pct": 13.87, "aligned_fraction": 0.62, "single_candle_share": 0.15, "oi_change_pct": null}
 {"ts": "2026-08-27T18:36:39.566443+00:00", "symbol": "MOVE-USDT", "direction": "LONG", "cumulative_change_pct": 13.06, "aligned_fraction": 0.71, "single_candle_share": 0.16, "oi_change_pct": null}
 {"ts": "2026-08-27T18:36:39.566443+00:00", "symbol": "SKR-USDT", "direction": "LONG", "cumulative_change_pct": 16.8, "aligned_fraction": 0.62, "single_candle_share": 0.11, "oi_change_pct": null}
+{"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "MOVR-USDT", "direction": "LONG", "cumulative_change_pct": 48.61, "aligned_fraction": 0.62, "single_candle_share": 0.23, "oi_change_pct": null}
+{"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "BEAM-USDT", "direction": "SHORT", "cumulative_change_pct": -11.17, "aligned_fraction": 0.88, "single_candle_share": 0.34, "oi_change_pct": null}
+{"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "RAY-USDT", "direction": "LONG", "cumulative_change_pct": 9.32, "aligned_fraction": 0.79, "single_candle_share": 0.13, "oi_change_pct": null}
+{"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "MUBARAK-USDT", "direction": "LONG", "cumulative_change_pct": 11.58, "aligned_fraction": 0.62, "single_candle_share": 0.12, "oi_change_pct": null}
+{"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "FF-USDT", "direction": "SHORT", "cumulative_change_pct": -9.74, "aligned_fraction": 0.83, "single_candle_share": 0.27, "oi_change_pct": null}
