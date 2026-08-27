@@ -12,3 +12,4 @@
 {"ts": "2026-08-27T13:38:10.954079+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.003015, "price_change_pct": 2.62, "vol_multiplier": 3.41}
 {"ts": "2026-08-27T13:57:26.457942+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.14904, "price_change_pct": 1.92, "vol_multiplier": 7.59}
 {"ts": "2026-08-27T15:18:23.785754+00:00", "symbol": "TAC-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.003216, "price_change_pct": -1.95, "vol_multiplier": 6.22}
+{"ts": "2026-08-27T16:05:09.793249+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.003422, "price_change_pct": 4.42, "vol_multiplier": 7.74}
