@@ -10,3 +10,4 @@
 {"ts": "2026-08-27T18:22:29.094159+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-27T18:22:29.094159+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T19:37:26.340706+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-27T19:52:24.171470+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
