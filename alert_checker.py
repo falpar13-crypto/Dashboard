@@ -1537,7 +1537,8 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
                                near_level_risk=False, funding_rate=None,
                                funding_delta_pct=None, orderbook_info=None,
                                macd_status=None, rsi=None, vol_multiplier=None,
-                               cross_bot_confirmations=None) -> tuple:
+                               cross_bot_confirmations=None, divergence=None,
+                               vwap_relation=None) -> tuple:
     """Visszatér: (score: int 0-100, label: str, factors: list[str])."""
     score = CONFIDENCE_BASELINE
     factors = []
@@ -1607,6 +1608,24 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
         score += bonus
         factors.append(f"+{bonus} bot-közi megerősítés ({len(cross_bot_confirmations)}x)")
 
+    if divergence == "BULLISH" and direction == "LONG":
+        score += 10; factors.append("+10 RSI bullish divergencia egyezik")
+    elif divergence == "BEARISH" and direction == "SHORT":
+        score += 10; factors.append("+10 RSI bearish divergencia egyezik")
+    elif divergence == "BULLISH" and direction == "SHORT":
+        score -= 10; factors.append("-10 RSI bullish divergencia ellenez (lehet forduló)")
+    elif divergence == "BEARISH" and direction == "LONG":
+        score -= 10; factors.append("-10 RSI bearish divergencia ellenez (lehet forduló)")
+
+    if vwap_relation == "ABOVE" and direction == "LONG":
+        score += 7; factors.append("+7 ár a VWAP fölött (egyezik)")
+    elif vwap_relation == "BELOW" and direction == "SHORT":
+        score += 7; factors.append("+7 ár a VWAP alatt (egyezik)")
+    elif vwap_relation == "BELOW" and direction == "LONG":
+        score -= 7; factors.append("-7 ár a VWAP alatt (ellenez)")
+    elif vwap_relation == "ABOVE" and direction == "SHORT":
+        score -= 7; factors.append("-7 ár a VWAP fölött (ellenez)")
+
     score = max(0, min(100, score))
     if score >= CONFIDENCE_STRONG_THRESHOLD:
         label = "🟢 ERŐS"
@@ -1624,7 +1643,8 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           funding_rate=None,
                           pace_vol_multiplier=None, elapsed_fraction=None,
                           funding_delta_pct=None, orderbook_info=None,
-                          cross_bot_confirmations=None):
+                          cross_bot_confirmations=None, divergence=None,
+                          vwap=None, vwap_relation=None, vwap_diff_pct=None):
     # v18 RÁNCFELVARRÁS: a bot mostantól KIZÁRÓLAG ⚡ STANDARD PUMP/DUMP
     # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
     # törölve.
@@ -1642,7 +1662,8 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         near_level_risk=near_level_risk, funding_rate=funding_rate,
         funding_delta_pct=funding_delta_pct, orderbook_info=orderbook_info,
         macd_status=macd_status, rsi=rsi, vol_multiplier=vol_multiplier,
-        cross_bot_confirmations=cross_bot_confirmations,
+        cross_bot_confirmations=cross_bot_confirmations, divergence=divergence,
+        vwap_relation=vwap_relation,
     )
     score_line = f"\n{score_label} Meggyőződés: {score}/100"
     if score_factors:
@@ -1651,6 +1672,21 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
     cross_line = ""
     if cross_bot_confirmations:
         cross_line = f"\n🔥 Megerősítve: {', '.join(cross_bot_confirmations)}"
+
+    divergence_line = ""
+    if divergence == "BULLISH":
+        divergence_line = "\n🔀 RSI bullish divergencia (ár lower-low, RSI higher-low - eséskifulladás jele)"
+    elif divergence == "BEARISH":
+        divergence_line = "\n🔀 RSI bearish divergencia (ár higher-high, RSI lower-high - felfutás-kifulladás jele)"
+
+    vwap_line = ""
+    if vwap is not None and vwap_relation is not None:
+        rel_txt = "fölött" if vwap_relation == "ABOVE" else "alatt"
+        note = " ✅ egyezik az iránnyal" if (
+            (vwap_relation == "ABOVE" and direction == "LONG") or (vwap_relation == "BELOW" and direction == "SHORT")
+        ) else " ⚠️ iránnyal szemben"
+        diff_txt = f" ({vwap_diff_pct:+.2f}%)" if vwap_diff_pct is not None else ""
+        vwap_line = f"\n📏 VWAP: {vwap:.6f} - az ár a VWAP {rel_txt}{diff_txt}{note}"
 
     early_line = ""
     if signal_type == "EARLY":
@@ -1732,6 +1768,8 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         f"{funding_line}"
         f"{orderbook_line}"
         f"{cross_line}"
+        f"{divergence_line}"
+        f"{vwap_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
@@ -1785,6 +1823,54 @@ def find_funding_baseline(history_without_current: list, now: datetime, target_m
 # EGY SZIMBÓLUM KIÉRTÉKELÉSE (v3: ÉLŐ gyertya a lezártak átlagához képest)
 # ----------------------------------------------------------------------------
 
+def compute_rsi_series(close_series: pd.Series) -> Optional[pd.Series]:
+    """Ugyanaz az RSI-számítás, mint compute_rsi_macd()-ban, de a TELJES
+    sorozatot adja vissza (nem csak az utolsó értéket) - lásd a
+    daytrade_checker.py azonos függvényének kommentjét."""
+    if len(close_series) < 35:
+        return None
+    delta = close_series.diff()
+    gain = delta.clip(lower=0)
+    loss = -delta.clip(upper=0)
+    avg_gain = gain.ewm(alpha=1 / 14, min_periods=14, adjust=False).mean()
+    avg_loss = loss.ewm(alpha=1 / 14, min_periods=14, adjust=False).mean()
+    rs = avg_gain / avg_loss.replace(0, pd.NA)
+    rsi_series = 100 - (100 / (1 + rs))
+    rsi_series = rsi_series.where(~((avg_loss == 0) & (avg_gain > 0)), 100.0)
+    return rsi_series
+
+
+DIVERGENCE_LOOKBACK_PERIOD = 40
+DIVERGENCE_SWING_LEGS = 2
+
+def detect_rsi_divergence(closed: pd.DataFrame, rsi_series: pd.Series,
+                            legs: int = DIVERGENCE_SWING_LEGS,
+                            lookback: int = DIVERGENCE_LOOKBACK_PERIOD) -> Optional[str]:
+    """RSI/ár divergencia keresése - lásd a daytrade_checker.py azonos
+    függvényének kommentjét a teljes indoklásért."""
+    if closed is None or rsi_series is None or len(closed) < lookback:
+        return None
+    window = closed.iloc[-lookback:].reset_index(drop=True)
+    rsi_window = rsi_series.iloc[-lookback:].reset_index(drop=True)
+    swing_points = _find_swing_points(window, legs=legs)
+    highs = [(idx, price) for idx, price, typ in swing_points if typ == "H"]
+    lows = [(idx, price) for idx, price, typ in swing_points if typ == "L"]
+
+    if len(highs) >= 2:
+        (idx1, price1), (idx2, price2) = highs[-2], highs[-1]
+        rsi1, rsi2 = rsi_window.iloc[idx1], rsi_window.iloc[idx2]
+        if pd.notna(rsi1) and pd.notna(rsi2) and price2 > price1 and rsi2 < rsi1:
+            return "BEARISH"
+
+    if len(lows) >= 2:
+        (idx1, price1), (idx2, price2) = lows[-2], lows[-1]
+        rsi1, rsi2 = rsi_window.iloc[idx1], rsi_window.iloc[idx2]
+        if pd.notna(rsi1) and pd.notna(rsi2) and price2 < price1 and rsi2 > rsi1:
+            return "BULLISH"
+
+    return None
+
+
 def compute_rsi_macd(close_series: pd.Series):
     """RSI(14) és MACD(12,26,9) számítása a TELJES sorozaton (lezárt gyertyák +
     élő gyertya) - ez tudatosan a szkript "korai jelzés" filozófiáját követi:
@@ -1826,6 +1912,20 @@ def compute_rsi_macd(close_series: pd.Series):
             macd_status = "Bearish"
 
     return rsi_val, macd_status
+
+
+def compute_vwap(kdf: pd.DataFrame) -> Optional[float]:
+    """Gördülő VWAP - lásd a daytrade_checker.py azonos függvényének
+    kommentjét a teljes indoklásért."""
+    if kdf is None or len(kdf) == 0:
+        return None
+    typical_price = (kdf["high"] + kdf["low"] + kdf["close"]) / 3
+    vol = kdf["volume"]
+    total_vol = vol.sum()
+    if total_vol is None or pd.isna(total_vol) or total_vol <= 0:
+        return None
+    vwap = (typical_price * vol).sum() / total_vol
+    return float(vwap) if pd.notna(vwap) else None
 
 
 def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Optional["CandleEval"]:
@@ -1870,6 +1970,18 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
 
     rsi_val, macd_status = compute_rsi_macd(kdf["close"])
 
+    # ÚJ: RSI/ár divergencia - kizárólag LEZÁRT gyertyákon.
+    rsi_series_closed = compute_rsi_series(closed["close"])
+    divergence = detect_rsi_divergence(closed, rsi_series_closed) if rsi_series_closed is not None else None
+
+    # ÚJ: VWAP-viszony.
+    vwap = compute_vwap(kdf)
+    vwap_relation = None
+    vwap_diff_pct = None
+    if vwap is not None and vwap > 0:
+        vwap_diff_pct = (current_price - vwap) / vwap * 100
+        vwap_relation = "ABOVE" if current_price > vwap else "BELOW"
+
     elapsed_fraction = None
     pace_vol_multiplier = None
     if now is not None and "timestamp" in kdf.columns:
@@ -1894,6 +2006,10 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
         "direction": direction,
         "rsi": rsi_val,
         "macd_status": macd_status,
+        "divergence": divergence,
+        "vwap": vwap,
+        "vwap_relation": vwap_relation,
+        "vwap_diff_pct": round(vwap_diff_pct, 2) if vwap_diff_pct is not None else None,
         "signal_type": "STANDARD",
         "elapsed_fraction": round(elapsed_fraction, 3) if elapsed_fraction is not None else None,
         "pace_vol_multiplier": round(pace_vol_multiplier, 2) if pace_vol_multiplier is not None else None,
@@ -2215,6 +2331,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 funding_delta_pct=funding_delta_pct,
                 orderbook_info=orderbook_info,
                 cross_bot_confirmations=cross_bot_confirmations,
+                divergence=candle.get("divergence"),
+                vwap=candle.get("vwap"), vwap_relation=candle.get("vwap_relation"),
+                vwap_diff_pct=candle.get("vwap_diff_pct"),
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
