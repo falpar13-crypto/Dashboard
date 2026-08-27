@@ -343,6 +343,74 @@ def _log_signal_outcome(record: dict) -> None:
     except OSError as e:
         logger.error("Nem sikerült írni a jelzés-naplóba: %s", e)
 
+# ----------------------------------------------------------------------------
+# ÚJ: HISTORIKUS KIMENETEL-STATISZTIKA
+# ----------------------------------------------------------------------------
+# A napi winrate-összesítő (lásd lentebb) már régóta feldolgozza a
+# SIGNAL_LOG_FILE-t, de csak NAPI bontásban jelenít meg összesítést. Ez a
+# funkció ugyanabból az adatból egy jelzés KIKÜLDÉSE ELŐTT ad egy konkrét,
+# "hasonló korábbi jelzések hogyan alakultak" számot - pl. "az elmúlt 30
+# nap hasonló EARLY LONG jelzéseinek 62%-a érte el a +2%-ot". Ez NEM
+# szűrőfeltétel (nem blokkolja a jelzést), csak tájékoztató kontextus és
+# egy szerény hatás a meggyőződés-pontszámra.
+HISTORICAL_STATS_LOOKBACK_DAYS = 30
+HISTORICAL_STATS_MIN_SAMPLES = 10   # ennél kevesebb releváns múltbeli minta esetén nem mutatunk semmit
+
+def compute_historical_stats(signal_type: str, direction: str, now: datetime) -> Optional[dict]:
+    """A SAJÁT (ugyanezen bot) korábbi, LEZÁRT (nem UNKNOWN) jelzéseinek
+    naplójából statisztikát számol az azonos signal_type + irány
+    kombinációra, BÁRMELY symbolon (egy adott symbolra általában túl
+    kevés minta gyűlne össze ahhoz, hogy megbízható legyen)."""
+    if not SIGNAL_LOG_FILE.exists():
+        return None
+    cutoff = now - timedelta(days=HISTORICAL_STATS_LOOKBACK_DAYS)
+    matched = []
+    try:
+        with SIGNAL_LOG_FILE.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if rec.get("signal_type") != signal_type or rec.get("direction") != direction:
+                    continue
+                if rec.get("outcome") not in ("LOSS", "NEUTRAL"):
+                    continue  # UNKNOWN vagy még nem lezárt jelzés - kihagyjuk
+                try:
+                    entry_ts = datetime.fromisoformat(rec["entry_ts"])
+                except (KeyError, ValueError):
+                    continue
+                if entry_ts < cutoff:
+                    continue
+                matched.append(rec)
+    except OSError:
+        return None
+
+    if len(matched) < HISTORICAL_STATS_MIN_SAMPLES:
+        return None
+
+    total = len(matched)
+    first_level = OUTCOME_PROFIT_LEVELS_PCT[0] if OUTCOME_PROFIT_LEVELS_PCT else None
+    reached_first_level = 0
+    if first_level is not None:
+        level_key = f"level_{first_level}pct"
+        reached_first_level = sum(1 for r in matched if (r.get("levels_reached") or {}).get(level_key))
+    loss_count = sum(1 for r in matched if r.get("outcome") == "LOSS")
+    favorable_values = [r["max_favorable_pct"] for r in matched if r.get("max_favorable_pct") is not None]
+    avg_favorable = sum(favorable_values) / len(favorable_values) if favorable_values else None
+
+    return {
+        "total": total,
+        "win_rate_pct": round(reached_first_level / total * 100, 1) if first_level is not None else None,
+        "loss_rate_pct": round(loss_count / total * 100, 1),
+        "avg_max_favorable_pct": round(avg_favorable, 2) if avg_favorable is not None else None,
+        "profit_level_pct": first_level,
+    }
+
+
 def register_pending_signal(state: dict, symbol: str, signal_type: str, direction: str, entry_price: float, now: datetime) -> None:
     pending = state.setdefault("pending_outcomes", [])
     pending.append({
@@ -1103,7 +1171,7 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
                                funding_delta_pct=None, orderbook_info=None,
                                macd_status=None, rsi=None, vol_multiplier=None,
                                cross_bot_confirmations=None, divergence=None,
-                               vwap_relation=None) -> tuple:
+                               vwap_relation=None, historical_stats=None) -> tuple:
     """Visszatér: (score: int 0-100, label: str, factors: list[str]).
     A factors lista a pontszám összetevőit sorolja fel - ez KERÜL bele az
     üzenetbe is, hogy ne "fekete doboz" számként érkezzen, hanem lásd is,
@@ -1202,6 +1270,17 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
     elif vwap_relation == "ABOVE" and direction == "SHORT":
         score -= 7; factors.append("-7 ár a VWAP fölött (ellenez)")
 
+    # ÚJ: historikus kimenetel-statisztika - lásd compute_historical_stats()
+    # kommentjét. Szerényebb súly (max +-8), mert ez nem az AKTUÁLIS
+    # jelzésről, hanem a TÍPUS múltbeli átlagos teljesítményéről mond
+    # valamit - fontos kontextus, de nem helyettesíti a friss jelzőket.
+    if historical_stats is not None and historical_stats.get("win_rate_pct") is not None:
+        win_rate = historical_stats["win_rate_pct"]
+        if win_rate >= 65:
+            score += 8; factors.append(f"+8 historikusan erős típus ({win_rate:.0f}% találati arány)")
+        elif win_rate <= 35:
+            score -= 8; factors.append(f"-8 historikusan gyenge típus ({win_rate:.0f}% találati arány)")
+
     score = max(0, min(100, score))
     if score >= CONFIDENCE_STRONG_THRESHOLD:
         label = "🟢 ERŐS"
@@ -1212,7 +1291,7 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
     return score, label, factors
 
 
-def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None, cross_bot_confirmations=None, divergence=None, vwap=None, vwap_relation=None, vwap_diff_pct=None):
+def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None, cross_bot_confirmations=None, divergence=None, vwap=None, vwap_relation=None, vwap_diff_pct=None, historical_stats=None):
     action = DIRECTION_LABELS.get(direction, direction)
     if signal_type == "EARLY":
         header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H)"
@@ -1227,7 +1306,7 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         funding_delta_pct=funding_delta_pct, orderbook_info=orderbook_info,
         macd_status=macd_status, rsi=rsi, vol_multiplier=vol_multiplier,
         cross_bot_confirmations=cross_bot_confirmations, divergence=divergence,
-        vwap_relation=vwap_relation,
+        vwap_relation=vwap_relation, historical_stats=historical_stats,
     )
     score_line = f"\n{score_label} Meggyőződés: {score}/100"
     if score_factors:
@@ -1242,6 +1321,17 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         divergence_line = "\n🔀 RSI bullish divergencia (ár lower-low, RSI higher-low - eséskifulladás jele)"
     elif divergence == "BEARISH":
         divergence_line = "\n🔀 RSI bearish divergencia (ár higher-high, RSI lower-high - felfutás-kifulladás jele)"
+
+    # ÚJ: historikus kimenetel-statisztika sor.
+    historical_line = ""
+    if historical_stats is not None:
+        hs = historical_stats
+        win_txt = f"{hs['win_rate_pct']:.0f}%" if hs.get("win_rate_pct") is not None else "n/a"
+        avg_txt = f"{hs['avg_max_favorable_pct']:+.2f}%" if hs.get("avg_max_favorable_pct") is not None else "n/a"
+        historical_line = (
+            f"\n📊 Historikus ({hs['total']} hasonló, {HISTORICAL_STATS_LOOKBACK_DAYS}nap): "
+            f"{win_txt} érte el a +{hs['profit_level_pct']}%-ot, átlag max {avg_txt}, SL-találat {hs['loss_rate_pct']:.0f}%"
+        )
 
     vwap_line = ""
     if vwap is not None and vwap_relation is not None:
@@ -1328,6 +1418,7 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         f"{cross_line}"
         f"{divergence_line}"
         f"{vwap_line}"
+        f"{historical_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
@@ -1749,6 +1840,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # ÚJ: bot-közi megerősítés ellenőrzése - lásd
             # get_cross_bot_confirmations() kommentjét.
             cross_bot_confirmations = get_cross_bot_confirmations(symbol, candle["direction"], now)
+            # ÚJ: historikus kimenetel-statisztika lekérdezése - lásd
+            # compute_historical_stats() kommentjét.
+            historical_stats = compute_historical_stats(fired_signal_type, candle["direction"], now)
             msg = format_daytrade_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
@@ -1765,6 +1859,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 divergence=candle.get("divergence"),
                 vwap=candle.get("vwap"), vwap_relation=candle.get("vwap_relation"),
                 vwap_diff_pct=candle.get("vwap_diff_pct"),
+                historical_stats=historical_stats,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
