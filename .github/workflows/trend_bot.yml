@@ -1,0 +1,100 @@
+name: BingX Csendes Trend Figyelő
+
+on:
+  schedule:
+    # ÚJ: ennek a botnak NEM kell külső cron-job.org szolgáltatás! A másik
+    # három bot (daytrade/scalp/kaszkád) percenkénti/tíz-perces gyors
+    # ciklusokat igényel, amit a GitHub saját cron-ja nem tud megbízhatóan
+    # tartani - ezért kell nekik a workflow_dispatch-et hívó külső cron.
+    # Ez a bot viszont eleve 1 ÓRÁS mintázatot keres, tehát a GitHub saját,
+    # kevésbé pontos (néha pár perc csúszással induló) óránkénti cron-ja
+    # bőven elég neki - a pár perces csúszás egy 24 órás ablaknál elhanyagolható.
+    - cron: "5 * * * *"
+  workflow_dispatch: {}   # kézi indítás az "Actions" fülről, teszteléshez
+
+concurrency:
+  group: bingx-trend-checker
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  STATE_BRANCH: state-trend
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repó checkout
+        uses: actions/checkout@v4
+
+      - name: Python telepítése
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: requirements-alerts.txt
+
+      - name: Csomagok telepítése
+        run: pip install aiohttp pandas requests
+
+      - name: Állapotfájlok betöltése a ${{ env.STATE_BRANCH }} branch-ről
+        run: |
+          if git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$STATE_BRANCH"
+            git worktree add --detach /tmp/state-load "origin/$STATE_BRANCH"
+            find /tmp/state-load -maxdepth 1 -type f \( -name '*.json' -o -name '*.jsonl' \) -exec cp {} . \;
+            git worktree remove /tmp/state-load --force
+            echo "Állapot betöltve a $STATE_BRANCH branch-ről."
+          else
+            echo "Még nincs $STATE_BRANCH branch - első futás, üres állapotból indulunk."
+          fi
+
+      - name: Csendes trend figyelő futtatása
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python trend_checker.py
+
+      - name: Állapotfájlok visszamentése a ${{ env.STATE_BRANCH }} branch-re
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          for i in 1 2 3 4 5; do
+            rm -rf /tmp/state-save
+            if git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null 2>&1; then
+              git fetch origin "$STATE_BRANCH"
+              git worktree add --detach /tmp/state-save "origin/$STATE_BRANCH"
+            else
+              git worktree add --detach /tmp/state-save
+              (cd /tmp/state-save && git checkout --orphan "$STATE_BRANCH" && git rm -rf . >/dev/null 2>&1 || true)
+            fi
+
+            cp trend_state.json /tmp/state-save/ 2>/dev/null || true
+            [ -f trend_alert_log.jsonl ] && cp trend_alert_log.jsonl /tmp/state-save/
+
+            cd /tmp/state-save
+            git add -A
+            if git diff --quiet --cached; then
+              echo "Nincs változás az állapotfájlokban, nincs mit commitolni."
+              cd "$GITHUB_WORKSPACE"
+              git worktree remove /tmp/state-save --force
+              exit 0
+            fi
+            git commit -m "trend_state / trend_alert_log frissítve [skip ci]"
+
+            if git push origin "HEAD:$STATE_BRANCH"; then
+              echo "Push sikeres."
+              cd "$GITHUB_WORKSPACE"
+              git worktree remove /tmp/state-save --force
+              exit 0
+            fi
+
+            echo "Push ütközött (${i}. próbálkozás) - újrapróbálás..."
+            cd "$GITHUB_WORKSPACE"
+            git worktree remove /tmp/state-save --force
+            sleep $((RANDOM % 6 + 3))
+          done
+          echo "Push végül sem sikerült 5 próbálkozás után."
