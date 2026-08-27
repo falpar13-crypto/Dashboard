@@ -1695,11 +1695,11 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
 
     score = max(0, min(100, score))
     if score >= CONFIDENCE_STRONG_THRESHOLD:
-        label = "🟢 ERŐS"
+        label = "🟢"  # ÚJ: csak a szín-pont, szöveg/szám nélkül (a felhasználó kérésére)
     elif score >= CONFIDENCE_WEAK_THRESHOLD:
-        label = "🟡 KÖZEPES"
+        label = "🟡"
     else:
-        label = "🔴 GYENGE"
+        label = "🔴"
     return score, label, factors
 
 
@@ -1719,12 +1719,10 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
     # ÚJ: EARLY (gyorsulás-alapú) jelzéstípus visszahozva, más fejléccel és
     # egy figyelmeztető sorral - lásd az EARLY paraméterek blokk-kommentjét.
     action = DIRECTION_LABELS.get(direction, direction)
-    if signal_type == "EARLY":
-        header = f"🌱 <b>{symbol}</b> {action} (KORAI)"
-    else:
-        header = f"⚡ <b>{symbol}</b> {action}"
 
-    # ÚJ: meggyőződés-pontszám - lásd compute_confidence_score() kommentjét.
+    # ÚJ: meggyőződés-pontszám mostantól CSAK szín-pontként (🟢/🟡/🔴)
+    # jelenik meg a fejlécben - lásd a daytrade_checker.py azonos
+    # kommentjét a teljes indoklásért.
     score, score_label, score_factors = compute_confidence_score(
         direction, htf_trend=htf_trend, bounce_confluence=bounce_confluence,
         near_level_risk=near_level_risk, funding_rate=funding_rate,
@@ -1733,9 +1731,11 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         cross_bot_confirmations=cross_bot_confirmations, divergence=divergence,
         vwap_relation=vwap_relation, historical_stats=historical_stats,
     )
-    score_line = f"\n{score_label} Meggyőződés: {score}/100"
-    if score_factors:
-        score_line += f" ({', '.join(score_factors)})"
+
+    if signal_type == "EARLY":
+        header = f"🌱 <b>{symbol}</b> {action} (KORAI) {score_label}"
+    else:
+        header = f"⚡ <b>{symbol}</b> {action} {score_label}"
 
     cross_line = ""
     if cross_bot_confirmations:
@@ -1836,8 +1836,7 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
             orderbook_line = f"\n📕 Orderbook: vékony bid / vastag ask ({inv_ratio:.1f}x){note}"
 
     body = (
-        f"{header}"
-        f"{score_line}\n"
+        f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"

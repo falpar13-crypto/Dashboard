@@ -1283,23 +1283,23 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
 
     score = max(0, min(100, score))
     if score >= CONFIDENCE_STRONG_THRESHOLD:
-        label = "🟢 ERŐS"
+        label = "🟢"  # ÚJ: csak a szín-pont, szöveg/szám nélkül (a felhasználó kérésére)
     elif score >= CONFIDENCE_WEAK_THRESHOLD:
-        label = "🟡 KÖZEPES"
+        label = "🟡"
     else:
-        label = "🔴 GYENGE"
+        label = "🔴"
     return score, label, factors
 
 
 def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None, cross_bot_confirmations=None, divergence=None, vwap=None, vwap_relation=None, vwap_diff_pct=None, historical_stats=None):
     action = DIRECTION_LABELS.get(direction, direction)
-    if signal_type == "EARLY":
-        header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H)"
-    else:
-        header = f"🦅 <b>[DAYTRADE] {symbol}</b> {action} (STANDARD 1H)"
 
-    # ÚJ: meggyőződés-pontszám - lásd compute_confidence_score() kommentjét.
-    # A fejléc közvetlen alá kerül, hogy az első pillantásra látszódjon.
+    # ÚJ: a meggyőződés-pontszám (compute_confidence_score) mostantól CSAK
+    # egy szín-pontként (🟢/🟡/🔴) jelenik meg a fejlécben - a felhasználó
+    # kérésére a szám és a részletes tényezőlista (ami félrevezetően
+    # "objektívnek" tűnhetett, holott a súlyok nem backteszteltek)
+    # KIKERÜLT az üzenetből. A pontszám maga változatlanul számít a
+    # háttérben, csak nem jelenítjük meg a részleteit.
     score, score_label, score_factors = compute_confidence_score(
         direction, htf_trend=htf_trend, bounce_confluence=bounce_confluence,
         near_level_risk=near_level_risk, funding_rate=funding_rate,
@@ -1308,9 +1308,11 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         cross_bot_confirmations=cross_bot_confirmations, divergence=divergence,
         vwap_relation=vwap_relation, historical_stats=historical_stats,
     )
-    score_line = f"\n{score_label} Meggyőződés: {score}/100"
-    if score_factors:
-        score_line += f" ({', '.join(score_factors)})"
+
+    if signal_type == "EARLY":
+        header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H) {score_label}"
+    else:
+        header = f"🦅 <b>[DAYTRADE] {symbol}</b> {action} (STANDARD 1H) {score_label}"
 
     cross_line = ""
     if cross_bot_confirmations:
@@ -1406,8 +1408,7 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
             orderbook_line = f"\n📕 Orderbook: vékony bid / vastag ask ({inv_ratio:.1f}x){note}"
 
     body = (
-        f"{header}"
-        f"{score_line}\n"
+        f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
