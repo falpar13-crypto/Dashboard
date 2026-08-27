@@ -1,8 +1,3 @@
-{"ts": "2026-08-27T15:01:44.054144+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-27T15:24:39.607775+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-27T16:23:34.287530+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-27T16:23:34.287530+00:00", "symbol": "PEOPLE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-27T16:33:51.024335+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T17:27:58.454303+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T18:12:15.783462+00:00", "symbol": "PROM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T18:13:18.331838+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -11,3 +6,4 @@
 {"ts": "2026-08-27T19:37:26.340706+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T19:52:24.171470+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T20:41:14.820387+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-08-27T23:23:36.292522+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
