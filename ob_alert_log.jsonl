@@ -1,2 +1,3 @@
 {"ts": "2026-08-27T19:19:08.923655+00:00", "symbol": "CHILLGUY-USDT", "direction": "SHORT", "zone_top": 0.013156, "zone_bot": 0.012289, "anchor_ts": "2026-08-27T16:00:00"}
 {"ts": "2026-08-27T19:19:08.923655+00:00", "symbol": "CHIP-USDT", "direction": "SHORT", "zone_top": 0.04372, "zone_bot": 0.04011, "anchor_ts": "2026-08-27T15:00:00"}
+{"ts": "2026-08-27T19:27:02.330948+00:00", "symbol": "LONGXIA-USDT", "direction": "LONG", "zone_top": 0.034097, "zone_bot": 0.032269, "anchor_ts": "2026-08-27T13:00:00"}
