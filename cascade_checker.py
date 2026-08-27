@@ -97,6 +97,83 @@ KLINES_ENDPOINT = f"{BASE_URL}/openApi/swap/v3/quote/klines"
 STATE_FILE = Path(__file__).parent / "cascade_state.json"
 SIGNAL_LOG_FILE = Path(__file__).parent / "cascade_alert_log.jsonl"
 
+# ----------------------------------------------------------------------------
+# ÚJ: BOT-KÖZI MEGERŐSÍTÉS (cross-bot confirmation) - lásd a
+# daytrade_checker.py azonos blokk-kommentjét a teljes indoklásért.
+# ----------------------------------------------------------------------------
+CROSS_SIGNAL_FILE = Path(__file__).parent / "cascade_recent_signals.jsonl"
+OTHER_BOT_SIGNAL_FILES = {
+    "SCALP": Path(__file__).parent / "scalp_recent_signals.jsonl",
+    "DAYTRADE": Path(__file__).parent / "daytrade_recent_signals.jsonl",
+}
+CROSS_BOT_WINDOW_MINUTES = 45
+CROSS_SIGNAL_RETENTION_HOURS = 6
+
+def _append_cross_bot_signal(symbol: str, direction: str, signal_type: str, now: datetime) -> None:
+    """A SAJÁT (bot-specifikus nevű) fájlba ír egy sort - ezt olvassák majd
+    a MÁSIK botok a kereszt-megerősítéshez."""
+    cutoff = now - timedelta(hours=CROSS_SIGNAL_RETENTION_HOURS)
+    rows = []
+    if CROSS_SIGNAL_FILE.exists():
+        try:
+            with CROSS_SIGNAL_FILE.open("r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        rec = json.loads(line)
+                        if datetime.fromisoformat(rec["ts"]) >= cutoff:
+                            rows.append(rec)
+                    except (json.JSONDecodeError, KeyError, ValueError):
+                        continue
+        except OSError:
+            pass
+    rows.append({"ts": now.isoformat(), "symbol": symbol, "direction": direction, "signal_type": signal_type})
+    try:
+        with CROSS_SIGNAL_FILE.open("w", encoding="utf-8") as f:
+            for rec in rows:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except OSError as e:
+        logger.warning("Kereszt-bot jelzés-fájl írása sikertelen: %s", e)
+
+
+def get_cross_bot_confirmations(symbol: str, direction: str, now: datetime) -> list:
+    """A MÁSIK botok jelzés-fájljait nézi végig, és visszaadja azok
+    listáját, amik az elmúlt CROSS_BOT_WINDOW_MINUTES percben UGYANARRA
+    a symbolra, UGYANABBA az irányba jeleztek."""
+    cutoff = now - timedelta(minutes=CROSS_BOT_WINDOW_MINUTES)
+    confirmations = []
+    for label, path in OTHER_BOT_SIGNAL_FILES.items():
+        if not path.exists():
+            continue
+        try:
+            with path.open("r", encoding="utf-8") as f:
+                lines = f.readlines()
+        except OSError:
+            continue
+        best_ts = None
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+                if rec.get("symbol") != symbol or rec.get("direction") != direction:
+                    continue
+                ts = datetime.fromisoformat(rec["ts"])
+                if ts < cutoff:
+                    continue
+                if best_ts is None or ts > best_ts:
+                    best_ts = ts
+            except (json.JSONDecodeError, KeyError, ValueError):
+                continue
+        if best_ts is not None:
+            age_minutes = (now - best_ts).total_seconds() / 60
+            confirmations.append(f"{label} ({age_minutes:.0f} perce)")
+    return confirmations
+
+
 MIN_VOLUME_USDT = 1_000_000
 MAX_VOLUME_USDT = 150_000_000
 
@@ -343,7 +420,8 @@ DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}
 
 def format_cascade_message(symbol, direction, price, price_change_pct, candle_vol_usdt,
                              vol_multiplier, signal_type="STANDARD",
-                             pace_vol_multiplier=None, elapsed_fraction=None) -> str:
+                             pace_vol_multiplier=None, elapsed_fraction=None,
+                             cross_bot_confirmations=None) -> str:
     action = DIRECTION_LABELS.get(direction, direction)
     if signal_type == "EARLY":
         header = f"🌋 <b>[KASZKÁD] {symbol}</b> {action} (KORAI, 1m)"
@@ -356,12 +434,22 @@ def format_cascade_message(symbol, direction, price, price_change_pct, candle_vo
         elapsed_note = f" (a gyertya ~{elapsed_fraction * 100:.0f}%-ánál)" if elapsed_fraction is not None else ""
         early_line = f"\n🔬 Korai jelzés{pace_note}{elapsed_note}"
 
+    # ÚJ: bot-közi megerősítés - lásd get_cross_bot_confirmations()
+    # kommentjét. Ez a bot nem számol teljes meggyőződés-pontszámot
+    # (szándékosan egyszerű), de a megerősítést mégis érdemes kiírni,
+    # mert ez a bot pont a leggyorsabb reakciójú - ha a másik két bot is
+    # jelzett rá, az önmagában erős plusz infó.
+    cross_line = ""
+    if cross_bot_confirmations:
+        cross_line = f"\n🔥 Megerősítve: {', '.join(cross_bot_confirmations)}"
+
     body = (
         f"{header}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%, 1 PERC alatt)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"⚠️ Extrém, kaszkád-jellegű mozgás - ellenőrizd a piacot, mielőtt lépsz."
         f"{early_line}"
+        f"{cross_line}"
     )
     return f"\n{body}\n"
 
@@ -451,12 +539,15 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
                 })
 
         if fired_signal_type and cooldown_ok:
+            # ÚJ: bot-közi megerősítés ellenőrzése.
+            cross_bot_confirmations = get_cross_bot_confirmations(symbol, candle["direction"], now)
             msg = format_cascade_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
                 signal_type=fired_signal_type,
                 pace_vol_multiplier=candle.get("pace_vol_multiplier"),
                 elapsed_fraction=candle.get("elapsed_fraction"),
+                cross_bot_confirmations=cross_bot_confirmations,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
@@ -466,6 +557,9 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
                 "signal_type": fired_signal_type, "price": candle["price"],
                 "price_change_pct": candle["price_change_pct"], "vol_multiplier": candle["vol_multiplier"],
             })
+            # ÚJ: a SAJÁT jelzésünket is elmentjük a kereszt-bot fájlba,
+            # hogy a MÁSIK két bot lássa a következő futásukban.
+            _append_cross_bot_signal(symbol, candle["direction"], fired_signal_type, now)
             logger.info("JELZÉS küldve [%s]: %s [%s] (ár %+.2f%%, vol %.1fx, %.0f USDT)",
                         fired_signal_type, symbol, candle["direction"],
                         candle["price_change_pct"], candle["vol_multiplier"], candle["candle_vol_usdt"])

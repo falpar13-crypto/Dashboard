@@ -124,6 +124,91 @@ ORDERBOOK_IMBALANCE_THRESHOLD = 1.8   # bid/ask notional-arány, ami felett/alat
 STATE_FILE = Path(__file__).parent / "daytrade_state.json"
 SIGNAL_LOG_FILE = Path(__file__).parent / "daytrade_alert_log.jsonl"
 
+# ----------------------------------------------------------------------------
+# ÚJ: BOT-KÖZI MEGERŐSÍTÉS (cross-bot confirmation)
+# ----------------------------------------------------------------------------
+# Ez a bot a SAJÁT, egyedi nevű fájljába ír egy sort minden kiküldött
+# jelzésnél - ezt a workflow yml (a jelenlegi futás ELEJÉN, olvasásra)
+# letölti a másik két bot state-branch-éről. Ez a bot csak OLVASSA a másik
+# kettőt, írni csak a SAJÁT fájljába ír - nincs közös írási célpont, tehát
+# nincs git push-ütközési kockázat (ugyanaz az elv, ami miatt eredetileg
+# is külön state-branch-et kapott mindhárom bot).
+CROSS_SIGNAL_FILE = Path(__file__).parent / "daytrade_recent_signals.jsonl"
+OTHER_BOT_SIGNAL_FILES = {
+    "SCALP": Path(__file__).parent / "scalp_recent_signals.jsonl",
+    "KASZKÁD": Path(__file__).parent / "cascade_recent_signals.jsonl",
+}
+CROSS_BOT_WINDOW_MINUTES = 45     # ennyi percen belüli másik-bot jelzés számít megerősítésnek
+CROSS_SIGNAL_RETENTION_HOURS = 6  # a SAJÁT fájl ennél régebbi sorait eldobja íráskor, ne nőjön korlátlanul
+
+def _append_cross_bot_signal(symbol: str, direction: str, signal_type: str, now: datetime) -> None:
+    """A SAJÁT (bot-specifikus nevű) fájlba ír egy sort - ezt olvassák majd
+    a MÁSIK botok a kereszt-megerősítéshez."""
+    cutoff = now - timedelta(hours=CROSS_SIGNAL_RETENTION_HOURS)
+    rows = []
+    if CROSS_SIGNAL_FILE.exists():
+        try:
+            with CROSS_SIGNAL_FILE.open("r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        rec = json.loads(line)
+                        if datetime.fromisoformat(rec["ts"]) >= cutoff:
+                            rows.append(rec)
+                    except (json.JSONDecodeError, KeyError, ValueError):
+                        continue
+        except OSError:
+            pass
+    rows.append({"ts": now.isoformat(), "symbol": symbol, "direction": direction, "signal_type": signal_type})
+    try:
+        with CROSS_SIGNAL_FILE.open("w", encoding="utf-8") as f:
+            for rec in rows:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except OSError as e:
+        logger.warning("Kereszt-bot jelzés-fájl írása sikertelen: %s", e)
+
+
+def get_cross_bot_confirmations(symbol: str, direction: str, now: datetime) -> list:
+    """A MÁSIK botok (workflow által előtte letöltött) jelzés-fájljait
+    nézi végig, és visszaadja azok listáját, amik az elmúlt
+    CROSS_BOT_WINDOW_MINUTES percben UGYANARRA a symbolra, UGYANABBA az
+    irányba jeleztek. Ha egy fájl nem létezik (pl. a másik bot még sosem
+    futott, vagy a fetch lépés kimaradt), csendben kihagyja - hiányzó
+    megerősítés NEM hiba, csak nincs plusz infó."""
+    cutoff = now - timedelta(minutes=CROSS_BOT_WINDOW_MINUTES)
+    confirmations = []
+    for label, path in OTHER_BOT_SIGNAL_FILES.items():
+        if not path.exists():
+            continue
+        try:
+            with path.open("r", encoding="utf-8") as f:
+                lines = f.readlines()
+        except OSError:
+            continue
+        best_ts = None
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+                if rec.get("symbol") != symbol or rec.get("direction") != direction:
+                    continue
+                ts = datetime.fromisoformat(rec["ts"])
+                if ts < cutoff:
+                    continue
+                if best_ts is None or ts > best_ts:
+                    best_ts = ts
+            except (json.JSONDecodeError, KeyError, ValueError):
+                continue
+        if best_ts is not None:
+            age_minutes = (now - best_ts).total_seconds() / 60
+            confirmations.append(f"{label} ({age_minutes:.0f} perce)")
+    return confirmations
+
+
 MIN_VOLUME_USDT = 1_000_000
 MAX_VOLUME_USDT = 150_000_000
 
@@ -993,12 +1078,141 @@ async def send_telegram_message(text: str) -> None:
 DIRECTION_LABELS = {"LONG": "PUMP", "SHORT": "DUMP"}  
 
 
-def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None):
+# ----------------------------------------------------------------------------
+# ÚJ: MEGGYŐZŐDÉS-PONTSZÁM (confidence score)
+# ----------------------------------------------------------------------------
+# A cél NEM a kereskedés automatizálása (nincs SL/TP, nincs pozíció-kezelés),
+# hanem hogy a már meglévő, egyenként megjelenő jelzőket (HTF-trend, S/R,
+# funding, orderbook, MACD, RSI, volumen-erő) EGY összesített, gyorsan
+# értelmezhető számmá/címkévé sűrítsük - a döntést továbbra is a
+# felhasználó hozza meg, ez csak segít gyorsabban átlátni, hány jelző
+# mutat EGY IRÁNYBA.
+#
+# A pontszám egy 50-ös (semleges) alapértékről indul, és minden
+# rendelkezésre álló jelző +/- pontot ad hozzá attól függően, hogy
+# EGYEZIK vagy ELLENTMOND-e a jelzés irányával. Fontos: ha egy adott
+# jelző (pl. orderbook, mert csak a kimenő jelzésekhez kérdezzük le)
+# egyszerűen nincs adat, azt a jelzőt NEM számítjuk bele (se pluszban,
+# se mínuszban) - a hiányzó adat nem büntetés.
+CONFIDENCE_BASELINE = 50
+CONFIDENCE_STRONG_THRESHOLD = 70
+CONFIDENCE_WEAK_THRESHOLD = 40
+
+def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
+                               near_level_risk=False, funding_rate=None,
+                               funding_delta_pct=None, orderbook_info=None,
+                               macd_status=None, rsi=None, vol_multiplier=None,
+                               cross_bot_confirmations=None) -> tuple:
+    """Visszatér: (score: int 0-100, label: str, factors: list[str]).
+    A factors lista a pontszám összetevőit sorolja fel - ez KERÜL bele az
+    üzenetbe is, hogy ne "fekete doboz" számként érkezzen, hanem lásd is,
+    MIÉRT annyi, amennyi."""
+    score = CONFIDENCE_BASELINE
+    factors = []
+
+    if htf_trend == "UP" and direction == "LONG":
+        score += 15; factors.append("+15 HTF trend egyezik")
+    elif htf_trend == "DOWN" and direction == "SHORT":
+        score += 15; factors.append("+15 HTF trend egyezik")
+    elif htf_trend == "UP" and direction == "SHORT":
+        score -= 15; factors.append("-15 HTF trend ellenez")
+    elif htf_trend == "DOWN" and direction == "LONG":
+        score -= 15; factors.append("-15 HTF trend ellenez")
+
+    if bounce_confluence:
+        score += 10; factors.append("+10 támasz/ellenállás egyezik")
+    if near_level_risk:
+        score -= 10; factors.append("-10 szemközti szint közelében (elutasítás-kockázat)")
+
+    if funding_rate is not None:
+        if direction == "LONG" and funding_rate <= -FUNDING_SQUEEZE_THRESHOLD_PCT:
+            score += 10; factors.append("+10 short squeeze funding")
+        elif direction == "SHORT" and funding_rate >= FUNDING_SQUEEZE_THRESHOLD_PCT:
+            score += 10; factors.append("+10 long squeeze funding")
+
+    if funding_delta_pct is not None:
+        if direction == "LONG" and funding_delta_pct <= -FUNDING_ACCEL_THRESHOLD_PCT:
+            score += 8; factors.append("+8 gyorsuló funding az irány felé")
+        elif direction == "SHORT" and funding_delta_pct >= FUNDING_ACCEL_THRESHOLD_PCT:
+            score += 8; factors.append("+8 gyorsuló funding az irány felé")
+
+    if orderbook_info is not None:
+        ratio = orderbook_info["bid_ask_ratio"]
+        if ratio >= ORDERBOOK_IMBALANCE_THRESHOLD:
+            if direction == "LONG":
+                score += 10; factors.append("+10 orderbook egyezik (vékony ask)")
+            else:
+                score -= 10; factors.append("-10 orderbook ellenez (vékony ask, de SHORT)")
+        elif ratio <= 1 / ORDERBOOK_IMBALANCE_THRESHOLD:
+            if direction == "SHORT":
+                score += 10; factors.append("+10 orderbook egyezik (vékony bid)")
+            else:
+                score -= 10; factors.append("-10 orderbook ellenez (vékony bid, de LONG)")
+
+    if macd_status:
+        bullish = macd_status in ("Bullish Cross", "Bullish")
+        bearish = macd_status in ("Bearish Cross", "Bearish")
+        if bullish and direction == "LONG":
+            score += 8; factors.append("+8 MACD egyezik")
+        elif bearish and direction == "SHORT":
+            score += 8; factors.append("+8 MACD egyezik")
+        elif bullish and direction == "SHORT":
+            score -= 8; factors.append("-8 MACD ellenez")
+        elif bearish and direction == "LONG":
+            score -= 8; factors.append("-8 MACD ellenez")
+
+    if rsi is not None:
+        if direction == "LONG" and rsi >= 75:
+            score -= 5; factors.append("-5 RSI túlvett (fordulat-kockázat)")
+        elif direction == "SHORT" and rsi <= 25:
+            score -= 5; factors.append("-5 RSI túladott (fordulat-kockázat)")
+
+    if vol_multiplier is not None and vol_multiplier >= 2 * MIN_VOL_MULTIPLIER:
+        score += 5; factors.append("+5 kiemelkedően erős volumen")
+
+    # ÚJ: bot-közi megerősítés - lásd get_cross_bot_confirmations() kommentjét.
+    # Erősebb súlyú, mint az egyedi jelzők, mert ez egy TELJESEN FÜGGETLEN
+    # botból/adatforrásból jövő megerősítés, nem csak a sajátunk egy másik
+    # metrikája - de max +20-ra korlátozzuk, hogy egyetlen tényező se
+    # tudja önmagában "átbillenteni" a pontszámot 0/100-ra.
+    if cross_bot_confirmations:
+        bonus = min(20, 12 * len(cross_bot_confirmations))
+        score += bonus
+        factors.append(f"+{bonus} bot-közi megerősítés ({len(cross_bot_confirmations)}x)")
+
+    score = max(0, min(100, score))
+    if score >= CONFIDENCE_STRONG_THRESHOLD:
+        label = "🟢 ERŐS"
+    elif score >= CONFIDENCE_WEAK_THRESHOLD:
+        label = "🟡 KÖZEPES"
+    else:
+        label = "🔴 GYENGE"
+    return score, label, factors
+
+
+def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None, cross_bot_confirmations=None):
     action = DIRECTION_LABELS.get(direction, direction)
     if signal_type == "EARLY":
         header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H)"
     else:
         header = f"🦅 <b>[DAYTRADE] {symbol}</b> {action} (STANDARD 1H)"
+
+    # ÚJ: meggyőződés-pontszám - lásd compute_confidence_score() kommentjét.
+    # A fejléc közvetlen alá kerül, hogy az első pillantásra látszódjon.
+    score, score_label, score_factors = compute_confidence_score(
+        direction, htf_trend=htf_trend, bounce_confluence=bounce_confluence,
+        near_level_risk=near_level_risk, funding_rate=funding_rate,
+        funding_delta_pct=funding_delta_pct, orderbook_info=orderbook_info,
+        macd_status=macd_status, rsi=rsi, vol_multiplier=vol_multiplier,
+        cross_bot_confirmations=cross_bot_confirmations,
+    )
+    score_line = f"\n{score_label} Meggyőződés: {score}/100"
+    if score_factors:
+        score_line += f" ({', '.join(score_factors)})"
+
+    cross_line = ""
+    if cross_bot_confirmations:
+        cross_line = f"\n🔥 Megerősítve: {', '.join(cross_bot_confirmations)}"
 
     early_line = ""
     if signal_type == "EARLY":
@@ -1064,7 +1278,8 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
             orderbook_line = f"\n📕 Orderbook: vékony bid / vastag ask ({inv_ratio:.1f}x){note}"
 
     body = (
-        f"{header}\n"
+        f"{header}"
+        f"{score_line}\n"
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"🧲 OI: {oi_value:,.0f} ({oi_change_pct:+.2f}%)"
@@ -1072,6 +1287,7 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         f"{indicator_line}"
         f"{funding_line}"
         f"{orderbook_line}"
+        f"{cross_line}"
         f"{warning_line}"
         f"{bounce_line}"
         f"{risk_line}"
@@ -1396,6 +1612,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # jelzéshez kérdezzük le - lásd fetch_orderbook_imbalance
             # kommentjét arról, miért nem minden candidate-re fut le ez.
             orderbook_info = await fetch_orderbook_imbalance(symbol)
+            # ÚJ: bot-közi megerősítés ellenőrzése - lásd
+            # get_cross_bot_confirmations() kommentjét.
+            cross_bot_confirmations = get_cross_bot_confirmations(symbol, candle["direction"], now)
             msg = format_daytrade_message(
                 symbol, candle["direction"], candle["price"], candle["price_change_pct"],
                 candle["candle_vol_usdt"], candle["vol_multiplier"],
@@ -1408,11 +1627,15 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 elapsed_fraction=candle.get("elapsed_fraction"),
                 funding_delta_pct=funding_delta_pct,
                 orderbook_info=orderbook_info,
+                cross_bot_confirmations=cross_bot_confirmations,
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
             register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
+            # ÚJ: a SAJÁT jelzésünket is elmentjük a kereszt-bot fájlba,
+            # hogy a MÁSIK két bot lássa a következő futásukban.
+            _append_cross_bot_signal(symbol, candle["direction"], fired_signal_type, now)
 
     # ÚJ (IDEIGLENES DEBUG): mutatja, hogy a websocket-adat ténylegesen
     # HATOTT-e a kiértékelésre ebben a körben - lásd az alert_checker.py
