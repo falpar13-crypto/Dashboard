@@ -12,7 +12,8 @@ hatás jelentős.
 MÓDSZERTAN:
 Az elmúlt TREND_LOOKBACK_HOURS (alapból 24) LEZÁRT 1h gyertyáján vizsgálja:
   1. Kumulatív ár-mozgás (a lookback-ablak elejétől a végéig) eléri-e a
-     küszöböt (MIN_CUMULATIVE_CHANGE_PCT).
+     küszöböt (a lookback ablak méretével arányosan, lásd
+     MIN_CUMULATIVE_CHANGE_PCT_PER_HOUR).
   2. "Egyenletesség": a gyertyák nagy hányada (MIN_ALIGNED_FRACTION) megy
      ugyanabba az irányba - nem csak egy-két nagy lökés viszi a mozgást.
   3. "Nem tüske-vezérelt": EGYETLEN gyertya se dominálja a teljes
@@ -51,25 +52,44 @@ logger = logging.getLogger("trend_checker")
 # PARAMÉTEREK
 # ----------------------------------------------------------------------------
 ALERT_TIMEFRAME = "1h"
-TREND_LOOKBACK_HOURS = 24        # ennyi lezárt 1h gyertyát vizsgálunk vissza
+
+# ÚJ: TÖBB-ABLAKOS elemzés a régi, egyetlen fix 24h ablak helyett. A
+# probléma a régivel: az egyenletesség-feltételt (MIN_ALIGNED_FRACTION)
+# a TELJES 24h ablakon kellett teljesíteni - ha egy mozgás csak 6-8
+# órája indult, a 24 órout nagy része még a "csendes" szakaszból
+# származik, tehát a feltétel STRUKTURÁLISAN csak akkor teljesülhetett,
+# ha a mozgás már sokáig (és ezért nagy %-ban) tartott. Emiatt a bot a
+# valóságban szinte mindig csak 18-20%-os, már-már kifulladó mozgásokat
+# kapott el, sosem a korai szakaszt.
+#
+# A megoldás: több, egyre HOSSZABB ablakot próbálunk (a legrövidebbtől
+# indulva), és a LEGRÖVIDEBBET használjuk, ami már minden feltételnek
+# megfelel. Ha egy mozgás csak 8 órája tart, de ott már egyenletes/erős,
+# AZONNAL jelez - nem kell megvárni, hogy a teljes 24h ablakot is
+# domináns legyen benne.
+TREND_LOOKBACK_OPTIONS_HOURS = [8, 12, 16, 20, 24]
+TREND_LOOKBACK_HOURS = max(TREND_LOOKBACK_OPTIONS_HOURS)   # a klines-lekéréshez ennyi kell összesen
 KLINES_LIMIT = TREND_LOOKBACK_HOURS + 5
 
-MIN_CUMULATIVE_CHANGE_PCT = 8.0    # 12.0 -> 8.0: teszt jelleggel lejjebb véve,
-                                     # hogy még korábban elkapja a trendet - a
-                                     # "friss folytatódás" + egyenletesség +
-                                     # nem-tüske szűrők + a rangsor-limit
-                                     # (MAX_ALERTS_PER_RUN) így is kordában
-                                     # tartják a zajt/mennyiséget
+# ÚJ: a küszöb mostantól ÓRÁNKÉNTI ÜTEM alapján skálázódik (a korábbi,
+# 24h-ra vonatkozó 8%-os küszöb ~0.33%/óra ütemnek felel meg) - minden
+# ablak-méretnél ezt az ütemet várjuk el, arányosan kisebb abszolút %-kal
+# a rövidebb ablakoknál. Így egy 8 órás, még csak ~2.7%-ot mozgott, de
+# már egyértelműen egyenletes trend is jelezhet, nem kell megvárni,
+# amíg 24 óra alatt eléri a 8%-ot.
+MIN_CUMULATIVE_CHANGE_PCT_PER_HOUR = 8.0 / 24.0   # ~0.333 %/óra
 MIN_ALIGNED_FRACTION = 0.55       # a gyertyák ennyi hányada menjen a fő irányba
 MAX_SINGLE_CANDLE_SHARE = 0.35    # egyetlen gyertya legfeljebb ennyi hányadát adhatja a teljes mozgásnak
 
 # ÚJ: "MÉG ÉL-E A TREND" ellenőrzés. A cél, hogy a jelzés a mozgás
-# KÖZEPE/ELEJE felé érkezzen, ne a végén - ezért megnézzük, hogy az
-# elmúlt RECENT_WINDOW_HOURS órában a mozgás MÉG mindig ugyanabba az
-# irányba folytatódik-e, nem laposodott-e már el vagy fordult meg. Ha a
-# friss szakasz már nem a fő irányba mutat, az a kifulladás jele -
-# valószínűleg elkéstünk volna vele, inkább kihagyjuk.
-RECENT_WINDOW_HOURS = 6
+# KÖZEPE/ELEJE felé érkezzen, ne a végén - ezért megnézzük, hogy az adott
+# ablak UTOLSÓ NEGYEDÉBEN a mozgás MÉG mindig ugyanabba az irányba
+# folytatódik-e, nem laposodott-e már el vagy fordult meg. Ha a friss
+# szakasz már nem a fő irányba mutat, az a kifulladás jele - valószínűleg
+# elkéstünk volna vele, inkább kihagyjuk. (Az ablak méretével arányosan
+# skálázódik: egy 8h-s ablaknál az utolsó ~2h, egy 24h-snál az utolsó ~6h.)
+RECENT_WINDOW_FRACTION = 0.25
+RECENT_WINDOW_MIN_HOURS = 2
 
 # ÚJ: biztonsági háló - még ha a fenti (szigorúbb) küszöbök mellett is sok
 # találat lenne egyszerre (pl. egy igazán élénk piaci napon), KÖRÖNKÉNT
@@ -279,10 +299,11 @@ def find_oi_baseline(history_without_current: list, now: datetime,
 # ----------------------------------------------------------------------------
 # KIÉRTÉKELÉS
 # ----------------------------------------------------------------------------
-def evaluate_slow_trend(kdf: pd.DataFrame, lookback: int = TREND_LOOKBACK_HOURS) -> Optional[dict]:
+def evaluate_slow_trend(kdf: pd.DataFrame, lookback: int) -> Optional[dict]:
     """LEZÁRT gyertyákon (az élőt kihagyjuk, mert még változhat) vizsgálja,
-    van-e 'csendes, egyenletes' trend. Lásd a fájl elején lévő
-    blokk-kommentet a módszertanért."""
+    van-e 'csendes, egyenletes' trend EGY ADOTT lookback (óra) ablakon.
+    Lásd a fájl elején lévő blokk-kommentet a módszertanért, és
+    evaluate_slow_trend_multi()-t a több-ablakos rangsorolásért."""
     if kdf is None or len(kdf) < lookback + 1:
         return None
     closed = kdf.iloc[:-1]
@@ -308,17 +329,25 @@ def evaluate_slow_trend(kdf: pd.DataFrame, lookback: int = TREND_LOOKBACK_HOURS)
     max_single = float(abs_changes.max())
     single_candle_share = (max_single / total_abs_move) if total_abs_move > 0 else 1.0
 
-    # ÚJ: "friss folytatódás" - az elmúlt RECENT_WINDOW_HOURS órában a
-    # mozgás MÉG mindig ugyanabba az irányba tart-e (nem laposodott el,
-    # nem fordult meg). Ez különbözteti meg "a trend még aktív, korán
-    # kaptuk el" esetet a "már kifulladt, elkéstünk vele" esettől.
-    recent_window = window.iloc[-min(RECENT_WINDOW_HOURS, len(window)):]
+    # "friss folytatódás" - az ablak UTOLSÓ NEGYEDÉBEN (min.
+    # RECENT_WINDOW_MIN_HOURS órára korlátozva) a mozgás MÉG mindig
+    # ugyanabba az irányba tart-e. Az ablak méretével arányosan skálázódik.
+    recent_hours = max(RECENT_WINDOW_MIN_HOURS, round(lookback * RECENT_WINDOW_FRACTION))
+    recent_window = window.iloc[-min(recent_hours, len(window)):]
     recent_start = float(recent_window.iloc[0]["open"])
     recent_end = float(recent_window.iloc[-1]["close"])
     recent_change_pct = (recent_end - recent_start) / recent_start * 100 if recent_start > 0 else 0.0
     still_active = (
         (direction == "LONG" and recent_change_pct > 0)
         or (direction == "SHORT" and recent_change_pct < 0)
+    )
+
+    min_cumulative_pct = MIN_CUMULATIVE_CHANGE_PCT_PER_HOUR * lookback
+    is_setup = (
+        abs(cumulative_change_pct) >= min_cumulative_pct
+        and aligned_fraction >= MIN_ALIGNED_FRACTION
+        and single_candle_share <= MAX_SINGLE_CANDLE_SHARE
+        and still_active
     )
 
     return {
@@ -329,7 +358,28 @@ def evaluate_slow_trend(kdf: pd.DataFrame, lookback: int = TREND_LOOKBACK_HOURS)
         "single_candle_share": round(single_candle_share, 2),
         "recent_change_pct": round(recent_change_pct, 2),
         "still_active": still_active,
+        "lookback_hours": lookback,
+        "min_cumulative_pct": round(min_cumulative_pct, 2),
+        "is_setup": is_setup,
     }
+
+
+def evaluate_slow_trend_multi(kdf: pd.DataFrame) -> Optional[dict]:
+    """Végigpróbálja a TREND_LOOKBACK_OPTIONS_HOURS ablakméreteket a
+    LEGRÖVIDEBBTŐL a leghosszabbig, és az ELSŐ (tehát legrövidebb, azaz
+    legkorábbi) ablakot adja vissza, ami megfelel MINDEN feltételnek. Ha
+    egyik sem felel meg, None-t ad vissza. Ez oldja meg azt a problémát,
+    hogy a régi, fix 24h-s ablak strukturálisan csak "már régóta tartó,
+    ezért nagy %-os" mozgásokat tudott elkapni - most a bot a
+    LEHETŐ LEGKORÁBBI pillanatban jelez, amint egy rövidebb ablakon is
+    egyértelműen egyenletes/erős a trend."""
+    for lookback in TREND_LOOKBACK_OPTIONS_HOURS:
+        trend = evaluate_slow_trend(kdf, lookback)
+        if trend is not None and trend["is_setup"]:
+            return trend
+    # Egyik ablak sem felelt meg - de a leghosszabb (24h) eredményét
+    # visszaadjuk (is_setup=False-sal) a diagnosztikai logoláshoz.
+    return evaluate_slow_trend(kdf, max(TREND_LOOKBACK_OPTIONS_HOURS))
 
 
 # ----------------------------------------------------------------------------
@@ -363,17 +413,24 @@ def format_trend_message(symbol, trend, oi_change_pct=None) -> str:
         ) else " ⚠️ nem egyezik"
         oi_line = f"\n🧲 OI-változás (~{OI_HISTORY_TARGET_HOURS}h): {oi_change_pct:+.2f}%{note}"
 
+    # ÚJ: mostantól a TALÁLT (legrövidebb, megfelelő) ablakméretet mutatjuk,
+    # nem mindig a 24h-t - így látod, milyen KORÁN kapta el a bot a trendet.
+    lookback = trend["lookback_hours"]
+    recent_hours = max(RECENT_WINDOW_MIN_HOURS, round(lookback * RECENT_WINDOW_FRACTION))
+
     body = (
         f"{header}\n"
         f"💰 Jelenlegi ár: {trend['price']:.6f}\n"
-        f"📈 Kumulatív mozgás ({TREND_LOOKBACK_HOURS}h): {trend['cumulative_change_pct']:+.2f}%\n"
-        f"⏱️ Friss folytatódás (utolsó {RECENT_WINDOW_HOURS}h): {trend['recent_change_pct']:+.2f}% - a trend MÉG aktív\n"
+        f"📈 Kumulatív mozgás ({lookback}h ablak): {trend['cumulative_change_pct']:+.2f}%\n"
+        f"⏱️ Friss folytatódás (utolsó {recent_hours}h): {trend['recent_change_pct']:+.2f}% - a trend MÉG aktív\n"
         f"📐 Egyenletesség: a gyertyák {trend['aligned_fraction']*100:.0f}%-a ment ebbe az irányba\n"
         f"🧩 Legnagyobb egyedi gyertya részesedése: {trend['single_candle_share']*100:.0f}% "
         f"(minél kisebb, annál 'csendesebb' a mozgás)"
         f"{oi_line}\n"
-        f"ℹ️ Ez NEM tüske-alapú jelzés - lassú, sok órán át tartó, egyenletes "
-        f"elmozdulást jelez, amit a másik botok (tüske-figyelők) nem vesznek észre."
+        f"ℹ️ Ez NEM tüske-alapú jelzés - lassú, egyenletes elmozdulást jelez, "
+        f"amit a másik botok (tüske-figyelők) nem vesznek észre. A {lookback}h-s "
+        f"ablak a LEGRÖVIDEBB volt, ami már minden feltételnek megfelelt - tehát "
+        f"ez a lehető legkorábbi pillanat, amikor ezt a mozgást el lehetett kapni."
     )
     return f"\n{body}\n"
 
@@ -428,7 +485,7 @@ async def run_once(state: dict, now: datetime) -> tuple:
     matches = []
 
     for symbol in candidates:
-        trend = evaluate_slow_trend(klines_map.get(symbol))
+        trend = evaluate_slow_trend_multi(klines_map.get(symbol))
         entry = state.setdefault(symbol, {"last_alert_ts": None, "oi_history": []})
 
         # OI history frissítése FÜGGETLENÜL attól, hogy tüzel-e a jelzés -
@@ -443,13 +500,7 @@ async def run_once(state: dict, now: datetime) -> tuple:
             continue
         evaluated += 1
 
-        is_setup = (
-            abs(trend["cumulative_change_pct"]) >= MIN_CUMULATIVE_CHANGE_PCT
-            and trend["aligned_fraction"] >= MIN_ALIGNED_FRACTION
-            and trend["single_candle_share"] <= MAX_SINGLE_CANDLE_SHARE
-            and trend["still_active"]
-        )
-        if not is_setup:
+        if not trend["is_setup"]:
             continue
 
         cooldown_ok = True
