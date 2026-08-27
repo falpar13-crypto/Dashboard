@@ -4,3 +4,5 @@
 {"ts": "2026-08-27T08:54:22.736324+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T09:07:52.193082+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-27T09:16:33.514618+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-27T09:42:17.400738+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-27T09:49:30.530816+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
