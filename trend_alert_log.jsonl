@@ -26,3 +26,8 @@
 {"ts": "2026-08-27T08:15:48.401852+00:00", "symbol": "POL-USDT", "direction": "SHORT", "cumulative_change_pct": -12.77, "aligned_fraction": 0.58, "single_candle_share": 0.1, "oi_change_pct": null}
 {"ts": "2026-08-27T08:15:48.401852+00:00", "symbol": "SPX-USDT", "direction": "LONG", "cumulative_change_pct": 16.06, "aligned_fraction": 0.62, "single_candle_share": 0.12, "oi_change_pct": null}
 {"ts": "2026-08-27T08:39:29.910003+00:00", "symbol": "H-USDT", "direction": "SHORT", "cumulative_change_pct": -9.74, "aligned_fraction": 0.67, "single_candle_share": 0.21, "oi_change_pct": null}
+{"ts": "2026-08-27T12:22:52.497700+00:00", "symbol": "ONG-USDT", "direction": "LONG", "cumulative_change_pct": 24.27, "aligned_fraction": 0.67, "single_candle_share": 0.29, "oi_change_pct": null}
+{"ts": "2026-08-27T12:22:52.497700+00:00", "symbol": "STBL-USDT", "direction": "LONG", "cumulative_change_pct": 11.89, "aligned_fraction": 0.58, "single_candle_share": 0.16, "oi_change_pct": null}
+{"ts": "2026-08-27T12:22:52.497700+00:00", "symbol": "ACU-USDT", "direction": "LONG", "cumulative_change_pct": 12.65, "aligned_fraction": 0.58, "single_candle_share": 0.16, "oi_change_pct": null}
+{"ts": "2026-08-27T12:22:52.497700+00:00", "symbol": "SPK-USDT", "direction": "LONG", "cumulative_change_pct": 9.89, "aligned_fraction": 0.62, "single_candle_share": 0.15, "oi_change_pct": null}
+{"ts": "2026-08-27T12:22:52.497700+00:00", "symbol": "TAO-USDT", "direction": "LONG", "cumulative_change_pct": 9.59, "aligned_fraction": 0.67, "single_candle_share": 0.12, "oi_change_pct": null}
