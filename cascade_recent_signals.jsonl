@@ -1,7 +1,4 @@
-{"ts": "2026-08-27T11:02:29.428431+00:00", "symbol": "BICO-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-08-27T11:15:28.653177+00:00", "symbol": "BEAM-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-08-27T13:38:10.954079+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-08-27T13:57:26.457942+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-27T15:18:23.785754+00:00", "symbol": "TAC-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-27T16:05:09.793249+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-27T16:56:19.840834+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-27T20:13:16.015679+00:00", "symbol": "TRIA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
