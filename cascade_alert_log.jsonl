@@ -5,3 +5,5 @@
 {"ts": "2026-08-27T06:31:59.647763+00:00", "symbol": "TUT-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.05597, "price_change_pct": -2.71, "vol_multiplier": 13.38}
 {"ts": "2026-08-27T07:38:57.536205+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.006658, "price_change_pct": 10.18, "vol_multiplier": 12.5}
 {"ts": "2026-08-27T08:35:07.426546+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 1.773, "price_change_pct": -2.9, "vol_multiplier": 10.04}
+{"ts": "2026-08-27T09:55:13.857498+00:00", "symbol": "GRASS-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.3737, "price_change_pct": -1.71, "vol_multiplier": 5.36}
+{"ts": "2026-08-27T09:56:39.615842+00:00", "symbol": "VELVET-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.1096, "price_change_pct": 2.72, "vol_multiplier": 14.8}
