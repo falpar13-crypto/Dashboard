@@ -25,3 +25,4 @@
 {"ts": "2026-08-27T08:15:48.401852+00:00", "symbol": "UAI-USDT", "direction": "LONG", "cumulative_change_pct": 11.36, "aligned_fraction": 0.58, "single_candle_share": 0.09, "oi_change_pct": null}
 {"ts": "2026-08-27T08:15:48.401852+00:00", "symbol": "POL-USDT", "direction": "SHORT", "cumulative_change_pct": -12.77, "aligned_fraction": 0.58, "single_candle_share": 0.1, "oi_change_pct": null}
 {"ts": "2026-08-27T08:15:48.401852+00:00", "symbol": "SPX-USDT", "direction": "LONG", "cumulative_change_pct": 16.06, "aligned_fraction": 0.62, "single_candle_share": 0.12, "oi_change_pct": null}
+{"ts": "2026-08-27T08:39:29.910003+00:00", "symbol": "H-USDT", "direction": "SHORT", "cumulative_change_pct": -9.74, "aligned_fraction": 0.67, "single_candle_share": 0.21, "oi_change_pct": null}
