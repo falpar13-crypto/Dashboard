@@ -1,10 +1,6 @@
-{"ts": "2026-08-27T14:15:52.570372+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
-{"ts": "2026-08-27T14:42:37.010678+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-27T14:49:32.358546+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-27T14:56:21.147628+00:00", "symbol": "PROM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-27T14:59:16.204559+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T16:55:43.050513+00:00", "symbol": "WIF-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T17:06:32.610733+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-27T17:20:01.522839+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-27T18:13:38.378213+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-27T18:57:06.733079+00:00", "symbol": "PROM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-27T21:19:22.345011+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "EARLY"}
