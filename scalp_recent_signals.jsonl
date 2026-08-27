@@ -9,3 +9,5 @@
 {"ts": "2026-08-27T17:27:58.454303+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T18:12:15.783462+00:00", "symbol": "PROM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-27T18:13:18.331838+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-27T18:22:29.094159+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-27T18:22:29.094159+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
