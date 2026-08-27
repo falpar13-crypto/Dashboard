@@ -49,6 +49,19 @@ jobs:
             echo "Még nincs $STATE_BRANCH branch - első futás, üres állapotból indulunk."
           fi
 
+      - name: Másik két bot jelzéseinek betöltése (csak olvasásra, bot-közi megerősítéshez)
+        run: |
+          for branch in state-scalp state-daytrade; do
+            if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+              git fetch origin "$branch"
+              git worktree add --detach "/tmp/cross-$branch" "origin/$branch"
+              find "/tmp/cross-$branch" -maxdepth 1 -type f -name '*_recent_signals.jsonl' -exec cp {} . \;
+              git worktree remove "/tmp/cross-$branch" --force
+            else
+              echo "A $branch branch még nem létezik - a másik bot még nem futott, kihagyva."
+            fi
+          done
+
       - name: Kaszkád-figyelő futtatása
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -72,6 +85,7 @@ jobs:
 
             cp cascade_state.json /tmp/state-save/ 2>/dev/null || true
             [ -f cascade_alert_log.jsonl ] && cp cascade_alert_log.jsonl /tmp/state-save/
+            [ -f cascade_recent_signals.jsonl ] && cp cascade_recent_signals.jsonl /tmp/state-save/
 
             cd /tmp/state-save
             git add -A
