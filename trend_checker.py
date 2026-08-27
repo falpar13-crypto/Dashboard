@@ -54,9 +54,29 @@ ALERT_TIMEFRAME = "1h"
 TREND_LOOKBACK_HOURS = 24        # ennyi lezárt 1h gyertyát vizsgálunk vissza
 KLINES_LIMIT = TREND_LOOKBACK_HOURS + 5
 
-MIN_CUMULATIVE_CHANGE_PCT = 10.0  # a lookback-ablak eleje-vége közti minimum |mozgás|
+MIN_CUMULATIVE_CHANGE_PCT = 8.0    # 12.0 -> 8.0: teszt jelleggel lejjebb véve,
+                                     # hogy még korábban elkapja a trendet - a
+                                     # "friss folytatódás" + egyenletesség +
+                                     # nem-tüske szűrők + a rangsor-limit
+                                     # (MAX_ALERTS_PER_RUN) így is kordában
+                                     # tartják a zajt/mennyiséget
 MIN_ALIGNED_FRACTION = 0.55       # a gyertyák ennyi hányada menjen a fő irányba
 MAX_SINGLE_CANDLE_SHARE = 0.35    # egyetlen gyertya legfeljebb ennyi hányadát adhatja a teljes mozgásnak
+
+# ÚJ: "MÉG ÉL-E A TREND" ellenőrzés. A cél, hogy a jelzés a mozgás
+# KÖZEPE/ELEJE felé érkezzen, ne a végén - ezért megnézzük, hogy az
+# elmúlt RECENT_WINDOW_HOURS órában a mozgás MÉG mindig ugyanabba az
+# irányba folytatódik-e, nem laposodott-e már el vagy fordult meg. Ha a
+# friss szakasz már nem a fő irányba mutat, az a kifulladás jele -
+# valószínűleg elkéstünk volna vele, inkább kihagyjuk.
+RECENT_WINDOW_HOURS = 6
+
+# ÚJ: biztonsági háló - még ha a fenti (szigorúbb) küszöbök mellett is sok
+# találat lenne egyszerre (pl. egy igazán élénk piaci napon), KÖRÖNKÉNT
+# legfeljebb ennyi riasztást küldünk ki - a többi találat a legerősebbeket
+# rangsorolva marad ki (lásd _rank_trend_candidates), csak a logban jelenik
+# meg, nem árasztja el a Telegramot.
+MAX_ALERTS_PER_RUN = 5
 
 # OI-trend: OPCIONÁLIS megerősítés (nem feltétele a tüzelésnek), mert a
 # BingX publikus API nem ad historikus OI-t - a history-t magunknak kell
@@ -288,12 +308,27 @@ def evaluate_slow_trend(kdf: pd.DataFrame, lookback: int = TREND_LOOKBACK_HOURS)
     max_single = float(abs_changes.max())
     single_candle_share = (max_single / total_abs_move) if total_abs_move > 0 else 1.0
 
+    # ÚJ: "friss folytatódás" - az elmúlt RECENT_WINDOW_HOURS órában a
+    # mozgás MÉG mindig ugyanabba az irányba tart-e (nem laposodott el,
+    # nem fordult meg). Ez különbözteti meg "a trend még aktív, korán
+    # kaptuk el" esetet a "már kifulladt, elkéstünk vele" esettől.
+    recent_window = window.iloc[-min(RECENT_WINDOW_HOURS, len(window)):]
+    recent_start = float(recent_window.iloc[0]["open"])
+    recent_end = float(recent_window.iloc[-1]["close"])
+    recent_change_pct = (recent_end - recent_start) / recent_start * 100 if recent_start > 0 else 0.0
+    still_active = (
+        (direction == "LONG" and recent_change_pct > 0)
+        or (direction == "SHORT" and recent_change_pct < 0)
+    )
+
     return {
         "direction": direction,
         "price": end_price,
         "cumulative_change_pct": round(cumulative_change_pct, 2),
         "aligned_fraction": round(aligned_fraction, 2),
         "single_candle_share": round(single_candle_share, 2),
+        "recent_change_pct": round(recent_change_pct, 2),
+        "still_active": still_active,
     }
 
 
@@ -332,6 +367,7 @@ def format_trend_message(symbol, trend, oi_change_pct=None) -> str:
         f"{header}\n"
         f"💰 Jelenlegi ár: {trend['price']:.6f}\n"
         f"📈 Kumulatív mozgás ({TREND_LOOKBACK_HOURS}h): {trend['cumulative_change_pct']:+.2f}%\n"
+        f"⏱️ Friss folytatódás (utolsó {RECENT_WINDOW_HOURS}h): {trend['recent_change_pct']:+.2f}% - a trend MÉG aktív\n"
         f"📐 Egyenletesség: a gyertyák {trend['aligned_fraction']*100:.0f}%-a ment ebbe az irányba\n"
         f"🧩 Legnagyobb egyedi gyertya részesedése: {trend['single_candle_share']*100:.0f}% "
         f"(minél kisebb, annál 'csendesebb' a mozgás)"
@@ -381,6 +417,16 @@ async def run_once(state: dict, now: datetime) -> tuple:
     evaluated = 0
     cutoff = now - timedelta(hours=OI_HISTORY_RETENTION_HOURS)
 
+    # ÚJ (két lépéses feldolgozás): ELŐSZÖR csak összegyűjtjük az összes
+    # küszöböt teljesítő, cooldown-mentes találatot (nem küldünk még
+    # semmit) - utána egy minőségi pontszám szerint RANGSOROLJUK, és
+    # csak a legjobb MAX_ALERTS_PER_RUN darabot küldjük ki. Így egy
+    # aktív piaci napon (sok egyszerre teljesülő találat) sem árasztja
+    # el a Telegramot a bot - a gyengébb találatok egyszerűen a
+    # következő órai futásban újra versenyeznek (nem kapnak cooldown-t,
+    # mert nem lettek elküldve).
+    matches = []
+
     for symbol in candidates:
         trend = evaluate_slow_trend(klines_map.get(symbol))
         entry = state.setdefault(symbol, {"last_alert_ts": None, "oi_history": []})
@@ -401,6 +447,7 @@ async def run_once(state: dict, now: datetime) -> tuple:
             abs(trend["cumulative_change_pct"]) >= MIN_CUMULATIVE_CHANGE_PCT
             and trend["aligned_fraction"] >= MIN_ALIGNED_FRACTION
             and trend["single_candle_share"] <= MAX_SINGLE_CANDLE_SHARE
+            and trend["still_active"]
         )
         if not is_setup:
             continue
@@ -419,6 +466,34 @@ async def run_once(state: dict, now: datetime) -> tuple:
             if baseline is not None and baseline["oi"] > 0:
                 oi_change_pct = (oi_now - baseline["oi"]) / baseline["oi"] * 100
 
+        # Minőségi pontszám: nagyobb kumulatív mozgás + egyenletesebb +
+        # kevésbé tüske-vezérelt + ERŐSEBB FRISS FOLYTATÓDÁS (a
+        # recent_change_pct is beleszámít, hogy a rangsor a "még
+        # gyorsuló/aktív" trendeket előnyben részesítse a "már csak
+        # éppen hogy még pozitív" esetekkel szemben).
+        quality_score = (
+            abs(trend["cumulative_change_pct"])
+            * trend["aligned_fraction"]
+            * (1 - trend["single_candle_share"])
+            * (1 + abs(trend["recent_change_pct"]) / 10)
+        )
+        matches.append({
+            "symbol": symbol, "trend": trend, "entry": entry,
+            "oi_change_pct": oi_change_pct, "quality_score": quality_score,
+        })
+
+    matches.sort(key=lambda m: m["quality_score"], reverse=True)
+    to_send = matches[:MAX_ALERTS_PER_RUN]
+    suppressed = matches[MAX_ALERTS_PER_RUN:]
+
+    if suppressed:
+        logger.info("Rate-limit: %d találat elnyomva ebben a körben (csak a legjobb %d ment ki). Elnyomva: %s",
+                    len(suppressed), MAX_ALERTS_PER_RUN,
+                    ", ".join(f"{m['symbol']}({m['trend']['cumulative_change_pct']:+.1f}%)" for m in suppressed))
+
+    for m in to_send:
+        symbol, trend, entry = m["symbol"], m["trend"], m["entry"]
+        oi_change_pct = m["oi_change_pct"]
         msg = format_trend_message(symbol, trend, oi_change_pct=oi_change_pct)
         await send_telegram_message(msg)
         entry["last_alert_ts"] = now.isoformat()
@@ -435,6 +510,7 @@ async def run_once(state: dict, now: datetime) -> tuple:
                     trend["aligned_fraction"] * 100, trend["single_candle_share"] * 100)
 
     return alerts_sent, evaluated
+
 
 
 async def main():
