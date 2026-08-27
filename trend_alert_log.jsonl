@@ -46,3 +46,8 @@
 {"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "MERL-USDT", "direction": "LONG", "cumulative_change_pct": 10.99, "aligned_fraction": 0.75, "single_candle_share": 0.29, "oi_change_pct": null}
 {"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "OFC-USDT", "direction": "LONG", "cumulative_change_pct": 7.73, "aligned_fraction": 0.62, "single_candle_share": 0.2, "oi_change_pct": null}
 {"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "LIGHTER-USDT", "direction": "LONG", "cumulative_change_pct": 9.39, "aligned_fraction": 0.67, "single_candle_share": 0.33, "oi_change_pct": null}
+{"ts": "2026-08-27T21:00:46.458392+00:00", "symbol": "4-USDT", "direction": "LONG", "cumulative_change_pct": 9.39, "aligned_fraction": 0.67, "single_candle_share": 0.29, "oi_change_pct": 1.9668372389154987}
+{"ts": "2026-08-27T21:00:46.458392+00:00", "symbol": "UB-USDT", "direction": "LONG", "cumulative_change_pct": 7.17, "aligned_fraction": 0.75, "single_candle_share": 0.2, "oi_change_pct": -3.6127894844108126}
+{"ts": "2026-08-27T21:00:46.458392+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "cumulative_change_pct": 8.11, "aligned_fraction": 0.62, "single_candle_share": 0.12, "oi_change_pct": -12.424281626179924}
+{"ts": "2026-08-27T21:00:46.458392+00:00", "symbol": "BR-USDT", "direction": "SHORT", "cumulative_change_pct": -7.23, "aligned_fraction": 0.75, "single_candle_share": 0.19, "oi_change_pct": -18.512228672996553}
+{"ts": "2026-08-27T21:00:46.458392+00:00", "symbol": "PUMPBTC-USDT", "direction": "SHORT", "cumulative_change_pct": -10.39, "aligned_fraction": 0.62, "single_candle_share": 0.27, "oi_change_pct": -7.037891006769488}
