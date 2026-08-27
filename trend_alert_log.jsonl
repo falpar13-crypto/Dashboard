@@ -41,3 +41,8 @@
 {"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "RAY-USDT", "direction": "LONG", "cumulative_change_pct": 9.32, "aligned_fraction": 0.79, "single_candle_share": 0.13, "oi_change_pct": null}
 {"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "MUBARAK-USDT", "direction": "LONG", "cumulative_change_pct": 11.58, "aligned_fraction": 0.62, "single_candle_share": 0.12, "oi_change_pct": null}
 {"ts": "2026-08-27T19:00:44.175958+00:00", "symbol": "FF-USDT", "direction": "SHORT", "cumulative_change_pct": -9.74, "aligned_fraction": 0.83, "single_candle_share": 0.27, "oi_change_pct": null}
+{"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "cumulative_change_pct": 34.6, "aligned_fraction": 0.56, "single_candle_share": 0.18, "oi_change_pct": null}
+{"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "RUNE-USDT", "direction": "SHORT", "cumulative_change_pct": -14.37, "aligned_fraction": 0.58, "single_candle_share": 0.31, "oi_change_pct": null}
+{"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "MERL-USDT", "direction": "LONG", "cumulative_change_pct": 10.99, "aligned_fraction": 0.75, "single_candle_share": 0.29, "oi_change_pct": null}
+{"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "OFC-USDT", "direction": "LONG", "cumulative_change_pct": 7.73, "aligned_fraction": 0.62, "single_candle_share": 0.2, "oi_change_pct": null}
+{"ts": "2026-08-27T20:00:45.930132+00:00", "symbol": "LIGHTER-USDT", "direction": "LONG", "cumulative_change_pct": 9.39, "aligned_fraction": 0.67, "single_candle_share": 0.33, "oi_change_pct": null}
