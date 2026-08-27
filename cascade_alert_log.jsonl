@@ -3,3 +3,4 @@
 {"ts": "2026-08-27T02:18:06.686655+00:00", "symbol": "ARIA-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.03462, "price_change_pct": -26.5, "vol_multiplier": 8.87}
 {"ts": "2026-08-27T04:33:17.238739+00:00", "symbol": "ONG-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.11188, "price_change_pct": -1.84, "vol_multiplier": 9.73}
 {"ts": "2026-08-27T06:31:59.647763+00:00", "symbol": "TUT-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.05597, "price_change_pct": -2.71, "vol_multiplier": 13.38}
+{"ts": "2026-08-27T07:38:57.536205+00:00", "symbol": "TAC-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.006658, "price_change_pct": 10.18, "vol_multiplier": 12.5}
