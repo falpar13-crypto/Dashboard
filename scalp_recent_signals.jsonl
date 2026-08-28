@@ -1,5 +1,3 @@
-{"ts": "2026-08-28T10:12:45.385099+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-28T10:13:47.426404+00:00", "symbol": "WIF-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T10:28:00.523757+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T11:16:32.930173+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T11:37:41.296290+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -20,3 +18,4 @@
 {"ts": "2026-08-28T16:02:52.122981+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-28T16:02:52.122981+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T16:09:03.806575+00:00", "symbol": "TURBO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T16:14:09.425681+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
