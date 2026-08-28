@@ -18,3 +18,4 @@
 {"ts": "2026-08-27T21:48:19.334826+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.35189, "price_change_pct": -1.59, "vol_multiplier": 19.73}
 {"ts": "2026-08-27T23:42:14.515181+00:00", "symbol": "MAGMA-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.37064, "price_change_pct": 2.25, "vol_multiplier": 33.27}
 {"ts": "2026-08-28T04:03:13.648988+00:00", "symbol": "TAC-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.002779, "price_change_pct": -6.68, "vol_multiplier": 26.72}
+{"ts": "2026-08-28T04:22:33.590740+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.16356, "price_change_pct": 2.37, "vol_multiplier": 11.28}
