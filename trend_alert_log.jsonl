@@ -96,3 +96,8 @@
 {"ts": "2026-08-28T22:08:39.698442+00:00", "symbol": "FOGO-USDT", "direction": "SHORT", "cumulative_change_pct": -17.82, "aligned_fraction": 0.75, "single_candle_share": 0.23, "oi_change_pct": -4.738405032486948}
 {"ts": "2026-08-28T22:08:39.698442+00:00", "symbol": "TURBO-USDT", "direction": "LONG", "cumulative_change_pct": 14.6, "aligned_fraction": 0.67, "single_candle_share": 0.3, "oi_change_pct": 52.81088190784015}
 {"ts": "2026-08-28T22:08:39.698442+00:00", "symbol": "ROBO-USDT", "direction": "LONG", "cumulative_change_pct": 11.69, "aligned_fraction": 0.75, "single_candle_share": 0.13, "oi_change_pct": -10.885031677344923}
+{"ts": "2026-08-28T23:08:40.121143+00:00", "symbol": "BITLIGHT-USDT", "direction": "SHORT", "cumulative_change_pct": -15.17, "aligned_fraction": 0.75, "single_candle_share": 0.29, "oi_change_pct": 0.0}
+{"ts": "2026-08-28T23:08:40.121143+00:00", "symbol": "LONGXIA-USDT", "direction": "LONG", "cumulative_change_pct": 13.24, "aligned_fraction": 0.67, "single_candle_share": 0.18, "oi_change_pct": 0.0}
+{"ts": "2026-08-28T23:08:40.121143+00:00", "symbol": "TRIA-USDT", "direction": "SHORT", "cumulative_change_pct": -13.63, "aligned_fraction": 0.62, "single_candle_share": 0.24, "oi_change_pct": 1.187171744148088}
+{"ts": "2026-08-28T23:08:40.121143+00:00", "symbol": "BEAM-USDT", "direction": "SHORT", "cumulative_change_pct": -10.14, "aligned_fraction": 0.58, "single_candle_share": 0.1, "oi_change_pct": 0.0}
+{"ts": "2026-08-28T23:08:40.121143+00:00", "symbol": "DOS-USDT", "direction": "LONG", "cumulative_change_pct": 9.24, "aligned_fraction": 0.6, "single_candle_share": 0.14, "oi_change_pct": 11.218482779433526}
