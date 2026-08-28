@@ -73,6 +73,21 @@ IMPULSE_LEN = 3
 IMPULSE_MULT = 1.5
 OB_LOOKBACK = 6
 
+# ÚJ: maximum zóna-szélesség - ha egy OB (top-bot) tartománya a mélyponthoz
+# képest ennél SZÉLESEBB %-ban, kihagyjuk. Indoklás: egy nagyon tág zónát
+# az ár szinte folyamatosan "érint" (a high/low könnyen belelóg), ezért egy
+# ilyen zóna "visszatérés" jelzése nem informatív - gyakorlatilag mindig
+# igaz lenne, nem egy konkrét, éles szintre való visszatérést jelezne.
+MAX_ZONE_WIDTH_PCT = 3.0
+
+# ÚJ: ha egy ÉPP MOST kialakuló zóna átfedésbe kerülne egy ELLENTÉTES
+# irányú (bull vs. bear), MÁR AKTÍV zónával, mindkettőt kizárjuk (sem az
+# újat nem hozzuk létre, sem a régit nem tartjuk meg). Indoklás: ha
+# ugyanazon a szinten van egy bullish ÉS egy bearish OB is, az
+# ellentmondásos jel - nem világos, a piac ezen a szinten vevőként vagy
+# eladóként viselkedett-e korábban, ezért inkább egyiket sem használjuk.
+EXCLUDE_OPPOSITE_DIRECTION_OVERLAP = True
+
 ALERT_COOLDOWN_HOURS = 8   # ugyanarra a zónára ennyi órán belül nem jelez újra
 
 MIN_VOLUME_USDT = 1_000_000
@@ -336,6 +351,46 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
             if not (z["bullish"] == bullish and new_top >= z["bot"] and new_bot <= z["top"])
         ]
 
+    def _zone_width_ok(zt: float, zb: float) -> bool:
+        """ÚJ: max. zóna-szélesség ellenőrzés - lásd MAX_ZONE_WIDTH_PCT
+        kommentjét. False, ha a zóna túl tág ahhoz, hogy informatív legyen."""
+        if zb <= 0:
+            return False
+        width_pct = (zt - zb) / zb * 100
+        return width_pct <= MAX_ZONE_WIDTH_PCT
+
+    def _ranges_overlap(top_a: float, bot_a: float, top_b: float, bot_b: float) -> bool:
+        return top_a >= bot_b and bot_a <= top_b
+
+    def _try_add_zone(zt: float, zb: float, bullish: bool, pos: int, idx: int) -> None:
+        """ÚJ: központosított zóna-hozzáadás, ami mindkét új szűrőt
+        alkalmazza (max. szélesség + ellentétes irányú átfedés kizárása),
+        mielőtt egyáltalán bekerülne az aktív zónák közé."""
+        if not _zone_width_ok(zt, zb):
+            return  # túl tág zóna - nem informatív, kihagyjuk
+
+        remove_overlap(zt, zb, bullish)
+
+        if EXCLUDE_OPPOSITE_DIRECTION_OVERLAP:
+            opposite_overlaps = [
+                z for z in active_zones
+                if z["bullish"] != bullish and _ranges_overlap(zt, zb, z["top"], z["bot"])
+            ]
+            if opposite_overlaps:
+                # Mindkét irányban ellentmondásos szint - sem az újat nem
+                # hozzuk létre, SEM a régi, átfedő ellentétes zónát nem
+                # tartjuk meg.
+                active_zones[:] = [
+                    z for z in active_zones
+                    if not (z["bullish"] != bullish and _ranges_overlap(zt, zb, z["top"], z["bot"]))
+                ]
+                return
+
+        active_zones.append({
+            "anchor_idx": idx, "top": zt, "bot": zb, "bullish": bullish,
+            "created_pos": pos, "touched": False, "touched_pos": None,
+        })
+
     # JAVÍTÁS: korábban ATR_LENGTH+1 (kb. 15 gyertya) után rögtön elkezdtük
     # a zóna-keresést, ami még a Wilder-seed hatása alatt állt (nem volt
     # elég ideje "kisimulnia" a rekurzív számításnak) - ez is hozzájárult
@@ -361,21 +416,13 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
             if idx is not None:
                 zt, zb = float(highs[idx]), float(lows[idx])
                 if zt > zb:
-                    remove_overlap(zt, zb, True)
-                    active_zones.append({
-                        "anchor_idx": idx, "top": zt, "bot": zb, "bullish": True,
-                        "created_pos": pos, "touched": False, "touched_pos": None,
-                    })
+                    _try_add_zone(zt, zb, True, pos, idx)
         if bear_disp_ok:
             idx = find_bear_ob(pos)
             if idx is not None:
                 zt, zb = float(highs[idx]), float(lows[idx])
                 if zt > zb:
-                    remove_overlap(zt, zb, False)
-                    active_zones.append({
-                        "anchor_idx": idx, "top": zt, "bot": zb, "bullish": False,
-                        "created_pos": pos, "touched": False, "touched_pos": None,
-                    })
+                    _try_add_zone(zt, zb, False, pos, idx)
 
         # "touch" (visszatérés) ellenőrzés - a zóna kialakulása UTÁNI
         # gyertyáktól kezdve, az ELSŐ érintéskor jelöljük meg
