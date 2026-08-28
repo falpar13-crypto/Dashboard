@@ -64,3 +64,4 @@
 {"ts": "2026-08-28T22:55:31.132587+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "zone_top": 0.06518, "zone_bot": 0.06346, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T22:55:31.132587+00:00", "symbol": "UMA-USDT", "direction": "SHORT", "zone_top": 0.3714, "zone_bot": 0.3644, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T23:15:33.988746+00:00", "symbol": "GMX-USDT", "direction": "SHORT", "zone_top": 7.907, "zone_bot": 7.706, "anchor_ts": "2026-08-28T15:00:00"}
+{"ts": "2026-08-28T23:20:34.030137+00:00", "symbol": "SKYAI-USDT", "direction": "SHORT", "zone_top": 0.05574, "zone_bot": 0.05448, "anchor_ts": "2026-08-28T13:00:00"}
