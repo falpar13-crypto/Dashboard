@@ -29,3 +29,4 @@
 {"ts": "2026-08-28T16:08:10.466494+00:00", "symbol": "HEMI-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.012515, "price_change_pct": -2.1, "vol_multiplier": 3.38}
 {"ts": "2026-08-28T16:08:10.466494+00:00", "symbol": "UB-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.13204, "price_change_pct": -1.52, "vol_multiplier": 9.15}
 {"ts": "2026-08-28T16:25:25.068369+00:00", "symbol": "VELVET-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.0984, "price_change_pct": -3.05, "vol_multiplier": 31.61}
+{"ts": "2026-08-28T16:43:21.884837+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0084756, "price_change_pct": 4.31, "vol_multiplier": 7.71}
