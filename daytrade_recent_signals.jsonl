@@ -23,3 +23,6 @@
 {"ts": "2026-08-28T14:20:14.514113+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T14:21:13.041140+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T14:22:11.208640+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T14:38:36.580087+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T14:43:50.565706+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T14:44:54.325188+00:00", "symbol": "VVV-USDT", "direction": "LONG", "signal_type": "STANDARD"}
