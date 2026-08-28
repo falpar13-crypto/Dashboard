@@ -33,3 +33,4 @@
 {"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "LAB-USDT", "direction": "LONG", "zone_top": 0.08017, "zone_bot": 0.07632, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "LAYER-USDT", "direction": "SHORT", "zone_top": 0.07139, "zone_bot": 0.06706, "anchor_ts": "2026-08-28T16:00:00"}
 {"ts": "2026-08-28T19:17:15.661084+00:00", "symbol": "ASR-USDT", "direction": "SHORT", "zone_top": 0.895, "zone_bot": 0.885, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T19:23:15.660162+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "zone_top": 0.03808, "zone_bot": 0.03722, "anchor_ts": "2026-08-28T14:00:00"}
