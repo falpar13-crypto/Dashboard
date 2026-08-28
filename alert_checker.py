@@ -119,9 +119,43 @@ FUNDING_HISTORY_MAX_MINUTES = 40
 FUNDING_ACCEL_THRESHOLD_PCT = 0.008   # rövidebb ablak -> alacsonyabb küszöb, hogy még érzékeny maradjon
 
 # v18 RÁNCFELVARRÁS: az EMA_SQUEEZE és EMA_REJECTION jelzéstípusok (és a
-# RANGE_BREAKOUT címkézés) teljesen törölve - a bot mostantól KIZÁRÓLAG a
-# ⚡ STANDARD PUMP/DUMP jelzést küldi, szigorúbb küszöbökkel (lásd
-# MIN_OI_INCREASE / MIN_VOL_MULTIPLIER fentebb).
+# RANGE_BREAKOUT címkézés) korábban törölve voltak - a felhasználó egy
+# régi (v12) verziójának elemzése alapján MOST ÚJRA BEKERÜLTEK, mert két
+# valódi, egymástól ÉS a STANDARD/EARLY-től is FÜGGETLEN piaci mintázatot
+# fednek le, amit a tisztán volumen/OI-alapú STANDARD/EARLY logika nem
+# lát. Két javítással a régi (v12) változathoz képest:
+#   1) EMA REJECTION mostantól MINDKÉT irányban működik (a régi csak
+#      SHORT-ot detektált - ez tükörszimmetrikus LONG-ot is keres).
+#   2) EMA SQUEEZE mostantól VOLUMEN-MEGERŐSÍTÉST is megkövetel a
+#      szorítási ablakban (a szorítás ideje alatt a volumennek TÉNYLEG
+#      a szokásosnál csendesebbnek kell lennie - ez kiszűri azokat az
+#      eseteket, amikor az ár csak VÉLETLENÜL van két EMA közelében,
+#      valódi konszolidáció nélkül).
+# Mindkét jelzéstípus a meglévő context-gyűjtő infrastruktúrát (HTF-trend,
+# orderbook, bot-közi megerősítés, historikus statisztika, kanóc-
+# elutasítás) és a meggyőződés-pontszámot (szín-pont) is használja,
+# ugyanúgy, mint a STANDARD/EARLY jelzés.
+EMA_SQUEEZE_FAST_PERIOD = 20
+EMA_SQUEEZE_SLOW_PERIOD = 50
+EMA_SQUEEZE_LOOKBACK_CANDLES = 4       # ennyi utolsó LEZÁRT gyertyán nézzük a szorítást
+EMA_SQUEEZE_MAX_EMA_GAP_PCT = 1.5      # az EMA20 és EMA50 távolsága ennél kisebb legyen
+EMA_SQUEEZE_MIN_OI_INCREASE = 0.8      # a standardnál lazább OI-küszöb (a setup önmagában erős)
+EMA_SQUEEZE_MIN_VOL_MULTIPLIER = 1.3   # a standardnál lazább volumen-szorzó a KITÖRÉS gyertyájára
+EMA_SQUEEZE_MAX_PRICE_CHANGE = 5.0     # felső korlát az élő gyertya ármozgására
+EMA_SQUEEZE_MAX_SQUEEZE_VOL_RATIO = 0.85  # ÚJ: a szorítási ablak átlagvolumene a
+                                            # baseline-nak legfeljebb ennyi hányada legyen -
+                                            # valódi "elcsendesedést" igazol, nem csak
+                                            # véletlen EMA-közelséget
+
+EMA_REJECTION_FAST_PERIOD = 20
+EMA_REJECTION_SLOW_PERIOD = 50
+EMA_REJECTION_LOOKBACK_CANDLES = 6
+EMA_REJECTION_BREAK_PCT = 0.1              # ennyivel legyen a close "határozottan" az EMA20 túloldalán (%)
+EMA_REJECTION_RETEST_TOLERANCE_PCT = 0.5   # a visszateszt ennyi %-on belül érintse az EMA20-at
+EMA_REJECTION_MIN_BODY_PCT = 0.15          # a trigger-gyertya teste legalább ennyi % legyen
+EMA_REJECTION_MAX_PRICE_CHANGE = 5.0
+EMA_REJECTION_MIN_OI_INCREASE = 0.9
+EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.4
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
 TOTAL_RUN_BUDGET_SECONDS = 480   # ÚJRA FELEMELVE: 420 -> 480 (~8 perc). Az
@@ -1598,7 +1632,8 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
                                funding_delta_pct=None, orderbook_info=None,
                                macd_status=None, rsi=None, vol_multiplier=None,
                                cross_bot_confirmations=None, divergence=None,
-                               vwap_relation=None, historical_stats=None) -> tuple:
+                               vwap_relation=None, historical_stats=None,
+                               wick_rejection_ratio=None) -> tuple:
     """Visszatér: (score: int 0-100, label: str, factors: list[str])."""
     score = CONFIDENCE_BASELINE
     factors = []
@@ -1693,6 +1728,12 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
         elif win_rate <= 35:
             score -= 8; factors.append(f"-8 historikusan gyenge típus ({win_rate:.0f}% találati arány)")
 
+    if wick_rejection_ratio is not None:
+        if wick_rejection_ratio >= 1.5:
+            score -= 20; factors.append(f"-20 erős kanóc-elutasítás a jelző gyertyán ({wick_rejection_ratio:.1f}x test)")
+        elif wick_rejection_ratio >= 0.8:
+            score -= 10; factors.append(f"-10 kanóc-elutasítás a jelző gyertyán ({wick_rejection_ratio:.1f}x test)")
+
     score = max(0, min(100, score))
     if score >= CONFIDENCE_STRONG_THRESHOLD:
         label = "🟢"  # ÚJ: csak a szín-pont, szöveg/szám nélkül (a felhasználó kérésére)
@@ -1712,12 +1753,13 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
                           funding_delta_pct=None, orderbook_info=None,
                           cross_bot_confirmations=None, divergence=None,
                           vwap=None, vwap_relation=None, vwap_diff_pct=None,
-                          historical_stats=None):
-    # v18 RÁNCFELVARRÁS: a bot mostantól KIZÁRÓLAG ⚡ STANDARD PUMP/DUMP
-    # jelzést küld - a RANGE_BREAKOUT/EMA_SQUEEZE/EMA_REJECTION fejléc-ágak
-    # törölve.
-    # ÚJ: EARLY (gyorsulás-alapú) jelzéstípus visszahozva, más fejléccel és
-    # egy figyelmeztető sorral - lásd az EARLY paraméterek blokk-kommentjét.
+                          historical_stats=None, wick_rejection_ratio=None,
+                          ema_gap_pct=None):
+    # ÚJ (v19): az EMA_SQUEEZE/EMA_REJECTION fejléc-ágak ÚJRA BEKERÜLTEK - a
+    # felhasználó egy korábbi (v12) verziójának elemzése után derült ki,
+    # hogy ez a v18-as egyszerűsítés (lásd a fájl elején lévő blokk-
+    # kommentet) elveszített két értékes, a STANDARD/EARLY-től eltérő
+    # piaci mintázatot felismerő, önálló logikát.
     action = DIRECTION_LABELS.get(direction, direction)
 
     # ÚJ: meggyőződés-pontszám mostantól CSAK szín-pontként (🟢/🟡/🔴)
@@ -1730,10 +1772,15 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         macd_status=macd_status, rsi=rsi, vol_multiplier=vol_multiplier,
         cross_bot_confirmations=cross_bot_confirmations, divergence=divergence,
         vwap_relation=vwap_relation, historical_stats=historical_stats,
+        wick_rejection_ratio=wick_rejection_ratio,
     )
 
     if signal_type == "EARLY":
         header = f"🌱 <b>{symbol}</b> {action} (KORAI) {score_label}"
+    elif signal_type == "EMA_SQUEEZE":
+        header = f"🗜️ <b>{symbol}</b> {action} (EMA SQUEEZE KITÖRÉS) {score_label}"
+    elif signal_type == "EMA_REJECTION":
+        header = f"📐 <b>{symbol}</b> {action} (EMA REJECTION) {score_label}"
     else:
         header = f"⚡ <b>{symbol}</b> {action} {score_label}"
 
@@ -1773,6 +1820,18 @@ def format_scalp_message(symbol, direction, price, price_change_pct,
         early_line = (
             f"\n🔬 Korai (gyorsulás-alapú) jelzés{pace_note}{elapsed_note}"
             f"\n⚠️ Nagyobb a hamis jelzés esélye, mint a szokásos jelzésnél"
+        )
+    elif signal_type == "EMA_SQUEEZE":
+        gap_note = f" (EMA20-EMA50 táv: {ema_gap_pct:.2f}%)" if ema_gap_pct is not None else ""
+        early_line = (
+            f"\n🗜️ Beszorulás utáni kitörés{gap_note}"
+            f"\nℹ️ Önálló setup - a STANDARD/EARLY jelzéstől független logika"
+        )
+    elif signal_type == "EMA_REJECTION":
+        early_line = (
+            f"\n📐 Mozgóátlag (EMA20) visszautasítás - a trend megtört, "
+            f"a visszateszt nem tudott áttörni\n"
+            f"ℹ️ Önálló setup - a STANDARD/EARLY jelzéstől független logika"
         )
 
     warning_line = ""
@@ -2006,6 +2065,123 @@ def compute_vwap(kdf: pd.DataFrame) -> Optional[float]:
     return float(vwap) if pd.notna(vwap) else None
 
 
+def detect_ema_squeeze(closed: pd.DataFrame, live: pd.Series, baseline_avg_vol: float):
+    """Visszaadja (irány vagy None, ema_gap_pct vagy None) párost.
+
+    1) Szorítás: az utolsó EMA_SQUEEZE_LOOKBACK_CANDLES db LEZÁRT gyertya
+       High/Low-ja szorosan az EMA20-EMA50 sáv körül mozgott, a két EMA
+       távolsága legfeljebb EMA_SQUEEZE_MAX_EMA_GAP_PCT%, ÉS (ÚJ) a
+       szorítási ablak átlagvolumene a baseline-nak legfeljebb
+       EMA_SQUEEZE_MAX_SQUEEZE_VOL_RATIO hányada (valódi elcsendesedés).
+    2) Kitörés: az ÉLŐ gyertya ára határozottan kitör ebből a csatornából."""
+    if len(closed) < EMA_SQUEEZE_SLOW_PERIOD + EMA_SQUEEZE_LOOKBACK_CANDLES:
+        return None, None
+
+    ema_fast = closed["close"].ewm(span=EMA_SQUEEZE_FAST_PERIOD, adjust=False).mean()
+    ema_slow = closed["close"].ewm(span=EMA_SQUEEZE_SLOW_PERIOD, adjust=False).mean()
+    last_fast = ema_fast.iloc[-1]
+    last_slow = ema_slow.iloc[-1]
+    if pd.isna(last_fast) or pd.isna(last_slow) or last_slow <= 0:
+        return None, None
+
+    ema_gap_pct = abs(last_fast - last_slow) / last_slow * 100
+    if ema_gap_pct > EMA_SQUEEZE_MAX_EMA_GAP_PCT:
+        return None, round(float(ema_gap_pct), 2)
+
+    lookback = closed.iloc[-EMA_SQUEEZE_LOOKBACK_CANDLES:]
+    band_low = min(last_fast, last_slow)
+    band_high = max(last_fast, last_slow)
+    tolerance = max((band_high - band_low) * 0.5, band_high * 0.002)
+    channel_low = band_low - tolerance
+    channel_high = band_high + tolerance
+
+    prior_high = float(lookback["high"].max())
+    prior_low = float(lookback["low"].min())
+    is_tight = (prior_high <= channel_high) and (prior_low >= channel_low)
+    if not is_tight:
+        return None, round(float(ema_gap_pct), 2)
+
+    # ÚJ: volumen-megerősítés - a szorítási ablak alatt a volumennek TÉNYLEG
+    # a szokásosnál csendesebbnek kell lennie, különben csak véletlen
+    # EMA-közelségről beszélünk, nem valódi konszolidációról.
+    if baseline_avg_vol and baseline_avg_vol > 0:
+        squeeze_avg_vol = float(lookback["volume"].mean())
+        if squeeze_avg_vol > baseline_avg_vol * EMA_SQUEEZE_MAX_SQUEEZE_VOL_RATIO:
+            return None, round(float(ema_gap_pct), 2)
+
+    current_price = float(live["close"])
+    breakout_up = current_price > band_high and current_price > prior_high
+    breakout_down = current_price < band_low and current_price < prior_low
+
+    if breakout_up:
+        return "LONG", round(float(ema_gap_pct), 2)
+    if breakout_down:
+        return "SHORT", round(float(ema_gap_pct), 2)
+    return None, round(float(ema_gap_pct), 2)
+
+
+def detect_ema_rejection(closed: pd.DataFrame, live: pd.Series) -> Optional[str]:
+    """Mozgóátlag-visszautasítás - MINDKÉT irányban (a régi verzióban csak
+    SHORT volt, ez a javítás tükörszimmetrikus LONG-ot is keres).
+
+    SHORT: korábbi UP trend (EMA20>EMA50) után az ár betört az EMA20 alá,
+    majd alulról visszatesztelte, de nem tudott fölé zárni - a szint
+    "visszautasította", és az élő gyertya határozottan piros.
+
+    LONG (tükörkép): korábbi DOWN trend (EMA20<EMA50) után az ár betört az
+    EMA20 fölé, majd felülről visszatesztelte, de nem tudott alá zárni -
+    az élő gyertya határozottan zöld."""
+    min_len = EMA_REJECTION_SLOW_PERIOD + EMA_REJECTION_LOOKBACK_CANDLES
+    if len(closed) < min_len:
+        return None
+
+    ema20 = closed["close"].ewm(span=EMA_REJECTION_FAST_PERIOD, adjust=False).mean()
+    ema50 = closed["close"].ewm(span=EMA_REJECTION_SLOW_PERIOD, adjust=False).mean()
+    last_ema20 = ema20.iloc[-1]
+    last_ema50 = ema50.iloc[-1]
+    if pd.isna(last_ema20) or pd.isna(last_ema50) or last_ema20 <= 0:
+        return None
+
+    lookback_closed = closed.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
+    lookback_ema20 = ema20.iloc[-EMA_REJECTION_LOOKBACK_CANDLES:]
+    live_open = float(live["open"])
+    live_close = float(live["close"])
+    live_high = float(live["high"])
+    live_low = float(live["low"])
+    if live_open <= 0:
+        return None
+
+    tolerance = last_ema20 * (EMA_REJECTION_RETEST_TOLERANCE_PCT / 100)
+    channel_low = last_ema20 - tolerance
+    channel_high = last_ema20 + tolerance
+    last_closed_high = float(closed["high"].iloc[-1])
+    last_closed_low = float(closed["low"].iloc[-1])
+
+    # --- SHORT ág (korábbi UP trend, letörés, visszateszt alulról, elutasítás) ---
+    if last_ema20 > last_ema50:
+        break_threshold = lookback_ema20 * (1 - EMA_REJECTION_BREAK_PCT / 100)
+        broke_below = bool((lookback_closed["close"].values < break_threshold.values).any())
+        if broke_below:
+            retested = (channel_low <= last_closed_high <= channel_high) or (channel_low <= live_high <= channel_high)
+            if retested:
+                red_body_pct = (live_open - live_close) / live_open * 100
+                if red_body_pct >= EMA_REJECTION_MIN_BODY_PCT and live_close < last_ema20:
+                    return "SHORT"
+
+    # --- LONG ág (ÚJ - korábbi DOWN trend, kitörés fölé, visszateszt felülről, elutasítás) ---
+    if last_ema20 < last_ema50:
+        break_threshold_up = lookback_ema20 * (1 + EMA_REJECTION_BREAK_PCT / 100)
+        broke_above = bool((lookback_closed["close"].values > break_threshold_up.values).any())
+        if broke_above:
+            retested_from_above = (channel_low <= last_closed_low <= channel_high) or (channel_low <= live_low <= channel_high)
+            if retested_from_above:
+                green_body_pct = (live_close - live_open) / live_open * 100
+                if green_body_pct >= EMA_REJECTION_MIN_BODY_PCT and live_close > last_ema20:
+                    return "LONG"
+
+    return None
+
+
 def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Optional["CandleEval"]:
     """Az ÉLŐ (még nyitott) gyertyát értékeli ki a megelőző VOLUME_MA_PERIOD db
     LEZÁRT gyertya átlagához képest. Az irányt az élő gyertya nyitó- és
@@ -2046,6 +2222,20 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
     candle_vol_usdt = float(live["volume"] * current_price)
     direction = "LONG" if current_price >= live["open"] else "SHORT"
 
+    # ÚJ: KANÓC-ELUTASÍTÁS ellenőrzés - lásd a daytrade_checker.py azonos
+    # blokk-kommentjét a teljes indoklásért (a felhasználó konkrét
+    # megfigyelése: jelzés kimegy, a KÖVETKEZŐ gyertya visszazár alá).
+    live_high = float(live["high"])
+    live_low = float(live["low"])
+    live_open = float(live["open"])
+    body = abs(current_price - live_open)
+    body_safe = max(body, current_price * 0.0005)
+    if direction == "LONG":
+        rejection_wick = live_high - max(live_open, current_price)
+    else:
+        rejection_wick = min(live_open, current_price) - live_low
+    wick_rejection_ratio = max(0.0, rejection_wick) / body_safe
+
     rsi_val, macd_status = compute_rsi_macd(kdf["close"])
 
     # ÚJ: RSI/ár divergencia - kizárólag LEZÁRT gyertyákon.
@@ -2076,6 +2266,12 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
         except (TypeError, ValueError, OverflowError):
             pass
 
+    # ÚJ: EMA Squeeze (beszorulás) + EMA Rejection (mozgóátlag-visszautasítás)
+    # - lásd a fájl elején lévő "v18 RÁNCFELVARRÁS" blokk-kommentet. Mindkettő
+    # a STANDARD/EARLY jelzéstől TELJESEN FÜGGETLEN, önálló setup.
+    ema_squeeze_signal, ema_gap_pct = detect_ema_squeeze(closed, live, avg_vol)
+    ema_rejection_signal = detect_ema_rejection(closed, live)
+
     return {
         "price": current_price,
         "price_change_pct": round(float(price_change_pct), 2),
@@ -2085,6 +2281,10 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
         "rsi": rsi_val,
         "macd_status": macd_status,
         "divergence": divergence,
+        "wick_rejection_ratio": round(wick_rejection_ratio, 2),
+        "ema_squeeze_signal": ema_squeeze_signal,
+        "ema_gap_pct": ema_gap_pct,
+        "ema_rejection_signal": ema_rejection_signal,
         "vwap": vwap,
         "vwap_relation": vwap_relation,
         "vwap_diff_pct": round(vwap_diff_pct, 2) if vwap_diff_pct is not None else None,
@@ -2415,6 +2615,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 vwap=candle.get("vwap"), vwap_relation=candle.get("vwap_relation"),
                 vwap_diff_pct=candle.get("vwap_diff_pct"),
                 historical_stats=historical_stats,
+                wick_rejection_ratio=candle.get("wick_rejection_ratio"),
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
@@ -2434,6 +2635,121 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                         fired_signal_type, symbol, candle["direction"], candle["price_change_pct"],
                         candle["vol_multiplier"], display_oi_change_pct, htf_trend or "ismeretlen",
                         trend_note, bounce_note)
+
+        # ----------------------------------------------------------------
+        # ÚJ: EMA SQUEEZE (beszorulás utáni kitörés) - önálló, a fenti
+        # STANDARD/EARLY jelzéstől TELJESEN FÜGGETLEN riasztás, saját
+        # cooldown-nal, lazább OI/volumen-küszöbökkel (a szoros EMA-
+        # csatorna kitörése önmagában is erős setup). Lásd a fájl elején
+        # lévő "v18 RÁNCFELVARRÁS" blokk-kommentet.
+        # ----------------------------------------------------------------
+        ema_squeeze_signal = candle.get("ema_squeeze_signal")
+        if ema_squeeze_signal is not None:
+            squeeze_is_setup = (
+                abs(candle["price_change_pct"]) <= EMA_SQUEEZE_MAX_PRICE_CHANGE
+                and oi_change_pct >= EMA_SQUEEZE_MIN_OI_INCREASE
+                and candle["vol_multiplier"] >= EMA_SQUEEZE_MIN_VOL_MULTIPLIER
+                and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
+            )
+            squeeze_cooldown_ok = True
+            if entry.get("last_ema_squeeze_alert_ts"):
+                last_sq_dt = datetime.fromisoformat(entry["last_ema_squeeze_alert_ts"])
+                if (now - last_sq_dt) < timedelta(minutes=ALERT_COOLDOWN_MINUTES):
+                    squeeze_cooldown_ok = False
+
+            if squeeze_is_setup and squeeze_cooldown_ok:
+                sq_near_level_risk = (
+                    (ema_squeeze_signal == "LONG" and near_resistance)
+                    or (ema_squeeze_signal == "SHORT" and near_support)
+                )
+                sq_bounce_confluence = (
+                    (ema_squeeze_signal == "LONG" and near_support)
+                    or (ema_squeeze_signal == "SHORT" and near_resistance)
+                )
+                sq_orderbook_info = await fetch_orderbook_imbalance(symbol)
+                sq_cross_bot = get_cross_bot_confirmations(symbol, ema_squeeze_signal, now)
+                sq_historical_stats = compute_historical_stats("EMA_SQUEEZE", ema_squeeze_signal, now)
+                sq_msg = format_scalp_message(
+                    symbol, ema_squeeze_signal, candle["price"], candle["price_change_pct"],
+                    candle["candle_vol_usdt"], candle["vol_multiplier"],
+                    oi_now, oi_change_pct, htf_trend=htf_trend,
+                    bounce_confluence=sq_bounce_confluence, near_level_risk=sq_near_level_risk,
+                    rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
+                    signal_type="EMA_SQUEEZE",
+                    funding_rate=funding_rate, funding_delta_pct=funding_delta_pct,
+                    orderbook_info=sq_orderbook_info,
+                    cross_bot_confirmations=sq_cross_bot,
+                    divergence=candle.get("divergence"),
+                    vwap=candle.get("vwap"), vwap_relation=candle.get("vwap_relation"),
+                    vwap_diff_pct=candle.get("vwap_diff_pct"),
+                    historical_stats=sq_historical_stats,
+                    wick_rejection_ratio=candle.get("wick_rejection_ratio"),
+                    ema_gap_pct=candle.get("ema_gap_pct"),
+                )
+                await send_telegram_message(sq_msg)
+                entry["last_ema_squeeze_alert_ts"] = now.isoformat()
+                alerts_sent += 1
+                register_pending_signal(state, symbol, "EMA_SQUEEZE", ema_squeeze_signal, candle["price"], now)
+                _append_cross_bot_signal(symbol, ema_squeeze_signal, "EMA_SQUEEZE", now)
+                logger.info("JELZÉS küldve [EMA_SQUEEZE]: %s [%s] (EMA-táv %.2f%%, Vol %.1fx átlag, OI %+.2f%%)",
+                            symbol, ema_squeeze_signal, candle.get("ema_gap_pct") or 0.0,
+                            candle["vol_multiplier"], oi_change_pct)
+
+        # ----------------------------------------------------------------
+        # ÚJ: EMA REJECTION (mozgóátlag-visszautasítás) - önálló, a
+        # STANDARD/EARLY/EMA SQUEEZE jelzésektől TELJESEN FÜGGETLEN
+        # riasztás, saját cooldown-nal, lazított küszöbökkel. MOSTANTÓL
+        # MINDKÉT irányban működik (lásd detect_ema_rejection()).
+        # ----------------------------------------------------------------
+        ema_rejection_signal = candle.get("ema_rejection_signal")
+        if ema_rejection_signal is not None:
+            rejection_is_setup = (
+                abs(candle["price_change_pct"]) <= EMA_REJECTION_MAX_PRICE_CHANGE
+                and oi_change_pct >= EMA_REJECTION_MIN_OI_INCREASE
+                and candle["vol_multiplier"] >= EMA_REJECTION_MIN_VOL_MULTIPLIER
+                and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
+            )
+            rejection_cooldown_ok = True
+            if entry.get("last_ema_rejection_alert_ts"):
+                last_rej_dt = datetime.fromisoformat(entry["last_ema_rejection_alert_ts"])
+                if (now - last_rej_dt) < timedelta(minutes=ALERT_COOLDOWN_MINUTES):
+                    rejection_cooldown_ok = False
+
+            if rejection_is_setup and rejection_cooldown_ok:
+                rej_near_level_risk = (
+                    (ema_rejection_signal == "LONG" and near_resistance)
+                    or (ema_rejection_signal == "SHORT" and near_support)
+                )
+                rej_bounce_confluence = (
+                    (ema_rejection_signal == "LONG" and near_support)
+                    or (ema_rejection_signal == "SHORT" and near_resistance)
+                )
+                rej_orderbook_info = await fetch_orderbook_imbalance(symbol)
+                rej_cross_bot = get_cross_bot_confirmations(symbol, ema_rejection_signal, now)
+                rej_historical_stats = compute_historical_stats("EMA_REJECTION", ema_rejection_signal, now)
+                rej_msg = format_scalp_message(
+                    symbol, ema_rejection_signal, candle["price"], candle["price_change_pct"],
+                    candle["candle_vol_usdt"], candle["vol_multiplier"],
+                    oi_now, oi_change_pct, htf_trend=htf_trend,
+                    bounce_confluence=rej_bounce_confluence, near_level_risk=rej_near_level_risk,
+                    rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
+                    signal_type="EMA_REJECTION",
+                    funding_rate=funding_rate, funding_delta_pct=funding_delta_pct,
+                    orderbook_info=rej_orderbook_info,
+                    cross_bot_confirmations=rej_cross_bot,
+                    divergence=candle.get("divergence"),
+                    vwap=candle.get("vwap"), vwap_relation=candle.get("vwap_relation"),
+                    vwap_diff_pct=candle.get("vwap_diff_pct"),
+                    historical_stats=rej_historical_stats,
+                    wick_rejection_ratio=candle.get("wick_rejection_ratio"),
+                )
+                await send_telegram_message(rej_msg)
+                entry["last_ema_rejection_alert_ts"] = now.isoformat()
+                alerts_sent += 1
+                register_pending_signal(state, symbol, "EMA_REJECTION", ema_rejection_signal, candle["price"], now)
+                _append_cross_bot_signal(symbol, ema_rejection_signal, "EMA_REJECTION", now)
+                logger.info("JELZÉS küldve [EMA_REJECTION]: %s [%s] (Vol %.1fx átlag, OI %+.2f%%)",
+                            symbol, ema_rejection_signal, candle["vol_multiplier"], oi_change_pct)
 
 
     if htf_warned:
