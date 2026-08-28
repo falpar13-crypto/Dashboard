@@ -61,3 +61,8 @@
 {"ts": "2026-08-27T23:00:49.600757+00:00", "symbol": "EDU-USDT", "direction": "LONG", "cumulative_change_pct": 7.94, "aligned_fraction": 0.75, "single_candle_share": 0.29, "oi_change_pct": -0.6626680063866432}
 {"ts": "2026-08-27T23:00:49.600757+00:00", "symbol": "GWEI-USDT", "direction": "LONG", "cumulative_change_pct": 6.5, "aligned_fraction": 0.75, "single_candle_share": 0.15, "oi_change_pct": -0.7294187479388098}
 {"ts": "2026-08-27T23:00:49.600757+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "cumulative_change_pct": 6.51, "aligned_fraction": 0.67, "single_candle_share": 0.23, "oi_change_pct": 3.531430978118528}
+{"ts": "2026-08-28T00:00:54.767793+00:00", "symbol": "US-USDT", "direction": "LONG", "cumulative_change_pct": 10.72, "aligned_fraction": 0.75, "single_candle_share": 0.17, "oi_change_pct": -2.3359688288008917}
+{"ts": "2026-08-28T00:00:54.767793+00:00", "symbol": "GPS-USDT", "direction": "SHORT", "cumulative_change_pct": -5.56, "aligned_fraction": 0.88, "single_candle_share": 0.23, "oi_change_pct": -13.84264146699804}
+{"ts": "2026-08-28T00:00:54.767793+00:00", "symbol": "MINA-USDT", "direction": "SHORT", "cumulative_change_pct": -7.35, "aligned_fraction": 0.67, "single_candle_share": 0.23, "oi_change_pct": -0.887869934506356}
+{"ts": "2026-08-28T00:00:54.767793+00:00", "symbol": "METEORA-USDT", "direction": "LONG", "cumulative_change_pct": 5.64, "aligned_fraction": 0.75, "single_candle_share": 0.17, "oi_change_pct": 0.0}
+{"ts": "2026-08-28T00:00:54.767793+00:00", "symbol": "MORPHO-USDT", "direction": "SHORT", "cumulative_change_pct": -5.35, "aligned_fraction": 0.75, "single_candle_share": 0.19, "oi_change_pct": -1.2786290849271684}
