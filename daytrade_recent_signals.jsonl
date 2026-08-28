@@ -1,4 +1,3 @@
-{"ts": "2026-08-28T10:59:26.403516+00:00", "symbol": "STX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T11:16:10.703233+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T11:47:29.648513+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T11:54:45.643981+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -32,3 +31,4 @@
 {"ts": "2026-08-28T16:40:54.146869+00:00", "symbol": "DYDX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T16:42:02.191337+00:00", "symbol": "ATH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T16:45:27.333100+00:00", "symbol": "LDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T17:02:52.241254+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
