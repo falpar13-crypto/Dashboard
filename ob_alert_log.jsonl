@@ -55,3 +55,4 @@
 {"ts": "2026-08-28T21:31:43.477204+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "zone_top": 0.34278, "zone_bot": 0.34203, "anchor_ts": "2026-08-25T12:00:00"}
 {"ts": "2026-08-28T21:45:33.717302+00:00", "symbol": "HUMA-USDT", "direction": "LONG", "zone_top": 0.021617, "zone_bot": 0.021336, "anchor_ts": "2026-08-25T20:00:00"}
 {"ts": "2026-08-28T21:50:35.478922+00:00", "symbol": "KAS-USDT", "direction": "LONG", "zone_top": 0.02745, "zone_bot": 0.0273, "anchor_ts": "2026-08-27T05:00:00"}
+{"ts": "2026-08-28T22:20:32.227280+00:00", "symbol": "KAVA-USDT", "direction": "SHORT", "zone_top": 0.0475, "zone_bot": 0.04664, "anchor_ts": "2026-08-28T15:00:00"}
