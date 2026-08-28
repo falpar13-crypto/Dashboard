@@ -9,3 +9,7 @@
 {"ts": "2026-08-28T12:31:42.739628+00:00", "symbol": "SAND-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-28T13:11:35.188742+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-28T13:32:48.691601+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T14:03:03.568849+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T14:04:19.385458+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T14:08:29.217718+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T14:08:29.217718+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
