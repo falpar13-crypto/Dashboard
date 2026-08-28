@@ -52,3 +52,4 @@
 {"ts": "2026-08-28T21:15:36.746188+00:00", "symbol": "IOTX-USDT", "direction": "SHORT", "zone_top": 0.002946, "zone_bot": 0.002866, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T21:20:33.309452+00:00", "symbol": "STABLE-USDT", "direction": "SHORT", "zone_top": 0.02739, "zone_bot": 0.02697, "anchor_ts": "2026-08-28T09:00:00"}
 {"ts": "2026-08-28T21:20:33.309452+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "zone_top": 7.73, "zone_bot": 7.526, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T21:31:43.477204+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "zone_top": 0.34278, "zone_bot": 0.34203, "anchor_ts": "2026-08-25T12:00:00"}
