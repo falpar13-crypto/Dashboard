@@ -50,6 +50,7 @@ from pathlib import Path
 from typing import Optional
 
 import aiohttp
+import numpy as np
 import pandas as pd
 import requests
 
@@ -237,7 +238,16 @@ async def fetch_klines(session, semaphore, symbol, interval, limit=HISTORY_CANDL
 # ORDER BLOCK SZIMULÁCIÓ (a Pine kód logikai magjának Python-fordítása)
 # ----------------------------------------------------------------------------
 def _compute_atr(df: pd.DataFrame, length: int) -> pd.Series:
-    """Wilder-simítású ATR - ugyanaz a módszer, mint a Pine ta.atr()."""
+    """PONTOS Wilder-simítású ATR - ugyanaz a módszer, mint a Pine ta.atr().
+
+    JAVÍTÁS: a korábbi verzió egy pandas ewm()-alapú KÖZELÍTÉST használt,
+    aminek a kezdő (seed) értéke hibásan a legelső True Range volt, nem a
+    Wilder-módszer szerinti helyes seed (az első `length` db valódi TR
+    egyszerű átlaga). Ez a bemelegítési szakaszban (kb. az első 30-40
+    gyertyán) SZISZTEMATIKUSAN ALULBECSÜLT ATR-t adott - ami miatt a
+    displacement-szűrő (ATR * DISPLACEMENT_MULT) a valóságosnál könnyebben
+    teljesült, tehát a szűrő "gyengébben" működött, mint a TradingView-n.
+    Ez most a Wilder-algoritmus PONTOS, rekurzív seedelésével készül."""
     high, low, close = df["high"], df["low"], df["close"]
     prev_close = close.shift(1)
     tr = pd.concat([
@@ -245,7 +255,23 @@ def _compute_atr(df: pd.DataFrame, length: int) -> pd.Series:
         (high - prev_close).abs(),
         (low - prev_close).abs(),
     ], axis=1).max(axis=1)
-    atr = tr.ewm(alpha=1 / length, min_periods=length, adjust=False).mean()
+
+    n = len(tr)
+    atr = pd.Series(np.nan, index=tr.index, dtype=float)
+    if n <= length:
+        return atr
+
+    # Wilder-seed: az első `length` db valódi (index 0 NaN, mert nincs
+    # előző close) True Range EGYSZERŰ átlaga.
+    seed = tr.iloc[1:length + 1].mean()
+    if pd.isna(seed):
+        return atr
+    atr.iloc[length] = seed
+    prev = seed
+    tr_values = tr.values
+    for i in range(length + 1, n):
+        prev = (prev * (length - 1) + tr_values[i]) / length
+        atr.iloc[i] = prev
     return atr
 
 
@@ -256,7 +282,7 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
     AKTÍV (nem mitigált) zónák listáját, mindegyiknél jelölve, hogy az
     UTOLSÓ (legfrissebb) gyertyán történt-e "touch" (érintés/visszatérés)
     esemény."""
-    if kdf is None or len(kdf) < OB_LOOKBACK + IMPULSE_LEN + ATR_LENGTH + 5:
+    if kdf is None or len(kdf) < OB_LOOKBACK + IMPULSE_LEN + ATR_LENGTH * 3 + 5:
         return []
 
     df = kdf.reset_index(drop=True)
@@ -310,7 +336,13 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
             if not (z["bullish"] == bullish and new_top >= z["bot"] and new_bot <= z["top"])
         ]
 
-    start_pos = max(ATR_LENGTH + 1, OB_LOOKBACK + IMPULSE_LEN + 1)
+    # JAVÍTÁS: korábban ATR_LENGTH+1 (kb. 15 gyertya) után rögtön elkezdtük
+    # a zóna-keresést, ami még a Wilder-seed hatása alatt állt (nem volt
+    # elég ideje "kisimulnia" a rekurzív számításnak) - ez is hozzájárult
+    # a pontatlan, túl-engedékeny displacement-szűréshez. Most a zóna-
+    # keresés csak azután indul, hogy az ATR-nek volt legalább
+    # ATR_LENGTH*3 gyertyányi ideje stabilizálódni.
+    start_pos = max(ATR_LENGTH * 3, OB_LOOKBACK + IMPULSE_LEN + 1)
     for pos in range(start_pos, n):
         if pd.isna(atr[pos - 1]):
             continue
