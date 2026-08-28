@@ -20,3 +20,4 @@
 {"ts": "2026-08-28T04:03:13.648988+00:00", "symbol": "TAC-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.002779, "price_change_pct": -6.68, "vol_multiplier": 26.72}
 {"ts": "2026-08-28T04:22:33.590740+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.16356, "price_change_pct": 2.37, "vol_multiplier": 11.28}
 {"ts": "2026-08-28T08:52:29.946522+00:00", "symbol": "4-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.012153, "price_change_pct": -4.81, "vol_multiplier": 36.69}
+{"ts": "2026-08-28T12:38:58.664657+00:00", "symbol": "ACE-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.19617, "price_change_pct": -3.55, "vol_multiplier": 38.6}
