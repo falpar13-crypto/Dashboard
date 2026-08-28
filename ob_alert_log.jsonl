@@ -1,3 +1,8 @@
 {"ts": "2026-08-27T19:19:08.923655+00:00", "symbol": "CHILLGUY-USDT", "direction": "SHORT", "zone_top": 0.013156, "zone_bot": 0.012289, "anchor_ts": "2026-08-27T16:00:00"}
 {"ts": "2026-08-27T19:19:08.923655+00:00", "symbol": "CHIP-USDT", "direction": "SHORT", "zone_top": 0.04372, "zone_bot": 0.04011, "anchor_ts": "2026-08-27T15:00:00"}
 {"ts": "2026-08-27T19:27:02.330948+00:00", "symbol": "LONGXIA-USDT", "direction": "LONG", "zone_top": 0.034097, "zone_bot": 0.032269, "anchor_ts": "2026-08-27T13:00:00"}
+{"ts": "2026-08-28T03:46:44.813362+00:00", "symbol": "SLP-USDT", "direction": "LONG", "zone_top": 0.0006366, "zone_bot": 0.0006291, "anchor_ts": "2026-08-27T00:00:00"}
+{"ts": "2026-08-28T03:46:44.813362+00:00", "symbol": "STX-USDT", "direction": "LONG", "zone_top": 0.2571, "zone_bot": 0.2525, "anchor_ts": "2026-08-28T00:00:00"}
+{"ts": "2026-08-28T03:46:44.813362+00:00", "symbol": "ERA-USDT", "direction": "SHORT", "zone_top": 0.05913, "zone_bot": 0.05703, "anchor_ts": "2026-08-28T00:00:00"}
+{"ts": "2026-08-28T03:46:44.813362+00:00", "symbol": "TWT-USDT", "direction": "LONG", "zone_top": 0.4549, "zone_bot": 0.448, "anchor_ts": "2026-08-27T14:00:00"}
+{"ts": "2026-08-28T03:46:44.813362+00:00", "symbol": "ALCH-USDT", "direction": "SHORT", "zone_top": 0.03132, "zone_bot": 0.03021, "anchor_ts": "2026-08-28T00:00:00"}
