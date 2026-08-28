@@ -26,3 +26,6 @@
 {"ts": "2026-08-28T15:07:34.716159+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-28T15:23:35.944702+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-28T15:54:18.714060+00:00", "symbol": "SEI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T15:59:31.101250+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T16:06:54.703636+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-28T16:06:54.703636+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "EARLY"}
