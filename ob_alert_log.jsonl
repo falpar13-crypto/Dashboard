@@ -58,3 +58,5 @@
 {"ts": "2026-08-28T22:20:32.227280+00:00", "symbol": "KAVA-USDT", "direction": "SHORT", "zone_top": 0.0475, "zone_bot": 0.04664, "anchor_ts": "2026-08-28T15:00:00"}
 {"ts": "2026-08-28T22:35:27.903426+00:00", "symbol": "0G-USDT", "direction": "SHORT", "zone_top": 0.1663, "zone_bot": 0.1648, "anchor_ts": "2026-08-25T10:00:00"}
 {"ts": "2026-08-28T22:35:27.903426+00:00", "symbol": "XAI-USDT", "direction": "SHORT", "zone_top": 0.007553, "zone_bot": 0.007387, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T22:40:36.541341+00:00", "symbol": "TRUST-USDT", "direction": "SHORT", "zone_top": 0.05151, "zone_bot": 0.05067, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T22:40:36.541341+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "zone_top": 2.427, "zone_bot": 2.373, "anchor_ts": "2026-08-28T14:00:00"}
