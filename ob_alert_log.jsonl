@@ -44,3 +44,4 @@
 {"ts": "2026-08-28T20:10:33.399228+00:00", "symbol": "CKB-USDT", "direction": "SHORT", "zone_top": 0.0010113, "zone_bot": 0.0009871, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T20:15:36.121068+00:00", "symbol": "FLOW-USDT", "direction": "SHORT", "zone_top": 0.0292, "zone_bot": 0.02843, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T20:15:36.121068+00:00", "symbol": "OFC-USDT", "direction": "SHORT", "zone_top": 0.009466, "zone_bot": 0.009337, "anchor_ts": "2026-08-28T12:00:00"}
+{"ts": "2026-08-28T20:25:26.650393+00:00", "symbol": "TNSR-USDT", "direction": "SHORT", "zone_top": 0.03437, "zone_bot": 0.03366, "anchor_ts": "2026-08-28T14:00:00"}
