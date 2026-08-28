@@ -22,3 +22,13 @@
 {"ts": "2026-08-28T18:48:33.237333+00:00", "symbol": "SPX-USDT", "direction": "LONG", "zone_top": 0.5341, "zone_bot": 0.5189, "anchor_ts": "2026-08-26T16:00:00"}
 {"ts": "2026-08-28T18:48:33.237333+00:00", "symbol": "SLX-USDT", "direction": "LONG", "zone_top": 0.07058, "zone_bot": 0.06835, "anchor_ts": "2026-08-28T15:00:00"}
 {"ts": "2026-08-28T18:48:33.237333+00:00", "symbol": "TRUMPSOL-USDT", "direction": "LONG", "zone_top": 2.574, "zone_bot": 2.534, "anchor_ts": "2026-08-27T22:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "ZEREBRO-USDT", "direction": "LONG", "zone_top": 0.041083, "zone_bot": 0.039896, "anchor_ts": "2026-08-28T16:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "BR-USDT", "direction": "LONG", "zone_top": 0.24228, "zone_bot": 0.23651, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "GLM-USDT", "direction": "SHORT", "zone_top": 0.11469, "zone_bot": 0.11074, "anchor_ts": "2026-08-28T16:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "NEIROCTO-USDT", "direction": "SHORT", "zone_top": 9.029e-05, "zone_bot": 8.64e-05, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "STABLE-USDT", "direction": "LONG", "zone_top": 0.02613, "zone_bot": 0.02492, "anchor_ts": "2026-08-28T16:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "B-USDT", "direction": "LONG", "zone_top": 0.1359, "zone_bot": 0.1333, "anchor_ts": "2026-08-28T15:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "SENT-USDT", "direction": "LONG", "zone_top": 0.01248, "zone_bot": 0.01212, "anchor_ts": "2026-08-28T16:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "UB-USDT", "direction": "LONG", "zone_top": 0.13531, "zone_bot": 0.13112, "anchor_ts": "2026-08-28T16:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "LAB-USDT", "direction": "LONG", "zone_top": 0.08017, "zone_bot": 0.07632, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T19:06:33.878109+00:00", "symbol": "LAYER-USDT", "direction": "SHORT", "zone_top": 0.07139, "zone_bot": 0.06706, "anchor_ts": "2026-08-28T16:00:00"}
