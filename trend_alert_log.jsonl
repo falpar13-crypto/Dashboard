@@ -81,3 +81,8 @@
 {"ts": "2026-08-28T03:00:47.552348+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "cumulative_change_pct": -4.34, "aligned_fraction": 0.88, "single_candle_share": 0.28, "oi_change_pct": 1.940512526853758}
 {"ts": "2026-08-28T03:00:47.552348+00:00", "symbol": "ME-USDT", "direction": "SHORT", "cumulative_change_pct": -5.91, "aligned_fraction": 0.56, "single_candle_share": 0.33, "oi_change_pct": -0.09957232587472371}
 {"ts": "2026-08-28T03:00:47.552348+00:00", "symbol": "ARK-USDT", "direction": "SHORT", "cumulative_change_pct": -4.5, "aligned_fraction": 0.67, "single_candle_share": 0.27, "oi_change_pct": -7.8199124050019915}
+{"ts": "2026-08-28T04:00:43.951592+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "cumulative_change_pct": -7.39, "aligned_fraction": 0.67, "single_candle_share": 0.35, "oi_change_pct": 19.598587924794046}
+{"ts": "2026-08-28T04:00:43.951592+00:00", "symbol": "MOODENG-USDT", "direction": "SHORT", "cumulative_change_pct": -5.62, "aligned_fraction": 0.88, "single_candle_share": 0.34, "oi_change_pct": -5.303240255475079}
+{"ts": "2026-08-28T04:00:43.951592+00:00", "symbol": "NEIROCTO-USDT", "direction": "SHORT", "cumulative_change_pct": -5.8, "aligned_fraction": 0.75, "single_candle_share": 0.3, "oi_change_pct": 0.0}
+{"ts": "2026-08-28T04:00:43.951592+00:00", "symbol": "AGI-USDT", "direction": "SHORT", "cumulative_change_pct": -5.51, "aligned_fraction": 0.67, "single_candle_share": 0.18, "oi_change_pct": 0.0}
+{"ts": "2026-08-28T04:00:43.951592+00:00", "symbol": "BAS-USDT", "direction": "LONG", "cumulative_change_pct": 6.86, "aligned_fraction": 0.58, "single_candle_share": 0.21, "oi_change_pct": 11.011529131759703}
