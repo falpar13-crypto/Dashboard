@@ -15,3 +15,5 @@
 {"ts": "2026-08-28T15:00:40.175282+00:00", "symbol": "HEMI-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-28T15:04:49.910054+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T15:46:53.949555+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T15:54:05.657509+00:00", "symbol": "SEI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T15:54:05.657509+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
