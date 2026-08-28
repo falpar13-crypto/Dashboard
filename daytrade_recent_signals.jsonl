@@ -26,3 +26,4 @@
 {"ts": "2026-08-28T14:50:44.291754+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T14:53:42.270319+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T14:57:39.900010+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T15:07:34.716159+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "EARLY"}
