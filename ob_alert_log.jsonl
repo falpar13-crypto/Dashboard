@@ -37,3 +37,4 @@
 {"ts": "2026-08-28T19:34:10.292928+00:00", "symbol": "PARTI-USDT", "direction": "SHORT", "zone_top": 0.02502, "zone_bot": 0.02431, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T19:34:10.292928+00:00", "symbol": "BREV-USDT", "direction": "SHORT", "zone_top": 0.07239, "zone_bot": 0.07069, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T19:34:10.292928+00:00", "symbol": "LQTY-USDT", "direction": "SHORT", "zone_top": 0.2246, "zone_bot": 0.2206, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-28T19:50:37.549630+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "zone_top": 0.0537, "zone_bot": 0.05339, "anchor_ts": "2026-08-28T11:00:00"}
