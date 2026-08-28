@@ -1,4 +1,3 @@
-{"ts": "2026-08-28T12:31:42.739628+00:00", "symbol": "SAND-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-28T13:11:35.188742+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-28T13:32:48.691601+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T14:03:03.568849+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -19,3 +18,4 @@
 {"ts": "2026-08-28T16:26:11.782940+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T16:42:43.721678+00:00", "symbol": "DEXE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T18:15:33.931853+00:00", "symbol": "DEXE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-28T18:51:24.001501+00:00", "symbol": "DEXE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
