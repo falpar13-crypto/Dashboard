@@ -19,3 +19,5 @@
 {"ts": "2026-08-28T16:02:52.122981+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T16:09:03.806575+00:00", "symbol": "TURBO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T16:14:09.425681+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T16:21:51.574400+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T16:26:11.782940+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
