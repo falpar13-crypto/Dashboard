@@ -30,3 +30,4 @@
 {"ts": "2026-08-28T17:56:46.978737+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T18:46:55.640595+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T18:49:44.296814+00:00", "symbol": "DEXE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-28T19:07:49.750019+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
