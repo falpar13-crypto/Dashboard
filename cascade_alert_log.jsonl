@@ -33,3 +33,4 @@
 {"ts": "2026-08-28T19:37:46.157566+00:00", "symbol": "MAGMA-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.5163, "price_change_pct": 3.04, "vol_multiplier": 21.47}
 {"ts": "2026-08-28T21:21:21.303360+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.0101266, "price_change_pct": 3.1, "vol_multiplier": 14.23}
 {"ts": "2026-08-28T21:28:41.684949+00:00", "symbol": "LONGXIA-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.06781, "price_change_pct": 7.33, "vol_multiplier": 23.48}
+{"ts": "2026-08-28T23:18:10.467531+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0111139, "price_change_pct": 2.44, "vol_multiplier": 5.48}
