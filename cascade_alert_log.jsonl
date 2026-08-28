@@ -25,3 +25,4 @@
 {"ts": "2026-08-28T13:29:32.514861+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 256.16, "price_change_pct": -1.82, "vol_multiplier": 28.64}
 {"ts": "2026-08-28T14:04:13.594697+00:00", "symbol": "PORTAL-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.01494, "price_change_pct": -3.98, "vol_multiplier": 39.47}
 {"ts": "2026-08-28T14:07:22.597915+00:00", "symbol": "TAC-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.002485, "price_change_pct": -1.58, "vol_multiplier": 9.36}
+{"ts": "2026-08-28T14:56:10.711873+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.013291, "price_change_pct": 4.27, "vol_multiplier": 13.54}
