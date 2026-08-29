@@ -90,6 +90,38 @@ EXCLUDE_OPPOSITE_DIRECTION_OVERLAP = True
 
 ALERT_COOLDOWN_HOURS = 8   # ugyanarra a zónára ennyi órán belül nem jelez újra
 
+# ÚJ: Fibonacci-visszahúzódás konfluencia - TISZTÁN TÁJÉKOZTATÓ, nem szűr.
+# A zóna kialakulását okozó impulzus-lökés (a zóna szélétől a lökés utáni
+# csúcsig/mélypontig) alapján kiszámoljuk, hogy az érintés pillanatában az
+# ár hány %-os Fibonacci-visszahúzódásnál van - az ICT/"smart money"
+# módszertanban a 61.8-78.6%-os sávot hívják "arany zóná"-nak (OTE -
+# Optimal Trade Entry), mert ez a leggyakoribb reakciós terület.
+FIB_GOLDEN_ZONE_MIN = 61.8
+FIB_GOLDEN_ZONE_MAX = 78.6
+FIB_SWING_LOOKBACK = 20   # ennyi gyertyával az anchor ELŐTT keressük a lökés
+                           # valódi eredetét (swing low/high) - NEM a zóna
+                           # saját szélét használjuk erre, mert az szinte
+                           # mindig ~90-100%-os retracement-et adna (a zóna
+                           # ugyanis definíció szerint a lökés KEZDETE
+                           # KÖZELÉBEN van), ami sosem esne az arany zónába
+
+# ÚJ (hibajavítás, majd VISSZAÁLLÍTVA): a felhasználó egy korábbi
+# TradingView-s módosítása véletlenül "Csak a gyertyatest"-re állította a
+# "Zóna típusa" beállítást - kiderült, hogy ez nem szándékos volt, a
+# valódi (helyes) beállítás "Teljes gyertya". Ha valaha tényleg
+# átállítanád a TradingView-n, itt is át kell írni ezt az egy konstanst.
+# Lehetséges értékek: "full" (Teljes gyertya), "body" (Csak a gyertyatest)
+ZONE_TYPE = "full"
+
+def _zone_bounds(idx: int, opens, closes, highs, lows) -> tuple:
+    """A megadott anchor-gyertya (idx) zóna-határait adja vissza a
+    ZONE_TYPE beállítás szerint."""
+    if ZONE_TYPE == "body":
+        o, c = float(opens[idx]), float(closes[idx])
+        return max(o, c), min(o, c)
+    # "full": teljes gyertya (high-low)
+    return float(highs[idx]), float(lows[idx])
+
 MIN_VOLUME_USDT = 1_000_000
 MAX_VOLUME_USDT = 150_000_000
 
@@ -414,13 +446,13 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
         if bull_disp_ok:
             idx = find_bull_ob(pos)
             if idx is not None:
-                zt, zb = float(highs[idx]), float(lows[idx])
+                zt, zb = _zone_bounds(idx, opens, closes, highs, lows)
                 if zt > zb:
                     _try_add_zone(zt, zb, True, pos, idx)
         if bear_disp_ok:
             idx = find_bear_ob(pos)
             if idx is not None:
-                zt, zb = float(highs[idx]), float(lows[idx])
+                zt, zb = _zone_bounds(idx, opens, closes, highs, lows)
                 if zt > zb:
                     _try_add_zone(zt, zb, False, pos, idx)
 
@@ -431,6 +463,34 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
                 if lows[pos] <= z["top"] and highs[pos] >= z["bot"]:
                     z["touched"] = True
                     z["touched_pos"] = pos
+
+                    # ÚJ: Fibonacci-visszahúzódás konfluencia - lásd a
+                    # fájl elején lévő FIB_GOLDEN_ZONE_MIN/MAX kommentjét.
+                    # A zóna szélétől a lökés utáni csúcsig/mélypontig
+                    # (a zóna kialakulása és az érintés közti ablakban)
+                    # húzott lökés-szakaszhoz viszonyítjuk az érintéskori árat.
+                    window_start = z["created_pos"] + 1
+                    window_end = pos
+                    fib_pct = None
+                    if window_end > window_start:
+                        touch_price = float(closes[pos])
+                        swing_start = max(0, z["anchor_idx"] - FIB_SWING_LOOKBACK)
+                        if z["bullish"]:
+                            peak = float(np.max(highs[window_start:window_end + 1]))
+                            swing_low = float(np.min(lows[swing_start:z["anchor_idx"] + 1]))
+                            fib_range = peak - swing_low
+                            if fib_range > 0:
+                                fib_pct = (peak - touch_price) / fib_range * 100
+                        else:
+                            trough = float(np.min(lows[window_start:window_end + 1]))
+                            swing_high = float(np.max(highs[swing_start:z["anchor_idx"] + 1]))
+                            fib_range = swing_high - trough
+                            if fib_range > 0:
+                                fib_pct = (touch_price - trough) / fib_range * 100
+                    z["fib_retracement_pct"] = round(fib_pct, 1) if fib_pct is not None else None
+                    z["fib_golden_zone"] = (
+                        fib_pct is not None and FIB_GOLDEN_ZONE_MIN <= fib_pct <= FIB_GOLDEN_ZONE_MAX
+                    )
 
         # mitigáció (záróár-alapú, az indikátor alap beállítása)
         still_active = []
@@ -476,11 +536,19 @@ def format_ob_message(symbol: str, zone: dict, price: float) -> str:
     action = "BULLISH OB visszateszt 🟩⬆️" if zone["bullish"] else "BEARISH OB visszateszt 🟥⬇️"
     header = f"🧱 <b>[ORDER BLOCK] {symbol}</b> {action}"
 
+    # ÚJ: Fibonacci-visszahúzódás konfluencia sor - lásd az
+    # FIB_GOLDEN_ZONE_MIN/MAX kommentjét. Tisztán tájékoztató, nem szűr.
+    fib_line = ""
+    if zone.get("fib_retracement_pct") is not None:
+        golden_note = " 🟡 arany zóna (OTE)" if zone.get("fib_golden_zone") else ""
+        fib_line = f"\n📐 Fibonacci-visszahúzódás a lökéshez képest: {zone['fib_retracement_pct']:.1f}%{golden_note}"
+
     body = (
         f"{header}\n"
         f"💰 Jelenlegi ár: {price:.6f}\n"
         f"📦 Zóna: {zone['bot']:.6f} - {zone['top']:.6f}\n"
-        f"⏳ Zóna kialakult: {zone['anchor_ts']}\n"
+        f"⏳ Zóna kialakult: {zone['anchor_ts']}"
+        f"{fib_line}\n"
         f"ℹ️ Az ár most (újra) belépett egy korábban kialakult, MÉG ÉRVÉNYES "
         f"(nem mitigált) order block zónába - ez a klasszikus 'smart money' "
         f"logika szerinti reakció-/belépési pillanat. Ellenőrizd a chartot, "
