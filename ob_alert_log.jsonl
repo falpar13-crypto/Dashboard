@@ -197,3 +197,5 @@
 {"ts": "2026-08-29T17:00:48.862482+00:00", "symbol": "ESPORTS-USDT", "direction": "LONG", "zone_top": 0.01503, "zone_bot": 0.01464, "anchor_ts": "2026-08-29T12:00:00"}
 {"ts": "2026-08-29T17:00:48.862482+00:00", "symbol": "ICP-USDT", "direction": "LONG", "zone_top": 2.492, "zone_bot": 2.449, "anchor_ts": "2026-08-29T12:00:00"}
 {"ts": "2026-08-29T17:05:33.869254+00:00", "symbol": "CTK-USDT", "direction": "SHORT", "zone_top": 0.1235, "zone_bot": 0.121, "anchor_ts": "2026-08-28T06:00:00"}
+{"ts": "2026-08-29T17:15:35.687088+00:00", "symbol": "ARIA-USDT", "direction": "LONG", "zone_top": 0.03428, "zone_bot": 0.03357, "anchor_ts": "2026-08-29T07:00:00"}
+{"ts": "2026-08-29T17:15:35.687088+00:00", "symbol": "ZEREBRO-USDT", "direction": "LONG", "zone_top": 0.038023, "zone_bot": 0.037237, "anchor_ts": "2026-08-25T07:00:00"}
