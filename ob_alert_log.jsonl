@@ -115,3 +115,5 @@
 {"ts": "2026-08-29T06:10:34.720758+00:00", "symbol": "MELANIA-USDT", "direction": "LONG", "zone_top": 0.11423, "zone_bot": 0.11263, "anchor_ts": "2026-08-29T01:00:00"}
 {"ts": "2026-08-29T06:10:34.720758+00:00", "symbol": "WLFI-USDT", "direction": "LONG", "zone_top": 0.05795, "zone_bot": 0.05753, "anchor_ts": "2026-08-29T01:00:00"}
 {"ts": "2026-08-29T06:10:34.720758+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "zone_top": 0.01385, "zone_bot": 0.0136, "anchor_ts": "2026-08-28T21:00:00"}
+{"ts": "2026-08-29T06:15:31.721126+00:00", "symbol": "HANA-USDT", "direction": "SHORT", "zone_top": 0.01955, "zone_bot": 0.01918, "anchor_ts": "2026-08-28T15:00:00"}
+{"ts": "2026-08-29T06:15:31.721126+00:00", "symbol": "FIGHTID-USDT", "direction": "LONG", "zone_top": 0.003585, "zone_bot": 0.003527, "anchor_ts": "2026-08-26T06:00:00"}
