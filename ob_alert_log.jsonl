@@ -99,3 +99,5 @@
 {"ts": "2026-08-29T03:50:30.639536+00:00", "symbol": "PRL-USDT", "direction": "LONG", "zone_top": 0.1847, "zone_bot": 0.1831, "anchor_ts": "2026-08-28T20:00:00"}
 {"ts": "2026-08-29T04:00:48.231558+00:00", "symbol": "BR-USDT", "direction": "LONG", "zone_top": 0.24133, "zone_bot": 0.23864, "anchor_ts": "2026-08-29T00:00:00"}
 {"ts": "2026-08-29T04:00:48.231558+00:00", "symbol": "EDU-USDT", "direction": "SHORT", "zone_top": 0.04834, "zone_bot": 0.04788, "anchor_ts": "2026-08-28T23:00:00"}
+{"ts": "2026-08-29T04:25:26.708353+00:00", "symbol": "GPS-USDT", "direction": "LONG", "zone_top": 0.009519, "zone_bot": 0.009315, "anchor_ts": "2026-08-28T18:00:00"}
+{"ts": "2026-08-29T04:25:26.708353+00:00", "symbol": "SQD-USDT", "direction": "LONG", "zone_top": 0.03319, "zone_bot": 0.03242, "anchor_ts": "2026-08-27T10:00:00"}
