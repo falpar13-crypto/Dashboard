@@ -181,3 +181,4 @@
 {"ts": "2026-08-29T15:05:29.674132+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "zone_top": 0.519, "zone_bot": 0.50901, "anchor_ts": "2026-08-29T10:00:00"}
 {"ts": "2026-08-29T15:15:33.375681+00:00", "symbol": "XNY-USDT", "direction": "LONG", "zone_top": 0.006983, "zone_bot": 0.006951, "anchor_ts": "2026-08-29T08:00:00"}
 {"ts": "2026-08-29T15:25:32.343667+00:00", "symbol": "GENSYN-USDT", "direction": "SHORT", "zone_top": 0.0204, "zone_bot": 0.0203, "anchor_ts": "2026-08-27T23:00:00"}
+{"ts": "2026-08-29T15:40:37.362750+00:00", "symbol": "CROSS-USDT", "direction": "LONG", "zone_top": 0.11105, "zone_bot": 0.11037, "anchor_ts": "2026-08-29T11:00:00"}
