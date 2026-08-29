@@ -36,3 +36,5 @@
 {"ts": "2026-08-28T23:18:10.467531+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0111139, "price_change_pct": 2.44, "vol_multiplier": 5.48}
 {"ts": "2026-08-29T00:41:26.985066+00:00", "symbol": "TAC-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.002364, "price_change_pct": -1.87, "vol_multiplier": 17.04}
 {"ts": "2026-08-29T02:18:23.269638+00:00", "symbol": "TURBO-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.0010426, "price_change_pct": -4.11, "vol_multiplier": 34.59}
+{"ts": "2026-08-29T03:51:10.350920+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.16938, "price_change_pct": 1.58, "vol_multiplier": 3.03}
+{"ts": "2026-08-29T03:55:11.736579+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0117, "price_change_pct": 2.47, "vol_multiplier": 13.54}
