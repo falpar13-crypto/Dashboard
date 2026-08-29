@@ -105,6 +105,11 @@ FIB_SWING_LOOKBACK = 20   # ennyi gyertyával az anchor ELŐTT keressük a lök�
                            # ugyanis definíció szerint a lökés KEZDETE
                            # KÖZELÉBEN van), ami sosem esne az arany zónába
 
+# ÚJ (hibajavítás): "Láthatóság" - a Pine Script bullShowPct/bearShowPct
+# beállítása (alapból 25-25%). Lásd a find_active_order_blocks() végén
+# lévő blokk-kommentet a teljes indoklásért.
+BULL_BEAR_SHOW_PCT = 25
+
 # ÚJ (hibajavítás, majd VISSZAÁLLÍTVA): a felhasználó egy korábbi
 # TradingView-s módosítása véletlenül "Csak a gyertyatest"-re állította a
 # "Zóna típusa" beállítást - kiderült, hogy ez nem szándékos volt, a
@@ -342,27 +347,35 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
 
     active_zones = []  # dict: anchor_idx, top, bot, bullish, created_pos, touched, touched_pos
 
-    def find_bull_ob(pos: int) -> Optional[int]:
+    def find_bull_ob(pos: int) -> tuple:
         for i in range(2, OB_LOOKBACK + 1):
             idx = pos - i
             if idx < 0 or pd.isna(atr[idx]):
                 continue
             if closes[idx] >= opens[idx]:
                 continue
-            # ÚJ (hibajavítás): az impulzus-gyertyák felső korlátja a
-            # JELENLEG SZIMULÁLT gyertya (pos), NEM a teljes lekért
-            # adattömb vége - a Pine-ban a "current bar"-nál futó kód nem
-            # láthat a jövőbe, ezt kell replikálni (ci>=0 megkötés a
-            # Pine-ban <=> k<=i <=> idx+k<=pos).
             end = min(idx + IMPULSE_LEN, pos)
             total = 0.0
             for j in range(idx + 1, end + 1):
                 total += max(closes[j] - opens[j], 0.0)
-            if total > atr[idx] * IMPULSE_MULT:
-                return idx
-        return None
+            threshold = atr[idx] * IMPULSE_MULT
+            if total > threshold:
+                # ÚJ: diagnosztikai adatok - lásd a run_once()-ban a
+                # naplózást. Ezekből kézzel visszaellenőrizhető, hogy a
+                # Pine Script ugyanígy döntött volna-e.
+                diag = {
+                    "anchor_ohlc": {"o": round(float(opens[idx]), 8), "h": round(float(highs[idx]), 8),
+                                     "l": round(float(lows[idx]), 8), "c": round(float(closes[idx]), 8)},
+                    "anchor_atr": round(float(atr[idx]), 8),
+                    "impulse_sum": round(float(total), 8),
+                    "impulse_threshold": round(float(threshold), 8),
+                    "impulse_candle_range": [int(idx + 1), int(end)],
+                    "ob_offset_i": int(i),
+                }
+                return idx, diag
+        return None, None
 
-    def find_bear_ob(pos: int) -> Optional[int]:
+    def find_bear_ob(pos: int) -> tuple:
         for i in range(2, OB_LOOKBACK + 1):
             idx = pos - i
             if idx < 0 or pd.isna(atr[idx]):
@@ -373,9 +386,19 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
             total = 0.0
             for j in range(idx + 1, end + 1):
                 total += max(opens[j] - closes[j], 0.0)
-            if total > atr[idx] * IMPULSE_MULT:
-                return idx
-        return None
+            threshold = atr[idx] * IMPULSE_MULT
+            if total > threshold:
+                diag = {
+                    "anchor_ohlc": {"o": round(float(opens[idx]), 8), "h": round(float(highs[idx]), 8),
+                                     "l": round(float(lows[idx]), 8), "c": round(float(closes[idx]), 8)},
+                    "anchor_atr": round(float(atr[idx]), 8),
+                    "impulse_sum": round(float(total), 8),
+                    "impulse_threshold": round(float(threshold), 8),
+                    "impulse_candle_range": [int(idx + 1), int(end)],
+                    "ob_offset_i": int(i),
+                }
+                return idx, diag
+        return None, None
 
     def remove_overlap(new_top: float, new_bot: float, bullish: bool) -> None:
         active_zones[:] = [
@@ -394,7 +417,7 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
     def _ranges_overlap(top_a: float, bot_a: float, top_b: float, bot_b: float) -> bool:
         return top_a >= bot_b and bot_a <= top_b
 
-    def _try_add_zone(zt: float, zb: float, bullish: bool, pos: int, idx: int) -> None:
+    def _try_add_zone(zt: float, zb: float, bullish: bool, pos: int, idx: int, diag: dict = None) -> None:
         """ÚJ: központosított zóna-hozzáadás, ami mindkét új szűrőt
         alkalmazza (max. szélesség + ellentétes irányú átfedés kizárása),
         mielőtt egyáltalán bekerülne az aktív zónák közé."""
@@ -421,6 +444,7 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
         active_zones.append({
             "anchor_idx": idx, "top": zt, "bot": zb, "bullish": bullish,
             "created_pos": pos, "touched": False, "touched_pos": None,
+            "diag": diag,  # ÚJ: kézi visszaellenőrzéshez szükséges diagnosztika
         })
 
     # JAVÍTÁS: korábban ATR_LENGTH+1 (kb. 15 gyertya) után rögtön elkezdtük
@@ -442,19 +466,28 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
             closes[pos - 1] < opens[pos - 1]
             and (opens[pos - 1] - closes[pos - 1]) > atr[pos - 1] * DISPLACEMENT_MULT
         )
+        # ÚJ: displacement diagnosztika a naplózáshoz
+        disp_diag = {
+            "displacement_candle_idx": int(pos - 1),
+            "displacement_ohlc": {"o": round(float(opens[pos - 1]), 8), "c": round(float(closes[pos - 1]), 8)},
+            "displacement_atr": round(float(atr[pos - 1]), 8),
+            "displacement_threshold": round(float(atr[pos - 1] * DISPLACEMENT_MULT), 8),
+        }
 
         if bull_disp_ok:
-            idx = find_bull_ob(pos)
+            idx, ob_diag = find_bull_ob(pos)
             if idx is not None:
                 zt, zb = _zone_bounds(idx, opens, closes, highs, lows)
                 if zt > zb:
-                    _try_add_zone(zt, zb, True, pos, idx)
+                    full_diag = {**disp_diag, **(ob_diag or {})}
+                    _try_add_zone(zt, zb, True, pos, idx, diag=full_diag)
         if bear_disp_ok:
-            idx = find_bear_ob(pos)
+            idx, ob_diag = find_bear_ob(pos)
             if idx is not None:
                 zt, zb = _zone_bounds(idx, opens, closes, highs, lows)
                 if zt > zb:
-                    _try_add_zone(zt, zb, False, pos, idx)
+                    full_diag = {**disp_diag, **(ob_diag or {})}
+                    _try_add_zone(zt, zb, False, pos, idx, diag=full_diag)
 
         # "touch" (visszatérés) ellenőrzés - a zóna kialakulása UTÁNI
         # gyertyáktól kezdve, az ELSŐ érintéskor jelöljük meg
@@ -508,6 +541,33 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
         z["anchor_ts"] = df["timestamp"].iloc[z["anchor_idx"]].isoformat()
         if z["touched_pos"] is not None:
             z["touched_ts"] = df["timestamp"].iloc[z["touched_pos"]].isoformat()
+
+    # ÚJ (hibajavítás): "Láthatóság" szűrő - a Pine Script-ben ez a
+    # bullShowPct/bearShowPct beállítás (alapból 25%): a TradingView CSAK
+    # a jelenlegi árhoz LEGKÖZELEBBI 25%-nyi bull/bear zónát MUTATJA MEG
+    # a charton, a többit vizuálisan elrejti (nem törli, csak nem
+    # rajzolja ki). A korábbi verzió ezt figyelmen kívül hagyta, ezért
+    # olyan zónákra is jelzett, amiket a felhasználó a charton EGYÁLTALÁN
+    # NEM LÁTOTT dobozként. Mostantól csak a látható (legközelebbi 25%-ba
+    # eső) zónákat vesszük figyelembe touch-jelzéshez.
+    if active_zones:
+        current_price = float(closes[n - 1])
+        bulls = [z for z in active_zones if z["bullish"]]
+        bears = [z for z in active_zones if not z["bullish"]]
+
+        def _visible_subset(zone_list: list) -> set:
+            if not zone_list:
+                return set()
+            with_dist = sorted(zone_list, key=lambda z: abs(current_price - (z["top"] + z["bot"]) / 2))
+            limit = max(1, -(-len(with_dist) * BULL_BEAR_SHOW_PCT // 100))  # felfelé kerekítés, mint a Pine math.ceil-je
+            visible_ids = {id(z) for z in with_dist[:limit]}
+            return visible_ids
+
+        visible_bull_ids = _visible_subset(bulls)
+        visible_bear_ids = _visible_subset(bears)
+        for z in active_zones:
+            z["visible_on_chart"] = id(z) in (visible_bull_ids if z["bullish"] else visible_bear_ids)
+        active_zones = [z for z in active_zones if z["visible_on_chart"]]
 
     return active_zones
 
@@ -624,13 +684,20 @@ async def run_once(state: dict, now: datetime) -> tuple:
             await send_telegram_message(msg)
             entry["alerted_zones"][zone_key] = now.isoformat()
             alerts_sent += 1
+            # ÚJ: a diagnosztikai adatokat (anchor OHLC, ATR, impulzus-
+            # összeg/küszöb, displacement-gyertya adatai) is elmentjük a
+            # jelzés-naplóba - ebből KÉZZEL vissza lehet ellenőrizni,
+            # hogy a Pine Script feltételei szerint valóban jogos volt-e
+            # a zóna, ha legközelebb megint gyanús jelzés érkezne.
             _append_signal_log({
                 "ts": now.isoformat(), "symbol": symbol, "direction": direction,
                 "zone_top": zone["top"], "zone_bot": zone["bot"],
                 "anchor_ts": zone["anchor_ts"],
+                "fib_retracement_pct": zone.get("fib_retracement_pct"),
+                "diag": zone.get("diag"),
             })
-            logger.info("JELZÉS küldve: %s [%s] zóna %.6f-%.6f (kialakult: %s)",
-                        symbol, direction, zone["bot"], zone["top"], zone["anchor_ts"])
+            logger.info("JELZÉS küldve: %s [%s] zóna %.6f-%.6f (kialakult: %s) | diag: %s",
+                        symbol, direction, zone["bot"], zone["top"], zone["anchor_ts"], zone.get("diag"))
 
     # a state ne nőjön korlátlanul - régi zóna-bejegyzések eldobása
     cutoff = now - timedelta(days=14)
