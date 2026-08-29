@@ -98,6 +98,14 @@ ALERT_COOLDOWN_HOURS = 8   # ugyanarra a zónára ennyi órán belül nem jelez 
 # Optimal Trade Entry), mert ez a leggyakoribb reakciós terület.
 FIB_GOLDEN_ZONE_MIN = 61.8
 FIB_GOLDEN_ZONE_MAX = 78.6
+# ÚJ: a sima %-szám helyett a standard Fibonacci-szintek egyikéhez
+# viszonyítva jelenítjük meg (érthetőbb, mint egy nyers "73.0%").
+FIB_STANDARD_LEVELS = [0.0, 23.6, 38.2, 50.0, 61.8, 78.6, 100.0]
+
+def _nearest_fib_level(pct: float) -> float:
+    """A megadott %-hoz legközelebbi standard Fibonacci-szintet adja vissza."""
+    return min(FIB_STANDARD_LEVELS, key=lambda lvl: abs(lvl - pct))
+
 FIB_SWING_LOOKBACK = 20   # ennyi gyertyával az anchor ELŐTT keressük a lökés
                            # valódi eredetét (swing low/high) - NEM a zóna
                            # saját szélét használjuk erre, mert az szinte
@@ -521,6 +529,7 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
                             if fib_range > 0:
                                 fib_pct = (touch_price - trough) / fib_range * 100
                     z["fib_retracement_pct"] = round(fib_pct, 1) if fib_pct is not None else None
+                    z["fib_nearest_level"] = _nearest_fib_level(fib_pct) if fib_pct is not None else None
                     z["fib_golden_zone"] = (
                         fib_pct is not None and FIB_GOLDEN_ZONE_MIN <= fib_pct <= FIB_GOLDEN_ZONE_MAX
                     )
@@ -599,9 +608,10 @@ def format_ob_message(symbol: str, zone: dict, price: float) -> str:
     # ÚJ: Fibonacci-visszahúzódás konfluencia sor - lásd az
     # FIB_GOLDEN_ZONE_MIN/MAX kommentjét. Tisztán tájékoztató, nem szűr.
     fib_line = ""
-    if zone.get("fib_retracement_pct") is not None:
+    if zone.get("fib_nearest_level") is not None:
         golden_note = " 🟡 arany zóna (OTE)" if zone.get("fib_golden_zone") else ""
-        fib_line = f"\n📐 Fibonacci-visszahúzódás a lökéshez képest: {zone['fib_retracement_pct']:.1f}%{golden_note}"
+        level = zone["fib_nearest_level"]
+        fib_line = f"\n📐 Fibonacci szint: {level/100:.3f} (a lökés {level:.1f}%-át adta vissza){golden_note}"
 
     body = (
         f"{header}\n"
