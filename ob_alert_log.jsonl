@@ -148,3 +148,4 @@
 {"ts": "2026-08-29T12:15:35.820233+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "zone_top": 1.731, "zone_bot": 1.718, "anchor_ts": "2026-08-28T06:00:00"}
 {"ts": "2026-08-29T12:20:32.471227+00:00", "symbol": "JASMY-USDT", "direction": "SHORT", "zone_top": 0.004589, "zone_bot": 0.004523, "anchor_ts": "2026-08-29T05:00:00"}
 {"ts": "2026-08-29T12:20:32.471227+00:00", "symbol": "ACH-USDT", "direction": "SHORT", "zone_top": 0.005102, "zone_bot": 0.005052, "anchor_ts": "2026-08-28T00:00:00"}
+{"ts": "2026-08-29T12:45:32.080434+00:00", "symbol": "DOLO-USDT", "direction": "LONG", "zone_top": 0.02583, "zone_bot": 0.02526, "anchor_ts": "2026-08-29T06:00:00"}
