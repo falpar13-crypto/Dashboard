@@ -183,3 +183,4 @@
 {"ts": "2026-08-29T15:25:32.343667+00:00", "symbol": "GENSYN-USDT", "direction": "SHORT", "zone_top": 0.0204, "zone_bot": 0.0203, "anchor_ts": "2026-08-27T23:00:00"}
 {"ts": "2026-08-29T15:40:37.362750+00:00", "symbol": "CROSS-USDT", "direction": "LONG", "zone_top": 0.11105, "zone_bot": 0.11037, "anchor_ts": "2026-08-29T11:00:00"}
 {"ts": "2026-08-29T15:45:34.082076+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "zone_top": 0.03777, "zone_bot": 0.03763, "anchor_ts": "2026-08-29T05:00:00"}
+{"ts": "2026-08-29T15:50:31.081834+00:00", "symbol": "LINEA-USDT", "direction": "SHORT", "zone_top": 0.002518, "zone_bot": 0.002496, "anchor_ts": "2026-08-28T00:00:00"}
