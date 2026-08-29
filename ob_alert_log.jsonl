@@ -169,3 +169,4 @@
 {"ts": "2026-08-29T14:17:09.005766+00:00", "symbol": "TA-USDT", "direction": "LONG", "zone_top": 0.06392, "zone_bot": 0.06359, "anchor_ts": "2026-08-29T09:00:00"}
 {"ts": "2026-08-29T14:17:09.005766+00:00", "symbol": "TAKE-USDT", "direction": "LONG", "zone_top": 0.05787, "zone_bot": 0.05743, "anchor_ts": "2026-08-29T09:00:00"}
 {"ts": "2026-08-29T14:17:09.005766+00:00", "symbol": "RON-USDT", "direction": "SHORT", "zone_top": 0.0542, "zone_bot": 0.0539, "anchor_ts": "2026-08-29T09:00:00"}
+{"ts": "2026-08-29T14:20:31.532047+00:00", "symbol": "BTR-USDT", "direction": "LONG", "zone_top": 0.1678, "zone_bot": 0.16352, "anchor_ts": "2026-08-29T08:00:00"}
