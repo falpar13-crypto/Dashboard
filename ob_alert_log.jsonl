@@ -96,3 +96,4 @@
 {"ts": "2026-08-29T03:05:32.388978+00:00", "symbol": "AIO-USDT", "direction": "LONG", "zone_top": 0.04388, "zone_bot": 0.04314, "anchor_ts": "2026-08-28T19:00:00"}
 {"ts": "2026-08-29T03:35:41.974192+00:00", "symbol": "IMX-USDT", "direction": "SHORT", "zone_top": 0.1339, "zone_bot": 0.1311, "anchor_ts": "2026-08-28T01:00:00"}
 {"ts": "2026-08-29T03:40:33.110031+00:00", "symbol": "JCT-USDT", "direction": "LONG", "zone_top": 0.001818, "zone_bot": 0.001798, "anchor_ts": "2026-08-28T23:00:00"}
+{"ts": "2026-08-29T03:50:30.639536+00:00", "symbol": "PRL-USDT", "direction": "LONG", "zone_top": 0.1847, "zone_bot": 0.1831, "anchor_ts": "2026-08-28T20:00:00"}
