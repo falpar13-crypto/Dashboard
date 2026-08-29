@@ -85,3 +85,5 @@
 {"ts": "2026-08-29T01:20:33.152631+00:00", "symbol": "AKT-USDT", "direction": "SHORT", "zone_top": 0.5354, "zone_bot": 0.5227, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T01:55:31.540637+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "zone_top": 0.04707, "zone_bot": 0.0458, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T02:15:31.222616+00:00", "symbol": "KMNO-USDT", "direction": "LONG", "zone_top": 0.02546, "zone_bot": 0.0252, "anchor_ts": "2026-08-26T20:00:00"}
+{"ts": "2026-08-29T02:20:33.210447+00:00", "symbol": "AIOT-USDT", "direction": "SHORT", "zone_top": 0.04119, "zone_bot": 0.04008, "anchor_ts": "2026-08-28T12:00:00"}
+{"ts": "2026-08-29T02:20:33.210447+00:00", "symbol": "SPACECOIN-USDT", "direction": "SHORT", "zone_top": 0.005124, "zone_bot": 0.005051, "anchor_ts": "2026-08-27T06:00:00"}
