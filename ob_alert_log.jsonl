@@ -132,3 +132,4 @@
 {"ts": "2026-08-29T07:30:41.367221+00:00", "symbol": "0G-USDT", "direction": "SHORT", "zone_top": 0.1694, "zone_bot": 0.1656, "anchor_ts": "2026-08-29T01:00:00"}
 {"ts": "2026-08-29T07:40:32.727450+00:00", "symbol": "EDGEX-USDT", "direction": "SHORT", "zone_top": 0.4017, "zone_bot": 0.3942, "anchor_ts": "2026-08-29T00:00:00"}
 {"ts": "2026-08-29T07:45:30.859726+00:00", "symbol": "SAHARA-USDT", "direction": "SHORT", "zone_top": 0.008657, "zone_bot": 0.008554, "anchor_ts": "2026-08-29T02:00:00"}
+{"ts": "2026-08-29T08:15:28.357897+00:00", "symbol": "KMNO-USDT", "direction": "LONG", "zone_top": 0.02566, "zone_bot": 0.02523, "anchor_ts": "2026-08-29T02:00:00"}
