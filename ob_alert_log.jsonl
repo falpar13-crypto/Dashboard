@@ -144,3 +144,4 @@
 {"ts": "2026-08-29T11:20:40.626685+00:00", "symbol": "PTB-USDT", "direction": "SHORT", "zone_top": 0.0008246, "zone_bot": 0.0008029, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T11:35:31.490065+00:00", "symbol": "FLUX-USDT", "direction": "SHORT", "zone_top": 0.04992, "zone_bot": 0.04904, "anchor_ts": "2026-08-27T22:00:00"}
 {"ts": "2026-08-29T11:40:35.705637+00:00", "symbol": "OPG-USDT", "direction": "SHORT", "zone_top": 0.0993, "zone_bot": 0.0965, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T11:55:31.635344+00:00", "symbol": "CKB-USDT", "direction": "LONG", "zone_top": 0.001002, "zone_bot": 0.0009968, "anchor_ts": "2026-08-29T03:00:00"}
