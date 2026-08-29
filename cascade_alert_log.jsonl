@@ -50,3 +50,4 @@
 {"ts": "2026-08-29T11:40:31.933357+00:00", "symbol": "TUT-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.03736, "price_change_pct": -2.51, "vol_multiplier": 24.03}
 {"ts": "2026-08-29T13:13:18.977841+00:00", "symbol": "CLO-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.12078, "price_change_pct": -2.45, "vol_multiplier": 7.88}
 {"ts": "2026-08-29T14:05:20.769789+00:00", "symbol": "BEAT-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.1334, "price_change_pct": -4.3, "vol_multiplier": 20.96}
+{"ts": "2026-08-29T14:47:31.363691+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 844.2, "price_change_pct": 2.06, "vol_multiplier": 10.79}
