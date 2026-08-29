@@ -188,3 +188,4 @@
 {"ts": "2026-08-29T15:55:31.013046+00:00", "symbol": "FRAX-USDT", "direction": "LONG", "zone_top": 0.2968, "zone_bot": 0.2946, "anchor_ts": "2026-08-29T11:00:00"}
 {"ts": "2026-08-29T16:10:36.907238+00:00", "symbol": "BANK-USDT", "direction": "LONG", "zone_top": 0.03661, "zone_bot": 0.03562, "anchor_ts": "2026-08-29T08:00:00"}
 {"ts": "2026-08-29T16:15:30.663123+00:00", "symbol": "IMX-USDT", "direction": "SHORT", "zone_top": 0.1322, "zone_bot": 0.1284, "anchor_ts": "2026-08-29T03:00:00"}
+{"ts": "2026-08-29T16:20:40.107762+00:00", "symbol": "SFP-USDT", "direction": "SHORT", "zone_top": 0.2641, "zone_bot": 0.2595, "anchor_ts": "2026-08-28T14:00:00"}
