@@ -82,3 +82,4 @@
 {"ts": "2026-08-29T00:55:28.791449+00:00", "symbol": "SAGA-USDT", "direction": "SHORT", "zone_top": 0.01558, "zone_bot": 0.01532, "anchor_ts": "2026-08-28T01:00:00"}
 {"ts": "2026-08-29T01:00:48.887234+00:00", "symbol": "CFG-USDT", "direction": "LONG", "zone_top": 0.1227, "zone_bot": 0.1197, "anchor_ts": "2026-08-28T21:00:00"}
 {"ts": "2026-08-29T01:05:31.836670+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "zone_top": 1.072, "zone_bot": 1.0563, "anchor_ts": "2026-08-25T11:00:00"}
+{"ts": "2026-08-29T01:20:33.152631+00:00", "symbol": "AKT-USDT", "direction": "SHORT", "zone_top": 0.5354, "zone_bot": 0.5227, "anchor_ts": "2026-08-28T14:00:00"}
