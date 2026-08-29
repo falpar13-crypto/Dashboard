@@ -34,3 +34,4 @@
 {"ts": "2026-08-28T21:21:21.303360+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.0101266, "price_change_pct": 3.1, "vol_multiplier": 14.23}
 {"ts": "2026-08-28T21:28:41.684949+00:00", "symbol": "LONGXIA-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.06781, "price_change_pct": 7.33, "vol_multiplier": 23.48}
 {"ts": "2026-08-28T23:18:10.467531+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0111139, "price_change_pct": 2.44, "vol_multiplier": 5.48}
+{"ts": "2026-08-29T00:41:26.985066+00:00", "symbol": "TAC-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.002364, "price_change_pct": -1.87, "vol_multiplier": 17.04}
