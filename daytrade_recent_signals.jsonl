@@ -26,3 +26,4 @@
 {"ts": "2026-08-29T15:06:42.233196+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-29T15:08:49.678402+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T15:08:49.678402+00:00", "symbol": "GALA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-29T15:23:29.312909+00:00", "symbol": "TURBO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
