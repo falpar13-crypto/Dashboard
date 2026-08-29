@@ -164,3 +164,4 @@
 {"ts": "2026-08-29T14:02:38.402755+00:00", "symbol": "POWR-USDT", "direction": "LONG", "zone_top": 0.04691, "zone_bot": 0.04644, "anchor_ts": "2026-08-29T10:00:00"}
 {"ts": "2026-08-29T14:02:38.402755+00:00", "symbol": "DOLO-USDT", "direction": "SHORT", "zone_top": 0.02682, "zone_bot": 0.02614, "anchor_ts": "2026-08-29T11:00:00"}
 {"ts": "2026-08-29T14:05:28.587570+00:00", "symbol": "ZK-USDT", "direction": "SHORT", "zone_top": 0.008262, "zone_bot": 0.00817, "anchor_ts": "2026-08-29T05:00:00"}
+{"ts": "2026-08-29T14:06:12.467340+00:00", "symbol": "AT-USDT", "direction": "SHORT", "zone_top": 0.1349, "zone_bot": 0.1336, "anchor_ts": "2026-08-29T01:00:00"}
