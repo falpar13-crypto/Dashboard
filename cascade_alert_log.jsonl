@@ -40,3 +40,4 @@
 {"ts": "2026-08-29T03:55:11.736579+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0117, "price_change_pct": 2.47, "vol_multiplier": 13.54}
 {"ts": "2026-08-29T04:55:09.621619+00:00", "symbol": "DEXE-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 2.39, "price_change_pct": -2.77, "vol_multiplier": 6.64}
 {"ts": "2026-08-29T04:59:28.259159+00:00", "symbol": "TURBO-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.0010203, "price_change_pct": -3.02, "vol_multiplier": 12.93}
+{"ts": "2026-08-29T06:07:25.557042+00:00", "symbol": "TRUMPSOL-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 2.752, "price_change_pct": -3.1, "vol_multiplier": 6.76}
