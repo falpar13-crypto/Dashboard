@@ -103,3 +103,4 @@
 {"ts": "2026-08-29T04:25:26.708353+00:00", "symbol": "SQD-USDT", "direction": "LONG", "zone_top": 0.03319, "zone_bot": 0.03242, "anchor_ts": "2026-08-27T10:00:00"}
 {"ts": "2026-08-29T04:35:30.040538+00:00", "symbol": "MANTRA-USDT", "direction": "LONG", "zone_top": 0.004174, "zone_bot": 0.004087, "anchor_ts": "2026-08-28T04:00:00"}
 {"ts": "2026-08-29T04:40:36.438473+00:00", "symbol": "W-USDT", "direction": "SHORT", "zone_top": 0.009485, "zone_bot": 0.009227, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T04:55:27.376617+00:00", "symbol": "ALICE-USDT", "direction": "SHORT", "zone_top": 0.1426, "zone_bot": 0.1409, "anchor_ts": "2026-08-28T13:00:00"}
