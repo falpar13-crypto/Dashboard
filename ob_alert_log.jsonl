@@ -207,3 +207,4 @@
 {"ts": "2026-08-29T18:05:32.252072+00:00", "symbol": "CARV-USDT", "direction": "LONG", "zone_top": 0.03366, "zone_bot": 0.03335, "anchor_ts": "2026-08-29T11:00:00"}
 {"ts": "2026-08-29T18:20:35.593159+00:00", "symbol": "LISTA-USDT", "direction": "SHORT", "zone_top": 0.07062, "zone_bot": 0.07032, "anchor_ts": "2026-08-27T23:00:00"}
 {"ts": "2026-08-29T18:20:35.593159+00:00", "symbol": "TWT-USDT", "direction": "LONG", "zone_top": 0.4901, "zone_bot": 0.4811, "anchor_ts": "2026-08-29T15:00:00"}
+{"ts": "2026-08-29T18:50:35.292863+00:00", "symbol": "KITE-USDT", "direction": "LONG", "zone_top": 0.12839, "zone_bot": 0.12734, "anchor_ts": "2026-08-29T10:00:00"}
