@@ -120,3 +120,7 @@
 {"ts": "2026-08-29T06:20:35.272342+00:00", "symbol": "METIS-USDT", "direction": "LONG", "zone_top": 2.699, "zone_bot": 2.674, "anchor_ts": "2026-08-29T03:00:00"}
 {"ts": "2026-08-29T06:20:35.272342+00:00", "symbol": "USUAL-USDT", "direction": "LONG", "zone_top": 0.011154, "zone_bot": 0.01106, "anchor_ts": "2026-08-29T00:00:00"}
 {"ts": "2026-08-29T06:20:35.272342+00:00", "symbol": "XAN-USDT", "direction": "LONG", "zone_top": 0.012276, "zone_bot": 0.012103, "anchor_ts": "2026-08-28T18:00:00"}
+{"ts": "2026-08-29T06:25:31.173315+00:00", "symbol": "MTL-USDT", "direction": "LONG", "zone_top": 0.231, "zone_bot": 0.2288, "anchor_ts": "2026-08-29T03:00:00"}
+{"ts": "2026-08-29T06:25:31.173315+00:00", "symbol": "MEGA-USDT", "direction": "SHORT", "zone_top": 0.03882, "zone_bot": 0.0381, "anchor_ts": "2026-08-28T13:00:00"}
+{"ts": "2026-08-29T06:25:31.173315+00:00", "symbol": "BSV-USDT", "direction": "LONG", "zone_top": 16.7, "zone_bot": 16.61, "anchor_ts": "2026-08-29T01:00:00"}
+{"ts": "2026-08-29T06:25:31.173315+00:00", "symbol": "ANKR-USDT", "direction": "LONG", "zone_top": 0.004013, "zone_bot": 0.003992, "anchor_ts": "2026-08-29T03:00:00"}
