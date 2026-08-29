@@ -14,3 +14,4 @@
 {"ts": "2026-08-29T11:58:28.006413+00:00", "symbol": "4-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T12:08:43.740046+00:00", "symbol": "TUT-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-29T12:11:53.949868+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-29T12:25:51.965708+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
