@@ -116,3 +116,8 @@
 {"ts": "2026-08-29T02:08:29.046727+00:00", "symbol": "HEI-USDT", "direction": "SHORT", "cumulative_change_pct": -12.33, "aligned_fraction": 0.69, "single_candle_share": 0.22, "oi_change_pct": 28.229602480773703}
 {"ts": "2026-08-29T02:08:29.046727+00:00", "symbol": "O-USDT", "direction": "LONG", "cumulative_change_pct": 8.03, "aligned_fraction": 0.67, "single_candle_share": 0.28, "oi_change_pct": 0.8461075010233651}
 {"ts": "2026-08-29T02:08:29.046727+00:00", "symbol": "SPK-USDT", "direction": "SHORT", "cumulative_change_pct": -9.54, "aligned_fraction": 0.79, "single_candle_share": 0.24, "oi_change_pct": -3.48970689572395}
+{"ts": "2026-08-29T03:08:55.658680+00:00", "symbol": "CLO-USDT", "direction": "LONG", "cumulative_change_pct": 20.42, "aligned_fraction": 0.6, "single_candle_share": 0.35, "oi_change_pct": -11.757566792365337}
+{"ts": "2026-08-29T03:08:55.658680+00:00", "symbol": "SIREN-USDT", "direction": "LONG", "cumulative_change_pct": 13.31, "aligned_fraction": 0.58, "single_candle_share": 0.3, "oi_change_pct": 3.7369779971314028}
+{"ts": "2026-08-29T03:08:55.658680+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "cumulative_change_pct": 18.18, "aligned_fraction": 0.58, "single_candle_share": 0.18, "oi_change_pct": 154.66870903954506}
+{"ts": "2026-08-29T03:08:55.658680+00:00", "symbol": "OPENEDEN-USDT", "direction": "SHORT", "cumulative_change_pct": -11.57, "aligned_fraction": 0.56, "single_candle_share": 0.17, "oi_change_pct": 0.0}
+{"ts": "2026-08-29T03:08:55.658680+00:00", "symbol": "TRUMPSOL-USDT", "direction": "LONG", "cumulative_change_pct": 8.74, "aligned_fraction": 0.75, "single_candle_share": 0.22, "oi_change_pct": 0.0}
