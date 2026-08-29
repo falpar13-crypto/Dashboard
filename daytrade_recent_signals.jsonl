@@ -1,7 +1,4 @@
-{"ts": "2026-08-28T18:46:55.640595+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-28T18:49:44.296814+00:00", "symbol": "DEXE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-28T19:07:49.750019+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
-{"ts": "2026-08-28T19:17:13.147475+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-28T21:43:55.116898+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-28T21:50:12.468552+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T00:19:44.134111+00:00", "symbol": "VVV-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-08-29T01:43:29.511966+00:00", "symbol": "IMX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
