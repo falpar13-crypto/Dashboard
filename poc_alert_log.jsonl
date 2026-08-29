@@ -1,0 +1,7 @@
+{"ts": "2026-08-29T19:11:39.249879+00:00", "symbol": "FOGO-USDT", "direction": "SHORT", "poc_price": 0.0075953, "price": 0.007582, "leg_start_ts": "2026-08-29T16:30:00", "leg_end_ts": "2026-08-29T18:00:00"}
+{"ts": "2026-08-29T19:11:39.249879+00:00", "symbol": "POPCAT-USDT", "direction": "SHORT", "poc_price": 0.054647, "price": 0.05444, "leg_start_ts": "2026-08-29T14:45:00", "leg_end_ts": "2026-08-29T17:30:00"}
+{"ts": "2026-08-29T19:11:39.249879+00:00", "symbol": "CARV-USDT", "direction": "LONG", "poc_price": 0.0334295, "price": 0.03347, "leg_start_ts": "2026-08-29T13:00:00", "leg_end_ts": "2026-08-29T15:45:00"}
+{"ts": "2026-08-29T19:11:39.249879+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "poc_price": 0.00826136, "price": 0.0082521, "leg_start_ts": "2026-08-29T15:00:00", "leg_end_ts": "2026-08-29T17:45:00"}
+{"ts": "2026-08-29T19:11:39.249879+00:00", "symbol": "THE-USDT", "direction": "LONG", "poc_price": 0.06849783, "price": 0.06887, "leg_start_ts": "2026-08-29T12:00:00", "leg_end_ts": "2026-08-29T15:45:00"}
+{"ts": "2026-08-29T19:11:39.249879+00:00", "symbol": "LONGXIA-USDT", "direction": "LONG", "poc_price": 0.0744898, "price": 0.076251, "leg_start_ts": "2026-08-29T16:00:00", "leg_end_ts": "2026-08-29T17:45:00"}
+{"ts": "2026-08-29T19:11:39.249879+00:00", "symbol": "DEXE-USDT", "direction": "SHORT", "poc_price": 2.3657, "price": 2.354, "leg_start_ts": "2026-08-29T15:45:00", "leg_end_ts": "2026-08-29T17:45:00"}
