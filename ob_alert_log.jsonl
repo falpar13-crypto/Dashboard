@@ -166,3 +166,6 @@
 {"ts": "2026-08-29T14:05:28.587570+00:00", "symbol": "ZK-USDT", "direction": "SHORT", "zone_top": 0.008262, "zone_bot": 0.00817, "anchor_ts": "2026-08-29T05:00:00"}
 {"ts": "2026-08-29T14:06:12.467340+00:00", "symbol": "AT-USDT", "direction": "SHORT", "zone_top": 0.1349, "zone_bot": 0.1336, "anchor_ts": "2026-08-29T01:00:00"}
 {"ts": "2026-08-29T14:10:36.219622+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "zone_top": 41.77, "zone_bot": 41.1, "anchor_ts": "2026-08-25T12:00:00"}
+{"ts": "2026-08-29T14:17:09.005766+00:00", "symbol": "TA-USDT", "direction": "LONG", "zone_top": 0.06392, "zone_bot": 0.06359, "anchor_ts": "2026-08-29T09:00:00"}
+{"ts": "2026-08-29T14:17:09.005766+00:00", "symbol": "TAKE-USDT", "direction": "LONG", "zone_top": 0.05787, "zone_bot": 0.05743, "anchor_ts": "2026-08-29T09:00:00"}
+{"ts": "2026-08-29T14:17:09.005766+00:00", "symbol": "RON-USDT", "direction": "SHORT", "zone_top": 0.0542, "zone_bot": 0.0539, "anchor_ts": "2026-08-29T09:00:00"}
