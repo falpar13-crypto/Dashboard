@@ -151,3 +151,7 @@
 {"ts": "2026-08-29T12:45:32.080434+00:00", "symbol": "DOLO-USDT", "direction": "LONG", "zone_top": 0.02583, "zone_bot": 0.02526, "anchor_ts": "2026-08-29T06:00:00"}
 {"ts": "2026-08-29T12:52:14.232352+00:00", "symbol": "ALLO-USDT", "direction": "SHORT", "zone_top": 0.25319, "zone_bot": 0.24821, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T13:20:34.876109+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "zone_top": 0.04307, "zone_bot": 0.04279, "anchor_ts": "2026-08-28T00:00:00"}
+{"ts": "2026-08-29T13:25:27.443614+00:00", "symbol": "MAVIA-USDT", "direction": "SHORT", "zone_top": 0.02965, "zone_bot": 0.02943, "anchor_ts": "2026-08-28T13:00:00"}
+{"ts": "2026-08-29T13:25:27.443614+00:00", "symbol": "CHR-USDT", "direction": "SHORT", "zone_top": 0.01534, "zone_bot": 0.01496, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T13:25:27.443614+00:00", "symbol": "LISTA-USDT", "direction": "SHORT", "zone_top": 0.06919, "zone_bot": 0.06761, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T13:25:27.443614+00:00", "symbol": "SKL-USDT", "direction": "SHORT", "zone_top": 0.003819, "zone_bot": 0.003726, "anchor_ts": "2026-08-28T14:00:00"}
