@@ -54,3 +54,4 @@
 {"ts": "2026-08-29T15:05:14.410171+00:00", "symbol": "MAGMA-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.51151, "price_change_pct": 1.84, "vol_multiplier": 4.6}
 {"ts": "2026-08-29T15:13:14.135191+00:00", "symbol": "4-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.016058, "price_change_pct": -6.93, "vol_multiplier": 7.23}
 {"ts": "2026-08-29T20:17:35.433871+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.45539, "price_change_pct": 3.09, "vol_multiplier": 10.45}
+{"ts": "2026-08-29T21:08:19.103262+00:00", "symbol": "BROCCOLI-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.018915, "price_change_pct": -3.67, "vol_multiplier": 8.86}
