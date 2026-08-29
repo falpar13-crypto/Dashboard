@@ -68,3 +68,4 @@
 {"ts": "2026-08-28T23:25:31.343890+00:00", "symbol": "LUMIA-USDT", "direction": "SHORT", "zone_top": 0.08582, "zone_bot": 0.08396, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T23:40:31.165228+00:00", "symbol": "GIGGLE-USDT", "direction": "SHORT", "zone_top": 37.78, "zone_bot": 36.7, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-28T23:45:29.916696+00:00", "symbol": "RAVE-USDT", "direction": "SHORT", "zone_top": 0.276, "zone_bot": 0.2689, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T00:00:43.610650+00:00", "symbol": "SANTOS-USDT", "direction": "LONG", "zone_top": 0.5269, "zone_bot": 0.5201, "anchor_ts": "2026-08-28T19:00:00"}
