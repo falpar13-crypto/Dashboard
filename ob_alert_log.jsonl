@@ -200,3 +200,5 @@
 {"ts": "2026-08-29T17:15:35.687088+00:00", "symbol": "ARIA-USDT", "direction": "LONG", "zone_top": 0.03428, "zone_bot": 0.03357, "anchor_ts": "2026-08-29T07:00:00"}
 {"ts": "2026-08-29T17:15:35.687088+00:00", "symbol": "ZEREBRO-USDT", "direction": "LONG", "zone_top": 0.038023, "zone_bot": 0.037237, "anchor_ts": "2026-08-25T07:00:00"}
 {"ts": "2026-08-29T17:25:27.971113+00:00", "symbol": "ACH-USDT", "direction": "LONG", "zone_top": 0.005017, "zone_bot": 0.004955, "anchor_ts": "2026-08-29T10:00:00"}
+{"ts": "2026-08-29T17:30:46.388758+00:00", "symbol": "BOME-USDT", "direction": "LONG", "zone_top": 0.0010068, "zone_bot": 0.0009983, "anchor_ts": "2026-08-29T13:00:00"}
+{"ts": "2026-08-29T17:30:46.388758+00:00", "symbol": "NOT-USDT", "direction": "LONG", "zone_top": 0.000402, "zone_bot": 0.0003993, "anchor_ts": "2026-08-29T11:00:00"}
