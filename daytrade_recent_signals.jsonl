@@ -1,16 +1,5 @@
-{"ts": "2026-08-29T15:23:29.312909+00:00", "symbol": "TURBO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T15:27:23.201805+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T15:33:11.978244+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T15:58:14.558153+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:02:49.557280+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:13:58.226060+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:20:31.167743+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:26:09.232635+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:34:39.308628+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:39:13.289734+00:00", "symbol": "IMX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:42:08.992235+00:00", "symbol": "ORDI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-29T16:43:09.294170+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T17:13:43.211925+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T18:47:45.461318+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T20:58:11.056464+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T21:16:30.229238+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-29T23:06:34.588637+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EARLY"}
