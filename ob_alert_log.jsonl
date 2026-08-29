@@ -196,3 +196,4 @@
 {"ts": "2026-08-29T16:40:35.226254+00:00", "symbol": "RLC-USDT", "direction": "SHORT", "zone_top": 0.323, "zone_bot": 0.3148, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T17:00:48.862482+00:00", "symbol": "ESPORTS-USDT", "direction": "LONG", "zone_top": 0.01503, "zone_bot": 0.01464, "anchor_ts": "2026-08-29T12:00:00"}
 {"ts": "2026-08-29T17:00:48.862482+00:00", "symbol": "ICP-USDT", "direction": "LONG", "zone_top": 2.492, "zone_bot": 2.449, "anchor_ts": "2026-08-29T12:00:00"}
+{"ts": "2026-08-29T17:05:33.869254+00:00", "symbol": "CTK-USDT", "direction": "SHORT", "zone_top": 0.1235, "zone_bot": 0.121, "anchor_ts": "2026-08-28T06:00:00"}
