@@ -71,3 +71,4 @@
 {"ts": "2026-08-29T00:00:43.610650+00:00", "symbol": "SANTOS-USDT", "direction": "LONG", "zone_top": 0.5269, "zone_bot": 0.5201, "anchor_ts": "2026-08-28T19:00:00"}
 {"ts": "2026-08-29T00:05:27.314205+00:00", "symbol": "SXT-USDT", "direction": "SHORT", "zone_top": 0.00854, "zone_bot": 0.008306, "anchor_ts": "2026-08-28T17:00:00"}
 {"ts": "2026-08-29T00:05:27.314205+00:00", "symbol": "SPORTFUN-USDT", "direction": "SHORT", "zone_top": 0.02495, "zone_bot": 0.02443, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T00:20:37.748460+00:00", "symbol": "LYN-USDT", "direction": "SHORT", "zone_top": 0.03673, "zone_bot": 0.03609, "anchor_ts": "2026-08-27T06:00:00"}
