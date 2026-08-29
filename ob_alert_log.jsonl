@@ -75,3 +75,4 @@
 {"ts": "2026-08-29T00:25:28.651417+00:00", "symbol": "APE-USDT", "direction": "SHORT", "zone_top": 0.1417, "zone_bot": 0.138, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T00:25:28.651417+00:00", "symbol": "FLOCK-USDT", "direction": "SHORT", "zone_top": 0.03334, "zone_bot": 0.03258, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T00:30:40.043465+00:00", "symbol": "ME-USDT", "direction": "SHORT", "zone_top": 0.06238, "zone_bot": 0.06112, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T00:35:31.045600+00:00", "symbol": "HAEDAL-USDT", "direction": "SHORT", "zone_top": 0.01913, "zone_bot": 0.01866, "anchor_ts": "2026-08-28T14:00:00"}
