@@ -156,3 +156,5 @@
 {"ts": "2026-08-29T13:25:27.443614+00:00", "symbol": "LISTA-USDT", "direction": "SHORT", "zone_top": 0.06919, "zone_bot": 0.06761, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T13:25:27.443614+00:00", "symbol": "SKL-USDT", "direction": "SHORT", "zone_top": 0.003819, "zone_bot": 0.003726, "anchor_ts": "2026-08-28T14:00:00"}
 {"ts": "2026-08-29T13:30:43.452467+00:00", "symbol": "AVA-USDT", "direction": "SHORT", "zone_top": 0.2094, "zone_bot": 0.2048, "anchor_ts": "2026-08-28T14:00:00"}
+{"ts": "2026-08-29T13:35:29.633393+00:00", "symbol": "APE-USDT", "direction": "SHORT", "zone_top": 0.1452, "zone_bot": 0.1423, "anchor_ts": "2026-08-28T00:00:00"}
+{"ts": "2026-08-29T13:35:29.633393+00:00", "symbol": "ERA-USDT", "direction": "SHORT", "zone_top": 0.05807, "zone_bot": 0.05753, "anchor_ts": "2026-08-29T04:00:00"}
