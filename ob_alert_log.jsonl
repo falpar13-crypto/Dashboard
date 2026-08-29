@@ -178,3 +178,4 @@
 {"ts": "2026-08-29T14:50:36.457589+00:00", "symbol": "ZEN-USDT", "direction": "SHORT", "zone_top": 5.328, "zone_bot": 5.233, "anchor_ts": "2026-08-28T00:00:00"}
 {"ts": "2026-08-29T14:50:36.457589+00:00", "symbol": "SKY-USDT", "direction": "SHORT", "zone_top": 0.06918, "zone_bot": 0.06852, "anchor_ts": "2026-08-28T13:00:00"}
 {"ts": "2026-08-29T15:00:48.627044+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "zone_top": 0.001381, "zone_bot": 0.001374, "anchor_ts": "2026-08-27T23:00:00"}
+{"ts": "2026-08-29T15:05:29.674132+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "zone_top": 0.519, "zone_bot": 0.50901, "anchor_ts": "2026-08-29T10:00:00"}
