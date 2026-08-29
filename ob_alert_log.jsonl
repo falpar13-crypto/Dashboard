@@ -128,3 +128,4 @@
 {"ts": "2026-08-29T06:40:33.702422+00:00", "symbol": "H-USDT", "direction": "SHORT", "zone_top": 0.0791, "zone_bot": 0.07837, "anchor_ts": "2026-08-29T03:00:00"}
 {"ts": "2026-08-29T06:40:33.702422+00:00", "symbol": "RECALL-USDT", "direction": "SHORT", "zone_top": 0.04726, "zone_bot": 0.04658, "anchor_ts": "2026-08-28T13:00:00"}
 {"ts": "2026-08-29T06:50:31.630744+00:00", "symbol": "BEAM-USDT", "direction": "LONG", "zone_top": 0.001584, "zone_bot": 0.00156, "anchor_ts": "2026-08-29T03:00:00"}
+{"ts": "2026-08-29T07:00:43.386556+00:00", "symbol": "POWR-USDT", "direction": "LONG", "zone_top": 0.04681, "zone_bot": 0.04628, "anchor_ts": "2026-08-29T03:00:00"}
