@@ -11,3 +11,4 @@
 {"ts": "2026-08-29T22:02:23.483904+00:00", "symbol": "VIRTUAL-USDT", "direction": "LONG", "poc_price": 0.69220167, "price": 0.6945, "leg_start_ts": "2026-08-29T17:15:00", "leg_end_ts": "2026-08-29T18:30:00"}
 {"ts": "2026-08-29T23:02:13.342835+00:00", "symbol": "GENIUS-USDT", "direction": "LONG", "poc_price": 0.28409, "price": 0.285, "leg_start_ts": "2026-08-29T16:15:00", "leg_end_ts": "2026-08-29T19:30:00"}
 {"ts": "2026-08-29T23:02:13.342835+00:00", "symbol": "GRVT-USDT", "direction": "LONG", "poc_price": 0.17003, "price": 0.1703, "leg_start_ts": "2026-08-29T18:15:00", "leg_end_ts": "2026-08-29T21:00:00"}
+{"ts": "2026-08-30T00:02:42.090539+00:00", "symbol": "WOTAMALAILE-USDT", "direction": "SHORT", "poc_price": 0.01431415, "price": 0.014237, "leg_start_ts": "2026-08-29T20:15:00", "leg_end_ts": "2026-08-29T23:00:00"}
