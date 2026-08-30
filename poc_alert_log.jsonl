@@ -52,3 +52,4 @@
 {"ts": "2026-08-30T18:55:06.754346+00:00", "symbol": "ESP-USDT", "direction": "SHORT", "poc_price": 0.08040083, "price": 0.08003, "leg_start_ts": "2026-08-30T10:45:00", "leg_end_ts": "2026-08-30T16:00:00"}
 {"ts": "2026-08-30T19:02:15.196306+00:00", "symbol": "MONAD-USDT", "direction": "LONG", "poc_price": 0.02770633, "price": 0.02806, "leg_start_ts": "2026-08-30T14:45:00", "leg_end_ts": "2026-08-30T18:00:00"}
 {"ts": "2026-08-30T19:08:58.339472+00:00", "symbol": "EGLD-USDT", "direction": "SHORT", "poc_price": 3.8615, "price": 3.85, "leg_start_ts": "2026-08-30T15:45:00", "leg_end_ts": "2026-08-30T17:15:00"}
+{"ts": "2026-08-30T19:26:01.106245+00:00", "symbol": "IOST-USDT", "direction": "LONG", "poc_price": 0.00059263, "price": 0.0005955, "leg_start_ts": "2026-08-30T08:30:00", "leg_end_ts": "2026-08-30T11:00:00"}
