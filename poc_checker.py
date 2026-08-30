@@ -5,7 +5,7 @@ BingX Perpetual - POC (Point of Control) Visszateszt Figyelő (poc_checker.py)
 
 MÓDSZERTAN:
   1. Fraktál-alapú swing-pont keresés (ugyanaz a módszer, mint a másik
-     botoknál a támasz/ellenállás szinteknél) egy 15 perces gyertyasoron.
+     botoknál a támasz/ellenállás szinteknél) egy 30 perces gyertyasoron.
   2. A legutóbbi, LEZÁRT swing-lábra (az utolsó két, váltakozó típusú
      swing-pont közötti szakaszra - pl. utolsó low-tól az utána kialakult
      high-ig) VOLUMEN-PROFILT építünk: az ártartományt sávokra bontjuk, és
@@ -47,8 +47,9 @@ logger = logging.getLogger("poc_checker")
 # ----------------------------------------------------------------------------
 # PARAMÉTEREK
 # ----------------------------------------------------------------------------
-ALERT_TIMEFRAME = "15m"
-HISTORY_CANDLES = 200        # kb. 50 óra 15m-en - elég hely több swing-lábhoz
+ALERT_TIMEFRAME = "30m"      # 15m -> 30m: a 15 perces idősík túl zajos volt,
+                               # a hosszabb gyertyák simábbá teszik a swing-keresést
+HISTORY_CANDLES = 200        # kb. 100 óra (~4 nap) 30m-en - elég hely több swing-lábhoz
 
 SWING_FRACTAL_LEGS = 3       # ennyi gyertyát nézünk mindkét oldalon egy swing-ponthoz
 
