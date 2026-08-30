@@ -36,3 +36,6 @@
 {"ts": "2026-08-30T13:02:23.068684+00:00", "symbol": "ZBT-USDT", "direction": "LONG", "poc_price": 0.08526917, "price": 0.08556, "leg_start_ts": "2026-08-30T10:00:00", "leg_end_ts": "2026-08-30T11:15:00"}
 {"ts": "2026-08-30T13:02:23.068684+00:00", "symbol": "ZKC-USDT", "direction": "SHORT", "poc_price": 0.06354467, "price": 0.06307, "leg_start_ts": "2026-08-30T04:45:00", "leg_end_ts": "2026-08-30T10:45:00"}
 {"ts": "2026-08-30T14:02:30.217251+00:00", "symbol": "BEAT-USDT", "direction": "LONG", "poc_price": 0.137225, "price": 0.1375, "leg_start_ts": "2026-08-30T09:15:00", "leg_end_ts": "2026-08-30T11:15:00"}
+{"ts": "2026-08-30T15:02:24.828249+00:00", "symbol": "COTI-USDT", "direction": "LONG", "poc_price": 0.01313425, "price": 0.013169, "leg_start_ts": "2026-08-30T09:30:00", "leg_end_ts": "2026-08-30T13:15:00"}
+{"ts": "2026-08-30T15:02:24.828249+00:00", "symbol": "MANA-USDT", "direction": "LONG", "poc_price": 0.07537967, "price": 0.07561, "leg_start_ts": "2026-08-30T09:45:00", "leg_end_ts": "2026-08-30T12:00:00"}
+{"ts": "2026-08-30T15:02:24.828249+00:00", "symbol": "ZEN-USDT", "direction": "LONG", "poc_price": 5.1259, "price": 5.138, "leg_start_ts": "2026-08-30T11:30:00", "leg_end_ts": "2026-08-30T14:00:00"}
