@@ -3,3 +3,4 @@
 {"ts": "2026-08-30T07:10:11.657966+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T08:48:58.584289+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T09:52:54.761380+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T10:06:12.237844+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "EARLY"}
