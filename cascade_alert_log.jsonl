@@ -73,3 +73,4 @@
 {"ts": "2026-08-30T19:47:44.068705+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.39868, "price_change_pct": -3.8, "vol_multiplier": 21.25}
 {"ts": "2026-08-30T20:43:19.042494+00:00", "symbol": "KITE-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.12163, "price_change_pct": -2.07, "vol_multiplier": 42.13}
 {"ts": "2026-08-30T21:07:15.986763+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.3908, "price_change_pct": 2.28, "vol_multiplier": 10.12}
+{"ts": "2026-08-30T23:14:21.335555+00:00", "symbol": "NIULAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.1112, "price_change_pct": 1.56, "vol_multiplier": 8.84}
