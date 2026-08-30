@@ -11,3 +11,5 @@
 {"ts": "2026-08-30T13:14:33.723190+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T13:22:18.365135+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T13:36:46.485673+00:00", "symbol": "DYM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T13:47:38.939850+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T13:48:20.632504+00:00", "symbol": "CAKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
