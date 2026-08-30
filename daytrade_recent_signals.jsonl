@@ -18,3 +18,5 @@
 {"ts": "2026-08-30T16:08:28.329321+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-30T16:08:28.329321+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T16:56:21.976870+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T17:14:17.802116+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-30T17:16:24.665084+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "EARLY"}
