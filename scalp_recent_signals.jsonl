@@ -20,3 +20,4 @@
 {"ts": "2026-08-30T20:43:46.681855+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T21:23:14.704169+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T21:24:17.364006+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T21:41:10.847619+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "EARLY"}
