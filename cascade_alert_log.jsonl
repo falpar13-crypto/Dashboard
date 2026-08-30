@@ -61,3 +61,4 @@
 {"ts": "2026-08-30T01:41:21.711655+00:00", "symbol": "PROM-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 7.471, "price_change_pct": 2.75, "vol_multiplier": 14.21}
 {"ts": "2026-08-30T02:02:10.507570+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.18091, "price_change_pct": 1.62, "vol_multiplier": 9.71}
 {"ts": "2026-08-30T03:33:10.796604+00:00", "symbol": "ZKP-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.05565, "price_change_pct": -2.28, "vol_multiplier": 4.88}
+{"ts": "2026-08-30T04:59:22.191599+00:00", "symbol": "4-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.021374, "price_change_pct": 3.46, "vol_multiplier": 37.96}
