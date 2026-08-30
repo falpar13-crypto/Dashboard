@@ -1,4 +1,3 @@
-{"ts": "2026-08-30T11:35:37.638543+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T11:49:13.166964+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T11:51:19.553140+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T12:51:45.147616+00:00", "symbol": "ENS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -21,3 +20,5 @@
 {"ts": "2026-08-30T17:14:17.802116+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T17:16:24.665084+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T17:21:48.260297+00:00", "symbol": "RUNE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T17:32:06.529988+00:00", "symbol": "DYDX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T17:39:27.305582+00:00", "symbol": "KAS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
