@@ -17,3 +17,4 @@
 {"ts": "2026-08-30T02:02:18.863696+00:00", "symbol": "STX-USDT", "direction": "SHORT", "poc_price": 0.241965, "price": 0.2397, "leg_start_ts": "2026-08-29T22:15:00", "leg_end_ts": "2026-08-30T01:00:00"}
 {"ts": "2026-08-30T03:02:26.967699+00:00", "symbol": "BTW-USDT", "direction": "LONG", "poc_price": 0.45865267, "price": 0.45881, "leg_start_ts": "2026-08-29T23:15:00", "leg_end_ts": "2026-08-30T01:15:00"}
 {"ts": "2026-08-30T03:02:26.967699+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "poc_price": 1.49805, "price": 1.495, "leg_start_ts": "2026-08-29T22:15:00", "leg_end_ts": "2026-08-29T23:45:00"}
+{"ts": "2026-08-30T05:02:17.084218+00:00", "symbol": "PROM-USDT", "direction": "LONG", "poc_price": 7.19866667, "price": 7.203, "leg_start_ts": "2026-08-30T02:30:00", "leg_end_ts": "2026-08-30T04:00:00"}
