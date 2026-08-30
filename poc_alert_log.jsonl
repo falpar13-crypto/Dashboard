@@ -21,3 +21,4 @@
 {"ts": "2026-08-30T06:02:33.925744+00:00", "symbol": "PROMPT-USDT", "direction": "LONG", "poc_price": 0.0242925, "price": 0.02438, "leg_start_ts": "2026-08-30T03:30:00", "leg_end_ts": "2026-08-30T04:45:00"}
 {"ts": "2026-08-30T06:02:33.925744+00:00", "symbol": "LSK-USDT", "direction": "LONG", "poc_price": 0.1007475, "price": 0.10108, "leg_start_ts": "2026-08-30T02:00:00", "leg_end_ts": "2026-08-30T04:30:00"}
 {"ts": "2026-08-30T06:02:33.925744+00:00", "symbol": "ON-USDT", "direction": "SHORT", "poc_price": 0.25939, "price": 0.2587, "leg_start_ts": "2026-08-29T23:00:00", "leg_end_ts": "2026-08-30T04:30:00"}
+{"ts": "2026-08-30T07:02:27.454763+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "poc_price": 0.0114173, "price": 0.011535, "leg_start_ts": "2026-08-30T01:45:00", "leg_end_ts": "2026-08-30T05:30:00"}
