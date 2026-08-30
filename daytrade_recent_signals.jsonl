@@ -26,3 +26,4 @@
 {"ts": "2026-08-30T18:26:32.214231+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T18:32:09.278556+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T18:41:24.799709+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T18:45:46.979848+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
