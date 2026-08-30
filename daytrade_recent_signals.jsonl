@@ -1,6 +1,3 @@
-{"ts": "2026-08-30T15:11:09.583509+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "EARLY"}
-{"ts": "2026-08-30T16:08:28.329321+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-08-30T16:08:28.329321+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T16:56:21.976870+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T17:14:17.802116+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T17:16:24.665084+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "EARLY"}
@@ -28,3 +25,5 @@
 {"ts": "2026-08-30T21:07:04.074645+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T21:08:09.909426+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T21:08:09.909426+00:00", "symbol": "ORDI-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-30T22:10:09.362210+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T22:10:09.362210+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
