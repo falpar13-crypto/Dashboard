@@ -4,3 +4,4 @@
 {"ts": "2026-08-30T07:43:44.842942+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-08-30T09:14:06.993877+00:00", "symbol": "ESPORTS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-08-30T09:38:46.786592+00:00", "symbol": "TURBO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T09:53:11.748025+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
