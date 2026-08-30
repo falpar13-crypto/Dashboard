@@ -1,4 +1,3 @@
-{"ts": "2026-08-29T18:47:45.461318+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T20:58:11.056464+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-29T21:16:30.229238+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-29T23:06:34.588637+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EARLY"}
@@ -7,3 +6,4 @@
 {"ts": "2026-08-29T23:55:46.853831+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T00:09:20.172804+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T00:12:16.173045+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-30T01:34:31.542582+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
