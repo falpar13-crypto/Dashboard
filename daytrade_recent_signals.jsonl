@@ -25,3 +25,6 @@
 {"ts": "2026-08-30T23:34:41.215678+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T23:37:53.718149+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T23:41:05.766389+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T23:48:28.992257+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T23:48:28.992257+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T23:50:48.676650+00:00", "symbol": "1000SHIB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
