@@ -69,3 +69,4 @@
 {"ts": "2026-08-30T09:01:42.848641+00:00", "symbol": "4-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.018903, "price_change_pct": -2.69, "vol_multiplier": 34.19}
 {"ts": "2026-08-30T10:50:27.900271+00:00", "symbol": "ZKC-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.06799, "price_change_pct": 4.57, "vol_multiplier": 10.37}
 {"ts": "2026-08-30T13:17:09.098241+00:00", "symbol": "NIULAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.1169, "price_change_pct": 3.89, "vol_multiplier": 4.21}
+{"ts": "2026-08-30T19:43:15.397711+00:00", "symbol": "NIULAI-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.11767, "price_change_pct": -2.91, "vol_multiplier": 6.88}
