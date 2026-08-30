@@ -27,3 +27,4 @@
 {"ts": "2026-08-30T09:02:28.406181+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "poc_price": 1.07965333, "price": 1.0757, "leg_start_ts": "2026-08-30T05:45:00", "leg_end_ts": "2026-08-30T07:45:00"}
 {"ts": "2026-08-30T09:02:28.406181+00:00", "symbol": "UAI-USDT", "direction": "LONG", "poc_price": 0.33832167, "price": 0.3413, "leg_start_ts": "2026-08-30T03:30:00", "leg_end_ts": "2026-08-30T07:30:00"}
 {"ts": "2026-08-30T09:02:28.406181+00:00", "symbol": "CITREA-USDT", "direction": "LONG", "poc_price": 0.00964098, "price": 0.009668, "leg_start_ts": "2026-08-30T04:45:00", "leg_end_ts": "2026-08-30T06:45:00"}
+{"ts": "2026-08-30T11:02:19.803231+00:00", "symbol": "NIULAI-USDT", "direction": "LONG", "poc_price": 0.091584, "price": 0.09204, "leg_start_ts": "2026-08-30T08:30:00", "leg_end_ts": "2026-08-30T10:00:00"}
