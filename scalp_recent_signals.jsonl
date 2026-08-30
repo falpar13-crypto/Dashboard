@@ -12,3 +12,5 @@
 {"ts": "2026-08-30T15:14:17.068473+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T15:14:17.068473+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-08-30T15:58:40.886426+00:00", "symbol": "CAKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T16:08:06.677565+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T16:09:02.945178+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
