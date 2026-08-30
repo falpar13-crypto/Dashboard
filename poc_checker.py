@@ -51,6 +51,13 @@ ALERT_TIMEFRAME = "15m"
 HISTORY_CANDLES = 200        # kb. 50 óra 15m-en - elég hely több swing-lábhoz
 
 SWING_FRACTAL_LEGS = 3       # ennyi gyertyát nézünk mindkét oldalon egy swing-ponthoz
+
+# ÚJ: minimum swing-mozgás szűrő - a nyers fraktál-keresés minden apró
+# kilengést "swingnek" vesz, ami zajossá teszi a láb-kiválasztást. Ez a
+# szűrő két egymást követő zigzag-pont között MINIMUM ennyi %-os mozgást
+# követel meg - ha kisebb, a kevésbé jelentős pontot eltávolítjuk, csak a
+# valóban jelentős fordulópontok maradnak.
+MIN_SWING_MOVE_PCT = 1.5
 MIN_SWING_LEG_CANDLES = 5    # a profil-szakasznak legalább ennyi gyertyát kell átfognia
 VP_BINS = 30                 # ennyi ársávra bontjuk a volumen-profilt
 
@@ -253,6 +260,43 @@ def _build_zigzag(swing_points: list) -> list:
     return zigzag
 
 
+def _filter_zigzag_by_amplitude(zigzag: list, min_move_pct: float = MIN_SWING_MOVE_PCT) -> list:
+    """ÚJ: a szomszédos zigzag-pontok közötti mozgást nézi - ha túl kicsi
+    (< min_move_pct), eltávolítja a kevésbé jelentős (közbülső) pontot.
+    Ez szűri ki a nyers fraktál-keresés apró, zajos kilengéseit, csak a
+    valóban jelentős fordulópontokat tartva meg. Iteratívan fut, amíg a
+    lista stabilizálódik (mert egy pont eltávolítása után előfordulhat,
+    hogy két szomszéd azonos típusú lesz - ezeket is összevonjuk, a
+    szélsőségesebbet tartva, ugyanúgy, mint _build_zigzag()-ban)."""
+    zigzag = list(zigzag)
+    changed = True
+    while changed and len(zigzag) > 2:
+        changed = False
+        i = 1
+        while i < len(zigzag):
+            idx, price, typ = zigzag[i]
+            prev_idx, prev_price, prev_typ = zigzag[i - 1]
+            move_pct = abs(price - prev_price) / prev_price * 100 if prev_price > 0 else 0
+            if move_pct < min_move_pct:
+                del zigzag[i]
+                changed = True
+                continue  # ne lépjünk i-vel, nézzük meg az új szomszédokat is
+            i += 1
+
+        merged = []
+        for point in zigzag:
+            idx, price, typ = point
+            if merged and merged[-1][2] == typ:
+                if (typ == "H" and price > merged[-1][1]) or (typ == "L" and price < merged[-1][1]):
+                    merged[-1] = point
+            else:
+                merged.append(point)
+        if merged != zigzag:
+            zigzag = merged
+            changed = True
+    return zigzag
+
+
 # ----------------------------------------------------------------------------
 # VOLUMEN-PROFIL + POC
 # ----------------------------------------------------------------------------
@@ -302,6 +346,7 @@ def evaluate_poc_retest(kdf: pd.DataFrame) -> Optional[dict]:
 
     swing_points = _find_swing_points(closed, legs=SWING_FRACTAL_LEGS)
     zigzag = _build_zigzag(swing_points)
+    zigzag = _filter_zigzag_by_amplitude(zigzag)
     if len(zigzag) < 2:
         return None
 
