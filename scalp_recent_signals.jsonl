@@ -17,3 +17,6 @@
 {"ts": "2026-08-30T19:36:34.198557+00:00", "symbol": "JASMY-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T19:42:40.068614+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T20:23:36.508269+00:00", "symbol": "VVV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T20:40:54.624343+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T20:40:54.624343+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-30T20:43:46.681855+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
