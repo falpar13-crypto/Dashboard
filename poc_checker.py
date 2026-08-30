@@ -229,72 +229,81 @@ async def fetch_klines(session, semaphore, symbol, interval, limit=HISTORY_CANDL
 
 
 # ----------------------------------------------------------------------------
-# SWING-KERESÉS (ugyanaz a fraktál-módszer, mint a másik botokban)
+# SWING-KERESÉS: standard "százalékos zigzag" algoritmus
 # ----------------------------------------------------------------------------
-def _find_swing_points(closed: pd.DataFrame, legs: int = SWING_FRACTAL_LEGS) -> list:
+# JAVÍTÁS: a korábbi verzió fraktál-alapú swing-keresést épített, majd
+# UTÓLAG próbálta megszűrni a szomszédos, kicsi mozgású pontokat - ez a
+# szomszédonkénti törlés hibás volt, láncreakcióban szinte mindent
+# összevont (4 pontból 1 maradt egy tesztben). Ehelyett ez egy EGYETLEN
+# ÁTHALADÁSOS, klasszikus "N%-os zigzag" algoritmus: a nyers ár-adaton
+# fut végig, és csak akkor rögzít új pivot-pontot, ha az aktuális
+# szélsőértéktől legalább MIN_SWING_MOVE_PCT%-ot elmozdult az ár az
+# ELLENTÉTES irányba - ez természeténél fogva kiszűri az apró zajt,
+# nincs szükség utólagos, hibalehetőséget rejtő post-processzálásra.
+def _zigzag_pct(closed: pd.DataFrame, min_move_pct: float = MIN_SWING_MOVE_PCT) -> list:
     highs = closed["high"].to_numpy()
     lows = closed["low"].to_numpy()
     n = len(highs)
-    points = []
-    for i in range(legs, n - legs):
-        h_window = highs[i - legs:i + legs + 1]
-        if highs[i] == h_window.max() and (h_window == highs[i]).sum() == 1:
-            points.append((i, float(highs[i]), "H"))
-        l_window = lows[i - legs:i + legs + 1]
-        if lows[i] == l_window.min() and (l_window == lows[i]).sum() == 1:
-            points.append((i, float(lows[i]), "L"))
-    points.sort(key=lambda p: p[0])
-    return points
+    if n < 2:
+        return []
 
+    pivots = []
+    dir_up = None  # None: még nem dőlt el az irány
+    # JAVÍTÁS: a kezdeti (irány-eldöntés előtti) szakaszban a szélsőérték
+    # POZÍCIÓJÁT is külön nyomon kell követni - a korábbi verzió hibásan
+    # mindig a 0. indexet rögzítette pivot-helyként, nem a tényleges
+    # szélsőérték gyertyáját.
+    extreme_high = float(highs[0])
+    extreme_high_idx = 0
+    extreme_low = float(lows[0])
+    extreme_low_idx = 0
+    extreme_idx = 0
 
-def _build_zigzag(swing_points: list) -> list:
-    zigzag = []
-    for idx, price, typ in swing_points:
-        if zigzag and zigzag[-1][2] == typ:
-            if typ == "H" and price > zigzag[-1][1]:
-                zigzag[-1] = (idx, price, typ)
-            elif typ == "L" and price < zigzag[-1][1]:
-                zigzag[-1] = (idx, price, typ)
-        else:
-            zigzag.append((idx, price, typ))
-    return zigzag
-
-
-def _filter_zigzag_by_amplitude(zigzag: list, min_move_pct: float = MIN_SWING_MOVE_PCT) -> list:
-    """ÚJ: a szomszédos zigzag-pontok közötti mozgást nézi - ha túl kicsi
-    (< min_move_pct), eltávolítja a kevésbé jelentős (közbülső) pontot.
-    Ez szűri ki a nyers fraktál-keresés apró, zajos kilengéseit, csak a
-    valóban jelentős fordulópontokat tartva meg. Iteratívan fut, amíg a
-    lista stabilizálódik (mert egy pont eltávolítása után előfordulhat,
-    hogy két szomszéd azonos típusú lesz - ezeket is összevonjuk, a
-    szélsőségesebbet tartva, ugyanúgy, mint _build_zigzag()-ban)."""
-    zigzag = list(zigzag)
-    changed = True
-    while changed and len(zigzag) > 2:
-        changed = False
-        i = 1
-        while i < len(zigzag):
-            idx, price, typ = zigzag[i]
-            prev_idx, prev_price, prev_typ = zigzag[i - 1]
-            move_pct = abs(price - prev_price) / prev_price * 100 if prev_price > 0 else 0
-            if move_pct < min_move_pct:
-                del zigzag[i]
-                changed = True
-                continue  # ne lépjünk i-vel, nézzük meg az új szomszédokat is
-            i += 1
-
-        merged = []
-        for point in zigzag:
-            idx, price, typ = point
-            if merged and merged[-1][2] == typ:
-                if (typ == "H" and price > merged[-1][1]) or (typ == "L" and price < merged[-1][1]):
-                    merged[-1] = point
+    for i in range(1, n):
+        if dir_up is None:
+            up_move = (highs[i] - extreme_low) / extreme_low * 100 if extreme_low > 0 else 0
+            down_move = (extreme_high - lows[i]) / extreme_high * 100 if extreme_high > 0 else 0
+            if up_move >= min_move_pct and up_move >= down_move:
+                pivots.append((extreme_low_idx, extreme_low, "L"))
+                dir_up = True
+                extreme_high = float(highs[i])
+                extreme_idx = i
+            elif down_move >= min_move_pct:
+                pivots.append((extreme_high_idx, extreme_high, "H"))
+                dir_up = False
+                extreme_low = float(lows[i])
+                extreme_idx = i
             else:
-                merged.append(point)
-        if merged != zigzag:
-            zigzag = merged
-            changed = True
-    return zigzag
+                if highs[i] > extreme_high:
+                    extreme_high = float(highs[i])
+                    extreme_high_idx = i
+                if lows[i] < extreme_low:
+                    extreme_low = float(lows[i])
+                    extreme_low_idx = i
+            continue
+
+        if dir_up:
+            if highs[i] > extreme_high:
+                extreme_high = float(highs[i])
+                extreme_idx = i
+            pullback = (extreme_high - lows[i]) / extreme_high * 100 if extreme_high > 0 else 0
+            if pullback >= min_move_pct:
+                pivots.append((extreme_idx, extreme_high, "H"))
+                dir_up = False
+                extreme_low = float(lows[i])
+                extreme_idx = i
+        else:
+            if lows[i] < extreme_low:
+                extreme_low = float(lows[i])
+                extreme_idx = i
+            rally = (highs[i] - extreme_low) / extreme_low * 100 if extreme_low > 0 else 0
+            if rally >= min_move_pct:
+                pivots.append((extreme_idx, extreme_low, "L"))
+                dir_up = True
+                extreme_high = float(highs[i])
+                extreme_idx = i
+
+    return pivots
 
 
 # ----------------------------------------------------------------------------
@@ -344,9 +353,7 @@ def evaluate_poc_retest(kdf: pd.DataFrame) -> Optional[dict]:
     if len(closed) < SWING_FRACTAL_LEGS * 2 + MIN_SWING_LEG_CANDLES:
         return None
 
-    swing_points = _find_swing_points(closed, legs=SWING_FRACTAL_LEGS)
-    zigzag = _build_zigzag(swing_points)
-    zigzag = _filter_zigzag_by_amplitude(zigzag)
+    zigzag = _zigzag_pct(closed, min_move_pct=MIN_SWING_MOVE_PCT)
     if len(zigzag) < 2:
         return None
 
@@ -391,6 +398,18 @@ def evaluate_poc_retest(kdf: pd.DataFrame) -> Optional[dict]:
 
     direction = "LONG" if live_close >= poc_price else "SHORT"
 
+    # ÚJ: explicit swing high/low mezők (nem csak a kronológiai
+    # start/end sorrend) - a felhasználó élesben szeretné pontosan
+    # látni, melyik szint melyik (ez segít visszaigazolni/cáfolni, hogy
+    # a fraktál-megerősítési késleltetés miatt elavult szakaszra épül-e
+    # a profil, ahelyett hogy a legfrissebb mozgást használná).
+    if leg_start_type == "H":
+        swing_high_price, swing_high_ts = leg_start_price, closed["timestamp"].iloc[leg_start_idx].isoformat()
+        swing_low_price, swing_low_ts = leg_end_price, closed["timestamp"].iloc[leg_end_idx].isoformat()
+    else:
+        swing_low_price, swing_low_ts = leg_start_price, closed["timestamp"].iloc[leg_start_idx].isoformat()
+        swing_high_price, swing_high_ts = leg_end_price, closed["timestamp"].iloc[leg_end_idx].isoformat()
+
     return {
         "poc_price": round(poc_price, 8),
         "direction": direction,
@@ -399,6 +418,11 @@ def evaluate_poc_retest(kdf: pd.DataFrame) -> Optional[dict]:
         "leg_end_ts": closed["timestamp"].iloc[leg_end_idx].isoformat(),
         "leg_start_type": leg_start_type,
         "leg_end_type": leg_end_type,
+        "swing_high_price": round(swing_high_price, 8),
+        "swing_high_ts": swing_high_ts,
+        "swing_low_price": round(swing_low_price, 8),
+        "swing_low_ts": swing_low_ts,
+        "candles_since_leg_end": int(len(kdf) - 1 - leg_end_idx),  # ÚJ: hány gyertyányira van a jelenlegitől
     }
 
 
@@ -430,8 +454,10 @@ def format_poc_message(symbol: str, result: dict) -> str:
         f"{header}\n"
         f"💰 Jelenlegi ár: {result['price']:.6f}\n"
         f"🎯 POC (legforgalmasabb szint): {result['poc_price']:.6f}\n"
-        f"📐 Profil-szakasz: {result['leg_start_type']}→{result['leg_end_type']} "
-        f"({result['leg_start_ts']} - {result['leg_end_ts']})\n"
+        f"📈 Swing HIGH: {result['swing_high_price']:.6f} ({result['swing_high_ts']})\n"
+        f"📉 Swing LOW: {result['swing_low_price']:.6f} ({result['swing_low_ts']})\n"
+        f"⏱️ A szakasz vége {result['candles_since_leg_end']} gyertyával a jelenlegi előtt zárult "
+        f"({ALERT_TIMEFRAME})\n"
         f"ℹ️ Az ár eltávolodott, majd MOST visszatért a legutóbbi swing-láb "
         f"legforgalmasabb (Volume Profile POC) szintjéhez - ez klasszikus "
         f"támasz/ellenállás-teszt pillanat. Ellenőrizd a chartot, mielőtt "
