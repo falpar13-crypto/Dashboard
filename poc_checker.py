@@ -312,9 +312,21 @@ def _zigzag_pct(closed: pd.DataFrame, min_move_pct: float = MIN_SWING_MOVE_PCT) 
 # ----------------------------------------------------------------------------
 def compute_poc(df: pd.DataFrame, start_idx: int, end_idx: int, bins: int = VP_BINS) -> Optional[float]:
     """Fixed Range Volume Profile a [start_idx, end_idx] (zárt) gyertya-
-    tartományon. Minden gyertya volumenét egyenletesen szétosztjuk azokon
-    a sávokon, amiket a gyertya high-low tartománya érint. Visszaadja a
-    legtöbb volument kapó sáv KÖZÉPÁRÁT (POC)."""
+    tartományon.
+
+    JAVÍTÁS: a korábbi verzió minden gyertya volumenét EGYENLETESEN
+    szétosztotta a teljes high-low tartományán - ez azt jelentette, hogy
+    egy nagy kanócú, nagy volumenű kitörő gyertya volumenje sok sávra
+    "felhígult", miközben néhány szűk tartományú, konszolidáló gyertya
+    kevés sávba koncentrálva torzíthatta a POC-ot a valódi kereskedési
+    aktivitástól távolabbra (élesben megfigyelt, valós eset: a POC a
+    swing-láb aljára tolódott, holott a tényleges forgalom a kitörő
+    gyertya záróára közelében zajlott).
+
+    Mostantól minden gyertya volumenét a ZÁRÓÁRHOZ közelebb súlyozva
+    (háromszög-eloszlással) osztjuk szét a high-low tartományon belül -
+    ez jobban közelíti, hogy a kereskedés ténylegesen hol koncentrálódott,
+    mint az egyenletes szétosztás."""
     window = df.iloc[start_idx:end_idx + 1]
     if len(window) < MIN_SWING_LEG_CANDLES:
         return None
@@ -325,18 +337,34 @@ def compute_poc(df: pd.DataFrame, start_idx: int, end_idx: int, bins: int = VP_B
         return None
 
     bin_edges = np.linspace(range_low, range_high, bins + 1)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
     bin_volumes = np.zeros(bins)
 
     for _, row in window.iterrows():
-        c_low, c_high, c_vol = float(row["low"]), float(row["high"]), float(row["volume"])
-        if c_vol <= 0:
+        c_low, c_high, c_close, c_vol = float(row["low"]), float(row["high"]), float(row["close"]), float(row["volume"])
+        if c_vol <= 0 or c_high <= c_low:
             continue
-        lo_bin = np.searchsorted(bin_edges, c_low, side="right") - 1
-        hi_bin = np.searchsorted(bin_edges, c_high, side="right") - 1
-        lo_bin = max(0, min(bins - 1, lo_bin))
-        hi_bin = max(0, min(bins - 1, hi_bin))
-        span = hi_bin - lo_bin + 1
-        bin_volumes[lo_bin:hi_bin + 1] += c_vol / span
+
+        mask = (bin_centers >= c_low) & (bin_centers <= c_high)
+        if not mask.any():
+            nearest = int(np.argmin(np.abs(bin_centers - c_close)))
+            bin_volumes[nearest] += c_vol
+            continue
+
+        # Háromszög-súlyozás: a záróárhoz legközelebbi sáv kapja a
+        # legtöbbet, a high/low szélekhez tartó sávok fokozatosan
+        # kevesebbet - de sosem nullát, a teljes tartomány számít, csak
+        # nem egyenlő súllyal.
+        max_dist = max(c_high - c_close, c_close - c_low, 1e-12)
+        distances = np.abs(bin_centers[mask] - c_close)
+        weights = 1.0 - (distances / (max_dist * 1.001))
+        weights = np.clip(weights, 0.02, None)  # minimális súly, hogy a szélek se kapjanak 0-t
+        weights_sum = weights.sum()
+        if weights_sum <= 0:
+            nearest = int(np.argmin(np.abs(bin_centers - c_close)))
+            bin_volumes[nearest] += c_vol
+            continue
+        bin_volumes[mask] += c_vol * weights / weights_sum
 
     poc_bin = int(np.argmax(bin_volumes))
     poc_price = (bin_edges[poc_bin] + bin_edges[poc_bin + 1]) / 2
