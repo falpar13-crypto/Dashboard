@@ -63,3 +63,4 @@
 {"ts": "2026-08-30T03:33:10.796604+00:00", "symbol": "ZKP-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.05565, "price_change_pct": -2.28, "vol_multiplier": 4.88}
 {"ts": "2026-08-30T04:59:22.191599+00:00", "symbol": "4-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.021374, "price_change_pct": 3.46, "vol_multiplier": 37.96}
 {"ts": "2026-08-30T05:11:35.892841+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.0078133, "price_change_pct": -1.75, "vol_multiplier": 23.57}
+{"ts": "2026-08-30T05:51:11.933663+00:00", "symbol": "4-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.018704, "price_change_pct": -4.65, "vol_multiplier": 5.62}
