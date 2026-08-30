@@ -53,3 +53,10 @@
 {"ts": "2026-08-30T19:02:15.196306+00:00", "symbol": "MONAD-USDT", "direction": "LONG", "poc_price": 0.02770633, "price": 0.02806, "leg_start_ts": "2026-08-30T14:45:00", "leg_end_ts": "2026-08-30T18:00:00"}
 {"ts": "2026-08-30T19:08:58.339472+00:00", "symbol": "EGLD-USDT", "direction": "SHORT", "poc_price": 3.8615, "price": 3.85, "leg_start_ts": "2026-08-30T15:45:00", "leg_end_ts": "2026-08-30T17:15:00"}
 {"ts": "2026-08-30T19:26:01.106245+00:00", "symbol": "IOST-USDT", "direction": "LONG", "poc_price": 0.00059263, "price": 0.0005955, "leg_start_ts": "2026-08-30T08:30:00", "leg_end_ts": "2026-08-30T11:00:00"}
+{"ts": "2026-08-30T19:50:00.957450+00:00", "symbol": "ACH-USDT", "direction": "LONG", "poc_price": 0.00497782, "price": 0.004991, "leg_start_ts": "2026-08-30T00:00:00", "leg_end_ts": "2026-08-30T06:00:00"}
+{"ts": "2026-08-30T19:50:00.957450+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "poc_price": 0.088175, "price": 0.08803, "leg_start_ts": "2026-08-30T14:30:00", "leg_end_ts": "2026-08-30T18:30:00"}
+{"ts": "2026-08-30T19:50:00.957450+00:00", "symbol": "GENSYN-USDT", "direction": "LONG", "poc_price": 0.01985433, "price": 0.01995, "leg_start_ts": "2026-08-29T21:30:00", "leg_end_ts": "2026-08-30T11:00:00"}
+{"ts": "2026-08-30T19:50:00.957450+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "poc_price": 0.340955, "price": 0.3403, "leg_start_ts": "2026-08-30T12:30:00", "leg_end_ts": "2026-08-30T15:00:00"}
+{"ts": "2026-08-30T19:50:00.957450+00:00", "symbol": "STO-USDT", "direction": "LONG", "poc_price": 0.042117, "price": 0.04233, "leg_start_ts": "2026-08-30T04:30:00", "leg_end_ts": "2026-08-30T11:30:00"}
+{"ts": "2026-08-30T19:50:00.957450+00:00", "symbol": "MANTA-USDT", "direction": "LONG", "poc_price": 0.05869583, "price": 0.05883, "leg_start_ts": "2026-08-30T04:30:00", "leg_end_ts": "2026-08-30T13:00:00"}
+{"ts": "2026-08-30T19:50:00.957450+00:00", "symbol": "API3-USDT", "direction": "LONG", "poc_price": 0.2322, "price": 0.2329, "leg_start_ts": "2026-08-30T15:30:00", "leg_end_ts": "2026-08-30T18:00:00"}
