@@ -13,3 +13,5 @@
 {"ts": "2026-08-29T23:02:13.342835+00:00", "symbol": "GRVT-USDT", "direction": "LONG", "poc_price": 0.17003, "price": 0.1703, "leg_start_ts": "2026-08-29T18:15:00", "leg_end_ts": "2026-08-29T21:00:00"}
 {"ts": "2026-08-30T00:02:42.090539+00:00", "symbol": "WOTAMALAILE-USDT", "direction": "SHORT", "poc_price": 0.01431415, "price": 0.014237, "leg_start_ts": "2026-08-29T20:15:00", "leg_end_ts": "2026-08-29T23:00:00"}
 {"ts": "2026-08-30T01:02:13.193810+00:00", "symbol": "LIGHTER-USDT", "direction": "LONG", "poc_price": 3.513025, "price": 3.5204, "leg_start_ts": "2026-08-29T22:00:00", "leg_end_ts": "2026-08-29T23:45:00"}
+{"ts": "2026-08-30T02:02:18.863696+00:00", "symbol": "ENA-USDT", "direction": "LONG", "poc_price": 0.158957, "price": 0.1594, "leg_start_ts": "2026-08-29T21:45:00", "leg_end_ts": "2026-08-30T00:45:00"}
+{"ts": "2026-08-30T02:02:18.863696+00:00", "symbol": "STX-USDT", "direction": "SHORT", "poc_price": 0.241965, "price": 0.2397, "leg_start_ts": "2026-08-29T22:15:00", "leg_end_ts": "2026-08-30T01:00:00"}
