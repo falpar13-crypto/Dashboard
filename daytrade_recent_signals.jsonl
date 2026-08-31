@@ -9,3 +9,5 @@
 {"ts": "2026-08-31T09:17:12.582209+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T09:40:24.430071+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T09:41:32.817754+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T09:46:05.458854+00:00", "symbol": "HEMI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T09:47:14.749087+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
