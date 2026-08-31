@@ -1,5 +1,3 @@
-{"ts": "2026-08-30T20:43:52.115574+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-30T20:50:51.012607+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-30T21:05:58.361429+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T21:05:58.361429+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-30T21:07:04.074645+00:00", "symbol": "ONG-USDT", "direction": "SHORT", "signal_type": "EARLY"}
@@ -23,3 +21,4 @@
 {"ts": "2026-08-31T01:47:58.422694+00:00", "symbol": "COMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T01:47:58.422694+00:00", "symbol": "DYM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T02:42:57.611153+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T02:57:45.403691+00:00", "symbol": "PEOPLE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
