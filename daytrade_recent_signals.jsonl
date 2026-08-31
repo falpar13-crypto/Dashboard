@@ -1,6 +1,3 @@
-{"ts": "2026-08-31T15:09:10.215998+00:00", "symbol": "US-USDT", "direction": "SHORT", "signal_type": "EARLY"}
-{"ts": "2026-08-31T15:25:35.028520+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T15:39:43.090149+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T16:46:10.745320+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T16:48:58.799314+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T16:53:23.242306+00:00", "symbol": "GALA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -19,3 +16,4 @@
 {"ts": "2026-08-31T20:47:52.079554+00:00", "symbol": "JASMY-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T20:58:08.276598+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T21:08:44.724619+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T21:41:10.309797+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
