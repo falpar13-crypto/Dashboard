@@ -17,3 +17,4 @@
 {"ts": "2026-08-31T20:11:20.848586+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-31T20:37:04.735304+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T20:47:52.079554+00:00", "symbol": "JASMY-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T20:58:08.276598+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
