@@ -15,3 +15,4 @@
 {"ts": "2026-08-31T10:20:32.146644+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-08-31T10:27:55.554591+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T10:53:23.463319+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T11:28:29.375485+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
