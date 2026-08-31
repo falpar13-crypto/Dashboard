@@ -102,3 +102,4 @@
 {"ts": "2026-08-31T15:02:39.417138+00:00", "symbol": "ZRX-USDT", "direction": "SHORT", "poc_price": 0.09669667, "price": 0.0962, "leg_start_ts": "2026-08-31T07:30:00", "leg_end_ts": "2026-08-31T13:30:00"}
 {"ts": "2026-08-31T15:02:39.417138+00:00", "symbol": "CETUS-USDT", "direction": "LONG", "poc_price": 0.02315833, "price": 0.0232, "leg_start_ts": "2026-08-31T10:30:00", "leg_end_ts": "2026-08-31T13:30:00"}
 {"ts": "2026-08-31T15:02:39.417138+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "poc_price": 0.1084405, "price": 0.10848, "leg_start_ts": "2026-08-31T05:00:00", "leg_end_ts": "2026-08-31T12:30:00"}
+{"ts": "2026-08-31T17:02:28.437650+00:00", "symbol": "FLOW-USDT", "direction": "LONG", "poc_price": 0.026311, "price": 0.02641, "leg_start_ts": "2026-08-31T09:30:00", "leg_end_ts": "2026-08-31T12:00:00"}
