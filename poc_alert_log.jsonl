@@ -104,3 +104,4 @@
 {"ts": "2026-08-31T15:02:39.417138+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "poc_price": 0.1084405, "price": 0.10848, "leg_start_ts": "2026-08-31T05:00:00", "leg_end_ts": "2026-08-31T12:30:00"}
 {"ts": "2026-08-31T17:02:28.437650+00:00", "symbol": "FLOW-USDT", "direction": "LONG", "poc_price": 0.026311, "price": 0.02641, "leg_start_ts": "2026-08-31T09:30:00", "leg_end_ts": "2026-08-31T12:00:00"}
 {"ts": "2026-08-31T18:02:45.274553+00:00", "symbol": "AZTEC-USDT", "direction": "SHORT", "poc_price": 0.01346983, "price": 0.01342, "leg_start_ts": "2026-08-31T06:00:00", "leg_end_ts": "2026-08-31T14:00:00"}
+{"ts": "2026-08-31T21:02:32.560839+00:00", "symbol": "AGLD-USDT", "direction": "SHORT", "poc_price": 0.164455, "price": 0.1638, "leg_start_ts": "2026-08-31T05:00:00", "leg_end_ts": "2026-08-31T16:00:00"}
