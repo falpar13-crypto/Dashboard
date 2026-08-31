@@ -92,3 +92,4 @@
 {"ts": "2026-08-30T23:02:15.773902+00:00", "symbol": "BNB-USDT", "direction": "LONG", "poc_price": 691.21366667, "price": 692.8, "leg_start_ts": "2026-08-28T18:30:00", "leg_end_ts": "2026-08-30T16:30:00"}
 {"ts": "2026-08-30T23:02:15.773902+00:00", "symbol": "HIVE-USDT", "direction": "LONG", "poc_price": 0.0425415, "price": 0.0427, "leg_start_ts": "2026-08-30T02:00:00", "leg_end_ts": "2026-08-30T12:00:00"}
 {"ts": "2026-08-31T07:02:19.319542+00:00", "symbol": "STABLE-USDT", "direction": "LONG", "poc_price": 0.02634667, "price": 0.02644, "leg_start_ts": "2026-08-30T23:30:00", "leg_end_ts": "2026-08-31T04:30:00"}
+{"ts": "2026-08-31T10:02:39.598962+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "poc_price": 0.08138517, "price": 0.08158, "leg_start_ts": "2026-08-31T03:00:00", "leg_end_ts": "2026-08-31T08:30:00"}
