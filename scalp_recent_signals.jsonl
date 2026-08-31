@@ -14,3 +14,4 @@
 {"ts": "2026-08-31T01:33:26.232628+00:00", "symbol": "ENS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T01:38:49.492997+00:00", "symbol": "SKR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T05:02:09.475720+00:00", "symbol": "ESPORTS-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-08-31T05:19:46.980683+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
