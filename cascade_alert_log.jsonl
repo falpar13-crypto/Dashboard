@@ -76,3 +76,4 @@
 {"ts": "2026-08-30T23:14:21.335555+00:00", "symbol": "NIULAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.1112, "price_change_pct": 1.56, "vol_multiplier": 8.84}
 {"ts": "2026-08-30T23:46:21.342089+00:00", "symbol": "FOGO-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.007062, "price_change_pct": -3.01, "vol_multiplier": 23.87}
 {"ts": "2026-08-30T23:46:21.342089+00:00", "symbol": "LAB-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.07282, "price_change_pct": -2.06, "vol_multiplier": 10.43}
+{"ts": "2026-08-31T00:51:20.465694+00:00", "symbol": "SKR-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.023778, "price_change_pct": 3.04, "vol_multiplier": 8.79}
