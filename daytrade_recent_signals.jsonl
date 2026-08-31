@@ -5,3 +5,5 @@
 {"ts": "2026-08-31T07:42:14.259228+00:00", "symbol": "CYS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T07:58:54.207650+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T07:58:54.207650+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T08:23:00.974402+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-08-31T08:29:17.879987+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
