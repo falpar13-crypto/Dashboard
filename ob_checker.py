@@ -90,6 +90,15 @@ EXCLUDE_OPPOSITE_DIRECTION_OVERLAP = True
 
 ALERT_COOLDOWN_HOURS = 8   # ugyanarra a zónára ennyi órán belül nem jelez újra
 
+# ÚJ: biztonsági háló - körönként legfeljebb ennyi riasztást küldünk ki,
+# még ha ennél sokkal több valódi (nem hamis) találat lenne is egyszerre
+# (ez élesben megtörtént: 18 jelzés egy körben). A rangsorolás a
+# "meggyőződés" erejét közelíti (kisebb zóna = pontosabb szint, arany
+# zónás Fibonacci-visszahúzódás = erősebb megerősítés). A kimaradó
+# találatok NEM kapnak cooldown-t, tehát a következő körben újra
+# versenyezhetnek - lásd a trend_checker.py azonos mintáját.
+MAX_ALERTS_PER_RUN = 6
+
 # ÚJ: Fibonacci-visszahúzódás konfluencia - TISZTÁN TÁJÉKOZTATÓ, nem szűr.
 # A zóna kialakulását okozó impulzus-lökés (a zóna szélétől a lökés utáni
 # csúcsig/mélypontig) alapján kiszámoljuk, hogy az érintés pillanatában az
@@ -660,6 +669,12 @@ async def run_once(state: dict, now: datetime) -> tuple:
     alerts_sent = 0
     evaluated = 0
 
+    # ÚJ (két lépéses feldolgozás, lásd MAX_ALERTS_PER_RUN kommentjét):
+    # ELŐSZÖR összegyűjtjük az összes cooldown-mentes, friss touch-találatot
+    # (nem küldünk még semmit), UTÁNA rangsoroljuk, és csak a legjobb
+    # MAX_ALERTS_PER_RUN darabot küldjük ki.
+    candidates_for_alert = []
+
     for symbol in candidates:
         kdf = klines_map.get(symbol)
         if kdf is None:
@@ -670,8 +685,6 @@ async def run_once(state: dict, now: datetime) -> tuple:
         if not zones:
             continue
 
-        # csak az UTOLSÓ (legfrissebb lezárt) gyertyán történt touch-ok
-        # érdekelnek minket - ez jelenti az "épp most történt visszatérés" eseményt
         last_pos = len(kdf) - 1
         fresh_touches = [z for z in zones if z.get("touched_pos") == last_pos]
         if not fresh_touches:
@@ -679,7 +692,6 @@ async def run_once(state: dict, now: datetime) -> tuple:
 
         entry = state.setdefault(symbol, {"alerted_zones": {}})
         entry.setdefault("alerted_zones", {})
-
         current_price = float(kdf.iloc[-1]["close"])
 
         for zone in fresh_touches:
@@ -690,24 +702,48 @@ async def run_once(state: dict, now: datetime) -> tuple:
                 if (now - last_dt) < timedelta(hours=ALERT_COOLDOWN_HOURS):
                     continue
 
-            msg, direction = format_ob_message(symbol, zone, current_price)
-            await send_telegram_message(msg)
-            entry["alerted_zones"][zone_key] = now.isoformat()
-            alerts_sent += 1
-            # ÚJ: a diagnosztikai adatokat (anchor OHLC, ATR, impulzus-
-            # összeg/küszöb, displacement-gyertya adatai) is elmentjük a
-            # jelzés-naplóba - ebből KÉZZEL vissza lehet ellenőrizni,
-            # hogy a Pine Script feltételei szerint valóban jogos volt-e
-            # a zóna, ha legközelebb megint gyanús jelzés érkezne.
-            _append_signal_log({
-                "ts": now.isoformat(), "symbol": symbol, "direction": direction,
-                "zone_top": zone["top"], "zone_bot": zone["bot"],
-                "anchor_ts": zone["anchor_ts"],
-                "fib_retracement_pct": zone.get("fib_retracement_pct"),
-                "diag": zone.get("diag"),
+            # Minőségi pontszám a rangsoroláshoz: szűkebb zóna (pontosabb
+            # szint) + arany zónás Fibonacci-visszahúzódás = erősebb jelölt.
+            zone_width_pct = (zone["top"] - zone["bot"]) / zone["bot"] * 100 if zone["bot"] > 0 else MAX_ZONE_WIDTH_PCT
+            quality_score = (MAX_ZONE_WIDTH_PCT - zone_width_pct)
+            if zone.get("fib_golden_zone"):
+                quality_score += 2.0
+
+            candidates_for_alert.append({
+                "symbol": symbol, "zone": zone, "entry": entry,
+                "current_price": current_price, "zone_key": zone_key,
+                "quality_score": quality_score,
             })
-            logger.info("JELZÉS küldve: %s [%s] zóna %.6f-%.6f (kialakult: %s) | diag: %s",
-                        symbol, direction, zone["bot"], zone["top"], zone["anchor_ts"], zone.get("diag"))
+
+    candidates_for_alert.sort(key=lambda c: c["quality_score"], reverse=True)
+    to_send = candidates_for_alert[:MAX_ALERTS_PER_RUN]
+    suppressed = candidates_for_alert[MAX_ALERTS_PER_RUN:]
+
+    if suppressed:
+        logger.info("Rate-limit: %d találat elnyomva ebben a körben (csak a legjobb %d ment ki). Elnyomva: %s",
+                    len(suppressed), MAX_ALERTS_PER_RUN,
+                    ", ".join(f"{c['symbol']}" for c in suppressed))
+
+    for c in to_send:
+        symbol, zone, entry = c["symbol"], c["zone"], c["entry"]
+        msg, direction = format_ob_message(symbol, zone, c["current_price"])
+        await send_telegram_message(msg)
+        entry["alerted_zones"][c["zone_key"]] = now.isoformat()
+        alerts_sent += 1
+        # ÚJ: a diagnosztikai adatokat (anchor OHLC, ATR, impulzus-
+        # összeg/küszöb, displacement-gyertya adatai) is elmentjük a
+        # jelzés-naplóba - ebből KÉZZEL vissza lehet ellenőrizni,
+        # hogy a Pine Script feltételei szerint valóban jogos volt-e
+        # a zóna, ha legközelebb megint gyanús jelzés érkezne.
+        _append_signal_log({
+            "ts": now.isoformat(), "symbol": symbol, "direction": direction,
+            "zone_top": zone["top"], "zone_bot": zone["bot"],
+            "anchor_ts": zone["anchor_ts"],
+            "fib_retracement_pct": zone.get("fib_retracement_pct"),
+            "diag": zone.get("diag"),
+        })
+        logger.info("JELZÉS küldve: %s [%s] zóna %.6f-%.6f (kialakult: %s) | diag: %s",
+                    symbol, direction, zone["bot"], zone["top"], zone["anchor_ts"], zone.get("diag"))
 
     # a state ne nőjön korlátlanul - régi zóna-bejegyzések eldobása
     cutoff = now - timedelta(days=14)
