@@ -93,34 +93,11 @@ ALERT_COOLDOWN_HOURS = 8   # ugyanarra a zónára ennyi órán belül nem jelez 
 # ÚJ: biztonsági háló - körönként legfeljebb ennyi riasztást küldünk ki,
 # még ha ennél sokkal több valódi (nem hamis) találat lenne is egyszerre
 # (ez élesben megtörtént: 18 jelzés egy körben). A rangsorolás a
-# "meggyőződés" erejét közelíti (kisebb zóna = pontosabb szint, arany
-# zónás Fibonacci-visszahúzódás = erősebb megerősítés). A kimaradó
+# 24h forgalom (piaci kapitalizáció közelítő helyettesítője) alapján
+# történik - lásd a rangsoroló kódrészlet kommentjét lentebb. A kimaradó
 # találatok NEM kapnak cooldown-t, tehát a következő körben újra
 # versenyezhetnek - lásd a trend_checker.py azonos mintáját.
 MAX_ALERTS_PER_RUN = 6
-
-# ÚJ: Fibonacci-visszahúzódás konfluencia - TISZTÁN TÁJÉKOZTATÓ, nem szűr.
-# A zóna kialakulását okozó impulzus-lökés (a zóna szélétől a lökés utáni
-# csúcsig/mélypontig) alapján kiszámoljuk, hogy az érintés pillanatában az
-# ár hány %-os Fibonacci-visszahúzódásnál van - az ICT/"smart money"
-# módszertanban a 61.8-78.6%-os sávot hívják "arany zóná"-nak (OTE -
-# Optimal Trade Entry), mert ez a leggyakoribb reakciós terület.
-FIB_GOLDEN_ZONE_MIN = 61.8
-FIB_GOLDEN_ZONE_MAX = 78.6
-# ÚJ: a sima %-szám helyett a standard Fibonacci-szintek egyikéhez
-# viszonyítva jelenítjük meg (érthetőbb, mint egy nyers "73.0%").
-FIB_STANDARD_LEVELS = [0.0, 23.6, 38.2, 50.0, 61.8, 78.6, 100.0]
-
-def _nearest_fib_level(pct: float) -> float:
-    """A megadott %-hoz legközelebbi standard Fibonacci-szintet adja vissza."""
-    return min(FIB_STANDARD_LEVELS, key=lambda lvl: abs(lvl - pct))
-
-FIB_SWING_LOOKBACK = 20   # ennyi gyertyával az anchor ELŐTT keressük a lökés
-                           # valódi eredetét (swing low/high) - NEM a zóna
-                           # saját szélét használjuk erre, mert az szinte
-                           # mindig ~90-100%-os retracement-et adna (a zóna
-                           # ugyanis definíció szerint a lökés KEZDETE
-                           # KÖZELÉBEN van), ami sosem esne az arany zónába
 
 # ÚJ (hibajavítás): "Láthatóság" - a Pine Script bullShowPct/bearShowPct
 # beállítása (alapból 25-25%). Lásd a find_active_order_blocks() végén
@@ -514,35 +491,6 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
                     z["touched"] = True
                     z["touched_pos"] = pos
 
-                    # ÚJ: Fibonacci-visszahúzódás konfluencia - lásd a
-                    # fájl elején lévő FIB_GOLDEN_ZONE_MIN/MAX kommentjét.
-                    # A zóna szélétől a lökés utáni csúcsig/mélypontig
-                    # (a zóna kialakulása és az érintés közti ablakban)
-                    # húzott lökés-szakaszhoz viszonyítjuk az érintéskori árat.
-                    window_start = z["created_pos"] + 1
-                    window_end = pos
-                    fib_pct = None
-                    if window_end > window_start:
-                        touch_price = float(closes[pos])
-                        swing_start = max(0, z["anchor_idx"] - FIB_SWING_LOOKBACK)
-                        if z["bullish"]:
-                            peak = float(np.max(highs[window_start:window_end + 1]))
-                            swing_low = float(np.min(lows[swing_start:z["anchor_idx"] + 1]))
-                            fib_range = peak - swing_low
-                            if fib_range > 0:
-                                fib_pct = (peak - touch_price) / fib_range * 100
-                        else:
-                            trough = float(np.min(lows[window_start:window_end + 1]))
-                            swing_high = float(np.max(highs[swing_start:z["anchor_idx"] + 1]))
-                            fib_range = swing_high - trough
-                            if fib_range > 0:
-                                fib_pct = (touch_price - trough) / fib_range * 100
-                    z["fib_retracement_pct"] = round(fib_pct, 1) if fib_pct is not None else None
-                    z["fib_nearest_level"] = _nearest_fib_level(fib_pct) if fib_pct is not None else None
-                    z["fib_golden_zone"] = (
-                        fib_pct is not None and FIB_GOLDEN_ZONE_MIN <= fib_pct <= FIB_GOLDEN_ZONE_MAX
-                    )
-
         # mitigáció (záróár-alapú, az indikátor alap beállítása)
         still_active = []
         for z in active_zones:
@@ -614,20 +562,11 @@ def format_ob_message(symbol: str, zone: dict, price: float) -> str:
     action = "BULLISH OB visszateszt 🟩⬆️" if zone["bullish"] else "BEARISH OB visszateszt 🟥⬇️"
     header = f"🧱 <b>[ORDER BLOCK] {symbol}</b> {action}"
 
-    # ÚJ: Fibonacci-visszahúzódás konfluencia sor - lásd az
-    # FIB_GOLDEN_ZONE_MIN/MAX kommentjét. Tisztán tájékoztató, nem szűr.
-    fib_line = ""
-    if zone.get("fib_nearest_level") is not None:
-        golden_note = " 🟡 arany zóna (OTE)" if zone.get("fib_golden_zone") else ""
-        level = zone["fib_nearest_level"]
-        fib_line = f"\n📐 Fibonacci szint: {level/100:.3f} (a lökés {level:.1f}%-át adta vissza){golden_note}"
-
     body = (
         f"{header}\n"
         f"💰 Jelenlegi ár: {price:.6f}\n"
         f"📦 Zóna: {zone['bot']:.6f} - {zone['top']:.6f}\n"
-        f"⏳ Zóna kialakult: {zone['anchor_ts']}"
-        f"{fib_line}\n"
+        f"⏳ Zóna kialakult: {zone['anchor_ts']}\n"
         f"ℹ️ Az ár most (újra) belépett egy korábban kialakult, MÉG ÉRVÉNYES "
         f"(nem mitigált) order block zónába - ez a klasszikus 'smart money' "
         f"logika szerinti reakció-/belépési pillanat. Ellenőrizd a chartot, "
@@ -702,12 +641,11 @@ async def run_once(state: dict, now: datetime) -> tuple:
                 if (now - last_dt) < timedelta(hours=ALERT_COOLDOWN_HOURS):
                     continue
 
-            # Minőségi pontszám a rangsoroláshoz: szűkebb zóna (pontosabb
-            # szint) + arany zónás Fibonacci-visszahúzódás = erősebb jelölt.
-            zone_width_pct = (zone["top"] - zone["bot"]) / zone["bot"] * 100 if zone["bot"] > 0 else MAX_ZONE_WIDTH_PCT
-            quality_score = (MAX_ZONE_WIDTH_PCT - zone_width_pct)
-            if zone.get("fib_golden_zone"):
-                quality_score += 2.0
+            # ÚJ: rangsorolás a 24h forgalom alapján (a piaci kapitalizáció
+            # könnyen elérhető közelítő helyettesítője - a botnak nincs
+            # közvetlen market cap adata, új API-t igényelne). Nagyobb
+            # forgalmú/ismertebb symbolok kerülnek előrébb a limit esetén.
+            quality_score = tickers.get(symbol, {}).get("quote_volume_24h", 0.0)
 
             candidates_for_alert.append({
                 "symbol": symbol, "zone": zone, "entry": entry,
@@ -720,7 +658,7 @@ async def run_once(state: dict, now: datetime) -> tuple:
     suppressed = candidates_for_alert[MAX_ALERTS_PER_RUN:]
 
     if suppressed:
-        logger.info("Rate-limit: %d találat elnyomva ebben a körben (csak a legjobb %d ment ki). Elnyomva: %s",
+        logger.info("Rate-limit: %d találat elnyomva ebben a körben (csak a legjobb %d ment ki, 24h forgalom szerint rangsorolva). Elnyomva: %s",
                     len(suppressed), MAX_ALERTS_PER_RUN,
                     ", ".join(f"{c['symbol']}" for c in suppressed))
 
@@ -739,7 +677,6 @@ async def run_once(state: dict, now: datetime) -> tuple:
             "ts": now.isoformat(), "symbol": symbol, "direction": direction,
             "zone_top": zone["top"], "zone_bot": zone["bot"],
             "anchor_ts": zone["anchor_ts"],
-            "fib_retracement_pct": zone.get("fib_retracement_pct"),
             "diag": zone.get("diag"),
         })
         logger.info("JELZÉS küldve: %s [%s] zóna %.6f-%.6f (kialakult: %s) | diag: %s",
