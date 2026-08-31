@@ -6,3 +6,4 @@
 {"ts": "2026-08-31T11:08:22.885759+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T11:08:22.885759+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T11:32:48.152776+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-08-31T12:36:17.793741+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
