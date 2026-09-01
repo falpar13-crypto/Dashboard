@@ -1,4 +1,3 @@
-{"ts": "2026-09-01T04:06:00.166086+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-09-01T04:12:13.453433+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-01T06:09:51.453438+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-01T06:43:29.525183+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -15,3 +14,4 @@
 {"ts": "2026-09-01T09:05:56.795872+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T09:06:55.763923+00:00", "symbol": "1000BONK-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-01T09:06:55.763923+00:00", "symbol": "OPN-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-09-01T10:10:35.787305+00:00", "symbol": "CAKE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
