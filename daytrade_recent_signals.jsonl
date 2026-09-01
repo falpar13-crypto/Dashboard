@@ -14,3 +14,7 @@
 {"ts": "2026-09-01T15:47:14.795818+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T16:12:53.090086+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T16:35:12.117243+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T16:45:55.074954+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T16:45:55.074954+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T16:45:55.074954+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T16:49:21.931326+00:00", "symbol": "APE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
