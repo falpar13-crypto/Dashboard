@@ -67,6 +67,22 @@ logger = logging.getLogger("ob_checker")
 # PARAMÉTEREK (az indikátor alapértelmezett beállításai)
 # ----------------------------------------------------------------------------
 ALERT_TIMEFRAME = "1h"
+
+# ÚJ: PROFI TREND-IRÁNY SZŰRŐ - a felhasználó kérésére, "kevesebb jelzés,
+# magasabb minőség" céllal. Ugyanaz a bevált, tesztelt logika, mint a
+# trader_checker.py-ban: 4h EMA50/EMA200 elrendezés + érdemi EMA-táv
+# (ez utóbbi kifejezetten azért kell, mert tesztelés közben kiderült,
+# hogy pusztán az EMA-sorrend zajos, oldalazó piacon is "talál" hamis
+# irányt - lásd a trader_checker.py azonos konstansának kommentjét).
+# CSAK OLYAN order block visszatesztre jelez, ami EGYEZIK a magasabb
+# idősíkú trenddel - bullish OB retest csak LONG HTF-trendben, bearish
+# csak SHORT-ban. Ha nincs egyértelmű HTF-trend, a jelzés KIMARAD.
+HTF_TREND_FILTER_ENABLED = True
+HTF_TIMEFRAME = "4h"
+HTF_EMA_FAST = 50
+HTF_EMA_SLOW = 200
+HTF_CANDLES = 250
+HTF_MIN_EMA_SEPARATION_PCT = 1.5
 HISTORY_CANDLES = 150     # ennyi lezárt gyertyán szimuláljuk végig a bar-by-bar logikát
 
 ATR_LENGTH = 14
@@ -199,6 +215,33 @@ def save_state(state: dict) -> None:
             tmp_path.unlink(missing_ok=True)
         except OSError:
             pass
+
+def determine_htf_bias(htf_df: pd.DataFrame) -> Optional[str]:
+    """ÚJ: profi trend-irány szűrő - 4h idősíkon EMA50/EMA200 elrendezés +
+    az ár helyzete. Csak EGYÉRTELMŰ trendnél ad irányt (érdemi EMA-táv
+    szükséges) - oldalazásnál None. Azonos, tesztelt logika, mint a
+    trader_checker.py determine_htf_bias()-e."""
+    if htf_df is None or len(htf_df) < HTF_EMA_SLOW + 10:
+        return None
+    closed = htf_df.iloc[:-1]
+    ema_fast = closed["close"].ewm(span=HTF_EMA_FAST, adjust=False).mean()
+    ema_slow = closed["close"].ewm(span=HTF_EMA_SLOW, adjust=False).mean()
+    price = float(closed["close"].iloc[-1])
+    f = float(ema_fast.iloc[-1])
+    s = float(ema_slow.iloc[-1])
+    if pd.isna(f) or pd.isna(s) or s <= 0:
+        return None
+
+    separation_pct = abs(f - s) / s * 100
+    if separation_pct < HTF_MIN_EMA_SEPARATION_PCT:
+        return None
+
+    if f > s and price > f:
+        return "LONG"
+    if f < s and price < f:
+        return "SHORT"
+    return None
+
 
 def _append_signal_log(record: dict) -> None:
     try:
@@ -897,11 +940,13 @@ def format_ob_message(symbol: str, zone: dict, price: float) -> str:
     action = "BULLISH OB visszateszt 🟩⬆️" if zone["bullish"] else "BEARISH OB visszateszt 🟥⬇️"
     header = f"🧱 <b>[ORDER BLOCK] {symbol}</b> {action}"
 
+    trend_line = "\n✅ Egyezik a 4h HTF-trenddel (profi trend-szűrő)" if HTF_TREND_FILTER_ENABLED else ""
     body = (
         f"{header}\n"
         f"💰 Jelenlegi ár: {price:.6f}\n"
         f"📦 Zóna: {zone['bot']:.6f} - {zone['top']:.6f}\n"
-        f"⏳ Zóna kialakult: {zone['anchor_ts']}\n"
+        f"⏳ Zóna kialakult: {zone['anchor_ts']}"
+        f"{trend_line}\n"
         f"ℹ️ Az ár most (újra) belépett egy korábban kialakult, MÉG ÉRVÉNYES "
         f"(nem mitigált) order block zónába - ez a klasszikus 'smart money' "
         f"logika szerinti reakció-/belépési pillanat. Ellenőrizd a chartot, "
@@ -943,12 +988,11 @@ async def run_once(state: dict, now: datetime) -> tuple:
     alerts_sent = 0
     evaluated = 0
 
-    # ÚJ (két lépéses feldolgozás, lásd MAX_ALERTS_PER_RUN kommentjét):
-    # ELŐSZÖR összegyűjtjük az összes cooldown-mentes, friss touch-találatot
-    # (nem küldünk még semmit), UTÁNA rangsoroljuk, és csak a legjobb
-    # MAX_ALERTS_PER_RUN darabot küldjük ki.
-    candidates_for_alert = []
-
+    # ÚJ: ELŐSZŐR (hálózat nélkül) összegyűjtjük, mely symboloknál van
+    # egyáltalán friss touch - ez jellemzően kevés. CSAK EZEKRE kérünk le
+    # 4h adatot a trend-szűréshez, hogy ne nőjön feleslegesen az API-terhelés
+    # az összes jelöltre.
+    touch_candidates = {}  # symbol -> (kdf, fresh_touches, current_price)
     for symbol in candidates:
         kdf = klines_map.get(symbol)
         if kdf is None:
@@ -964,9 +1008,34 @@ async def run_once(state: dict, now: datetime) -> tuple:
         if not fresh_touches:
             continue
 
+        touch_candidates[symbol] = (kdf, fresh_touches, float(kdf.iloc[-1]["close"]))
+
+    # ÚJ: profi trend-irány szűrő - 4h HTF-bias lekérése CSAK a friss
+    # touch-csal rendelkező symbolokra.
+    htf_bias_map = {}
+    if HTF_TREND_FILTER_ENABLED and touch_candidates:
+        htf_connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
+        async with aiohttp.ClientSession(connector=htf_connector) as htf_session:
+            htf_semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+            htf_tasks = [fetch_klines(htf_session, htf_semaphore, s, HTF_TIMEFRAME, HTF_CANDLES) for s in touch_candidates]
+            htf_results = await asyncio.gather(*htf_tasks, return_exceptions=True)
+        for item in htf_results:
+            if isinstance(item, BaseException) or item[1] is None:
+                continue
+            sym, hdf = item
+            htf_bias_map[sym] = determine_htf_bias(hdf)
+
+    # ÚJ (két lépéses feldolgozás, lásd MAX_ALERTS_PER_RUN kommentjét):
+    # ELŐSZÖR összegyűjtjük az összes cooldown-mentes, TREND-EGYEZŐ, friss
+    # touch-találatot (nem küldünk még semmit), UTÁNA rangsoroljuk, és
+    # csak a legjobb MAX_ALERTS_PER_RUN darabot küldjük ki.
+    candidates_for_alert = []
+    trend_filtered_count = 0
+
+    for symbol, (kdf, fresh_touches, current_price) in touch_candidates.items():
         entry = state.setdefault(symbol, {"alerted_zones": {}})
         entry.setdefault("alerted_zones", {})
-        current_price = float(kdf.iloc[-1]["close"])
+        symbol_htf_bias = htf_bias_map.get(symbol)
 
         for zone in fresh_touches:
             zone_key = f"{zone['anchor_ts']}_{zone['bullish']}"
@@ -974,6 +1043,15 @@ async def run_once(state: dict, now: datetime) -> tuple:
             if last_alert_ts:
                 last_dt = datetime.fromisoformat(last_alert_ts)
                 if (now - last_dt) < timedelta(hours=ALERT_COOLDOWN_HOURS):
+                    continue
+
+            # ÚJ: trend-egyezés ellenőrzése - bullish zóna csak LONG
+            # HTF-trendben, bearish csak SHORT-ban. Ha nincs egyértelmű
+            # HTF-trend (oldalazás), a jelzés KIMARAD.
+            if HTF_TREND_FILTER_ENABLED:
+                zone_direction = "LONG" if zone["bullish"] else "SHORT"
+                if symbol_htf_bias != zone_direction:
+                    trend_filtered_count += 1
                     continue
 
             # ÚJ: rangsorolás a 24h forgalom alapján (a piaci kapitalizáció
@@ -987,6 +1065,9 @@ async def run_once(state: dict, now: datetime) -> tuple:
                 "current_price": current_price, "zone_key": zone_key,
                 "quality_score": quality_score,
             })
+
+    if trend_filtered_count:
+        logger.info("Trend-szűrő: %d találat kimaradt, mert nem egyezett a 4h HTF-trenddel.", trend_filtered_count)
 
     candidates_for_alert.sort(key=lambda c: c["quality_score"], reverse=True)
     to_send = candidates_for_alert[:MAX_ALERTS_PER_RUN]
