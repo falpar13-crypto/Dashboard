@@ -102,3 +102,4 @@
 {"ts": "2026-09-01T18:49:00.547805+00:00", "symbol": "USELESS-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.11216, "price_change_pct": 2.85, "vol_multiplier": 19.32}
 {"ts": "2026-09-01T19:53:20.826959+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.4934, "price_change_pct": 1.54, "vol_multiplier": 5.29}
 {"ts": "2026-09-01T21:17:22.072147+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 1.311, "price_change_pct": -1.8, "vol_multiplier": 9.14}
+{"ts": "2026-09-01T22:19:11.180009+00:00", "symbol": "UAI-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.5319, "price_change_pct": -2.67, "vol_multiplier": 7.23}
