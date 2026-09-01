@@ -98,6 +98,20 @@ OB_LOOKBACK = 6
 # igaz lenne, nem egy konkrét, éles szintre való visszatérést jelezne.
 MAX_ZONE_WIDTH_PCT = 3.0
 
+# ÚJ: volumen-megerősítés a touch pillanatában - TISZTÁN TÁJÉKOZTATÓ, nem
+# szűr (a felhasználóval egyeztetve: kötelező feltételként kihagyhatna
+# olyan valódi reakciókat, amik csendesebb volumennel is végbemennek).
+# A touch-gyertya volumenjét az azt megelőző VOLUME_BASELINE_CANDLES
+# gyertya átlagához viszonyítjuk.
+VOLUME_BASELINE_CANDLES = 20
+
+# ÚJ: több idősíkú (4h) OB-egybeesés - TISZTÁN TÁJÉKOZTATÓ. Mivel a HTF
+# trend-szűrő már úgyis lekéri a 4h adatot minden touch-jelöltre, nem
+# igényel új API-hívást - csak ugyanazon az adaton újra lefuttatjuk a
+# find_active_order_blocks()-ot, és megnézzük, van-e ott is zóna
+# nagyjából ugyanazon a szinten.
+HTF_CONFLUENCE_TOLERANCE_PCT = 1.0  # a 4h zóna ennyi %-on belül legyen az 1h zónától, hogy egybeesésnek számítson
+
 # ÚJ: ha egy ÉPP MOST kialakuló zóna átfedésbe kerülne egy ELLENTÉTES
 # irányú (bull vs. bear), MÁR AKTÍV zónával, mindkettőt kizárjuk (sem az
 # újat nem hozzuk létre, sem a régit nem tartjuk meg). Indoklás: ha
@@ -715,6 +729,7 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
     closes = df["close"].values
     highs = df["high"].values
     lows = df["low"].values
+    volumes = df["volume"].values if "volume" in df.columns else None
     atr = _compute_atr(df, ATR_LENGTH).values
 
     active_zones = []  # dict: anchor_idx, top, bot, bullish, created_pos, touched, touched_pos
@@ -868,6 +883,16 @@ def find_active_order_blocks(kdf: pd.DataFrame) -> list:
                 if lows[pos] <= z["top"] and highs[pos] >= z["bot"]:
                     z["touched"] = True
                     z["touched_pos"] = pos
+                    # ÚJ: volumen-megerősítés - lásd a VOLUME_BASELINE_CANDLES
+                    # kommentjét. Tisztán tájékoztató, nem szűr.
+                    if volumes is not None:
+                        baseline_start = max(0, pos - VOLUME_BASELINE_CANDLES)
+                        baseline = volumes[baseline_start:pos]
+                        baseline_avg = float(baseline.mean()) if len(baseline) > 0 else None
+                        touch_volume = float(volumes[pos])
+                        z["touch_volume_ratio"] = round(touch_volume / baseline_avg, 2) if baseline_avg and baseline_avg > 0 else None
+                    else:
+                        z["touch_volume_ratio"] = None
 
         # mitigáció (záróár-alapú, az indikátor alap beállítása)
         still_active = []
@@ -941,12 +966,27 @@ def format_ob_message(symbol: str, zone: dict, price: float) -> str:
     header = f"🧱 <b>[ORDER BLOCK] {symbol}</b> {action}"
 
     trend_line = "\n✅ Egyezik a 4h HTF-trenddel (profi trend-szűrő)" if HTF_TREND_FILTER_ENABLED else ""
+
+    # ÚJ: volumen-megerősítés sor - tisztán tájékoztató.
+    volume_line = ""
+    vol_ratio = zone.get("touch_volume_ratio")
+    if vol_ratio is not None:
+        vol_note = " 📈 megerősítő" if vol_ratio >= 1.5 else (" 📉 gyenge" if vol_ratio < 0.7 else "")
+        volume_line = f"\n📊 Volumen a touch pillanatában: {vol_ratio:.2f}x az átlaghoz képest{vol_note}"
+
+    # ÚJ: több idősíkú (4h) OB-egybeesés sor - tisztán tájékoztató.
+    confluence_line = ""
+    if zone.get("htf_confluence"):
+        confluence_line = "\n🔗 4h idősíkon is van OB-zóna nagyjából ezen a szinten (több idősíkú egybeesés)"
+
     body = (
         f"{header}\n"
         f"💰 Jelenlegi ár: {price:.6f}\n"
         f"📦 Zóna: {zone['bot']:.6f} - {zone['top']:.6f}\n"
         f"⏳ Zóna kialakult: {zone['anchor_ts']}"
-        f"{trend_line}\n"
+        f"{trend_line}"
+        f"{volume_line}"
+        f"{confluence_line}\n"
         f"ℹ️ Az ár most (újra) belépett egy korábban kialakult, MÉG ÉRVÉNYES "
         f"(nem mitigált) order block zónába - ez a klasszikus 'smart money' "
         f"logika szerinti reakció-/belépési pillanat. Ellenőrizd a chartot, "
@@ -1010,10 +1050,13 @@ async def run_once(state: dict, now: datetime) -> tuple:
 
         touch_candidates[symbol] = (kdf, fresh_touches, float(kdf.iloc[-1]["close"]))
 
-    # ÚJ: profi trend-irány szűrő - 4h HTF-bias lekérése CSAK a friss
-    # touch-csal rendelkező symbolokra.
+    # ÚJ: 4h HTF-adat lekérése CSAK a friss touch-csal rendelkező
+    # symbolokra - egyaránt szolgálja a trend-szűrőt ÉS az új, tisztán
+    # tájékoztató "több idősíkú OB-egybeesés" jelzőt (5. pont), így nem
+    # kell külön API-hívás emiatt.
     htf_bias_map = {}
-    if HTF_TREND_FILTER_ENABLED and touch_candidates:
+    htf_zones_map = {}
+    if touch_candidates:
         htf_connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
         async with aiohttp.ClientSession(connector=htf_connector) as htf_session:
             htf_semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
@@ -1023,7 +1066,14 @@ async def run_once(state: dict, now: datetime) -> tuple:
             if isinstance(item, BaseException) or item[1] is None:
                 continue
             sym, hdf = item
-            htf_bias_map[sym] = determine_htf_bias(hdf)
+            if HTF_TREND_FILTER_ENABLED:
+                htf_bias_map[sym] = determine_htf_bias(hdf)
+            # ÚJ: a 4h zónákat is meghatározzuk - ugyanaz a függvény, mint
+            # az 1h-nál, csak most a 4h adaton fut.
+            try:
+                htf_zones_map[sym] = find_active_order_blocks(hdf)
+            except Exception:
+                htf_zones_map[sym] = []
 
     # ÚJ (két lépéses feldolgozás, lásd MAX_ALERTS_PER_RUN kommentjét):
     # ELŐSZÖR összegyűjtjük az összes cooldown-mentes, TREND-EGYEZŐ, friss
@@ -1053,6 +1103,19 @@ async def run_once(state: dict, now: datetime) -> tuple:
                 if symbol_htf_bias != zone_direction:
                     trend_filtered_count += 1
                     continue
+
+            # ÚJ: több idősíkú (4h) OB-egybeesés - TISZTÁN TÁJÉKOZTATÓ,
+            # nem szűr. Megnézzük, van-e a 4h-s zónák között olyan, ami
+            # nagyjából ugyanazon a szinten van, mint az 1h-s zóna.
+            htf_confluence = False
+            for hz in htf_zones_map.get(symbol, []):
+                if hz["bullish"] != zone["bullish"]:
+                    continue
+                tolerance = zone["bot"] * (HTF_CONFLUENCE_TOLERANCE_PCT / 100)
+                if hz["top"] >= (zone["bot"] - tolerance) and hz["bot"] <= (zone["top"] + tolerance):
+                    htf_confluence = True
+                    break
+            zone["htf_confluence"] = htf_confluence
 
             # ÚJ: rangsorolás a 24h forgalom alapján (a piaci kapitalizáció
             # könnyen elérhető közelítő helyettesítője - a botnak nincs
