@@ -13,3 +13,5 @@
 {"ts": "2026-09-01T12:37:46.652202+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-01T12:38:40.368187+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-01T12:40:45.059892+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-09-01T12:49:06.442566+00:00", "symbol": "MARSCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T12:49:06.442566+00:00", "symbol": "MARSCOIN-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
