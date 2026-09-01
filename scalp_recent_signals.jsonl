@@ -9,3 +9,4 @@
 {"ts": "2026-09-01T11:45:31.939054+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-01T11:59:03.516850+00:00", "symbol": "ONG-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-01T12:09:21.445457+00:00", "symbol": "SUSHI-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-01T12:19:14.242573+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
