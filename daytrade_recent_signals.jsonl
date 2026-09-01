@@ -12,3 +12,6 @@
 {"ts": "2026-09-01T08:52:28.599499+00:00", "symbol": "ENS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T08:53:29.714463+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T08:57:44.070229+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T09:05:56.795872+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T09:06:55.763923+00:00", "symbol": "1000BONK-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-09-01T09:06:55.763923+00:00", "symbol": "OPN-USDT", "direction": "LONG", "signal_type": "EARLY"}
