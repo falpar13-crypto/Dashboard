@@ -113,3 +113,4 @@
 {"ts": "2026-09-01T00:05:39.310592+00:00", "symbol": "ALLO-USDT", "direction": "SHORT", "poc_price": 0.24333, "price": 0.24243, "leg_start_ts": "2026-08-31T01:00:00", "leg_end_ts": "2026-08-31T16:00:00"}
 {"ts": "2026-09-01T00:05:39.310592+00:00", "symbol": "IOTA-USDT", "direction": "LONG", "poc_price": 0.03974783, "price": 0.04, "leg_start_ts": "2026-08-31T16:00:00", "leg_end_ts": "2026-08-31T19:00:00"}
 {"ts": "2026-09-01T01:04:10.484693+00:00", "symbol": "KOMA-USDT", "direction": "SHORT", "poc_price": 0.01316505, "price": 0.013096, "leg_start_ts": "2026-08-31T15:00:00", "leg_end_ts": "2026-08-31T22:30:00"}
+{"ts": "2026-09-01T03:03:56.026754+00:00", "symbol": "SENT-USDT", "direction": "LONG", "poc_price": 0.01271917, "price": 0.01278, "leg_start_ts": "2026-08-31T12:30:00", "leg_end_ts": "2026-08-31T22:00:00"}
