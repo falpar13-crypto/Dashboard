@@ -86,3 +86,4 @@
 {"ts": "2026-08-31T18:15:19.301513+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.016434, "price_change_pct": 2.39, "vol_multiplier": 18.92}
 {"ts": "2026-08-31T18:49:58.067626+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.017374, "price_change_pct": 3.39, "vol_multiplier": 9.3}
 {"ts": "2026-08-31T22:47:26.262992+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.4051, "price_change_pct": 1.71, "vol_multiplier": 10.14}
+{"ts": "2026-09-01T00:04:26.850256+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.10888, "price_change_pct": 4.58, "vol_multiplier": 8.22}
