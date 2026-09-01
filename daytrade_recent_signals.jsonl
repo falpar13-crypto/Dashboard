@@ -25,3 +25,4 @@
 {"ts": "2026-09-01T18:06:17.501559+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-01T18:11:59.142096+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T18:27:02.704607+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T18:33:28.771195+00:00", "symbol": "ENS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
