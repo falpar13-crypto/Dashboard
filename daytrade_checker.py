@@ -10,6 +10,7 @@ import logging
 import os
 import re
 import time
+import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -123,6 +124,41 @@ ORDERBOOK_IMBALANCE_THRESHOLD = 1.8   # bid/ask notional-arány, ami felett/alat
 
 STATE_FILE = Path(__file__).parent / "daytrade_state.json"
 SIGNAL_LOG_FILE = Path(__file__).parent / "daytrade_alert_log.jsonl"
+
+# ----------------------------------------------------------------------------
+# ÚJ: OBJEKTÍV, SL/TP-MENTES SIGNAL-AUDIT RENDSZER
+# ----------------------------------------------------------------------------
+# A felhasználó kifejezett kérésére: a meglévő jelzés-generáló logikát ez
+# NEM módosítja, csak KIEGÉSZÍTI naplózással és utólagos, több időablakos
+# (5m/15m/30m/1h/2h/4h) irány-pontosság + MFE/MAE-elemzéssel. NEM
+# fix SL/TP-t szimulál (az a meglévő register_pending_signal/
+# resolve_pending_signals rendszer, amit szintén NEM bántunk) - ehelyett
+# objektíven méri, mennyire mozdult az ár a jelzett irányba, és mennyire
+# ellene, félretéve bármilyen konkrét kereskedési tervet.
+AUDIT_SIGNALS_FILE = Path(__file__).parent / "daytrade_audit_signals.jsonl"
+AUDIT_RESULTS_FILE = Path(__file__).parent / "daytrade_audit_results.jsonl"
+
+# Az időablakok, amikben az irány-pontosságot és MFE/MAE-t mérjük.
+AUDIT_WINDOWS_MINUTES = [("5m", 5), ("15m", 15), ("30m", 30), ("1h", 60), ("2h", 120), ("4h", 240)]
+AUDIT_MAX_WINDOW_MINUTES = AUDIT_WINDOWS_MINUTES[-1][1]
+
+# Time-to-move mérföldkövek (%) - mennyi idő alatt éri el az ár ezeket a
+# kedvező irányú elmozdulásokat a jelzés után.
+AUDIT_TIME_TO_MOVE_LEVELS_PCT = [0.5, 1.0, 2.0, 3.0]
+
+# ÚJ: minősítési küszöbök - SZÁNDÉKOSAN külön konstansként, hogy később
+# könnyen finomhangolható legyen (ahogy a specifikáció kérte). A
+# minősítés a 4h-s (leghosszabb, "végleges") ablak directional_return és
+# MAE értékén alapul.
+AUDIT_VERY_GOOD_MIN_RETURN_PCT = 2.0
+AUDIT_VERY_GOOD_MAX_MAE_PCT = 1.0
+AUDIT_GOOD_MIN_RETURN_PCT = 0.5
+AUDIT_BAD_MAX_RETURN_PCT = -1.0
+
+# Napi riport küldési órája (helyi idő, Europe/Budapest - lásd
+# SUMMARY_TIMEZONE lentebb) - a nap UTOLSÓ lezárt futásakor ez után küldi el.
+AUDIT_DAILY_REPORT_HOUR = 23
+
 
 # ----------------------------------------------------------------------------
 # ÚJ: BOT-KÖZI MEGERŐSÍTÉS (cross-bot confirmation)
@@ -423,6 +459,392 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str, directio
         "entry_date": now.astimezone(SUMMARY_TIMEZONE).strftime("%Y-%m-%d"), 
         "window_end_ts": (now + timedelta(minutes=OUTCOME_EVAL_WINDOW_MINUTES)).isoformat(),
     })
+
+
+# ----------------------------------------------------------------------------
+# ÚJ: OBJEKTÍV SIGNAL-AUDIT MOTOR (lásd a fájl elején a blokk-kommentet)
+# ----------------------------------------------------------------------------
+def register_signal_audit(state: dict, symbol: str, direction: str, signal_type: str,
+                            score: Optional[int], entry_price: float, now: datetime) -> str:
+    """Egy ÚJ, a meglévő pending_outcomes-tól TELJESEN FÜGGETLEN nyilvántartásba
+    veszi fel a jelzést - ez táplálja az objektív, SL/TP-mentes auditot.
+    Visszaadja az egyedi signal_id-t."""
+    signal_id = str(uuid.uuid4())
+    windows = {
+        label: {"target_minutes": minutes, "resolved": False, "future_price": None,
+                 "directional_return_pct": None, "mfe_pct": None, "mae_pct": None,
+                 "classification": None, "resolved_ts": None}
+        for label, minutes in AUDIT_WINDOWS_MINUTES
+    }
+    audit_pending = state.setdefault("_audit_pending", [])
+    audit_pending.append({
+        "signal_id": signal_id,
+        "symbol": symbol,
+        "direction": direction,
+        "signal_type": signal_type,
+        "score": score,
+        "timeframe": ALERT_TIMEFRAME,
+        "entry_price": entry_price,
+        "entry_ts": now.isoformat(),
+        "windows": windows,
+        "time_to_move": {str(lvl): None for lvl in AUDIT_TIME_TO_MOVE_LEVELS_PCT},
+    })
+    _append_log_to(AUDIT_SIGNALS_FILE, {
+        "signal_id": signal_id, "ts": now.isoformat(), "symbol": symbol,
+        "direction": direction, "signal_type": signal_type, "score": score,
+        "timeframe": ALERT_TIMEFRAME, "entry_price": entry_price,
+    })
+    return signal_id
+
+
+def _append_log_to(path: Path, record: dict) -> None:
+    try:
+        with path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except OSError:
+        pass
+
+
+async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -> None:
+    """A függőben lévő jelzéseket a friss árfolyam-adat alapján frissíti:
+    MFE/MAE folyamatos követése, time-to-move mérföldkövek rögzítése, és
+    az esedékessé vált időablakok (5m/15m/.../4h) lezárása. NEM fix
+    SL/TP-t szimulál - tisztán az irány szerinti elmozdulást és az
+    ellenirányú kilengést méri."""
+    pending = state.get("_audit_pending", [])
+    if not pending:
+        return
+
+    still_pending = []
+    for rec in pending:
+        try:
+            entry_dt = datetime.fromisoformat(rec["entry_ts"])
+        except (KeyError, ValueError):
+            continue
+        age_minutes = (now - entry_dt).total_seconds() / 60
+
+        # Az 1 perces gyertyákból a legpontosabb az MFE/MAE-követés - ha
+        # ennyi idő már eltelt a jelzés óta, hogy a limit ne legyen elég,
+        # durvább (5 perces) granularitásra váltunk.
+        if age_minutes <= 60:
+            interval, limit = "1m", min(300, int(age_minutes) + 10)
+        else:
+            interval, limit = "5m", min(300, int(age_minutes / 5) + 10)
+
+        _, kdf = await fetch_klines(session, semaphore, rec["symbol"], interval, limit)
+        if kdf is None or len(kdf) == 0:
+            still_pending.append(rec)
+            continue
+
+        entry_ts_naive = pd.Timestamp(entry_dt.replace(tzinfo=None))
+        after = kdf[kdf["timestamp"] >= entry_ts_naive].reset_index(drop=True)
+        if after.empty:
+            still_pending.append(rec)
+            continue
+
+        direction = rec["direction"]
+        entry_price = rec["entry_price"]
+
+        # ÚJ (hibajavítás tesztelés közben): a time-to-move mérföldköveket
+        # a TELJES eddig ismert árpályán mérjük (ez helyes, mindegy melyik
+        # ablakhoz tartozik - egy abszolút időpont az egész jelzésre nézve).
+        for _, row in after.iterrows():
+            hi, lo = float(row["high"]), float(row["low"])
+            if direction == "LONG":
+                move_pct = (hi - entry_price) / entry_price * 100
+            else:
+                move_pct = (entry_price - lo) / entry_price * 100
+            for lvl in AUDIT_TIME_TO_MOVE_LEVELS_PCT:
+                key = str(lvl)
+                if rec["time_to_move"][key] is None and move_pct >= lvl:
+                    row_ts = row["timestamp"]
+                    if pd.notna(row_ts):
+                        elapsed_min = (row_ts.to_pydatetime().replace(tzinfo=timezone.utc) - entry_dt).total_seconds() / 60
+                        rec["time_to_move"][key] = round(max(0.0, elapsed_min), 1)
+
+        # ÚJ (hibajavítás): korábban EGY közös, a teljes (esetleg a
+        # célidőponton túlnyúló) árpályából számolt MFE/MAE/ár került
+        # MINDEN esedékes ablakhoz - ez tesztelés közben kiderült hibát
+        # okozott (minden ablak ugyanazt az értéket kapta). Mostantól
+        # MINDEN ablak a SAJÁT [entry, entry+ablakhossz] időszeletéből
+        # számol - a rövidebb ablakok nem "látnak bele" a hosszabbak
+        # adatába, még ha egy késői futás egyszerre oldja is fel őket.
+        any_unresolved = False
+        for label, minutes in AUDIT_WINDOWS_MINUTES:
+            w = rec["windows"][label]
+            if w["resolved"]:
+                continue
+            if age_minutes < minutes:
+                any_unresolved = True
+                continue
+
+            target_ts = entry_ts_naive + pd.Timedelta(minutes=minutes)
+            window_slice = after[after["timestamp"] <= target_ts]
+            if window_slice.empty:
+                window_slice = after.iloc[:1]
+            # a cél-időponthoz legközelebbi (azt el nem érő, vagy első
+            # az után következő) gyertya záróára a referencia-ár
+            at_or_after_target = after[after["timestamp"] >= target_ts]
+            window_price = float(at_or_after_target.iloc[0]["close"]) if not at_or_after_target.empty else float(window_slice.iloc[-1]["close"])
+
+            if direction == "LONG":
+                fav = float(window_slice["high"].max())
+                adv = float(window_slice["low"].min())
+                mfe_pct = (fav - entry_price) / entry_price * 100
+                mae_pct = (adv - entry_price) / entry_price * 100
+                directional_return = (window_price - entry_price) / entry_price * 100
+            else:
+                fav = float(window_slice["low"].min())
+                adv = float(window_slice["high"].max())
+                mfe_pct = (entry_price - fav) / entry_price * 100
+                mae_pct = (entry_price - adv) / entry_price * 100
+                directional_return = (entry_price - window_price) / entry_price * 100
+
+            classification = _classify_audit_result(directional_return, mae_pct)
+            w.update({
+                "resolved": True, "future_price": window_price,
+                "directional_return_pct": round(directional_return, 3),
+                "mfe_pct": round(mfe_pct, 3), "mae_pct": round(mae_pct, 3),
+                "classification": classification, "resolved_ts": now.isoformat(),
+            })
+            _append_log_to(AUDIT_RESULTS_FILE, {
+                "signal_id": rec["signal_id"], "symbol": rec["symbol"],
+                "direction": direction, "signal_type": rec["signal_type"],
+                "score": rec["score"], "entry_ts": rec["entry_ts"],
+                "window": label, "directional_return_pct": round(directional_return, 3),
+                "mfe_pct": round(mfe_pct, 3), "mae_pct": round(mae_pct, 3),
+                "classification": classification,
+                "time_to_move": dict(rec["time_to_move"]),
+            })
+
+        if any_unresolved and age_minutes <= AUDIT_MAX_WINDOW_MINUTES + 30:
+            still_pending.append(rec)
+        # ha minden ablak lezárult (vagy túl régi már), a jelzés lekerül
+        # a pending listáról - a végleges adatok már a results logban vannak
+
+    state["_audit_pending"] = still_pending
+
+
+def _classify_audit_result(directional_return_pct: float, mae_pct: float) -> str:
+    """VERY GOOD / GOOD / NEUTRAL / BAD minősítés - lásd az
+    AUDIT_*_THRESHOLD konstansok kommentjét a küszöbökről."""
+    abs_mae = abs(mae_pct)
+    if directional_return_pct >= AUDIT_VERY_GOOD_MIN_RETURN_PCT and abs_mae <= AUDIT_VERY_GOOD_MAX_MAE_PCT:
+        return "VERY_GOOD"
+    if directional_return_pct >= AUDIT_GOOD_MIN_RETURN_PCT:
+        return "GOOD"
+    if directional_return_pct <= AUDIT_BAD_MAX_RETURN_PCT:
+        return "BAD"
+    return "NEUTRAL"
+
+
+def _classify_audit_result(directional_return_pct: float, mae_pct: float) -> str:
+    """VERY GOOD / GOOD / NEUTRAL / BAD minősítés - lásd az
+    AUDIT_*_THRESHOLD konstansok kommentjét a küszöbökről."""
+    abs_mae = abs(mae_pct)
+    if directional_return_pct >= AUDIT_VERY_GOOD_MIN_RETURN_PCT and abs_mae <= AUDIT_VERY_GOOD_MAX_MAE_PCT:
+        return "VERY_GOOD"
+    if directional_return_pct >= AUDIT_GOOD_MIN_RETURN_PCT:
+        return "GOOD"
+    if directional_return_pct <= AUDIT_BAD_MAX_RETURN_PCT:
+        return "BAD"
+    return "NEUTRAL"
+
+
+def _load_jsonl(path: Path) -> list:
+    if not path.exists():
+        return []
+    records = []
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    records.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    except OSError:
+        pass
+    return records
+
+
+def generate_daily_audit_report(now: datetime) -> Optional[str]:
+    """A mai (helyi idő szerinti) nap ÖSSZES jelzéséből épít egy
+    részletes, objektív, SL/TP-mentes riportot. None, ha nincs elég adat."""
+    today_str = now.astimezone(SUMMARY_TIMEZONE).strftime("%Y-%m-%d")
+
+    signals = _load_jsonl(AUDIT_SIGNALS_FILE)
+    results = _load_jsonl(AUDIT_RESULTS_FILE)
+
+    signals_today = {
+        s["signal_id"]: s for s in signals
+        if s.get("ts") and datetime.fromisoformat(s["ts"]).astimezone(SUMMARY_TIMEZONE).strftime("%Y-%m-%d") == today_str
+    }
+    if not signals_today:
+        return None
+    results_today = [r for r in results if r.get("signal_id") in signals_today]
+    if not results_today:
+        return None
+
+    window_stats = {}
+    for label, _ in AUDIT_WINDOWS_MINUTES:
+        wr = [r for r in results_today if r.get("window") == label]
+        if not wr:
+            continue
+        correct = sum(1 for r in wr if r["directional_return_pct"] > 0)
+        window_stats[label] = {"n": len(wr), "accuracy_pct": round(correct / len(wr) * 100, 1)}
+
+    # A legmesszebbi elért ablak eredményét használjuk "végleges"
+    # rekordként jelzésenként (ha a 4h még nincs kész, a legutóbb
+    # lezárt, rövidebb ablak áll rendelkezésre helyette).
+    final_by_signal = {}
+    window_order = {label: i for i, (label, _) in enumerate(AUDIT_WINDOWS_MINUTES)}
+    for r in results_today:
+        sid = r["signal_id"]
+        if sid not in final_by_signal or window_order.get(r["window"], -1) > window_order.get(final_by_signal[sid]["window"], -1):
+            final_by_signal[sid] = r
+    finals = list(final_by_signal.values())
+    if not finals:
+        return None
+
+    total_signals = len(signals_today)
+    avg_mfe = sum(r["mfe_pct"] for r in finals) / len(finals)
+    avg_mae = sum(r["mae_pct"] for r in finals) / len(finals)
+    sorted_mfe = sorted(r["mfe_pct"] for r in finals)
+    sorted_mae = sorted(r["mae_pct"] for r in finals)
+    median_mfe = sorted_mfe[len(sorted_mfe) // 2]
+    median_mae = sorted_mae[len(sorted_mae) // 2]
+
+    class_counts = {"VERY_GOOD": 0, "GOOD": 0, "NEUTRAL": 0, "BAD": 0}
+    for r in finals:
+        c = r.get("classification")
+        if c in class_counts:
+            class_counts[c] += 1
+
+    long_results = [r for r in finals if signals_today.get(r["signal_id"], {}).get("direction") == "LONG"]
+    short_results = [r for r in finals if signals_today.get(r["signal_id"], {}).get("direction") == "SHORT"]
+    long_acc = round(sum(1 for r in long_results if r["directional_return_pct"] > 0) / len(long_results) * 100, 1) if long_results else None
+    short_acc = round(sum(1 for r in short_results if r["directional_return_pct"] > 0) / len(short_results) * 100, 1) if short_results else None
+
+    by_symbol = {}
+    for r in finals:
+        sym = signals_today.get(r["signal_id"], {}).get("symbol", "?")
+        by_symbol.setdefault(sym, []).append(r)
+    symbol_acc = {
+        sym: round(sum(1 for r in rs if r["directional_return_pct"] > 0) / len(rs) * 100, 1)
+        for sym, rs in by_symbol.items() if len(rs) >= 2
+    }
+
+    by_type = {}
+    for r in finals:
+        t = r.get("signal_type", "?")
+        by_type.setdefault(t, []).append(r)
+    type_acc = {
+        t: round(sum(1 for r in rs if r["directional_return_pct"] > 0) / len(rs) * 100, 1)
+        for t, rs in by_type.items()
+    }
+
+    score_buckets = {"50-60": (50, 60), "60-70": (60, 70), "70-80": (70, 80), "80+": (80, 101)}
+    score_acc = {}
+    for label, (lo, hi) in score_buckets.items():
+        bucket = [r for r in finals if r.get("score") is not None and lo <= r["score"] < hi]
+        if bucket:
+            score_acc[label] = round(sum(1 for r in bucket if r["directional_return_pct"] > 0) / len(bucket) * 100, 1)
+
+    hour_buckets = [("00-04", 0, 4), ("04-08", 4, 8), ("08-12", 8, 12), ("12-16", 12, 16), ("16-20", 16, 20), ("20-24", 20, 24)]
+    hour_acc = {}
+    for label, lo, hi in hour_buckets:
+        bucket = []
+        for r in finals:
+            sig = signals_today.get(r["signal_id"])
+            if not sig:
+                continue
+            h = datetime.fromisoformat(sig["ts"]).astimezone(SUMMARY_TIMEZONE).hour
+            if lo <= h < hi:
+                bucket.append(r)
+        if bucket:
+            hour_acc[label] = round(sum(1 for r in bucket if r["directional_return_pct"] > 0) / len(bucket) * 100, 1)
+
+    ttm_medians = {}
+    for lvl in AUDIT_TIME_TO_MOVE_LEVELS_PCT:
+        vals = sorted(r["time_to_move"][str(lvl)] for r in finals if r.get("time_to_move", {}).get(str(lvl)) is not None)
+        if vals:
+            ttm_medians[lvl] = vals[len(vals) // 2]
+
+    false_signals = [r for r in finals if abs(r["mae_pct"]) > 1.0 and r["mfe_pct"] < 0.3]
+
+    lines = [f"📊 <b>NAPI SIGNAL PERFORMANCE - {today_str}</b> (DAYTRADE 1h)",
+             f"\nJelzések száma: {total_signals}"]
+
+    if window_stats:
+        lines.append("\n<b>Irány-pontosság időablakonként:</b>")
+        for label, _ in AUDIT_WINDOWS_MINUTES:
+            if label in window_stats:
+                ws = window_stats[label]
+                lines.append(f"  {label}: {ws['accuracy_pct']}% (n={ws['n']})")
+
+    if long_acc is not None or short_acc is not None:
+        lines.append("\n<b>Irány szerint:</b>")
+        if long_acc is not None:
+            lines.append(f"  LONG: {long_acc}% (n={len(long_results)})")
+        if short_acc is not None:
+            lines.append(f"  SHORT: {short_acc}% (n={len(short_results)})")
+
+    lines.append(f"\n<b>Átlag MFE:</b> {avg_mfe:+.2f}%  <b>Átlag MAE:</b> {avg_mae:+.2f}%")
+    lines.append(f"<b>Medián MFE:</b> {median_mfe:+.2f}%  <b>Medián MAE:</b> {median_mae:+.2f}%")
+    lines.append(f"\n<b>Minősítés:</b> Very Good: {class_counts['VERY_GOOD']} | Good: {class_counts['GOOD']} | "
+                 f"Neutral: {class_counts['NEUTRAL']} | Bad: {class_counts['BAD']}")
+
+    if symbol_acc:
+        lines.append("\n<b>Coin szerint (min. 2 jelzés):</b>")
+        for sym, acc in sorted(symbol_acc.items(), key=lambda x: -x[1])[:10]:
+            lines.append(f"  {sym}: {acc}%")
+
+    if type_acc:
+        lines.append("\n<b>Jelzéstípus szerint:</b>")
+        for t, acc in type_acc.items():
+            lines.append(f"  {t}: {acc}%")
+
+    if score_acc:
+        lines.append("\n<b>Meggyőződés-pontszám sáv szerint:</b>")
+        for label in ("50-60", "60-70", "70-80", "80+"):
+            if label in score_acc:
+                lines.append(f"  {label}: {score_acc[label]}%")
+
+    if hour_acc:
+        lines.append("\n<b>Napszak szerint:</b>")
+        for label, _, _ in hour_buckets:
+            if label in hour_acc:
+                lines.append(f"  {label}: {hour_acc[label]}%")
+
+    if ttm_medians:
+        lines.append("\n<b>Medián idő a kedvező mozgás eléréséhez:</b>")
+        for lvl in AUDIT_TIME_TO_MOVE_LEVELS_PCT:
+            if lvl in ttm_medians:
+                lines.append(f"  +{lvl}%: {ttm_medians[lvl]:.0f} perc")
+
+    if false_signals:
+        lines.append(f"\n⚠️ <b>Gyanús (fals) jelzések:</b> {len(false_signals)} db "
+                     f"(nagy ellenirányú mozgás, minimális kedvező mozgás)")
+
+    return "\n".join(lines)
+
+
+async def maybe_send_daily_audit_report(state: dict, now: datetime) -> None:
+    local_now = now.astimezone(SUMMARY_TIMEZONE)
+    today_str = local_now.strftime("%Y-%m-%d")
+    if local_now.hour < AUDIT_DAILY_REPORT_HOUR:
+        return
+    if state.get("_audit_report_sent_date") == today_str:
+        return
+    report = generate_daily_audit_report(now)
+    if report:
+        await send_telegram_message(report)
+        logger.info("Napi signal-audit riport elküldve.")
+    state["_audit_report_sent_date"] = today_str
+
 
 def _simulate_trade_outcome(direction: str, entry_price: float, candles: pd.DataFrame) -> dict:
     levels_reached = {lvl: False for lvl in OUTCOME_PROFIT_LEVELS_PCT}
@@ -1171,7 +1593,8 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
                                funding_delta_pct=None, orderbook_info=None,
                                macd_status=None, rsi=None, vol_multiplier=None,
                                cross_bot_confirmations=None, divergence=None,
-                               vwap_relation=None, historical_stats=None) -> tuple:
+                               vwap_relation=None, historical_stats=None,
+                               wick_rejection_ratio=None) -> tuple:
     """Visszatér: (score: int 0-100, label: str, factors: list[str]).
     A factors lista a pontszám összetevőit sorolja fel - ez KERÜL bele az
     üzenetbe is, hogy ne "fekete doboz" számként érkezzen, hanem lásd is,
@@ -1281,6 +1704,17 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
         elif win_rate <= 35:
             score -= 8; factors.append(f"-8 historikusan gyenge típus ({win_rate:.0f}% találati arány)")
 
+    # ÚJ: kanóc-elutasítás - lásd az evaluate_candle() blokk-kommentjét a
+    # teljes indoklásért. Ez a felhasználó által konkrétan megfigyelt
+    # mintázat (jelzés kimegy, a KÖVETKEZŐ gyertya visszazár alá) ellen
+    # véd - erősebb súllyal, mert ez egy közvetlenül megfigyelt,
+    # visszatérő probléma volt, nem csak elméleti feltételezés.
+    if wick_rejection_ratio is not None:
+        if wick_rejection_ratio >= 1.5:
+            score -= 20; factors.append(f"-20 erős kanóc-elutasítás a jelző gyertyán ({wick_rejection_ratio:.1f}x test)")
+        elif wick_rejection_ratio >= 0.8:
+            score -= 10; factors.append(f"-10 kanóc-elutasítás a jelző gyertyán ({wick_rejection_ratio:.1f}x test)")
+
     score = max(0, min(100, score))
     if score >= CONFIDENCE_STRONG_THRESHOLD:
         label = "🟢"  # ÚJ: csak a szín-pont, szöveg/szám nélkül (a felhasználó kérésére)
@@ -1291,7 +1725,7 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
     return score, label, factors
 
 
-def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None, cross_bot_confirmations=None, divergence=None, vwap=None, vwap_relation=None, vwap_diff_pct=None, historical_stats=None):
+def format_daytrade_message(symbol, direction, price, price_change_pct, candle_vol_usdt, vol_multiplier, oi_value, oi_change_pct, htf_trend=None, bounce_confluence=False, near_level_risk=False, rsi=None, macd_status=None, signal_type="STANDARD", funding_rate=None, pace_vol_multiplier=None, elapsed_fraction=None, funding_delta_pct=None, orderbook_info=None, cross_bot_confirmations=None, divergence=None, vwap=None, vwap_relation=None, vwap_diff_pct=None, historical_stats=None, wick_rejection_ratio=None):
     action = DIRECTION_LABELS.get(direction, direction)
 
     # ÚJ: a meggyőződés-pontszám (compute_confidence_score) mostantól CSAK
@@ -1307,6 +1741,7 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         macd_status=macd_status, rsi=rsi, vol_multiplier=vol_multiplier,
         cross_bot_confirmations=cross_bot_confirmations, divergence=divergence,
         vwap_relation=vwap_relation, historical_stats=historical_stats,
+        wick_rejection_ratio=wick_rejection_ratio,
     )
 
     if signal_type == "EARLY":
@@ -1591,6 +2026,26 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
     candle_vol_usdt = float(live["volume"] * current_price)
     direction = "LONG" if current_price >= live["open"] else "SHORT"
 
+    # ÚJ: KANÓC-ELUTASÍTÁS ellenőrzés. A felhasználó konkrét megfigyelése:
+    # "kimegy egy pump jelzés egy gyertyára, a KÖVETKEZŐ gyertya már
+    # visszazár alá" - ennek klasszikus előjele, ha a JELZŐ gyertyának
+    # már MOST, a jelzés pillanatában is aránytalanul nagy kanóca van a
+    # test irányával ELLENTÉTES oldalon (pl. LONG-nál nagy felső kanóc a
+    # test fölött) - ez azt jelenti, hogy a piac MÁR a gyertyán belül
+    # visszaverte a nyomást, csak ez a nyitó-záró %-ból és a volumenből
+    # önmagában nem látszik. A meggyőződés-pontszámba számít be (a
+    # színes pontot befolyásolja), nem ad új szöveges sort az üzenetbe.
+    live_high = float(live["high"])
+    live_low = float(live["low"])
+    live_open = float(live["open"])
+    body = abs(current_price - live_open)
+    body_safe = max(body, current_price * 0.0005)  # nullával osztás elleni védelem nagyon kis testű gyertyáknál
+    if direction == "LONG":
+        rejection_wick = live_high - max(live_open, current_price)
+    else:
+        rejection_wick = min(live_open, current_price) - live_low
+    wick_rejection_ratio = max(0.0, rejection_wick) / body_safe
+
     rsi_val, macd_status = compute_rsi_macd(kdf["close"])
 
     # ÚJ: RSI/ár divergencia - kizárólag LEZÁRT gyertyákon (lásd
@@ -1629,6 +2084,7 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
         "rsi": rsi_val,
         "macd_status": macd_status,
         "divergence": divergence,
+        "wick_rejection_ratio": round(wick_rejection_ratio, 2),
         "vwap": vwap,
         "vwap_relation": vwap_relation,
         "vwap_diff_pct": round(vwap_diff_pct, 2) if vwap_diff_pct is not None else None,
@@ -1861,11 +2317,28 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 vwap=candle.get("vwap"), vwap_relation=candle.get("vwap_relation"),
                 vwap_diff_pct=candle.get("vwap_diff_pct"),
                 historical_stats=historical_stats,
+                wick_rejection_ratio=candle.get("wick_rejection_ratio"),
             )
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
             register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
+            # ÚJ: objektív, SL/TP-mentes signal-audit regisztrálása - lásd
+            # a fájl elején lévő blokk-kommentet. A pontszámot itt
+            # ÚJRASZÁMOLJUK (nem módosítjuk a jelzés-generálást, csak a
+            # már meglévő bemenetekből egy már úgyis kiszámolt értéket
+            # kérünk le újra, kizárólag naplózási célra).
+            audit_score, _, _ = compute_confidence_score(
+                candle["direction"], htf_trend=htf_trend, bounce_confluence=bounce_confluence,
+                near_level_risk=near_level_risk, funding_rate=funding_rate,
+                funding_delta_pct=funding_delta_pct, orderbook_info=orderbook_info,
+                macd_status=candle.get("macd_status"), rsi=candle.get("rsi"),
+                vol_multiplier=candle["vol_multiplier"], cross_bot_confirmations=cross_bot_confirmations,
+                divergence=candle.get("divergence"), vwap_relation=candle.get("vwap_relation"),
+                historical_stats=historical_stats, wick_rejection_ratio=candle.get("wick_rejection_ratio"),
+            )
+            register_signal_audit(state, symbol, candle["direction"], fired_signal_type,
+                                    audit_score, candle["price"], now)
             # ÚJ: a SAJÁT jelzésünket is elmentjük a kereszt-bot fájlba,
             # hogy a MÁSIK két bot lássa a következő futásukban.
             _append_cross_bot_signal(symbol, candle["direction"], fired_signal_type, now)
@@ -1931,6 +2404,20 @@ async def _run_main_loop(state: dict):
         except Exception as e:
             logger.warning("WS-figyelő indítása sikertelen, REST-polling-ra esünk vissza: %s", e)
             ws_store, ws_tasks = None, []
+
+    # ÚJ: signal-audit feloldás + napi riport - EGYSZER a futás elején,
+    # nem minden pass-ban (elkerülve a felesleges API-terhelést). Lásd a
+    # fájl elején lévő "OBJEKTÍV, SL/TP-MENTES SIGNAL-AUDIT RENDSZER"
+    # blokk-kommentet.
+    try:
+        audit_connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS)
+        async with aiohttp.ClientSession(connector=audit_connector) as audit_session:
+            audit_semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+            await resolve_signal_audit(state, audit_session, audit_semaphore, datetime.now(timezone.utc))
+        await maybe_send_daily_audit_report(state, datetime.now(timezone.utc))
+        save_state(state)
+    except Exception as e:
+        logger.warning("Signal-audit feloldás/riport sikertelen (a fő ciklus ettől függetlenül folytatódik): %s", e)
 
     try:
         while True:
