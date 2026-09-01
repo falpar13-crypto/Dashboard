@@ -1,15 +1,3 @@
-{"ts": "2026-08-31T16:46:10.745320+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T16:48:58.799314+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T16:53:23.242306+00:00", "symbol": "GALA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T16:54:13.756745+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T17:10:09.569016+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T17:42:06.437814+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T17:54:54.436212+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T18:28:24.717891+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T18:46:03.381190+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T19:08:18.378056+00:00", "symbol": "RENDER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-08-31T19:24:47.057389+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
-{"ts": "2026-08-31T19:56:19.428157+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T20:11:20.848586+00:00", "symbol": "PENDLE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T20:11:20.848586+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-08-31T20:37:04.735304+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -18,3 +6,4 @@
 {"ts": "2026-08-31T21:08:44.724619+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T21:41:10.309797+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-08-31T22:41:38.249795+00:00", "symbol": "ONG-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T01:56:32.304915+00:00", "symbol": "VVV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
