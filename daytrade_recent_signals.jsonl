@@ -22,3 +22,5 @@
 {"ts": "2026-09-01T17:07:19.986582+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T17:13:57.515021+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T17:13:57.515021+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T17:22:48.097505+00:00", "symbol": "KAS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T17:22:48.097505+00:00", "symbol": "PEOPLE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
