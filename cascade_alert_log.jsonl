@@ -94,3 +94,4 @@
 {"ts": "2026-09-01T05:31:25.972519+00:00", "symbol": "SKR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.029335, "price_change_pct": 1.62, "vol_multiplier": 6.83}
 {"ts": "2026-09-01T08:08:17.130814+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.09486, "price_change_pct": -1.68, "vol_multiplier": 26.55}
 {"ts": "2026-09-01T08:19:17.492018+00:00", "symbol": "SKR-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.026696, "price_change_pct": -3.18, "vol_multiplier": 7.94}
+{"ts": "2026-09-01T08:41:24.182673+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.10655, "price_change_pct": -2.13, "vol_multiplier": 6.56}
