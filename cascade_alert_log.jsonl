@@ -92,3 +92,4 @@
 {"ts": "2026-09-01T04:23:15.319091+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.009394, "price_change_pct": -2.64, "vol_multiplier": 4.9}
 {"ts": "2026-09-01T05:28:29.767080+00:00", "symbol": "NIULAI-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.09519, "price_change_pct": -2.25, "vol_multiplier": 9.64}
 {"ts": "2026-09-01T05:31:25.972519+00:00", "symbol": "SKR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.029335, "price_change_pct": 1.62, "vol_multiplier": 6.83}
+{"ts": "2026-09-01T08:08:17.130814+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.09486, "price_change_pct": -1.68, "vol_multiplier": 26.55}
