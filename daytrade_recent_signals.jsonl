@@ -11,3 +11,4 @@
 {"ts": "2026-09-01T14:57:46.395801+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-01T15:13:31.482385+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-09-01T15:21:48.432868+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-01T15:29:04.938009+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "EARLY"}
