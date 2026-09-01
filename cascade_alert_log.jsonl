@@ -89,3 +89,4 @@
 {"ts": "2026-09-01T00:04:26.850256+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.10888, "price_change_pct": 4.58, "vol_multiplier": 8.22}
 {"ts": "2026-09-01T00:59:10.299589+00:00", "symbol": "LAB-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.06955, "price_change_pct": -6.24, "vol_multiplier": 50.86}
 {"ts": "2026-09-01T04:08:44.106407+00:00", "symbol": "MAGMA-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.33238, "price_change_pct": -6.0, "vol_multiplier": 17.36}
+{"ts": "2026-09-01T04:23:15.319091+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.009394, "price_change_pct": -2.64, "vol_multiplier": 4.9}
