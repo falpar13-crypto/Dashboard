@@ -3,3 +3,5 @@
 {"ts": "2026-09-02T10:11:57.539713+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-02T13:38:47.091700+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-02T13:38:47.091700+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-02T13:49:05.958806+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-02T13:49:05.958806+00:00", "symbol": "BLESS-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
