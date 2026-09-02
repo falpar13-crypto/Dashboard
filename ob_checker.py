@@ -572,7 +572,7 @@ def generate_daily_audit_report(now: datetime):
 # mezőlista az OB-specifikus mérhető bemenetekre korlátozódik (nincs
 # meggyőződés-pontszám).
 # ----------------------------------------------------------------------------
-MIN_SUGGESTION_SAMPLE = 15
+MIN_SUGGESTION_SAMPLE = 50
 MIN_SUGGESTION_GAP_PCT = 0.3
 
 THRESHOLD_SUGGESTION_FIELDS = [

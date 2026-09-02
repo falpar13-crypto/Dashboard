@@ -1059,7 +1059,7 @@ def generate_daily_audit_report(now: datetime) -> Optional[str]:
 # ÚJ: KÜSZÖB-HANGOLÁSI JAVASLAT RENDSZER - lásd a daytrade_checker.py
 # azonos, tesztelt implementációját a teljes indoklásért.
 # ----------------------------------------------------------------------------
-MIN_SUGGESTION_SAMPLE = 15
+MIN_SUGGESTION_SAMPLE = 50
 MIN_SUGGESTION_GAP_PCT = 0.3
 
 THRESHOLD_SUGGESTION_FIELDS = [

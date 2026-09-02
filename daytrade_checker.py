@@ -847,7 +847,7 @@ def generate_daily_audit_report(now: datetime) -> Optional[str]:
 # küszöböket érdemes lenne megfontolni módosítani - de CSAK akkor mond
 # bármit is, ha legalább MIN_SUGGESTION_SAMPLE minta van MINDKÉT
 # összehasonlított csoportban, hogy ne kis mintából, zajból következtessen.
-MIN_SUGGESTION_SAMPLE = 15
+MIN_SUGGESTION_SAMPLE = 50
 MIN_SUGGESTION_GAP_PCT = 0.3  # a directional_return_pct-ban legalább ennyi különbség kell a javaslathoz
 
 # Mezők, amiket a küszöb-javaslat rendszer megvizsgál ennél a botnál -

@@ -584,7 +584,7 @@ def generate_daily_audit_report(now: datetime):
 # nincs meggyőződés-pontszám, ezért a mezőlista a nyers ár/volumen-
 # mutatókra korlátozódik.
 # ----------------------------------------------------------------------------
-MIN_SUGGESTION_SAMPLE = 15
+MIN_SUGGESTION_SAMPLE = 50
 MIN_SUGGESTION_GAP_PCT = 0.3
 
 THRESHOLD_SUGGESTION_FIELDS = [
