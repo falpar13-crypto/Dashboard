@@ -159,6 +159,15 @@ AUDIT_BAD_MAX_RETURN_PCT = -1.0
 # SUMMARY_TIMEZONE lentebb) - a nap UTOLSÓ lezárt futásakor ez után küldi el.
 AUDIT_DAILY_REPORT_HOUR = 23
 
+# ÚJ: SYMBOL-TILTÁS 3 EGYMÁS UTÁNI BAD MINŐSÍTÉS UTÁN - a felhasználóval
+# egyeztetett védőmechanizmus. Ha egy symbolra ennél a BOTNÁL (nem
+# összevontan a többivel) egymás után ennyi VÉGLEGES (leghosszabb elért
+# ablakú) minősítés mind "BAD", a symbol erre a botra nézve ennyi órára
+# letiltásra kerül - nem kap új jelzést, amíg a tiltás le nem jár.
+BAN_AFTER_CONSECUTIVE_BAD = 3
+BAN_DURATION_HOURS = 24
+SYMBOL_OUTCOME_HISTORY_MAX = 10  # ennyi legutóbbi minősítést tartunk meg symbolonként
+
 
 # ----------------------------------------------------------------------------
 # ÚJ: BOT-KÖZI MEGERŐSÍTÉS (cross-bot confirmation)
@@ -245,7 +254,7 @@ def get_cross_bot_confirmations(symbol: str, direction: str, now: datetime) -> l
     return confirmations
 
 
-MIN_VOLUME_USDT = 1_000_000
+MIN_VOLUME_USDT = 3_000_000  # 1M -> 3M: shitcoin-szűrés, a napi audit-adat alapján
 MAX_VOLUME_USDT = 150_000_000
 
 NON_CRYPTO_PREFIXES = ("NCSK", "NCFX")
@@ -512,6 +521,42 @@ def _append_log_to(path: Path, record: dict) -> None:
         pass
 
 
+def _record_symbol_outcome(state: dict, symbol: str, classification: str, now: datetime) -> None:
+    """ÚJ: symbolonkénti minősítés-történet + 3-bad-tiltás - lásd a
+    BAN_AFTER_CONSECUTIVE_BAD kommentjét. Botonként KÜLÖN számol (ez a
+    state ennek a botnak a saját state-branch-én él, nem osztott a
+    másik három bottal)."""
+    history = state.setdefault("_symbol_outcome_history", {})
+    sym_hist = history.setdefault(symbol, [])
+    sym_hist.append(classification)
+    if len(sym_hist) > SYMBOL_OUTCOME_HISTORY_MAX:
+        sym_hist[:] = sym_hist[-SYMBOL_OUTCOME_HISTORY_MAX:]
+
+    if len(sym_hist) >= BAN_AFTER_CONSECUTIVE_BAD and all(c == "BAD" for c in sym_hist[-BAN_AFTER_CONSECUTIVE_BAD:]):
+        bans = state.setdefault("_symbol_ban_until", {})
+        ban_until = now + timedelta(hours=BAN_DURATION_HOURS)
+        bans[symbol] = ban_until.isoformat()
+        logger.warning("SYMBOL TILTÁS: %s - %d egymás utáni BAD minősítés, tiltva %s-ig",
+                        symbol, BAN_AFTER_CONSECUTIVE_BAD, ban_until.isoformat())
+
+
+def is_symbol_banned(state: dict, symbol: str, now: datetime) -> bool:
+    """ÚJ: ellenőrzi, hogy a symbol jelenleg tiltva van-e ennél a botnál.
+    A lejárt tiltásokat automatikusan kitakarítja."""
+    bans = state.get("_symbol_ban_until", {})
+    ban_until_str = bans.get(symbol)
+    if not ban_until_str:
+        return False
+    try:
+        ban_until = datetime.fromisoformat(ban_until_str)
+    except ValueError:
+        return False
+    if now >= ban_until:
+        del bans[symbol]
+        return False
+    return True
+
+
 async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -> None:
     """A függőben lévő jelzéseket a friss árfolyam-adat alapján frissíti:
     MFE/MAE folyamatos követése, time-to-move mérföldkövek rögzítése, és
@@ -626,6 +671,19 @@ async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -
 
         if any_unresolved and age_minutes <= AUDIT_MAX_WINDOW_MINUTES + 30:
             still_pending.append(rec)
+        else:
+            # ÚJ: a jelzés VÉGLEGESEN lezárult (minden ablak megvolt, vagy
+            # túl régi már) - rögzítjük a végső (leghosszabb elért ablakú)
+            # minősítést a symbol-történetbe, ami táplálja a 3-bad-tiltást.
+            final_classification = None
+            best_idx = -1
+            for w_idx, (w_label, _) in enumerate(AUDIT_WINDOWS_MINUTES):
+                w = rec["windows"][w_label]
+                if w["resolved"] and w_idx > best_idx:
+                    final_classification = w["classification"]
+                    best_idx = w_idx
+            if final_classification is not None:
+                _record_symbol_outcome(state, rec["symbol"], final_classification, now)
         # ha minden ablak lezárult (vagy túl régi már), a jelzés lekerül
         # a pending listáról - a végleges adatok már a results logban vannak
 
@@ -2316,6 +2374,12 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     ws_patched_count = 0  # ÚJ (ideiglenes debug): hányszor patchelt ténylegesen a WS-adat ebben a körben
 
     for symbol in candidates:
+        # ÚJ: symbol-tiltás ellenőrzése MINDENEK ELŐTT - ha 3 egymás utáni
+        # BAD minősítést kapott ennél a botnál, 24 órára kihagyjuk, hogy
+        # ne pazaroljunk rá feleslegesen erőforrást.
+        if is_symbol_banned(state, symbol, now):
+            continue
+
         kdf = klines_map.get(symbol)
         # ÚJ: ha van rá friss websocket-adat, az élő (utolsó, még nyitott)
         # gyertya sorát frissebb, valós idejű close/high/low/volume értékekre

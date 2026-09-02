@@ -122,6 +122,12 @@ AUDIT_BAD_MAX_RETURN_PCT = -1.0
 
 AUDIT_DAILY_REPORT_HOUR = 23
 
+# ÚJ: SYMBOL-TILTÁS 3 EGYMÁS UTÁNI BAD MINŐSÍTÉS UTÁN - lásd a
+# daytrade_checker.py azonos, tesztelt implementációját.
+BAN_AFTER_CONSECUTIVE_BAD = 3
+BAN_DURATION_HOURS = 24
+SYMBOL_OUTCOME_HISTORY_MAX = 10
+
 
 # ----------------------------------------------------------------------------
 # ÚJ: BOT-KÖZI MEGERŐSÍTÉS (cross-bot confirmation) - lásd a
@@ -200,7 +206,7 @@ def get_cross_bot_confirmations(symbol: str, direction: str, now: datetime) -> l
     return confirmations
 
 
-MIN_VOLUME_USDT = 1_000_000
+MIN_VOLUME_USDT = 3_000_000  # 1M -> 3M: shitcoin-szűrés, a napi audit-adat alapján
 MAX_VOLUME_USDT = 150_000_000
 
 NON_CRYPTO_PREFIXES = ("NCSK", "NCFX")
@@ -318,6 +324,36 @@ def _append_log_to(path: Path, record: dict) -> None:
         pass
 
 
+def _record_symbol_outcome(state: dict, symbol: str, classification: str, now: datetime) -> None:
+    history = state.setdefault("_symbol_outcome_history", {})
+    sym_hist = history.setdefault(symbol, [])
+    sym_hist.append(classification)
+    if len(sym_hist) > SYMBOL_OUTCOME_HISTORY_MAX:
+        sym_hist[:] = sym_hist[-SYMBOL_OUTCOME_HISTORY_MAX:]
+
+    if len(sym_hist) >= BAN_AFTER_CONSECUTIVE_BAD and all(c == "BAD" for c in sym_hist[-BAN_AFTER_CONSECUTIVE_BAD:]):
+        bans = state.setdefault("_symbol_ban_until", {})
+        ban_until = now + timedelta(hours=BAN_DURATION_HOURS)
+        bans[symbol] = ban_until.isoformat()
+        logger.warning("SYMBOL TILTÁS: %s - %d egymás utáni BAD minősítés, tiltva %s-ig",
+                        symbol, BAN_AFTER_CONSECUTIVE_BAD, ban_until.isoformat())
+
+
+def is_symbol_banned(state: dict, symbol: str, now: datetime) -> bool:
+    bans = state.get("_symbol_ban_until", {})
+    ban_until_str = bans.get(symbol)
+    if not ban_until_str:
+        return False
+    try:
+        ban_until = datetime.fromisoformat(ban_until_str)
+    except ValueError:
+        return False
+    if now >= ban_until:
+        del bans[symbol]
+        return False
+    return True
+
+
 async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -> None:
     pending = state.get("_audit_pending", [])
     if not pending:
@@ -412,6 +448,16 @@ async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -
 
         if any_unresolved and age_minutes <= AUDIT_MAX_WINDOW_MINUTES + 30:
             still_pending.append(rec)
+        else:
+            final_classification = None
+            best_idx = -1
+            for w_idx, (w_label, _) in enumerate(AUDIT_WINDOWS_MINUTES):
+                w = rec["windows"][w_label]
+                if w["resolved"] and w_idx > best_idx:
+                    final_classification = w["classification"]
+                    best_idx = w_idx
+            if final_classification is not None:
+                _record_symbol_outcome(state, rec["symbol"], final_classification, now)
 
     state["_audit_pending"] = still_pending
 
@@ -941,6 +987,10 @@ async def run_single_pass(state: dict, valid_contracts, now: datetime):
     pass_diagnostics = []
 
     for symbol in candidates:
+        # ÚJ: symbol-tiltás ellenőrzése MINDENEK ELŐTT.
+        if is_symbol_banned(state, symbol, now):
+            continue
+
         candle = evaluate_candle(klines_map.get(symbol), now=now)
         if candle is None:
             continue
