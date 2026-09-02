@@ -1,5 +1,5 @@
-{"ts": "2026-09-02T17:06:32.865758+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-02T18:33:51.330129+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-02T20:08:25.297519+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-02T20:24:35.719684+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-02T22:24:24.317658+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-02T23:24:39.373585+00:00", "symbol": "FLOCK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
