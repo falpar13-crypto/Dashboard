@@ -732,7 +732,8 @@ def register_pending_signal(state: dict, symbol: str, signal_type: str,
 # a daytrade_checker.py azonos, offline tesztekkel igazolt implementációját)
 # ----------------------------------------------------------------------------
 def register_signal_audit(state: dict, symbol: str, direction: str, signal_type: str,
-                            score: Optional[int], entry_price: float, now: datetime) -> str:
+                            score: Optional[int], entry_price: float, now: datetime,
+                            meta: Optional[dict] = None) -> str:
     signal_id = str(uuid.uuid4())
     windows = {
         label: {"target_minutes": minutes, "resolved": False, "future_price": None,
@@ -757,6 +758,7 @@ def register_signal_audit(state: dict, symbol: str, direction: str, signal_type:
         "signal_id": signal_id, "ts": now.isoformat(), "symbol": symbol,
         "direction": direction, "signal_type": signal_type, "score": score,
         "timeframe": ALERT_TIMEFRAME, "entry_price": entry_price,
+        "meta": meta or {},
     })
     return signal_id
 
@@ -1053,6 +1055,127 @@ def generate_daily_audit_report(now: datetime) -> Optional[str]:
     return "\n".join(lines)
 
 
+# ----------------------------------------------------------------------------
+# ÚJ: KÜSZÖB-HANGOLÁSI JAVASLAT RENDSZER - lásd a daytrade_checker.py
+# azonos, tesztelt implementációját a teljes indoklásért.
+# ----------------------------------------------------------------------------
+MIN_SUGGESTION_SAMPLE = 15
+MIN_SUGGESTION_GAP_PCT = 0.3
+
+THRESHOLD_SUGGESTION_FIELDS = [
+    ("oi_change_pct", "numeric", "OI-növekedés (%)"),
+    ("vol_multiplier", "numeric", "Volumen-szorzó"),
+    ("htf_aligned", "bool", "HTF-trend egyezés"),
+    ("rsi_divergence", "bool", "RSI-divergencia jelenléte"),
+    ("cross_bot_confirmed", "bool", "Bot-közi megerősítés"),
+    ("wick_rejection_ratio", "numeric", "Kanóc-elutasítás arány"),
+]
+
+
+def _compute_group_stats(finals_with_meta: list, field: str, kind: str) -> Optional[dict]:
+    pairs = [(r, m.get(field)) for r, m in finals_with_meta if m.get(field) is not None]
+    if len(pairs) < MIN_SUGGESTION_SAMPLE * 2:
+        return None
+
+    if kind == "bool":
+        group_hi = [r for r, v in pairs if v]
+        group_lo = [r for r, v in pairs if not v]
+        split_value = None
+    else:
+        vals = sorted(v for _, v in pairs)
+        split_value = vals[len(vals) // 2]
+        group_hi = [r for r, v in pairs if v >= split_value]
+        group_lo = [r for r, v in pairs if v < split_value]
+
+    if len(group_hi) < MIN_SUGGESTION_SAMPLE or len(group_lo) < MIN_SUGGESTION_SAMPLE:
+        return None
+
+    avg_hi = sum(r["directional_return_pct"] for r in group_hi) / len(group_hi)
+    avg_lo = sum(r["directional_return_pct"] for r in group_lo) / len(group_lo)
+    win_hi = sum(1 for r in group_hi if r["directional_return_pct"] > 0) / len(group_hi) * 100
+    win_lo = sum(1 for r in group_lo if r["directional_return_pct"] > 0) / len(group_lo) * 100
+
+    return {
+        "field": field, "kind": kind, "split_value": split_value,
+        "n_hi": len(group_hi), "n_lo": len(group_lo),
+        "avg_return_hi": avg_hi, "avg_return_lo": avg_lo,
+        "win_rate_hi": win_hi, "win_rate_lo": win_lo,
+        "gap": avg_hi - avg_lo,
+    }
+
+
+def generate_threshold_suggestions() -> Optional[str]:
+    signals = _load_jsonl(AUDIT_SIGNALS_FILE)
+    results = _load_jsonl(AUDIT_RESULTS_FILE)
+    if not signals or not results:
+        return None
+
+    signals_by_id = {s["signal_id"]: s for s in signals}
+    window_order = {label: i for i, (label, _) in enumerate(AUDIT_WINDOWS_MINUTES)}
+    final_by_signal = {}
+    for r in results:
+        sid = r["signal_id"]
+        if sid not in final_by_signal or window_order.get(r["window"], -1) > window_order.get(final_by_signal[sid]["window"], -1):
+            final_by_signal[sid] = r
+
+    finals_with_meta = []
+    for sid, r in final_by_signal.items():
+        sig = signals_by_id.get(sid)
+        if not sig:
+            continue
+        finals_with_meta.append((r, sig.get("meta", {}) or {}))
+
+    if len(finals_with_meta) < MIN_SUGGESTION_SAMPLE * 2:
+        return None
+
+    suggestions = []
+    for field, kind, label in THRESHOLD_SUGGESTION_FIELDS:
+        stat = _compute_group_stats(finals_with_meta, field, kind)
+        if stat is None:
+            continue
+        if abs(stat["gap"]) < MIN_SUGGESTION_GAP_PCT:
+            continue
+        if kind == "bool":
+            if stat["avg_return_hi"] > stat["avg_return_lo"]:
+                suggestions.append(
+                    f"• <b>{label}</b>: amikor IGAZ, jobb az átlag hozam "
+                    f"({stat['avg_return_hi']:+.2f}% vs {stat['avg_return_lo']:+.2f}%, "
+                    f"találati arány {stat['win_rate_hi']:.0f}% vs {stat['win_rate_lo']:.0f}%, "
+                    f"n={stat['n_hi']}/{stat['n_lo']})"
+                )
+            else:
+                suggestions.append(
+                    f"• <b>{label}</b>: amikor HAMIS, jobb az átlag hozam "
+                    f"({stat['avg_return_lo']:+.2f}% vs {stat['avg_return_hi']:+.2f}%, "
+                    f"találati arány {stat['win_rate_lo']:.0f}% vs {stat['win_rate_hi']:.0f}%, "
+                    f"n={stat['n_lo']}/{stat['n_hi']}) - érdemes megvizsgálni, miért"
+                )
+        else:
+            if stat["avg_return_hi"] > stat["avg_return_lo"]:
+                suggestions.append(
+                    f"• <b>{label}</b>: a medián ({stat['split_value']:.2f}) FÖLÖTTI jelzések jobban "
+                    f"teljesítenek ({stat['avg_return_hi']:+.2f}% vs {stat['avg_return_lo']:+.2f}%, "
+                    f"találati arány {stat['win_rate_hi']:.0f}% vs {stat['win_rate_lo']:.0f}%, "
+                    f"n={stat['n_hi']}/{stat['n_lo']}) - érdemes lehet a küszöböt a medián közelébe emelni"
+                )
+            else:
+                suggestions.append(
+                    f"• <b>{label}</b>: a medián ({stat['split_value']:.2f}) ALATTI jelzések jobban "
+                    f"teljesítenek ({stat['avg_return_lo']:+.2f}% vs {stat['avg_return_hi']:+.2f}%, "
+                    f"találati arány {stat['win_rate_lo']:.0f}% vs {stat['win_rate_hi']:.0f}%, "
+                    f"n={stat['n_lo']}/{stat['n_hi']}) - meglepő, ellenőrizd, miért ront a magas érték"
+                )
+
+    if not suggestions:
+        return None
+
+    lines = [f"🔧 <b>KÜSZÖB-HANGOLÁSI JAVASLATOK</b> (összesen {len(finals_with_meta)} lezárt jelzés alapján)",
+             "⚠️ Statisztikai összefüggések, nem garantált okozati kapcsolatok - "
+             "mérlegeld, mielőtt bármit módosítasz.\n"]
+    lines.extend(suggestions)
+    return "\n".join(lines)
+
+
 async def maybe_send_daily_audit_report(state: dict, now: datetime) -> None:
     local_now = now.astimezone(SUMMARY_TIMEZONE)
     today_str = local_now.strftime("%Y-%m-%d")
@@ -1062,6 +1185,9 @@ async def maybe_send_daily_audit_report(state: dict, now: datetime) -> None:
         return
     report = generate_daily_audit_report(now)
     if report:
+        suggestions = generate_threshold_suggestions()
+        if suggestions:
+            report = f"{report}\n\n{suggestions}"
         await send_telegram_message(report)
         logger.info("Napi signal-audit riport elküldve.")
     state["_audit_report_sent_date"] = today_str
@@ -2997,7 +3123,15 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 historical_stats=historical_stats, wick_rejection_ratio=candle.get("wick_rejection_ratio"),
             )
             register_signal_audit(state, symbol, candle["direction"], fired_signal_type,
-                                    audit_score, candle["price"], now)
+                                    audit_score, candle["price"], now,
+                                    meta={
+                                        "oi_change_pct": display_oi_change_pct,
+                                        "vol_multiplier": candle["vol_multiplier"],
+                                        "htf_aligned": (htf_trend == candle["direction"]) if htf_trend else None,
+                                        "rsi_divergence": candle.get("divergence") is not None,
+                                        "cross_bot_confirmed": bool(cross_bot_confirmations),
+                                        "wick_rejection_ratio": candle.get("wick_rejection_ratio"),
+                                    })
             # ÚJ: a SAJÁT jelzésünket is elmentjük a kereszt-bot fájlba,
             # hogy a MÁSIK két bot lássa a következő futásukban.
             _append_cross_bot_signal(symbol, candle["direction"], fired_signal_type, now)
@@ -3072,7 +3206,13 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     historical_stats=sq_historical_stats, wick_rejection_ratio=candle.get("wick_rejection_ratio"),
                 )
                 register_signal_audit(state, symbol, ema_squeeze_signal, "EMA_SQUEEZE",
-                                        sq_audit_score, candle["price"], now)
+                                        sq_audit_score, candle["price"], now,
+                                        meta={
+                                            "vol_multiplier": candle["vol_multiplier"],
+                                            "htf_aligned": (htf_trend == ema_squeeze_signal) if htf_trend else None,
+                                            "cross_bot_confirmed": bool(sq_cross_bot),
+                                            "ema_gap_pct": candle.get("ema_gap_pct"),
+                                        })
                 _append_cross_bot_signal(symbol, ema_squeeze_signal, "EMA_SQUEEZE", now)
                 logger.info("JELZÉS küldve [EMA_SQUEEZE]: %s [%s] (EMA-táv %.2f%%, Vol %.1fx átlag, OI %+.2f%%)",
                             symbol, ema_squeeze_signal, candle.get("ema_gap_pct") or 0.0,
@@ -3140,7 +3280,12 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                     historical_stats=rej_historical_stats, wick_rejection_ratio=candle.get("wick_rejection_ratio"),
                 )
                 register_signal_audit(state, symbol, ema_rejection_signal, "EMA_REJECTION",
-                                        rej_audit_score, candle["price"], now)
+                                        rej_audit_score, candle["price"], now,
+                                        meta={
+                                            "vol_multiplier": candle["vol_multiplier"],
+                                            "htf_aligned": (htf_trend == ema_rejection_signal) if htf_trend else None,
+                                            "cross_bot_confirmed": bool(rej_cross_bot),
+                                        })
                 _append_cross_bot_signal(symbol, ema_rejection_signal, "EMA_REJECTION", now)
                 logger.info("JELZÉS küldve [EMA_REJECTION]: %s [%s] (Vol %.1fx átlag, OI %+.2f%%)",
                             symbol, ema_rejection_signal, candle["vol_multiplier"], oi_change_pct)
