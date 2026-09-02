@@ -1,1 +1,2 @@
 {"signal_id": "ef9d26de-c8c7-479b-a726-b01e28f97a77", "ts": "2026-09-02T03:40:29.600799+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD", "score": 26, "timeframe": "1h", "entry_price": 0.0034853}
+{"signal_id": "fdc6d140-9c6c-4869-9632-6bf230de5d2a", "ts": "2026-09-02T04:12:09.322704+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "EARLY", "score": 60, "timeframe": "1h", "entry_price": 6.159}
