@@ -101,6 +101,11 @@ jobs:
               [ -f "$f" ] && cp "$f" /tmp/state-save/
             done
             [ -f daytrade_recent_signals.jsonl ] && cp daytrade_recent_signals.jsonl /tmp/state-save/
+            # ÚJ: az objektív signal-audit rendszer naplófájljai - ezek
+            # NÉLKÜL a napi teljesítmény-riport soha nem tudna generálódni,
+            # mert minden futás végén elveszne az addig gyűjtött adat.
+            [ -f daytrade_audit_signals.jsonl ] && cp daytrade_audit_signals.jsonl /tmp/state-save/
+            [ -f daytrade_audit_results.jsonl ] && cp daytrade_audit_results.jsonl /tmp/state-save/
 
             cd /tmp/state-save
             git add -A

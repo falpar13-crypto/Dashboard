@@ -71,6 +71,9 @@ jobs:
 
             cp ob_state.json /tmp/state-save/ 2>/dev/null || true
             [ -f ob_alert_log.jsonl ] && cp ob_alert_log.jsonl /tmp/state-save/
+            # ÚJ: az objektív signal-audit rendszer naplófájljai.
+            [ -f ob_audit_signals.jsonl ] && cp ob_audit_signals.jsonl /tmp/state-save/
+            [ -f ob_audit_results.jsonl ] && cp ob_audit_results.jsonl /tmp/state-save/
 
             cd /tmp/state-save
             git add -A

@@ -118,6 +118,9 @@ jobs:
             # másik két bot a KÖVETKEZŐ futásukban lássa (lásd a fenti
             # "Másik két bot jelzéseinek betöltése" lépést a tükörpárjához).
             [ -f scalp_recent_signals.jsonl ] && cp scalp_recent_signals.jsonl /tmp/state-save/
+            # ÚJ: az objektív signal-audit rendszer naplófájljai.
+            [ -f scalp_audit_signals.jsonl ] && cp scalp_audit_signals.jsonl /tmp/state-save/
+            [ -f scalp_audit_results.jsonl ] && cp scalp_audit_results.jsonl /tmp/state-save/
 
             cd /tmp/state-save
             git add -A
