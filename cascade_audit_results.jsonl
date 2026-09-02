@@ -1,0 +1,1 @@
+{"signal_id": "129696b2-bee7-4a78-884e-502a55ab8802", "symbol": "MARSCOIN-USDT", "direction": "SHORT", "signal_type": "EARLY", "score": null, "entry_ts": "2026-09-02T01:51:16.049355+00:00", "window": "2h", "directional_return_pct": 0.088, "mfe_pct": 8.343, "mae_pct": -0.969, "classification": "NEUTRAL", "time_to_move": {"0.5": 0.7, "1.0": 0.7, "2.0": 0.7, "3.0": 0.7}}
