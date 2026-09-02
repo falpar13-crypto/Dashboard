@@ -1,10 +1,4 @@
-{"ts": "2026-09-02T08:20:19.383461+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-09-02T08:36:54.330187+00:00", "symbol": "JASMY-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-02T08:50:04.973726+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-02T09:08:56.655214+00:00", "symbol": "MAGMA-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-09-02T09:41:10.309171+00:00", "symbol": "SUSHI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-02T09:41:10.309171+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-02T09:57:52.826289+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-02T10:13:38.327446+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-02T13:47:55.495530+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-02T14:09:24.381736+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-09-02T16:09:31.395838+00:00", "symbol": "EGLD-USDT", "direction": "LONG", "signal_type": "EARLY"}
