@@ -104,3 +104,4 @@
 {"ts": "2026-09-01T21:17:22.072147+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 1.311, "price_change_pct": -1.8, "vol_multiplier": 9.14}
 {"ts": "2026-09-01T22:19:11.180009+00:00", "symbol": "UAI-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.5319, "price_change_pct": -2.67, "vol_multiplier": 7.23}
 {"ts": "2026-09-02T00:39:10.074316+00:00", "symbol": "SKR-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.020697, "price_change_pct": -3.4, "vol_multiplier": 6.36}
+{"ts": "2026-09-02T00:55:12.958488+00:00", "symbol": "HEMI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.015362, "price_change_pct": 1.99, "vol_multiplier": 5.27}
