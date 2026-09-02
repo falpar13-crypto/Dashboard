@@ -122,3 +122,7 @@
 {"ts": "2026-09-02T16:11:39.058077+00:00", "symbol": "MAGMA-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.54994, "price_change_pct": 2.73, "vol_multiplier": 20.75}
 {"ts": "2026-09-02T18:44:26.446032+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.45059, "price_change_pct": -4.19, "vol_multiplier": 10.21}
 {"ts": "2026-09-02T21:37:26.169516+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0241698, "price_change_pct": 7.79, "vol_multiplier": 7.95}
+{"ts": "2026-09-02T21:44:05.571920+00:00", "symbol": "MAGMA-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.59612, "price_change_pct": 8.19, "vol_multiplier": 30.26}
+{"ts": "2026-09-02T21:44:22.398631+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.5132, "price_change_pct": 8.27, "vol_multiplier": 9.05}
+{"ts": "2026-09-02T21:44:22.398631+00:00", "symbol": "SKR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.024148, "price_change_pct": 1.82, "vol_multiplier": 5.83}
+{"ts": "2026-09-02T21:44:22.398631+00:00", "symbol": "USELESS-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.12508, "price_change_pct": 3.54, "vol_multiplier": 18.27}
