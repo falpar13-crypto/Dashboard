@@ -5,3 +5,5 @@
 {"ts": "2026-09-02T01:35:36.020325+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-02T01:36:33.973785+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-02T01:36:33.973785+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-02T01:44:46.291531+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-02T01:44:46.291531+00:00", "symbol": "AERO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
