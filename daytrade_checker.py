@@ -917,6 +917,7 @@ THRESHOLD_SUGGESTION_FIELDS = [
     ("rsi_divergence", "bool", "RSI-divergencia jelenléte"),
     ("cross_bot_confirmed", "bool", "Bot-közi megerősítés"),
     ("wick_rejection_ratio", "numeric", "Kanóc-elutasítás arány"),
+    ("sr_distance_pct", "numeric", "Divergencia-fordulat: távolság a szinttől (%)"),
 ]
 
 
@@ -1414,6 +1415,19 @@ async def fetch_orderbook_imbalance(symbol: str, limit: int = ORDERBOOK_LEVELS_L
 SR_LOOKBACK_PERIOD = 60     
 SR_PROXIMITY_PCT = 1.0      
 
+# ÚJ: DIVERGENCE_REVERSAL - önálló jelzéstípus, a STANDARD/EARLY-től
+# TELJESEN FÜGGETLEN. A fő trigger itt NEM a volumen-kiugrás, hanem az
+# RSI-divergencia (a bot már eddig is számolta, csak pontszám-tényezőként
+# használta - most a divergencia maga a belépési ok), MEGERŐSÍTVE azzal,
+# hogy a divergencia egy valódi (swing-pont alapú) támasz/ellenállás
+# közelében történik. Cél: a mai TAO-USDT esethez hasonló ellentmondásos
+# jelzések elkapása MÁSKÉNT - nem tiltással, hanem egy alternatív,
+# divergencia-vezérelt setup-ként, amit az audit-rendszer saját
+# jelzéstípusként külön mér, így adatból derül ki, jobban teljesít-e.
+DIVERGENCE_REVERSAL_SR_PROXIMITY_PCT = 1.5  # a divergenciának ennyi %-on belül kell lennie a szinthez
+DIVERGENCE_REVERSAL_MIN_BODY_PCT = 0.15     # a megerősítő gyertyának legalább ennyi %-os testet kell mutatnia
+DIVERGENCE_REVERSAL_MIN_CANDLE_VOL_USDT = 20_000  # laza likviditási alapszint - NEM növekedési küszöb
+
 
 def _find_swing_points(closed: pd.DataFrame, legs: int = SWING_FRACTAL_LEGS) -> list:
     """Fraktál-alapú swing csúcs/mélypont keresés: az i. gyertya akkor
@@ -1492,16 +1506,28 @@ async def fetch_htf_trend(session, semaphore, symbol):
         closed = df.iloc[:-1]
         min_candles_needed = SWING_FRACTAL_LEGS * 2 + 1
         trend = None
+        zigzag = []
         if len(closed) >= min_candles_needed:
             swing_points = _find_swing_points(closed, legs=SWING_FRACTAL_LEGS)
             zigzag = _build_zigzag(swing_points)
             trend = _classify_structure_trend(zigzag)
 
+        # JAVÍTÁS: a régi módszer az utolsó SR_LOOKBACK_PERIOD gyertya
+        # NYERS min/max-át adta támasz/ellenállásnak - ez nem valódi,
+        # strukturálisan jelentős szintet talál, csak egy ablak-
+        # szélsőértéket. Mostantól a MÁR KISZÁMOLT zigzag (swing-pont)
+        # adatból a jelenlegi árhoz LEGKÖZELEBBI swing low/high-ot
+        # használjuk - ugyanaz a módszer, amit a POC/OB botoknál is
+        # bevált, tesztelt megoldásként alkalmazunk.
         support = resistance = None
-        sr_window = closed.iloc[-SR_LOOKBACK_PERIOD:]
-        if len(sr_window) >= SR_LOOKBACK_PERIOD:
-            support = float(sr_window["low"].min())
-            resistance = float(sr_window["high"].max())
+        if zigzag and len(closed) > 0:
+            current_price = float(closed["close"].iloc[-1])
+            lows = [p for _, p, t in zigzag if t == "L"]
+            highs = [p for _, p, t in zigzag if t == "H"]
+            below = [l for l in lows if l < current_price]
+            above = [h for h in highs if h > current_price]
+            support = max(below) if below else None
+            resistance = min(above) if above else None
 
         return symbol, {"trend": trend, "support": support, "resistance": resistance}
 
@@ -1949,6 +1975,8 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
 
     if signal_type == "EARLY":
         header = f"🌅 <b>[DAYTRADE] {symbol}</b> {action} (KORAI 1H) {score_label}"
+    elif signal_type == "DIVERGENCE_REVERSAL":
+        header = f"🔀 <b>[DAYTRADE] {symbol}</b> {action} (DIVERGENCIA-FORDULAT 1H) {score_label}"
     else:
         header = f"🦅 <b>[DAYTRADE] {symbol}</b> {action} (STANDARD 1H) {score_label}"
 
@@ -1987,6 +2015,12 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         pace_note = f", vetített ütem: {pace_vol_multiplier:.1f}x" if pace_vol_multiplier is not None else ""
         elapsed_note = f" (a gyertya ~{elapsed_fraction * 100:.0f}%-ánál)" if elapsed_fraction is not None else ""
         early_line = f"\n🔬 Korai jelzés{pace_note}{elapsed_note}"
+    elif signal_type == "DIVERGENCE_REVERSAL":
+        early_line = (
+            f"\nℹ️ Önálló setup - NEM volumen-alapú: RSI-divergencia + valódi "
+            f"(swing-pont alapú) szint-közelség adja a jelzést, a STANDARD/EARLY "
+            f"logikától teljesen függetlenül."
+        )
 
     warning_line = ""
     against_trend = ((direction == "LONG" and htf_trend == "DOWN") or (direction == "SHORT" and htf_trend == "UP"))
@@ -2559,6 +2593,90 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # ÚJ: a SAJÁT jelzésünket is elmentjük a kereszt-bot fájlba,
             # hogy a MÁSIK két bot lássa a következő futásukban.
             _append_cross_bot_signal(symbol, candle["direction"], fired_signal_type, now)
+
+        # --------------------------------------------------------------
+        # ÚJ: DIVERGENCE_REVERSAL - önálló, a STANDARD/EARLY-től TELJESEN
+        # FÜGGETLEN jelzéstípus. Lásd a fájl elején lévő blokk-kommentet.
+        # A fő trigger az RSI-divergencia (nem a volumen-kiugrás),
+        # MEGERŐSÍTVE egy valódi (swing-pont alapú) támasz/ellenállás
+        # közelségével, plusz egy megerősítő gyertyával, ami már a
+        # divergencia szerinti irányba mozog.
+        # --------------------------------------------------------------
+        divergence = candle.get("divergence")
+        divergence_direction = "LONG" if divergence == "BULLISH" else ("SHORT" if divergence == "BEARISH" else None)
+
+        if divergence_direction is not None:
+            div_near_support = support is not None and support > 0 and abs(price - support) / support * 100 <= DIVERGENCE_REVERSAL_SR_PROXIMITY_PCT
+            div_near_resistance = resistance is not None and resistance > 0 and abs(price - resistance) / resistance * 100 <= DIVERGENCE_REVERSAL_SR_PROXIMITY_PCT
+            div_confluence = (
+                (divergence_direction == "LONG" and div_near_support)
+                or (divergence_direction == "SHORT" and div_near_resistance)
+            )
+
+            is_setup_divergence = (
+                div_confluence
+                and candle["direction"] == divergence_direction
+                and abs(candle["price_change_pct"]) >= DIVERGENCE_REVERSAL_MIN_BODY_PCT
+                and candle["candle_vol_usdt"] >= DIVERGENCE_REVERSAL_MIN_CANDLE_VOL_USDT
+            )
+
+            div_cooldown_ok = True
+            if entry.get("last_divergence_alert_ts"):
+                last_div_dt = datetime.fromisoformat(entry["last_divergence_alert_ts"])
+                if (now - last_div_dt) < timedelta(minutes=ALERT_COOLDOWN_MINUTES):
+                    div_cooldown_ok = False
+
+            if is_setup_divergence and div_cooldown_ok:
+                div_orderbook_info = await fetch_orderbook_imbalance(symbol)
+                div_cross_bot = get_cross_bot_confirmations(symbol, divergence_direction, now)
+                div_historical_stats = compute_historical_stats("DIVERGENCE_REVERSAL", divergence_direction, now)
+                div_near_level_risk = (
+                    (divergence_direction == "LONG" and div_near_resistance)
+                    or (divergence_direction == "SHORT" and div_near_support)
+                )
+                div_msg = format_daytrade_message(
+                    symbol, divergence_direction, candle["price"], candle["price_change_pct"],
+                    candle["candle_vol_usdt"], candle["vol_multiplier"],
+                    oi_now, oi_change_pct, htf_trend=htf_trend,
+                    bounce_confluence=div_confluence, near_level_risk=div_near_level_risk,
+                    rsi=candle.get("rsi"), macd_status=candle.get("macd_status"),
+                    signal_type="DIVERGENCE_REVERSAL",
+                    funding_rate=funding_rate, funding_delta_pct=funding_delta_pct,
+                    orderbook_info=div_orderbook_info,
+                    cross_bot_confirmations=div_cross_bot,
+                    divergence=divergence,
+                    vwap=candle.get("vwap"), vwap_relation=candle.get("vwap_relation"),
+                    vwap_diff_pct=candle.get("vwap_diff_pct"),
+                    historical_stats=div_historical_stats,
+                    wick_rejection_ratio=candle.get("wick_rejection_ratio"),
+                )
+                await send_telegram_message(div_msg)
+                entry["last_divergence_alert_ts"] = now.isoformat()
+                alerts_sent += 1
+                register_pending_signal(state, symbol, "DIVERGENCE_REVERSAL", divergence_direction, candle["price"], now)
+                div_audit_score, _, _ = compute_confidence_score(
+                    divergence_direction, htf_trend=htf_trend, bounce_confluence=div_confluence,
+                    near_level_risk=div_near_level_risk, funding_rate=funding_rate,
+                    funding_delta_pct=funding_delta_pct, orderbook_info=div_orderbook_info,
+                    macd_status=candle.get("macd_status"), rsi=candle.get("rsi"),
+                    vol_multiplier=candle["vol_multiplier"], cross_bot_confirmations=div_cross_bot,
+                    divergence=divergence, vwap_relation=candle.get("vwap_relation"),
+                    historical_stats=div_historical_stats, wick_rejection_ratio=candle.get("wick_rejection_ratio"),
+                )
+                register_signal_audit(state, symbol, divergence_direction, "DIVERGENCE_REVERSAL",
+                                        div_audit_score, candle["price"], now,
+                                        meta={
+                                            "sr_level": support if divergence_direction == "LONG" else resistance,
+                                            "sr_distance_pct": (abs(price - support) / support * 100) if divergence_direction == "LONG" and support else
+                                                                (abs(price - resistance) / resistance * 100) if divergence_direction == "SHORT" and resistance else None,
+                                            "htf_aligned": (htf_trend == divergence_direction) if htf_trend else None,
+                                            "cross_bot_confirmed": bool(div_cross_bot),
+                                        })
+                _append_cross_bot_signal(symbol, divergence_direction, "DIVERGENCE_REVERSAL", now)
+                logger.info("JELZÉS küldve [DIVERGENCE_REVERSAL]: %s [%s] ár=%.6f szint-táv=%.2f%%",
+                            symbol, divergence_direction, candle["price"],
+                            (abs(price - support) / support * 100) if divergence_direction == "LONG" and support else
+                            (abs(price - resistance) / resistance * 100) if divergence_direction == "SHORT" and resistance else -1.0)
 
     # ÚJ (IDEIGLENES DEBUG): mutatja, hogy a websocket-adat ténylegesen
     # HATOTT-e a kiértékelésre ebben a körben - lásd az alert_checker.py
