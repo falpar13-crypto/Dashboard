@@ -133,3 +133,4 @@
 {"ts": "2026-09-03T08:50:09.499423+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.04904, "price_change_pct": 1.53, "vol_multiplier": 5.78}
 {"ts": "2026-09-03T09:56:14.305388+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0523, "price_change_pct": 3.07, "vol_multiplier": 3.8}
 {"ts": "2026-09-03T10:44:11.670778+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.0125609, "price_change_pct": -1.97, "vol_multiplier": 6.36}
+{"ts": "2026-09-03T11:00:33.938701+00:00", "symbol": "HEMI-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.015227, "price_change_pct": -5.22, "vol_multiplier": 9.17}
