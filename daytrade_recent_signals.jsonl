@@ -9,3 +9,9 @@
 {"ts": "2026-09-03T08:31:51.815418+00:00", "symbol": "TRUTH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T08:42:18.797292+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T08:55:24.772373+00:00", "symbol": "REDSTONE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T09:03:55.047291+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T09:05:55.050076+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T09:05:55.050076+00:00", "symbol": "CC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T09:05:55.050076+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T09:09:25.054723+00:00", "symbol": "0G-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T09:09:55.055657+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
