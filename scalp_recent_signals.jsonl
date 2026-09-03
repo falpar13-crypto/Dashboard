@@ -1,3 +1,4 @@
 {"ts": "2026-09-03T05:19:43.398656+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-03T05:28:19.326077+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-03T06:43:55.348137+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-03T07:23:31.729028+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
