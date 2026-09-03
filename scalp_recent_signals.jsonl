@@ -25,3 +25,4 @@
 {"ts": "2026-09-03T16:18:17.613171+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-03T16:19:17.617992+00:00", "symbol": "XPL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-03T16:24:05.089589+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-03T16:39:15.270246+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
