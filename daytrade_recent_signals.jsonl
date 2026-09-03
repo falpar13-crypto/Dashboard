@@ -42,3 +42,4 @@
 {"ts": "2026-09-03T13:12:37.375953+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T13:14:07.378400+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T13:14:07.378400+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T13:44:25.134661+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
