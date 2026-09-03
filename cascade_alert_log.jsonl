@@ -130,3 +130,4 @@
 {"ts": "2026-09-03T03:05:23.001657+00:00", "symbol": "MUBARAK-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.02678, "price_change_pct": -3.15, "vol_multiplier": 6.86}
 {"ts": "2026-09-03T06:51:19.863490+00:00", "symbol": "USELESS-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.15587, "price_change_pct": 3.23, "vol_multiplier": 6.44}
 {"ts": "2026-09-03T08:03:15.549675+00:00", "symbol": "HEMI-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.016106, "price_change_pct": -7.32, "vol_multiplier": 7.25}
+{"ts": "2026-09-03T08:50:09.499423+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.04904, "price_change_pct": 1.53, "vol_multiplier": 5.78}
