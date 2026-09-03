@@ -7,3 +7,4 @@
 {"ts": "2026-09-03T21:11:10.723523+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-09-03T21:13:40.729157+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-09-03T21:59:44.551863+00:00", "symbol": "MERL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-03T22:15:25.957819+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "EARLY"}
