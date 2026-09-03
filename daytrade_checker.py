@@ -2152,7 +2152,8 @@ DIVERGENCE_SWING_LEGS = 2          # ugyanaz a fraktál-méret, mint a S/R swing
 
 def detect_rsi_divergence(closed: pd.DataFrame, rsi_series: pd.Series,
                             legs: int = DIVERGENCE_SWING_LEGS,
-                            lookback: int = DIVERGENCE_LOOKBACK_PERIOD) -> Optional[str]:
+                            lookback: int = DIVERGENCE_LOOKBACK_PERIOD,
+                            current_price: Optional[float] = None) -> Optional[str]:
     """RSI/ár divergencia keresése az utolsó `lookback` LEZÁRT gyertyán
     (a még formálódó élő gyertyát szándékosan kihagyjuk, mert a high/low
     még változhat, zajossá tenné a swing-detektálást).
@@ -2161,7 +2162,16 @@ def detect_rsi_divergence(closed: pd.DataFrame, rsi_series: pd.Series,
       csúcsot ír ugyanott -> a felfutás "kifullad", fordulat-kockázat.
     - "BULLISH": az ár újabb (mélyebb) mélypontot ír, de az RSI MAGASABB
       mélypontot ír ugyanott -> az esés "kifullad", fordulat-kockázat.
-    - None: nincs elég swing-pont, vagy nincs divergencia."""
+    - None: nincs elég swing-pont, vagy nincs divergencia.
+
+    JAVÍTÁS (élesben megfigyelt hiba): a fraktál-alapú swing-keresés csak
+    UTÓLAG, `legs` gyertyával később erősít meg egy csúcsot/mélypontot -
+    ha az ár AZÓTA (a jelenlegi, élő gyertyáig) MÁR TÚLLÉPTE azt a
+    csúcsot/mélypontot, amivel összehasonlítottunk, a divergencia
+    ELAVULT: a valódi "tető"/"alj" még nem alakult ki, a mozgás még tart.
+    Ilyenkor NEM adunk vissza divergenciát, még ha a két RÉGI swing-pont
+    között technikailag fennállna is a mintázat - lásd a `current_price`
+    paramétert, ami ezt az ellenőrzést végzi."""
     if closed is None or rsi_series is None or len(closed) < lookback:
         return None
     window = closed.iloc[-lookback:].reset_index(drop=True)
@@ -2173,13 +2183,19 @@ def detect_rsi_divergence(closed: pd.DataFrame, rsi_series: pd.Series,
     if len(highs) >= 2:
         (idx1, price1), (idx2, price2) = highs[-2], highs[-1]
         rsi1, rsi2 = rsi_window.iloc[idx1], rsi_window.iloc[idx2]
-        if pd.notna(rsi1) and pd.notna(rsi2) and price2 > price1 and rsi2 < rsi1:
+        # ÚJ: elavultság-ellenőrzés - ha az élő ár már túllépte a
+        # legutóbbi (highs[-1]) csúcsot, ez a divergencia elavult.
+        stale = current_price is not None and current_price > price2
+        if pd.notna(rsi1) and pd.notna(rsi2) and price2 > price1 and rsi2 < rsi1 and not stale:
             return "BEARISH"
 
     if len(lows) >= 2:
         (idx1, price1), (idx2, price2) = lows[-2], lows[-1]
         rsi1, rsi2 = rsi_window.iloc[idx1], rsi_window.iloc[idx2]
-        if pd.notna(rsi1) and pd.notna(rsi2) and price2 < price1 and rsi2 > rsi1:
+        # ÚJ: elavultság-ellenőrzés - ha az élő ár már a legutóbbi
+        # (lows[-1]) mélypont ALÁ esett, ez a divergencia elavult.
+        stale = current_price is not None and current_price < price2
+        if pd.notna(rsi1) and pd.notna(rsi2) and price2 < price1 and rsi2 > rsi1 and not stale:
             return "BULLISH"
 
     return None
@@ -2289,7 +2305,7 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
     # detect_rsi_divergence() kommentjét). Tájékoztató jellegű, nem szűr -
     # a meggyőződés-pontszámba számít be, illetve az üzenetben megjelenik.
     rsi_series_closed = compute_rsi_series(closed["close"])
-    divergence = detect_rsi_divergence(closed, rsi_series_closed) if rsi_series_closed is not None else None
+    divergence = detect_rsi_divergence(closed, rsi_series_closed, current_price=current_price) if rsi_series_closed is not None else None
 
     # ÚJ: VWAP-viszony - lásd compute_vwap() kommentjét.
     vwap = compute_vwap(kdf)
