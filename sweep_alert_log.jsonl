@@ -1,0 +1,6 @@
+{"ts": "2026-09-03T23:28:45.624572+00:00", "symbol": "AIO-USDT", "direction": "SHORT", "price": 0.05091, "swept_level": 0.05109, "pierce_pct": 0.117, "rejection_ratio": 2.0}
+{"ts": "2026-09-03T23:28:45.624572+00:00", "symbol": "BANK-USDT", "direction": "SHORT", "price": 0.03562, "swept_level": 0.03565, "pierce_pct": 0.393, "rejection_ratio": 8.5}
+{"ts": "2026-09-03T23:28:45.624572+00:00", "symbol": "PROMPT-USDT", "direction": "LONG", "price": 0.02358, "swept_level": 0.02357, "pierce_pct": 0.212, "rejection_ratio": 2.0}
+{"ts": "2026-09-03T23:28:45.624572+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "price": 0.1683, "swept_level": 0.1689, "pierce_pct": 0.118, "rejection_ratio": 7.0}
+{"ts": "2026-09-03T23:28:45.624572+00:00", "symbol": "HOLO-USDT", "direction": "SHORT", "price": 0.06322, "swept_level": 0.06345, "pierce_pct": 0.189, "rejection_ratio": 11.07}
+{"ts": "2026-09-03T23:28:45.624572+00:00", "symbol": "RESOLV-USDT", "direction": "LONG", "price": 0.01759, "swept_level": 0.01758, "pierce_pct": 0.114, "rejection_ratio": 1.5}
