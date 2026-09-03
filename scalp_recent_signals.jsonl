@@ -8,3 +8,4 @@
 {"ts": "2026-09-03T11:27:34.048202+00:00", "symbol": "MYX-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-03T11:34:34.666127+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-03T11:39:44.192430+00:00", "symbol": "TWT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-03T11:59:05.659824+00:00", "symbol": "USELESS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
