@@ -1,12 +1,3 @@
-{"ts": "2026-09-03T12:56:03.360717+00:00", "symbol": "ENSO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:04:21.970774+00:00", "symbol": "ORCA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:04:51.971464+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:04:51.971464+00:00", "symbol": "WAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:05:21.971789+00:00", "symbol": "POL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:06:51.974189+00:00", "symbol": "NEIROCTO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:12:37.375953+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:14:07.378400+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-03T13:14:07.378400+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T13:44:25.134661+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-03T14:08:39.971152+00:00", "symbol": "REDSTONE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T14:12:39.977531+00:00", "symbol": "EUL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -54,3 +45,5 @@
 {"ts": "2026-09-03T18:24:23.516602+00:00", "symbol": "BEAT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T18:33:06.403878+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T18:34:06.404721+00:00", "symbol": "TUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T19:12:05.435402+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-09-03T19:14:35.440291+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
