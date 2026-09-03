@@ -18,3 +18,5 @@
 {"ts": "2026-09-03T10:03:20.372659+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T10:10:41.653666+00:00", "symbol": "TUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T10:12:11.656383+00:00", "symbol": "EUL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T10:20:28.184330+00:00", "symbol": "TOSHI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T10:21:58.186538+00:00", "symbol": "HUMA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
