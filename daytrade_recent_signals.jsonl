@@ -6,3 +6,4 @@
 {"ts": "2026-09-03T08:10:28.407421+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T08:10:28.407421+00:00", "symbol": "BERA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T08:10:58.407705+00:00", "symbol": "TURTLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T08:31:51.815418+00:00", "symbol": "TRUTH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
