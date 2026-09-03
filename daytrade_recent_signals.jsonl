@@ -25,3 +25,4 @@
 {"ts": "2026-09-03T23:04:51.846294+00:00", "symbol": "PIEVERSE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T23:05:51.847972+00:00", "symbol": "HYPERLANE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T23:12:42.318647+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T23:27:53.249232+00:00", "symbol": "FOLKS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
