@@ -34,3 +34,8 @@
 {"ts": "2026-09-03T12:20:41.234041+00:00", "symbol": "MAGMA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T12:32:50.085532+00:00", "symbol": "TURTLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T12:56:03.360717+00:00", "symbol": "ENSO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T13:04:21.970774+00:00", "symbol": "ORCA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T13:04:51.971464+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T13:04:51.971464+00:00", "symbol": "WAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T13:05:21.971789+00:00", "symbol": "POL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T13:06:51.974189+00:00", "symbol": "NEIROCTO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
