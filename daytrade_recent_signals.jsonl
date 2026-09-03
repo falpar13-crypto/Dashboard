@@ -23,3 +23,4 @@
 {"ts": "2026-09-03T10:43:31.296234+00:00", "symbol": "PYTH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T10:48:01.302406+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T10:48:01.302406+00:00", "symbol": "FHE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T10:58:05.185015+00:00", "symbol": "AIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
