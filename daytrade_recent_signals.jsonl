@@ -51,3 +51,4 @@
 {"ts": "2026-09-03T15:12:31.814994+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T15:18:01.824589+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T15:23:42.116773+00:00", "symbol": "MUBARAK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T15:50:50.854940+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
