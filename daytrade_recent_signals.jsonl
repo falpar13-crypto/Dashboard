@@ -15,3 +15,4 @@
 {"ts": "2026-09-03T09:05:55.050076+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T09:09:25.054723+00:00", "symbol": "0G-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-03T09:09:55.055657+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-03T10:03:20.372659+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
