@@ -1,8 +1,3 @@
-{"ts": "2026-09-04T11:40:52.760070+00:00", "symbol": "AWE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-04T11:55:18.201497+00:00", "symbol": "MARSCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-04T11:59:42.259397+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-04T12:04:12.266112+00:00", "symbol": "POL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-04T12:05:12.267128+00:00", "symbol": "GRASS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T12:13:14.773146+00:00", "symbol": "HBAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T12:20:15.995739+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T12:24:47.457515+00:00", "symbol": "AVNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -42,3 +37,6 @@
 {"ts": "2026-09-04T17:17:59.773271+00:00", "symbol": "ALCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T17:19:59.776725+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T17:20:29.777875+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-04T18:05:08.756161+00:00", "symbol": "REZ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-04T18:07:38.760385+00:00", "symbol": "BERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-04T18:11:38.767190+00:00", "symbol": "BANK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
