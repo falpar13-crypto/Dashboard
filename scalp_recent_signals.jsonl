@@ -13,3 +13,13 @@
 {"ts": "2026-09-04T12:32:51.405409+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-04T12:34:21.419882+00:00", "symbol": "GIGGLE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T12:34:21.419882+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:38:07.554763+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:38:37.556298+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:38:37.556298+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:38:37.556298+00:00", "symbol": "HBAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:39:37.558870+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:39:37.558870+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:40:37.562640+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-09-04T12:44:07.569862+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:44:37.571182+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-04T12:44:37.571182+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
