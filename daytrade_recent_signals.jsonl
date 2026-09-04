@@ -30,3 +30,5 @@
 {"ts": "2026-09-04T08:05:33.940074+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T08:06:33.942408+00:00", "symbol": "GIGGLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T08:17:03.261874+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-04T08:34:43.779931+00:00", "symbol": "PIEVERSE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-04T08:36:15.577736+00:00", "symbol": "BANK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
