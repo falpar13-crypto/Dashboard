@@ -49,3 +49,6 @@
 {"ts": "2026-09-04T12:46:40.782463+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T12:47:10.783433+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T12:47:40.783675+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:52:15.124988+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:55:45.130586+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:56:45.131845+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
