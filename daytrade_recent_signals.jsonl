@@ -52,3 +52,5 @@
 {"ts": "2026-09-04T12:52:15.124988+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T12:55:45.130586+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T12:56:45.131845+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T13:06:24.834222+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-09-04T13:08:54.836974+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
