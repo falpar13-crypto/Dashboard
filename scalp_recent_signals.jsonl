@@ -23,3 +23,4 @@
 {"ts": "2026-09-04T12:44:07.569862+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T12:44:37.571182+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-04T12:44:37.571182+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-04T12:47:55.161091+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
