@@ -1,4 +1,3 @@
-{"ts": "2026-09-04T01:13:38.883103+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T01:34:22.274347+00:00", "symbol": "MARSCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T01:42:10.499735+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-04T02:47:47.545480+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -11,3 +10,4 @@
 {"ts": "2026-09-04T05:32:16.788284+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T05:51:08.133377+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-04T06:13:31.942199+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-04T07:33:58.064760+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
