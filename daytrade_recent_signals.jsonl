@@ -33,3 +33,5 @@
 {"ts": "2026-09-04T12:13:14.773146+00:00", "symbol": "HBAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T12:20:15.995739+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-04T12:24:47.457515+00:00", "symbol": "AVNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-04T12:32:28.947239+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-04T12:34:58.953196+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
