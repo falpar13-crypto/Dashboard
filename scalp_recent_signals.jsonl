@@ -1,5 +1,3 @@
-{"ts": "2026-09-03T21:11:10.723523+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-09-03T21:13:40.729157+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-09-03T21:59:44.551863+00:00", "symbol": "MERL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-03T22:15:25.957819+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-09-03T22:38:52.739630+00:00", "symbol": "PENGU-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -13,3 +11,4 @@
 {"ts": "2026-09-04T01:42:10.499735+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-04T02:47:47.545480+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-04T02:54:19.393643+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-04T03:18:15.401926+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
