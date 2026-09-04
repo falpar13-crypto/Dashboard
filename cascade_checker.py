@@ -122,6 +122,11 @@ AUDIT_BAD_MAX_RETURN_PCT = -1.0
 
 AUDIT_DAILY_REPORT_HOUR = 23
 
+# ÚJ (hibajavítás - torlódás elkerülése): körönként LEGFELJEBB ennyi
+# nyitott jelzést oldunk fel egyszerre - lásd a daytrade_checker.py
+# azonos kommentjét a teljes indoklásért.
+MAX_AUDIT_RESOLVE_PER_RUN = 30
+
 # ÚJ: SYMBOL-TILTÁS 3 EGYMÁS UTÁNI BAD MINŐSÍTÉS UTÁN - lásd a
 # daytrade_checker.py azonos, tesztelt implementációját.
 BAN_AFTER_CONSECUTIVE_BAD = 3
@@ -359,8 +364,15 @@ async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -
     if not pending:
         return
 
-    still_pending = []
-    for rec in pending:
+    pending_sorted = sorted(pending, key=lambda r: r.get("entry_ts", ""))
+    to_process = pending_sorted[:MAX_AUDIT_RESOLVE_PER_RUN]
+    deferred = pending_sorted[MAX_AUDIT_RESOLVE_PER_RUN:]
+    if deferred:
+        logger.info("Audit feloldás: %d jelzés halasztva a következő körre (körönkénti limit: %d).",
+                    len(deferred), MAX_AUDIT_RESOLVE_PER_RUN)
+
+    still_pending = list(deferred)
+    for rec in to_process:
         try:
             entry_dt = datetime.fromisoformat(rec["entry_ts"])
         except (KeyError, ValueError):

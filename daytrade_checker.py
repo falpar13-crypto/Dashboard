@@ -159,6 +159,15 @@ AUDIT_BAD_MAX_RETURN_PCT = -1.0
 # SUMMARY_TIMEZONE lentebb) - a nap UTOLSÓ lezárt futásakor ez után küldi el.
 AUDIT_DAILY_REPORT_HOUR = 23
 
+# ÚJ (hibajavítás - torlódás elkerülése): körönként LEGFELJEBB ennyi
+# nyitott jelzést oldunk fel egyszerre - élesben kiderült, hogy sok
+# felhalmozódott nyitott jelzésnél (magas napi jelzésszámnál) a
+# feloldási lépés futásideje korlátlanul nőhetett, ami a cron-
+# intervallumon (5-10 perc) túlnyúlva GitHub Actions-torlódást okozott,
+# és MAGÁT A JELZÉS-KÜLDÉST is késleltette. A LEGRÉGEBBI jelzések
+# élveznek elsőbbséget, a többi a következő körben folytatódik.
+MAX_AUDIT_RESOLVE_PER_RUN = 30
+
 # ÚJ: SYMBOL-TILTÁS 3 EGYMÁS UTÁNI BAD MINŐSÍTÉS UTÁN - a felhasználóval
 # egyeztetett védőmechanizmus. Ha egy symbolra ennél a BOTNÁL (nem
 # összevontan a többivel) egymás után ennyi VÉGLEGES (leghosszabb elért
@@ -567,8 +576,18 @@ async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -
     if not pending:
         return
 
-    still_pending = []
-    for rec in pending:
+    # ÚJ: körönkénti feldolgozási korlát - lásd MAX_AUDIT_RESOLVE_PER_RUN
+    # kommentjét. A legrégebbi (leghamarabb esedékes) jelzések mennek
+    # előre, a többi változatlanul visszakerül a listába a következő körre.
+    pending_sorted = sorted(pending, key=lambda r: r.get("entry_ts", ""))
+    to_process = pending_sorted[:MAX_AUDIT_RESOLVE_PER_RUN]
+    deferred = pending_sorted[MAX_AUDIT_RESOLVE_PER_RUN:]
+    if deferred:
+        logger.info("Audit feloldás: %d jelzés halasztva a következő körre (körönkénti limit: %d).",
+                    len(deferred), MAX_AUDIT_RESOLVE_PER_RUN)
+
+    still_pending = list(deferred)
+    for rec in to_process:
         try:
             entry_dt = datetime.fromisoformat(rec["entry_ts"])
         except (KeyError, ValueError):
