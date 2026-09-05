@@ -28,3 +28,4 @@
 {"ts": "2026-09-05T10:05:20.791631+00:00", "symbol": "SPX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T10:16:13.965879+00:00", "symbol": "RESOLV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T10:40:52.517406+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-05T10:48:39.135515+00:00", "symbol": "GIGGLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
