@@ -24,3 +24,6 @@
 {"ts": "2026-09-05T12:15:17.700791+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T12:24:59.563231+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-05T13:03:36.315381+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T13:09:59.988824+00:00", "symbol": "NIGHT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T13:11:59.991538+00:00", "symbol": "GRIFFAIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T13:13:59.995383+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
