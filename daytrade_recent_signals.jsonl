@@ -24,3 +24,5 @@
 {"ts": "2026-09-05T05:04:28.095257+00:00", "symbol": "ALCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T05:05:29.784632+00:00", "symbol": "YB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T05:17:43.534519+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T05:22:24.609581+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T05:26:54.617765+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
