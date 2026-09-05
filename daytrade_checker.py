@@ -330,6 +330,12 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 SUMMARY_TIMEZONE = ZoneInfo("Europe/Budapest")
 
+ENABLE_LEGACY_SLTP_SUMMARY = False  # ÚJ: kikapcsolva - a régi, fix SL/TP-
+# szimulációs napi összesítő redundánssá vált a sokkal részletesebb,
+# objektív audit-riport mellett, és ÖNMAGÁBAN is jelentős, felesleges
+# API-terhelést jelentett (minden nyitott "régi" jelzéshez külön
+# lekérdezés). A kód nem lett törölve, könnyen visszakapcsolható.
+
 # ----------------------------------------------------------------------------
 # KIÉRTÉKELÉS (NAPI ÖSSZESÍTŐ)
 # ----------------------------------------------------------------------------
@@ -2383,7 +2389,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         if valid_contracts is None:
             valid_contracts = await fetch_valid_contract_symbols(session)
 
-        await resolve_pending_signals(state, session, klines_semaphore, now)
+        if ENABLE_LEGACY_SLTP_SUMMARY:
+            await resolve_pending_signals(state, session, klines_semaphore, now)
 
         candidates = []
         for s, info in tickers.items():
@@ -2604,7 +2611,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             await send_telegram_message(msg)
             entry["last_alert_ts"] = now.isoformat()
             alerts_sent += 1
-            register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
+            if ENABLE_LEGACY_SLTP_SUMMARY:
+                register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
             # ÚJ: objektív, SL/TP-mentes signal-audit regisztrálása - lásd
             # a fájl elején lévő blokk-kommentet. A pontszámot itt
             # ÚJRASZÁMOLJUK (nem módosítjuk a jelzés-generálást, csak a
@@ -2692,7 +2700,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 await send_telegram_message(div_msg)
                 entry["last_divergence_alert_ts"] = now.isoformat()
                 alerts_sent += 1
-                register_pending_signal(state, symbol, "DIVERGENCE_REVERSAL", divergence_direction, candle["price"], now)
+                if ENABLE_LEGACY_SLTP_SUMMARY:
+                    register_pending_signal(state, symbol, "DIVERGENCE_REVERSAL", divergence_direction, candle["price"], now)
                 div_audit_score, _, _ = compute_confidence_score(
                     divergence_direction, htf_trend=htf_trend, bounce_confluence=div_confluence,
                     near_level_risk=div_near_level_risk, funding_rate=funding_rate,
@@ -2732,7 +2741,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                         d["symbol"], d["price_change_pct"], d["oi_change_pct"], d["vol_multiplier"],
                         d["candle_vol_usdt"], "; ".join(d["failed"]))
 
-    await maybe_send_daily_summary(state, now)
+    if ENABLE_LEGACY_SLTP_SUMMARY:
+        await maybe_send_daily_summary(state, now)
     return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
 
 RUN_LOCK_STALE_MINUTES = (TOTAL_RUN_BUDGET_SECONDS / 60) + 2

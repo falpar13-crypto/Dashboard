@@ -507,6 +507,9 @@ SYMBOL_OUTCOME_HISTORY_MAX = 10
 # VÁLTOZATLANUL UTC marad - csak az összesítő naphatára/küldési idő lokális.
 SUMMARY_TIMEZONE = ZoneInfo("Europe/Budapest")
 
+ENABLE_LEGACY_SLTP_SUMMARY = False  # ÚJ: kikapcsolva - lásd a
+# daytrade_checker.py azonos kommentjét a teljes indoklásért.
+
 # ----------------------------------------------------------------------------
 # v18 RÁNCFELVARRÁS: EGYSZERŰSÍTETT, FIX SL-ES KIÉRTÉKELÉS
 # ----------------------------------------------------------------------------
@@ -2870,7 +2873,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         # kiértékelése - MOST MÁR az 5 perces gyertyák high/low-ját nézve, nem
         # egyetlen pillanatnyi ticker-árat (lásd a resolve_pending_signals()
         # feletti blokk-kommentet a módszertani váltás okáról).
-        await resolve_pending_signals(state, session, klines_semaphore, now)
+        if ENABLE_LEGACY_SLTP_SUMMARY:
+            await resolve_pending_signals(state, session, klines_semaphore, now)
 
         candidates = []
         for s, info in tickers.items():
@@ -3177,7 +3181,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
             # OUTCOME_FIXED_SL_PCT és resolve_pending_signals) - az előző
             # ATR/swing-alapú számítást (compute_sl_tp) a felhasználó kérésére
             # töröltük, a statisztika egyszerűbb és átláthatóbb lett tőle.
-            register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
+            if ENABLE_LEGACY_SLTP_SUMMARY:
+                register_pending_signal(state, symbol, fired_signal_type, candle["direction"], candle["price"], now)
             # ÚJ: objektív, SL/TP-mentes signal-audit regisztrálása.
             audit_score, _, _ = compute_confidence_score(
                 candle["direction"], htf_trend=htf_trend, bounce_confluence=bounce_confluence,
@@ -3261,7 +3266,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 await send_telegram_message(sq_msg)
                 entry["last_ema_squeeze_alert_ts"] = now.isoformat()
                 alerts_sent += 1
-                register_pending_signal(state, symbol, "EMA_SQUEEZE", ema_squeeze_signal, candle["price"], now)
+                if ENABLE_LEGACY_SLTP_SUMMARY:
+                    register_pending_signal(state, symbol, "EMA_SQUEEZE", ema_squeeze_signal, candle["price"], now)
                 sq_audit_score, _, _ = compute_confidence_score(
                     ema_squeeze_signal, htf_trend=htf_trend, bounce_confluence=sq_bounce_confluence,
                     near_level_risk=sq_near_level_risk, funding_rate=funding_rate,
@@ -3335,7 +3341,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 await send_telegram_message(rej_msg)
                 entry["last_ema_rejection_alert_ts"] = now.isoformat()
                 alerts_sent += 1
-                register_pending_signal(state, symbol, "EMA_REJECTION", ema_rejection_signal, candle["price"], now)
+                if ENABLE_LEGACY_SLTP_SUMMARY:
+                    register_pending_signal(state, symbol, "EMA_REJECTION", ema_rejection_signal, candle["price"], now)
                 rej_audit_score, _, _ = compute_confidence_score(
                     ema_rejection_signal, htf_trend=htf_trend, bounce_confluence=rej_bounce_confluence,
                     near_level_risk=rej_near_level_risk, funding_rate=funding_rate,
@@ -3387,7 +3394,8 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
     # elküldi az előző nap winrate-összesítőjét. A state-alapú gate miatt
     # (lásd maybe_send_daily_summary) naponta csak egyszer megy ki, akárhány
     # 30 mp-es körben is fut le ez a függvény.
-    await maybe_send_daily_summary(state, now)
+    if ENABLE_LEGACY_SLTP_SUMMARY:
+        await maybe_send_daily_summary(state, now)
 
     return alerts_sent, evaluated, valid_contracts, htf_cache, funding_cache
 
