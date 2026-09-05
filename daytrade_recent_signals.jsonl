@@ -25,3 +25,6 @@
 {"ts": "2026-09-05T07:42:28.222682+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-05T07:44:58.229076+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T07:51:16.298490+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-05T08:07:09.954951+00:00", "symbol": "COW-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T08:08:39.958098+00:00", "symbol": "DOLO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T08:08:39.958098+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
