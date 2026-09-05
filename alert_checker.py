@@ -89,6 +89,10 @@ MIN_VOL_MULTIPLIER = 2.0    # 2.5x -> 2.0x, lásd a MIN_OI_INCREASE melletti kom
 EARLY_MIN_PACE_VOL_MULT = 5.0    # a TELJES gyertyára vetített volumen-szorzó
                                    # küszöbe (magasabb, mint a STANDARD 2.5x-e,
                                    # mert ez egy zajosabb, korai becslés)
+ENABLE_EARLY_SIGNALS = False  # ÚJ: kikapcsolva - a mai audit-adat szerint az EARLY
+# típus gyengén teljesített (40% pontosság), ráadásul minden kiváltott
+# jelzés extra nyitott audit-tételt jelent, ami lassítja a futást. A kódot
+# nem töröltük, könnyen visszakapcsolható, ha a kép megváltozik.
 EARLY_MIN_ELAPSED_FRACTION = 0.07  # kb. 20 mp - ennél korábban túl zajos a mérés
 EARLY_MAX_ELAPSED_FRACTION = 0.6   # a gyertya 60%-a után már nincs sok előnye
                                      # az EARLY jelzésnek a STANDARD-hoz képest -
@@ -159,7 +163,7 @@ EMA_REJECTION_MIN_OI_INCREASE = 0.9
 EMA_REJECTION_MIN_VOL_MULTIPLIER = 1.4
 
 # --- ÚJ (v3): belső ciklus időzítése egy GitHub Actions futáson belül ---
-TOTAL_RUN_BUDGET_SECONDS = 480   # ÚJRA FELEMELVE: 420 -> 480 (~8 perc). Az
+TOTAL_RUN_BUDGET_SECONDS = 480   # v15: 420 -> 480, ~8 perc
                                    # előző csökkentés (520 -> 420) azért kellett,
                                    # mert a git push lépés a másik (daytrade)
                                    # bottal való branch-ütközés miatt akár 3+
@@ -3063,7 +3067,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         # mozgásra - így nem kap a felhasználó két jelzést ugyanarról.
         is_setup_early = False
         oi_fast_change_pct = None
-        if not is_setup:
+        if ENABLE_EARLY_SIGNALS and not is_setup:
             elapsed_fraction = candle.get("elapsed_fraction")
             pace_vol_multiplier = candle.get("pace_vol_multiplier")
             if (

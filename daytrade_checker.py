@@ -49,6 +49,10 @@ MIN_VOL_MULTIPLIER = 2.5
 # magát egy random kilengés is egy 1 órás gyertya elején. A scalp botban is
 # 5.0x a bevált érték ugyanerre a célra.
 EARLY_MIN_PACE_VOL_MULT = 5.0    
+ENABLE_EARLY_SIGNALS = False  # ÚJ: kikapcsolva - a mai audit-adat szerint az EARLY
+# típus gyengén teljesített (28.6% pontosság), ráadásul minden kiváltott
+# jelzés extra nyitott audit-tételt jelent, ami lassítja a futást. A kódot
+# nem töröltük, könnyen visszakapcsolható, ha a kép megváltozik.
 EARLY_MIN_ELAPSED_FRACTION = 0.1  
 EARLY_MAX_ELAPSED_FRACTION = 0.5   
 # SZIGORÍTVA: 20 000 -> 35 000 - arányosan a MIN_CANDLE_VOL_USDT emeléséhez
@@ -2516,7 +2520,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
 
         is_setup_early = False
         oi_fast_change_pct = None
-        if not is_setup:
+        if ENABLE_EARLY_SIGNALS and not is_setup:
             elapsed_fraction = candle.get("elapsed_fraction")
             pace_vol_multiplier = candle.get("pace_vol_multiplier")
             if (
