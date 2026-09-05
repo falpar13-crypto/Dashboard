@@ -20,3 +20,4 @@
 {"ts": "2026-09-05T00:08:12.902674+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T00:12:42.911094+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T00:20:25.083445+00:00", "symbol": "BANK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T00:43:28.367115+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
