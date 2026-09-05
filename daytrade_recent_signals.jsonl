@@ -1,7 +1,3 @@
-{"ts": "2026-09-05T16:14:45.747989+00:00", "symbol": "ENSO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-05T16:14:45.747989+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-05T16:15:15.748403+00:00", "symbol": "AIXBT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-05T16:17:45.751060+00:00", "symbol": "TRUST-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T16:26:07.297866+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T16:28:07.301302+00:00", "symbol": "DIA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T16:30:07.304731+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -29,3 +25,5 @@
 {"ts": "2026-09-05T21:19:50.467784+00:00", "symbol": "CLANKER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T22:08:51.017514+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T22:09:21.017912+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T22:22:54.807578+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T22:25:24.811282+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
