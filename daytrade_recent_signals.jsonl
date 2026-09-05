@@ -27,3 +27,4 @@
 {"ts": "2026-09-05T06:11:42.338797+00:00", "symbol": "THE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T06:21:38.545332+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-05T06:49:28.939950+00:00", "symbol": "BANANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T06:58:18.661596+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
