@@ -1,8 +1,5 @@
-{"ts": "2026-09-05T15:33:19.542081+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-09-05T15:41:21.188908+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EARLY"}
-{"ts": "2026-09-05T16:02:19.369522+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY"}
-{"ts": "2026-09-05T16:03:09.507689+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EARLY"}
-{"ts": "2026-09-05T16:12:35.148302+00:00", "symbol": "4-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-05T17:41:15.136147+00:00", "symbol": "MOODENG-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-09-05T18:22:30.432779+00:00", "symbol": "MARSCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-05T20:35:10.839191+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-09-05T22:17:25.078748+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-05T22:18:10.315119+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EARLY"}
