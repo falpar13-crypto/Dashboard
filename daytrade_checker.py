@@ -847,6 +847,28 @@ def generate_daily_audit_report(now: datetime) -> Optional[str]:
         if bucket:
             score_acc[label] = round(sum(1 for r in bucket if r["directional_return_pct"] > 0) / len(bucket) * 100, 1)
 
+    # ÚJ: pontszám-sáv bontás TÍPUSONKÉNT is - a felhasználó helyesen
+    # rámutatott, hogy az összesített (pooled) bontás félrevezető lehet:
+    # ha egy adott jelzéstípus eleve máshogy oszlik el a pontszám-sávokban,
+    # a "magas pontszám rosszabb" jelenség lehet, hogy nem a pontszám-
+    # számítás hibája, hanem egy adott típus (pl. DIVERGENCE_REVERSAL)
+    # felülreprezentáltsága egy adott sávban. Csak min. 3 mintás
+    # sáv/típus kombinációt mutatunk, hogy ne legyen zajos.
+    MIN_TYPE_SCORE_BUCKET_SAMPLE = 3
+    score_acc_by_type = {}
+    for t, rs in by_type.items():
+        per_type_scored = [r for r in rs if r.get("score") is not None]
+        if not per_type_scored:
+            continue
+        type_buckets = {}
+        for label, (lo, hi) in score_buckets.items():
+            bucket = [r for r in per_type_scored if lo <= r["score"] < hi]
+            if len(bucket) >= MIN_TYPE_SCORE_BUCKET_SAMPLE:
+                acc = round(sum(1 for r in bucket if r["directional_return_pct"] > 0) / len(bucket) * 100, 1)
+                type_buckets[label] = (acc, len(bucket))
+        if type_buckets:
+            score_acc_by_type[t] = type_buckets
+
     hour_buckets = [("00-04", 0, 4), ("04-08", 4, 8), ("08-12", 8, 12), ("12-16", 12, 16), ("16-20", 16, 20), ("20-24", 20, 24)]
     hour_acc = {}
     for label, lo, hi in hour_buckets:
@@ -902,10 +924,20 @@ def generate_daily_audit_report(now: datetime) -> Optional[str]:
             lines.append(f"  {t}: {acc}%")
 
     if score_acc:
-        lines.append("\n<b>Meggyőződés-pontszám sáv szerint:</b>")
+        lines.append("\n<b>Meggyőződés-pontszám sáv szerint (összesítve):</b>")
         for label in ("50-60", "60-70", "70-80", "80+"):
             if label in score_acc:
                 lines.append(f"  {label}: {score_acc[label]}%")
+
+    # ÚJ: típusonkénti pontszám-sáv bontás - lásd a fenti kommentet.
+    if score_acc_by_type:
+        lines.append("\n<b>Meggyőződés-pontszám sáv szerint, TÍPUSONKÉNT:</b>")
+        for t, buckets in score_acc_by_type.items():
+            lines.append(f"  <b>{t}</b>:")
+            for label in ("50-60", "60-70", "70-80", "80+"):
+                if label in buckets:
+                    acc, n = buckets[label]
+                    lines.append(f"    {label}: {acc}% (n={n})")
 
     if hour_acc:
         lines.append("\n<b>Napszak szerint:</b>")
