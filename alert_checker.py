@@ -2246,8 +2246,17 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
         elif direction == "SHORT" and rsi <= 25:
             score -= 5; factors.append("-5 RSI túladott (fordulat-kockázat)")
 
+    # JAVÍTÁS (adat alapján, 2026-09-04): korábban a KIEMELKEDŐEN magas
+    # volumen-szorzó (+5) jutalmat kapott, mint "erős megerősítés". A
+    # küszöb-hangolási rendszer 111 lezárt jelzésen (55/55 mintán) viszont
+    # az ELLENKEZŐJÉT mutatta: a medián (2.74) ALATTI volumen-szorzójú
+    # jelzések teljesítettek jobban (+1.32% vs +0.20% átlag hozam, 62% vs
+    # 31% találati arány) - vagyis a nagyon magas szorzó inkább egy
+    # egyszeri "climax"-gyertyát jelez (kifulladás), mint folytatódó
+    # mozgást. Amíg ezt több napi adat is meg nem erősíti, ÓVATOSAN, csak
+    # pontszám-tényezőként (nem kemény szűrőként) fordítottuk meg a hatást.
     if vol_multiplier is not None and vol_multiplier >= 2 * MIN_VOL_MULTIPLIER:
-        score += 5; factors.append("+5 kiemelkedően erős volumen")
+        score -= 8; factors.append("-8 szokatlanul magas volumen (lehetséges kifulladás - climax gyertya)")
 
     if cross_bot_confirmations:
         bonus = min(20, 12 * len(cross_bot_confirmations))

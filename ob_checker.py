@@ -1304,11 +1304,18 @@ async def run_once(state: dict, now: datetime) -> tuple:
                     break
             zone["htf_confluence"] = htf_confluence
 
-            # ÚJ: rangsorolás a 24h forgalom alapján (a piaci kapitalizáció
-            # könnyen elérhető közelítő helyettesítője - a botnak nincs
-            # közvetlen market cap adata, új API-t igényelne). Nagyobb
-            # forgalmú/ismertebb symbolok kerülnek előrébb a limit esetén.
-            quality_score = tickers.get(symbol, {}).get("quote_volume_24h", 0.0)
+            # ÚJ: rangsorolás a 24h forgalom (likviditási alap) ÉS a
+            # touch-volumen arány EGYÜTT alapján. A ma reggeli, addig csak
+            # tájékoztató touch-volumen mező mostanra megerősítést kapott a
+            # küszöb-hangolási rendszertől (87/86 mintán +3.17% vs +0.29%
+            # átlag hozam a magas/alacsony touch-volumenű csoportban) -
+            # ezért innentől nem csak infó, hanem SZORZÓKÉNT befolyásolja a
+            # rangsorolást (nem szűr, csak a MAX_ALERTS_PER_RUN-os
+            # válogatásnál dönt előrébb, ha egyszerre több jelölt is van).
+            base_liquidity_score = tickers.get(symbol, {}).get("quote_volume_24h", 0.0)
+            touch_vol_ratio = zone.get("touch_volume_ratio")
+            touch_vol_multiplier = min(3.0, max(0.3, touch_vol_ratio)) if touch_vol_ratio is not None else 1.0
+            quality_score = base_liquidity_score * touch_vol_multiplier
 
             candidates_for_alert.append({
                 "symbol": symbol, "zone": zone, "entry": entry,
