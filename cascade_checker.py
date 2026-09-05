@@ -51,6 +51,22 @@ logger = logging.getLogger("cascade_checker")
 # 1) PARAMÉTEREK
 # ----------------------------------------------------------------------------
 ALERT_TIMEFRAME = "1m"
+
+# ÚJ (2026-09-04, felhasználóval egyeztetve): FORDULAT-FOGADÁS
+# (mean-reversion / "fade") mód - a bot eddig a hirtelen kiugrás
+# IRÁNYÁBA fogadott (folytatódásra), de az audit-adat szerint ez a
+# kaszkád-botnál 3 egymást követő napon a leggyengébb teljesítményt
+# adta (MFE≈MAE, gyakran a MAE volt nagyobb) - vagyis mire a bot 1 perc
+# alatt észreveszi és tüzel egy kirobbanást, a mozgás gyakran már
+# kifulladóban van. A bot eredeti célja is a likvidációs kaszkádok
+# elkapása ("Liquidation-proxy") - egy likvidációs kaszkád pedig
+# KÉNYSZER-mozgás, nem valódi kereslet/kínálat, ezért JELLEMZŐEN gyorsan
+# visszapattan, amint a kényszer-kilépések kifogynak. Emiatt most a bot
+# az ELLENKEZŐ irányba fogad: hirtelen PUMP -> SHORT (fogadás a
+# visszapattanásra lefelé), hirtelen DUMP -> LONG (fogadás a
+# visszapattanásra fölfelé). Könnyen visszaállítható False-ra, ha az
+# audit-adat nem igazolja vissza.
+ENABLE_FADE_MODE = True
 CANDLE_DURATION_SECONDS = 60
 
 # SZIGORÚ küszöbök - ez a bot direkt csak a VALÓBAN szélsőséges,
@@ -878,7 +894,14 @@ def evaluate_candle(kdf: pd.DataFrame, now: Optional[datetime] = None) -> Option
     price_change_pct = (current_price - prev_close) / prev_close * 100
     vol_multiplier = live["volume"] / avg_vol
     candle_vol_usdt = float(live["volume"] * current_price)
-    direction = "LONG" if current_price >= live["open"] else "SHORT"
+    momentum_direction = "LONG" if current_price >= live["open"] else "SHORT"
+    # ÚJ: FADE mód - lásd az ENABLE_FADE_MODE kommentjét. A jelzett irány
+    # az ELLENKEZŐJE a nyers ár-mozgásnak (fordulatra fogadunk, nem
+    # folytatódásra).
+    if ENABLE_FADE_MODE:
+        direction = "SHORT" if momentum_direction == "LONG" else "LONG"
+    else:
+        direction = momentum_direction
 
     elapsed_fraction = None
     pace_vol_multiplier = None
@@ -936,6 +959,19 @@ def format_cascade_message(symbol, direction, price, price_change_pct, candle_vo
     else:
         header = f"🌋 <b>[KASZKÁD] {symbol}</b> {action} (1m)"
 
+    # ÚJ: FADE mód egyértelműsítő sor - lásd az ENABLE_FADE_MODE
+    # kommentjét. FONTOS: a fenti PUMP/DUMP címke a JELZÉS IRÁNYÁT (mire
+    # fogadunk), NEM a nyers ár-mozgást írja le - FADE módban ez a kettő
+    # ELLENTÉTES, ezért itt külön kiírjuk, mi történt ténylegesen.
+    fade_line = ""
+    if ENABLE_FADE_MODE:
+        raw_move = "felfelé pumpolt" if price_change_pct >= 0 else "lefelé dumpolt"
+        fade_line = (
+            f"\nℹ️ FORDULAT-FOGADÁS: az ár az elmúlt percben {raw_move} "
+            f"({price_change_pct:+.2f}%) - a jelzés a VISSZAPATTANÁSRA "
+            f"fogad ({action}), nem a folytatódásra."
+        )
+
     early_line = ""
     if signal_type == "EARLY":
         pace_note = f", vetített ütem: {pace_vol_multiplier:.1f}x" if pace_vol_multiplier is not None else ""
@@ -956,6 +992,7 @@ def format_cascade_message(symbol, direction, price, price_change_pct, candle_vo
         f"💰 Ár: {price:.6f} ({price_change_pct:+.2f}%, 1 PERC alatt)\n"
         f"📊 Vol: {candle_vol_usdt:,.0f} USDT ({vol_multiplier:.1f}x átlag)\n"
         f"⚠️ Extrém, kaszkád-jellegű mozgás - ellenőrizd a piacot, mielőtt lépsz."
+        f"{fade_line}"
         f"{early_line}"
         f"{cross_line}"
     )
