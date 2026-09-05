@@ -4,3 +4,5 @@
 {"ts": "2026-09-05T14:12:10.807940+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "EARLY"}
 {"ts": "2026-09-05T15:33:19.542081+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "EARLY"}
 {"ts": "2026-09-05T15:41:21.188908+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EARLY"}
+{"ts": "2026-09-05T16:02:19.369522+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY"}
+{"ts": "2026-09-05T16:03:09.507689+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EARLY"}
