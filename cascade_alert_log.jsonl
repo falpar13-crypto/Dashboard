@@ -165,3 +165,4 @@
 {"ts": "2026-09-05T04:21:13.494908+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.4317, "price_change_pct": -2.66, "vol_multiplier": 4.96}
 {"ts": "2026-09-05T04:53:03.168537+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.0172166, "price_change_pct": -3.09, "vol_multiplier": 8.16}
 {"ts": "2026-09-05T05:22:44.487513+00:00", "symbol": "XPIN-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.001038, "price_change_pct": -5.72, "vol_multiplier": 8.48}
+{"ts": "2026-09-05T07:02:21.462578+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 69.32, "price_change_pct": -1.52, "vol_multiplier": 12.31}
