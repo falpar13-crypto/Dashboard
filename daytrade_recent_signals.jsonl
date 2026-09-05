@@ -1,5 +1,3 @@
-{"ts": "2026-09-05T03:27:07.726688+00:00", "symbol": "VANA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-05T03:44:50.612812+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T04:09:18.313937+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T04:53:46.465862+00:00", "symbol": "EUL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T05:03:28.094388+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -28,3 +26,4 @@
 {"ts": "2026-09-05T09:07:06.389583+00:00", "symbol": "XPIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T09:09:36.392539+00:00", "symbol": "EUL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T09:19:26.233290+00:00", "symbol": "BROCCOLI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T10:05:20.791631+00:00", "symbol": "SPX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
