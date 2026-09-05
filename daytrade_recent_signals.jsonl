@@ -27,3 +27,5 @@
 {"ts": "2026-09-05T18:24:10.772363+00:00", "symbol": "MYX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T18:30:55.917800+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-05T19:25:21.274098+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T19:39:18.930866+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-05T19:41:48.934063+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
