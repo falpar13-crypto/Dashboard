@@ -23,3 +23,4 @@
 {"ts": "2026-09-05T15:30:09.806791+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T15:33:09.812150+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-05T15:42:35.775827+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-05T16:04:46.392523+00:00", "symbol": "DRIFT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
