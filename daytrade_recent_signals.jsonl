@@ -27,3 +27,4 @@
 {"ts": "2026-09-05T19:41:48.934063+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-05T20:14:33.299060+00:00", "symbol": "COOKIE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-05T20:20:37.095216+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-05T20:57:51.361577+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
