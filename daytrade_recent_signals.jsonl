@@ -21,3 +21,4 @@
 {"ts": "2026-09-06T00:04:45.711957+00:00", "symbol": "ENSO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T00:09:02.230068+00:00", "symbol": "MOVE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T00:12:32.236073+00:00", "symbol": "TNSR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T00:23:55.837493+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
