@@ -42,3 +42,4 @@
 {"ts": "2026-09-06T09:40:08.412840+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T09:42:08.416117+00:00", "symbol": "KAIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T09:44:08.419459+00:00", "symbol": "NXPC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T09:50:09.464587+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
