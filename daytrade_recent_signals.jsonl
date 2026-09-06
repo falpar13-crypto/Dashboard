@@ -33,3 +33,5 @@
 {"ts": "2026-09-06T19:06:27.508835+00:00", "symbol": "ILV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T19:23:18.152386+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T19:30:48.757514+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-06T19:41:42.225712+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T19:44:13.732784+00:00", "symbol": "MYX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
