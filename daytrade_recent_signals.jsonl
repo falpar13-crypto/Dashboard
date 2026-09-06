@@ -31,3 +31,4 @@
 {"ts": "2026-09-06T11:10:33.119197+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T11:26:53.094561+00:00", "symbol": "AGT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T11:29:23.097823+00:00", "symbol": "BANK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T11:37:38.024772+00:00", "symbol": "JUP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
