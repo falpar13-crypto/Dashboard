@@ -204,3 +204,4 @@
 {"ts": "2026-09-06T14:32:14.163094+00:00", "symbol": "RIVER-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 1.264, "price_change_pct": -1.79, "vol_multiplier": 5.48}
 {"ts": "2026-09-06T15:00:38.756252+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.813, "price_change_pct": -3.43, "vol_multiplier": 9.15}
 {"ts": "2026-09-06T18:29:28.809098+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.7826, "price_change_pct": -2.08, "vol_multiplier": 8.98}
+{"ts": "2026-09-06T18:42:11.337906+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.5815, "price_change_pct": -1.54, "vol_multiplier": 9.65}
