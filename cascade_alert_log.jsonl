@@ -182,3 +182,4 @@
 {"ts": "2026-09-05T22:17:25.078748+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.18015, "price_change_pct": 3.64, "vol_multiplier": 8.68}
 {"ts": "2026-09-05T22:18:10.315119+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.5517, "price_change_pct": -1.52, "vol_multiplier": 2.99}
 {"ts": "2026-09-06T00:16:53.423287+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 0.18671, "price_change_pct": 3.61, "vol_multiplier": 21.93}
+{"ts": "2026-09-06T01:03:19.271084+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 1059.55, "price_change_pct": 2.08, "vol_multiplier": 48.94}
