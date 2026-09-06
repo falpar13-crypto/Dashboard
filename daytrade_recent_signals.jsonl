@@ -1,4 +1,3 @@
-{"ts": "2026-09-06T11:04:03.109485+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T11:10:33.119197+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T11:26:53.094561+00:00", "symbol": "AGT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T11:29:23.097823+00:00", "symbol": "BANK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -36,3 +35,11 @@
 {"ts": "2026-09-06T16:12:51.054453+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T16:53:52.605511+00:00", "symbol": "AWE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T16:56:22.609020+00:00", "symbol": "STO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:04:15.957391+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:04:15.957391+00:00", "symbol": "BERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:04:45.957533+00:00", "symbol": "PARTI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:05:15.958218+00:00", "symbol": "HOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:05:15.958218+00:00", "symbol": "KAITO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:07:15.961660+00:00", "symbol": "PNUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:08:15.962769+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T17:08:15.962769+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
