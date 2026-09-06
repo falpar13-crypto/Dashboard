@@ -191,3 +191,5 @@
 {"ts": "2026-09-06T04:42:12.893767+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD", "price": 1127.92, "price_change_pct": 4.19, "vol_multiplier": 28.23}
 {"ts": "2026-09-06T05:34:13.148777+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 1178.77, "price_change_pct": 1.97, "vol_multiplier": 20.58}
 {"ts": "2026-09-06T05:56:22.457759+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.8751, "price_change_pct": -3.0, "vol_multiplier": 6.52}
+{"ts": "2026-09-06T06:15:30.086895+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0155478, "price_change_pct": -2.45, "vol_multiplier": 9.84}
+{"ts": "2026-09-06T06:20:35.639352+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0009482, "price_change_pct": -1.88, "vol_multiplier": 11.5}
