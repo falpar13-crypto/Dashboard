@@ -35,3 +35,4 @@
 {"ts": "2026-09-06T08:37:43.424979+00:00", "symbol": "PARTI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T08:40:13.429312+00:00", "symbol": "PNUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T08:46:47.394762+00:00", "symbol": "ZKP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T09:02:54.854408+00:00", "symbol": "BEAT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
