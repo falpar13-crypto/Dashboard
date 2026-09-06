@@ -26,3 +26,4 @@
 {"ts": "2026-09-06T21:04:28.949522+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T21:04:28.949522+00:00", "symbol": "NIGHT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T21:17:54.481732+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-06T21:35:34.735271+00:00", "symbol": "EVAA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
