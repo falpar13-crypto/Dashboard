@@ -198,3 +198,4 @@
 {"ts": "2026-09-06T09:11:35.281183+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 1199.48, "price_change_pct": 2.3, "vol_multiplier": 43.15}
 {"ts": "2026-09-06T09:22:14.068926+00:00", "symbol": "4-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.022778, "price_change_pct": -1.75, "vol_multiplier": 4.22}
 {"ts": "2026-09-06T10:25:42.404576+00:00", "symbol": "MARSCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD", "price": 0.19927, "price_change_pct": -3.27, "vol_multiplier": 18.54}
+{"ts": "2026-09-06T11:12:27.047359+00:00", "symbol": "4-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.023779, "price_change_pct": 2.46, "vol_multiplier": 15.36}
