@@ -2564,7 +2564,7 @@ def compute_rsi_series(close_series: pd.Series) -> Optional[pd.Series]:
 
 
 DIVERGENCE_LOOKBACK_PERIOD = 40
-DIVERGENCE_SWING_LEGS = 2
+DIVERGENCE_SWING_LEGS = 4          # 2 -> 4: lásd a daytrade_checker.py azonos kommentjét
 
 def detect_rsi_divergence(closed: pd.DataFrame, rsi_series: pd.Series,
                             legs: int = DIVERGENCE_SWING_LEGS,

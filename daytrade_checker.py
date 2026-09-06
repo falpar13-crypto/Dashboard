@@ -2209,7 +2209,11 @@ def compute_rsi_series(close_series: pd.Series) -> Optional[pd.Series]:
 
 
 DIVERGENCE_LOOKBACK_PERIOD = 40   # ennyi LEZÁRT gyertyán belül keresünk swing-pontokat
-DIVERGENCE_SWING_LEGS = 2          # ugyanaz a fraktál-méret, mint a S/R swing-keresőnél
+DIVERGENCE_SWING_LEGS = 4          # 2 -> 4: a felhasználó élő megfigyelése alapján
+# (PLUME-USDT eset) a 2-es érték túl érzékeny volt - apró, jelentéktelen
+# blip-eket is "swing-pontnak" fogadott el, amiket vizuálisan nem lehetett
+# a charton valódi mélypontként/csúcsként azonosítani. A 4-es szigorúbb:
+# egy pontnak 9 gyertya közül kell a legszélsőségesebbnek lennie.
 
 def detect_rsi_divergence(closed: pd.DataFrame, rsi_series: pd.Series,
                             legs: int = DIVERGENCE_SWING_LEGS,
