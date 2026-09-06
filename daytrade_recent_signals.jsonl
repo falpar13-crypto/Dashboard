@@ -25,3 +25,4 @@
 {"ts": "2026-09-06T01:07:00.764078+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T01:07:00.764078+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T01:07:00.764078+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T01:20:04.152495+00:00", "symbol": "CLANKER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
