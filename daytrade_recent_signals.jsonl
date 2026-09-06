@@ -39,3 +39,4 @@
 {"ts": "2026-09-06T14:58:38.058252+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-06T15:08:31.739753+00:00", "symbol": "ORCA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T15:09:01.740569+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T15:15:37.277660+00:00", "symbol": "OG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
