@@ -22,3 +22,6 @@
 {"ts": "2026-09-06T00:23:55.837493+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T00:34:50.196168+00:00", "symbol": "MYX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T00:47:42.591006+00:00", "symbol": "REDSTONE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T01:07:00.764078+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T01:07:00.764078+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T01:07:00.764078+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
