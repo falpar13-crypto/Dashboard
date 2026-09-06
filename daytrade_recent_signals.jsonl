@@ -37,3 +37,4 @@
 {"ts": "2026-09-06T13:06:56.598797+00:00", "symbol": "PNUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T13:08:56.782360+00:00", "symbol": "CC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T13:20:02.675557+00:00", "symbol": "MYX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T13:44:17.543607+00:00", "symbol": "NXPC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
