@@ -28,3 +28,5 @@
 {"ts": "2026-09-06T01:39:29.039931+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-06T01:50:52.465857+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-06T02:04:28.907753+00:00", "symbol": "WAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T02:09:56.483514+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T02:10:26.485585+00:00", "symbol": "RECALL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
