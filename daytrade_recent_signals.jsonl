@@ -39,3 +39,4 @@
 {"ts": "2026-09-06T13:44:17.543607+00:00", "symbol": "NXPC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T13:49:57.077023+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-06T13:51:57.446412+00:00", "symbol": "STBL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T14:04:16.519087+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
