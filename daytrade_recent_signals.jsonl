@@ -33,3 +33,4 @@
 {"ts": "2026-09-06T12:34:55.798706+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T12:35:25.799697+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-06T12:37:55.803848+00:00", "symbol": "PARTI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T12:43:20.384810+00:00", "symbol": "PROMPT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
