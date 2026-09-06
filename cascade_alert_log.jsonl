@@ -194,3 +194,4 @@
 {"ts": "2026-09-06T06:15:30.086895+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0155478, "price_change_pct": -2.45, "vol_multiplier": 9.84}
 {"ts": "2026-09-06T06:20:35.639352+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 0.0009482, "price_change_pct": -1.88, "vol_multiplier": 11.5}
 {"ts": "2026-09-06T07:14:11.827644+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "EARLY", "price": 69.95, "price_change_pct": -1.88, "vol_multiplier": 4.42}
+{"ts": "2026-09-06T08:38:10.717599+00:00", "symbol": "FLOCK-USDT", "direction": "SHORT", "signal_type": "EARLY", "price": 0.07758, "price_change_pct": 1.8, "vol_multiplier": 4.48}
