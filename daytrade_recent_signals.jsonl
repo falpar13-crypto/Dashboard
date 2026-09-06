@@ -38,3 +38,7 @@
 {"ts": "2026-09-06T09:19:39.919248+00:00", "symbol": "MYX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T09:21:39.923155+00:00", "symbol": "STBL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-06T09:24:39.927877+00:00", "symbol": "SXT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T09:38:38.410037+00:00", "symbol": "AIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T09:40:08.412840+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T09:42:08.416117+00:00", "symbol": "KAIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-06T09:44:08.419459+00:00", "symbol": "NXPC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
