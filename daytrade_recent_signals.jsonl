@@ -35,3 +35,4 @@
 {"ts": "2026-09-07T09:22:35.442971+00:00", "symbol": "GRASS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T09:25:05.445792+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T09:27:05.449038+00:00", "symbol": "TOSHI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T09:37:44.333676+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
