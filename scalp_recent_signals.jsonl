@@ -32,3 +32,4 @@
 {"ts": "2026-09-07T16:57:17.981774+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T16:59:20.924057+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-07T17:19:44.545794+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T17:28:16.180276+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
