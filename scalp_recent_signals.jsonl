@@ -29,3 +29,4 @@
 {"ts": "2026-09-07T18:28:52.935364+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T18:28:52.935364+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-07T19:35:14.620436+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T19:42:21.025752+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
