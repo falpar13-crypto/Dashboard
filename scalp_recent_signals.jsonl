@@ -31,3 +31,4 @@
 {"ts": "2026-09-07T14:19:14.551283+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-07T14:21:44.561334+00:00", "symbol": "CAKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T14:54:52.811524+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T15:04:57.607813+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
