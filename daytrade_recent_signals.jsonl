@@ -41,3 +41,5 @@
 {"ts": "2026-09-07T12:58:00.583522+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T13:04:30.593685+00:00", "symbol": "AT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T13:04:30.593685+00:00", "symbol": "RESOLV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T13:07:46.848030+00:00", "symbol": "S-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T13:09:16.849160+00:00", "symbol": "PUMPBTC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
