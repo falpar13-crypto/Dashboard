@@ -34,3 +34,4 @@
 {"ts": "2026-09-07T10:04:50.009924+00:00", "symbol": "BNLIFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T10:28:03.581647+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T10:43:07.605109+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T10:52:07.484787+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
