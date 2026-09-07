@@ -46,3 +46,4 @@
 {"ts": "2026-09-07T15:32:35.024614+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T15:35:35.027486+00:00", "symbol": "FF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T15:46:37.699427+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T15:59:40.901867+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
