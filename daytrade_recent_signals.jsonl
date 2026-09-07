@@ -46,3 +46,6 @@
 {"ts": "2026-09-07T13:36:11.775661+00:00", "symbol": "HOLO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T13:37:11.777071+00:00", "symbol": "STO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T13:38:11.778932+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T13:54:33.279465+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T13:56:34.072073+00:00", "symbol": "FET-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T13:59:34.534652+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
