@@ -53,3 +53,4 @@
 {"ts": "2026-09-07T17:36:21.893904+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T17:36:21.893904+00:00", "symbol": "HOLO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T17:37:21.896259+00:00", "symbol": "STO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T17:55:49.255711+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "STANDARD"}
