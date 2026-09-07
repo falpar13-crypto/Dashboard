@@ -1884,7 +1884,7 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
                                macd_status=None, rsi=None, vol_multiplier=None,
                                cross_bot_confirmations=None, divergence=None,
                                vwap_relation=None, historical_stats=None,
-                               wick_rejection_ratio=None) -> tuple:
+                               wick_rejection_ratio=None, oi_change_pct=None) -> tuple:
     """Visszatér: (score: int 0-100, label: str, factors: list[str]).
     A factors lista a pontszám összetevőit sorolja fel - ez KERÜL bele az
     üzenetbe is, hogy ne "fekete doboz" számként érkezzen, hanem lásd is,
@@ -1949,8 +1949,25 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
         elif direction == "SHORT" and rsi <= 25:
             score -= 5; factors.append("-5 RSI túladott (fordulat-kockázat)")
 
+    # JAVÍTÁS (adat alapján, 2026-09-06): korábban a KIEMELKEDŐEN magas
+    # volumen-szorzó (+5) jutalmat kapott. A küszöb-hangolási rendszer
+    # 510 lezárt jelzésen (55/55 mintán) az ELLENKEZŐJÉT mutatta: a
+    # medián (2.65) ALATTI szorzójú jelzések teljesítettek jobban
+    # (+1.05% vs +0.57%, 53% vs 38% találati arány) - ugyanaz a mintázat,
+    # mint amit a scalp-nál (alert_checker.py) már korábban megfordítottunk.
     if vol_multiplier is not None and vol_multiplier >= 2 * MIN_VOL_MULTIPLIER:
-        score += 5; factors.append("+5 kiemelkedően erős volumen")
+        score -= 8; factors.append("-8 szokatlanul magas volumen (lehetséges kifulladás - climax gyertya)")
+
+    # ÚJ (adat alapján, 2026-09-06): az OI-növekedés eddig NEM számított
+    # bele a pontszámba (csak a tüzelési küszöbnél). A küszöb-hangolási
+    # rendszer 510 lezárt jelzésen (55/55 mintán) azt mutatta, hogy a
+    # medián (6.95%) ALATTI OI-növekedésű jelzések jobban teljesítenek
+    # (+1.00% vs +0.63%, 44% vs 47% találati arány - utóbbi szám
+    # megtévesztő, az átlag hozam a lényeg). Szimmetrikusan a volumen-
+    # szorzóval, a SZOKATLANUL magas OI-ugrást is inkább kockázatnak,
+    # mint megerősítésnek tekintjük mostantól.
+    if oi_change_pct is not None and oi_change_pct >= 2 * MIN_OI_INCREASE:
+        score -= 8; factors.append("-8 szokatlanul magas OI-ugrás (lehetséges kifulladás)")
 
     # ÚJ: bot-közi megerősítés - lásd get_cross_bot_confirmations() kommentjét.
     # Erősebb súlyú, mint az egyedi jelzők, mert ez egy TELJESEN FÜGGETLEN
@@ -2031,7 +2048,7 @@ def format_daytrade_message(symbol, direction, price, price_change_pct, candle_v
         macd_status=macd_status, rsi=rsi, vol_multiplier=vol_multiplier,
         cross_bot_confirmations=cross_bot_confirmations, divergence=divergence,
         vwap_relation=vwap_relation, historical_stats=historical_stats,
-        wick_rejection_ratio=wick_rejection_ratio,
+        wick_rejection_ratio=wick_rejection_ratio, oi_change_pct=oi_change_pct,
     )
 
     if signal_type == "EARLY":
@@ -2662,6 +2679,7 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
                 vol_multiplier=candle["vol_multiplier"], cross_bot_confirmations=cross_bot_confirmations,
                 divergence=candle.get("divergence"), vwap_relation=candle.get("vwap_relation"),
                 historical_stats=historical_stats, wick_rejection_ratio=candle.get("wick_rejection_ratio"),
+                oi_change_pct=display_oi_change_pct,
             )
             register_signal_audit(state, symbol, candle["direction"], fired_signal_type,
                                     audit_score, candle["price"], now,
