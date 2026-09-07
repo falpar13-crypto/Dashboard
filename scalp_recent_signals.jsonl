@@ -24,3 +24,4 @@
 {"ts": "2026-09-07T11:14:09.177876+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T11:33:58.214055+00:00", "symbol": "KAS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-07T11:34:58.220406+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
+{"ts": "2026-09-07T11:48:28.790030+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
