@@ -16,3 +16,6 @@
 {"ts": "2026-09-07T09:34:17.887510+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T09:38:26.491834+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-07T09:53:20.504346+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T09:59:16.345957+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T10:02:16.369991+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-07T10:03:16.378025+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
