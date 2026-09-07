@@ -39,3 +39,4 @@
 {"ts": "2026-09-07T20:11:30.206971+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T20:22:48.355360+00:00", "symbol": "RIVER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T20:22:48.355360+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T20:34:27.083911+00:00", "symbol": "INX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
