@@ -33,3 +33,4 @@
 {"ts": "2026-09-07T12:06:47.945970+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T12:07:17.946783+00:00", "symbol": "KGEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-07T12:33:16.723998+00:00", "symbol": "INX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-07T12:42:37.824375+00:00", "symbol": "ALCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
