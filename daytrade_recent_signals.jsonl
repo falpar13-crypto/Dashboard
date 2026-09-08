@@ -40,3 +40,7 @@
 {"ts": "2026-09-08T10:37:41.722432+00:00", "symbol": "HUMA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-08T10:58:38.831335+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T10:58:38.831335+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-08T11:06:40.994208+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-08T11:06:40.994208+00:00", "symbol": "STABLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-08T11:10:41.001181+00:00", "symbol": "AIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-08T11:11:41.002490+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
