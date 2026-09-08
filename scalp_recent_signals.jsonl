@@ -10,3 +10,9 @@
 {"ts": "2026-09-08T12:37:21.171380+00:00", "symbol": "ATOM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T13:16:29.908902+00:00", "symbol": "VET-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-08T13:33:21.193350+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T13:42:03.075756+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T13:42:03.075756+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T13:42:03.075756+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T13:42:03.075756+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T13:42:33.996107+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T13:43:03.999261+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
