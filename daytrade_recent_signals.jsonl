@@ -33,3 +33,5 @@
 {"ts": "2026-09-08T04:23:32.022092+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-08T05:18:25.883681+00:00", "symbol": "UAI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-08T05:21:55.888018+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T05:36:09.064753+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T05:43:39.074952+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
