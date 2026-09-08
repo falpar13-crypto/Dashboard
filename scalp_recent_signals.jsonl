@@ -16,3 +16,4 @@
 {"ts": "2026-09-08T16:17:53.518259+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T17:16:28.848550+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-08T17:23:28.865112+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-08T18:02:53.551850+00:00", "symbol": "KAITO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
