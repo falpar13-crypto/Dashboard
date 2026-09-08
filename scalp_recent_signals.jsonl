@@ -15,3 +15,4 @@
 {"ts": "2026-09-07T22:39:32.550200+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-08T01:04:34.768875+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T01:27:30.491854+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T01:33:57.105582+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
