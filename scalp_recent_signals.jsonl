@@ -10,3 +10,4 @@
 {"ts": "2026-09-08T07:18:53.523343+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-08T08:32:19.090519+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T08:38:49.134220+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-08T09:34:28.041190+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
