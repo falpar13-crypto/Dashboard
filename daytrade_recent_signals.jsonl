@@ -44,3 +44,4 @@
 {"ts": "2026-09-08T15:36:08.279755+00:00", "symbol": "VVV-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T15:46:03.025693+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T16:04:30.245061+00:00", "symbol": "PNUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-08T16:21:33.078466+00:00", "symbol": "ORDI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
