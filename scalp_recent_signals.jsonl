@@ -7,3 +7,4 @@
 {"ts": "2026-09-08T03:49:03.268182+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-08T04:24:22.466566+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-08T05:22:58.673229+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-08T05:49:02.670009+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
