@@ -36,3 +36,5 @@
 {"ts": "2026-09-08T09:43:51.050340+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-08T10:00:24.548185+00:00", "symbol": "LIGHTER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-08T10:26:56.007938+00:00", "symbol": "ENSO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-08T10:37:11.373755+00:00", "symbol": "AIXBT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-08T10:37:41.722432+00:00", "symbol": "HUMA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
