@@ -27,3 +27,6 @@
 {"ts": "2026-09-09T14:49:39.791287+00:00", "symbol": "IOST-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T15:01:27.510957+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-09T15:14:34.630190+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T15:23:02.250336+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T15:23:32.253612+00:00", "symbol": "FARTCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T15:24:02.257155+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
