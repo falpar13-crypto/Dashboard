@@ -22,3 +22,4 @@
 {"ts": "2026-09-09T10:33:37.847562+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T10:59:08.370936+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T10:59:38.372826+00:00", "symbol": "JTO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T11:32:44.738184+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
