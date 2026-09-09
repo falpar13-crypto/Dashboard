@@ -12,3 +12,4 @@
 {"ts": "2026-09-09T07:09:08.237009+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T07:28:57.457687+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T07:37:40.124874+00:00", "symbol": "FLOCK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-09T08:14:01.650567+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
