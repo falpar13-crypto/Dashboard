@@ -26,3 +26,4 @@
 {"ts": "2026-09-09T14:28:27.175168+00:00", "symbol": "FORM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T14:49:39.791287+00:00", "symbol": "IOST-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T15:01:27.510957+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-09T15:14:34.630190+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
