@@ -61,3 +61,5 @@
 {"ts": "2026-09-09T16:00:42.301609+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T16:04:12.305788+00:00", "symbol": "WAL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T16:04:42.306085+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T16:11:21.542705+00:00", "symbol": "PUMPBTC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T16:13:21.546669+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
