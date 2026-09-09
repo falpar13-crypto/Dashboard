@@ -53,3 +53,4 @@
 {"ts": "2026-09-09T18:08:38.227440+00:00", "symbol": "BERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T18:24:50.312222+00:00", "symbol": "PENDLE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T18:44:04.966162+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T18:48:48.883214+00:00", "symbol": "JASMY-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
