@@ -20,3 +20,4 @@
 {"ts": "2026-09-09T09:59:23.154404+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T10:01:53.166942+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T10:18:44.467231+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T10:33:37.847562+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
