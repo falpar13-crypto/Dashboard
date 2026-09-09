@@ -1,4 +1,3 @@
-{"ts": "2026-09-09T14:29:33.661349+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T14:44:03.216942+00:00", "symbol": "RUNE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T14:48:48.664154+00:00", "symbol": "JASMY-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T14:49:48.665258+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -61,3 +60,9 @@
 {"ts": "2026-09-09T20:22:55.887676+00:00", "symbol": "AUCTION-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T20:23:25.888229+00:00", "symbol": "SHELL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T20:24:25.889203+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T20:34:32.374508+00:00", "symbol": "TNSR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T20:34:32.374508+00:00", "symbol": "API3-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T20:35:36.335095+00:00", "symbol": "PNUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T20:35:36.335095+00:00", "symbol": "W-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T20:35:36.335095+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T20:37:10.414828+00:00", "symbol": "JTO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
