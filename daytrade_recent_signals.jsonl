@@ -30,3 +30,6 @@
 {"ts": "2026-09-09T08:09:07.979371+00:00", "symbol": "KITE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T08:09:07.979371+00:00", "symbol": "DRIFT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T08:12:37.984519+00:00", "symbol": "HANA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T08:17:01.399793+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T08:17:01.399793+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T08:18:31.401051+00:00", "symbol": "ZKP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
