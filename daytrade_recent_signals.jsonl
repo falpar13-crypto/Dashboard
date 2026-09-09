@@ -50,3 +50,4 @@
 {"ts": "2026-09-09T23:11:15.871336+00:00", "symbol": "WAL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T23:11:46.830589+00:00", "symbol": "STABLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T23:13:17.480169+00:00", "symbol": "APE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T23:22:30.557623+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
