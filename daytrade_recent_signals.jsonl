@@ -49,3 +49,5 @@
 {"ts": "2026-09-09T14:08:31.717459+00:00", "symbol": "BERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T14:29:33.661349+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T14:44:03.216942+00:00", "symbol": "RUNE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T14:48:48.664154+00:00", "symbol": "JASMY-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T14:49:48.665258+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
