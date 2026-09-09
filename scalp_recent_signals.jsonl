@@ -15,3 +15,5 @@
 {"ts": "2026-09-09T08:39:42.353378+00:00", "symbol": "ALLO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T09:37:33.382171+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-09T09:39:33.858093+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-09T09:44:24.814615+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T09:44:24.814615+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
