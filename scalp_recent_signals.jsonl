@@ -8,3 +8,4 @@
 {"ts": "2026-09-09T05:47:03.533049+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-09T05:48:35.558978+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-09T05:49:06.008251+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T06:19:15.194206+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
