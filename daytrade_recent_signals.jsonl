@@ -44,3 +44,5 @@
 {"ts": "2026-09-09T11:48:57.505062+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T11:56:41.803411+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-09T11:57:11.804227+00:00", "symbol": "PENDLE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-09T12:09:13.737318+00:00", "symbol": "NEIROCTO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T12:12:53.743092+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
