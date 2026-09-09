@@ -35,3 +35,5 @@
 {"ts": "2026-09-09T09:04:46.399818+00:00", "symbol": "SXT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T09:07:46.404712+00:00", "symbol": "FHE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-09T09:10:46.409817+00:00", "symbol": "OPENLEDGER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T09:19:11.890848+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-09T09:20:11.891758+00:00", "symbol": "BLUAI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
