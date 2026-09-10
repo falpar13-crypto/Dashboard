@@ -38,3 +38,7 @@
 {"ts": "2026-09-10T04:16:06.947541+00:00", "symbol": "ZK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T04:20:06.952148+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T04:28:16.500859+00:00", "symbol": "PUMPBTC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T04:36:55.633541+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T04:37:25.634556+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T04:38:55.639201+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T04:40:25.640233+00:00", "symbol": "W-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
