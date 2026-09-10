@@ -6,3 +6,4 @@
 {"ts": "2026-09-10T17:14:38.338402+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T17:14:38.338402+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-10T18:00:13.073038+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T18:12:46.116257+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
