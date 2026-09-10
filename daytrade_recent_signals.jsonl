@@ -52,3 +52,5 @@
 {"ts": "2026-09-10T21:50:32.652821+00:00", "symbol": "ENS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T21:52:02.654863+00:00", "symbol": "COOKIE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T21:52:32.655057+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T22:04:17.844679+00:00", "symbol": "XPL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T22:04:17.844679+00:00", "symbol": "ALCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
