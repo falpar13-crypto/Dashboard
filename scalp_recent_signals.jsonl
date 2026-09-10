@@ -14,3 +14,4 @@
 {"ts": "2026-09-10T00:12:37.387400+00:00", "symbol": "KAT-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-10T00:52:29.893054+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T01:06:48.574264+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T01:34:06.262852+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
