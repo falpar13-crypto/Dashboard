@@ -42,3 +42,5 @@
 {"ts": "2026-09-10T13:03:37.597727+00:00", "symbol": "SOLV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T13:15:37.079242+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T13:51:04.371225+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T13:58:46.491688+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T14:04:30.242977+00:00", "symbol": "AWE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
