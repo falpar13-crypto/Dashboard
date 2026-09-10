@@ -48,3 +48,6 @@
 {"ts": "2026-09-10T21:17:24.066975+00:00", "symbol": "ERA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T21:17:54.224460+00:00", "symbol": "BERA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T21:18:24.225218+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T21:27:34.144979+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T21:29:34.166197+00:00", "symbol": "RENDER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T21:31:34.169545+00:00", "symbol": "DYDX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
