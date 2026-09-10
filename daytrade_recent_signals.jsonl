@@ -44,3 +44,4 @@
 {"ts": "2026-09-10T08:19:38.959245+00:00", "symbol": "AUCTION-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T08:20:08.961268+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T08:20:39.182517+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T08:28:23.500098+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
