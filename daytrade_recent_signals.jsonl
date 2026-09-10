@@ -45,3 +45,4 @@
 {"ts": "2026-09-10T12:56:13.480104+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T13:00:07.315962+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T13:03:37.597727+00:00", "symbol": "SOLV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T13:15:37.079242+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
