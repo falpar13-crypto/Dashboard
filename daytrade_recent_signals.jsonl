@@ -48,3 +48,6 @@
 {"ts": "2026-09-10T05:27:32.868727+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T05:28:02.869155+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T05:28:02.869155+00:00", "symbol": "ORDI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T05:50:55.967314+00:00", "symbol": "GALA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T05:52:58.445532+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T05:52:58.445532+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
