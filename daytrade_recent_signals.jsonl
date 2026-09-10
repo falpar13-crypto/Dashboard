@@ -1,5 +1,3 @@
-{"ts": "2026-09-10T01:49:48.876752+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-10T01:50:48.880193+00:00", "symbol": "GALA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T02:42:21.938302+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T02:42:21.938302+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T02:45:15.644328+00:00", "symbol": "ATOM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -42,3 +40,7 @@
 {"ts": "2026-09-10T07:43:29.838674+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T07:43:59.839792+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T07:46:30.033845+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T08:17:08.349473+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T08:19:38.959245+00:00", "symbol": "AUCTION-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T08:20:08.961268+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T08:20:39.182517+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
