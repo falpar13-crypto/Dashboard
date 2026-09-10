@@ -9,3 +9,4 @@
 {"ts": "2026-09-10T04:53:36.512808+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T04:56:12.802820+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-10T04:57:15.001380+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-10T05:09:32.883224+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "STANDARD"}
