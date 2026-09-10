@@ -37,3 +37,6 @@
 {"ts": "2026-09-10T12:06:07.364452+00:00", "symbol": "ALLO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T12:18:45.619194+00:00", "symbol": "ALCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-10T12:30:37.420299+00:00", "symbol": "AT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T12:36:07.219148+00:00", "symbol": "PENDLE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-10T12:38:40.626477+00:00", "symbol": "AUCTION-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-10T12:41:43.531838+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
