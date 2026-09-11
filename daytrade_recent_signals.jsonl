@@ -60,3 +60,4 @@
 {"ts": "2026-09-11T12:50:12.691935+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T12:52:12.694043+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T12:55:12.697626+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T13:04:29.666892+00:00", "symbol": "XPIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
