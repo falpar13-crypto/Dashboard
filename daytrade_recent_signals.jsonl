@@ -49,3 +49,6 @@
 {"ts": "2026-09-11T04:14:50.099080+00:00", "symbol": "AIXBT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T04:16:20.469623+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T04:21:20.475481+00:00", "symbol": "1INCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T04:25:39.766679+00:00", "symbol": "XPIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T04:25:39.766679+00:00", "symbol": "PUMPBTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T04:26:43.137266+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
