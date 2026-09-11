@@ -54,3 +54,7 @@
 {"ts": "2026-09-11T12:29:33.950599+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T12:29:33.950599+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T12:29:33.950599+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T12:35:41.373304+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T12:41:13.682249+00:00", "symbol": "WCT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T12:43:43.684738+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T12:43:43.684738+00:00", "symbol": "1INCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
