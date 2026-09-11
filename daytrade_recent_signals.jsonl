@@ -42,3 +42,4 @@
 {"ts": "2026-09-11T10:19:41.338691+00:00", "symbol": "WAL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T10:55:02.247027+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T10:56:02.248729+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T11:12:21.839846+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
