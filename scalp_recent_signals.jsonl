@@ -17,3 +17,5 @@
 {"ts": "2026-09-11T13:43:34.369266+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T13:53:22.159886+00:00", "symbol": "PONS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T13:59:53.356440+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T14:08:23.928072+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T14:09:27.262491+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
