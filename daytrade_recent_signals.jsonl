@@ -59,3 +59,4 @@
 {"ts": "2026-09-11T01:57:07.771843+00:00", "symbol": "WET-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T02:09:07.295281+00:00", "symbol": "XPL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T02:10:07.296218+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T02:16:34.758057+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
