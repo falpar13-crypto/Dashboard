@@ -94,3 +94,4 @@
 {"ts": "2026-09-11T21:08:33.355386+00:00", "symbol": "EUL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T21:10:38.723514+00:00", "symbol": "AWE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T21:11:10.591951+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T21:20:40.939728+00:00", "symbol": "ICNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
