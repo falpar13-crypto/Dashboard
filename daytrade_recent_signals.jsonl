@@ -48,3 +48,5 @@
 {"ts": "2026-09-11T04:26:43.137266+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T05:15:20.004715+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T05:29:19.094039+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T05:51:21.985714+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T05:52:21.986785+00:00", "symbol": "RUNE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
