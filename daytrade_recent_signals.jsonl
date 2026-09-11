@@ -53,3 +53,5 @@
 {"ts": "2026-09-11T16:18:35.897962+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T16:19:05.899029+00:00", "symbol": "AUCTION-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T16:30:12.169000+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T16:50:36.121984+00:00", "symbol": "WCT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T16:51:36.123536+00:00", "symbol": "1INCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
