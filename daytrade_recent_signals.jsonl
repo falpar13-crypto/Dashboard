@@ -1,5 +1,3 @@
-{"ts": "2026-09-11T08:51:32.209261+00:00", "symbol": "MARSCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-11T08:55:02.214234+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T09:07:55.637737+00:00", "symbol": "0G-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T09:14:42.010678+00:00", "symbol": "EGLD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T09:55:50.055787+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -43,3 +41,5 @@
 {"ts": "2026-09-11T14:06:11.151340+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T14:19:10.917511+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T14:46:40.823077+00:00", "symbol": "VVV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T14:59:03.145252+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T14:59:03.145252+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
