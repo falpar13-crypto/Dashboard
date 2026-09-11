@@ -8,3 +8,4 @@
 {"ts": "2026-09-11T01:03:14.333037+00:00", "symbol": "VVV-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-11T02:35:46.612449+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T02:37:16.622475+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-11T03:13:39.220959+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
