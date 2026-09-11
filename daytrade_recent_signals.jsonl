@@ -80,3 +80,5 @@
 {"ts": "2026-09-11T19:24:20.410743+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T19:24:50.412416+00:00", "symbol": "COOKIE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T19:39:12.702139+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T19:59:40.831696+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T19:59:40.831696+00:00", "symbol": "STX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
