@@ -42,3 +42,4 @@
 {"ts": "2026-09-11T14:59:03.145252+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T14:59:03.145252+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T15:25:18.695974+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T15:52:10.448584+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
