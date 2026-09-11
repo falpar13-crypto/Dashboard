@@ -8,3 +8,4 @@
 {"ts": "2026-09-11T20:38:16.509381+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-11T21:59:51.692373+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T23:04:15.001291+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T23:29:26.526783+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
