@@ -49,3 +49,4 @@
 {"ts": "2026-09-11T08:51:32.209261+00:00", "symbol": "MARSCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T08:55:02.214234+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T09:07:55.637737+00:00", "symbol": "0G-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T09:14:42.010678+00:00", "symbol": "EGLD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
