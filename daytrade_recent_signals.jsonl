@@ -50,3 +50,4 @@
 {"ts": "2026-09-11T00:12:36.250302+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T00:12:36.250302+00:00", "symbol": "MERL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T00:13:10.420662+00:00", "symbol": "TNSR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T00:26:19.355014+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
