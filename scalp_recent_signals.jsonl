@@ -16,3 +16,5 @@
 {"ts": "2026-09-11T12:39:43.315972+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-11T12:42:43.931272+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-11T12:42:43.931272+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T12:52:21.062390+00:00", "symbol": "JASMY-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T12:53:21.065487+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
