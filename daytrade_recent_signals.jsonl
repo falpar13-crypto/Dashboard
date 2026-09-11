@@ -1,6 +1,3 @@
-{"ts": "2026-09-10T23:20:48.145707+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-10T23:20:48.145707+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-10T23:28:48.161716+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T00:03:58.010505+00:00", "symbol": "PENDLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T00:10:24.358833+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T00:10:57.634693+00:00", "symbol": "HBAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -50,3 +47,4 @@
 {"ts": "2026-09-11T04:25:39.766679+00:00", "symbol": "PUMPBTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T04:26:43.137266+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T05:15:20.004715+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-11T05:29:19.094039+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
