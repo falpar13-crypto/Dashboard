@@ -56,3 +56,4 @@
 {"ts": "2026-09-11T17:02:17.141259+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T17:04:28.741655+00:00", "symbol": "SYRUP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-11T17:04:58.742040+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-11T17:11:54.072202+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
