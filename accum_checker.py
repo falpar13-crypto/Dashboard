@@ -73,6 +73,11 @@ HISTORY_CANDLES = 200          # fedi a 180 napos ATH-visszatekintést + puffer
 ATH_LOOKBACK_DAYS = 180
 MIN_DROP_FROM_PEAK_PCT = 70.0  # a csúcshoz képest legalább ennyivel lejjebb kell lennie
 
+# ÚJ: minimum ennyi napi gyertya elég ahhoz, hogy egyáltalán megvizsgáljuk
+# a coint - NEM követeljük meg mereven a teljes ATH_LOOKBACK_DAYS-t (lásd
+# az evaluate_accumulation() blokk-kommentjét a hibajavítás indoklásáért).
+MIN_HISTORY_DAYS_REQUIRED = 40
+
 PATTERN_WINDOW_DAYS = 10       # a felhalmozási mintázat vizsgálati ablaka
 VOLUME_GROWTH_MIN_RATIO = 1.5  # az ablak 2. fele / 1. fele volumen-arány min.
 MAX_PRICE_RANGE_PCT = 18.0     # az ártartomány max. ennyi %-a lehet az átlagárnak
@@ -288,20 +293,31 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
     """Tisztán OHLC+volumen alapú kiértékelés - lásd a fájl elején lévő
     blokk-kommentet a módszertanért. A LEZÁRT napi gyertyákat vizsgáljuk,
     az élő (ma még formálódó) napot csak a "még nem tört ki" ellenőrzésre
-    használjuk."""
-    min_needed = ATH_LOOKBACK_DAYS + PATTERN_WINDOW_DAYS + 5
-    if kdf is None or len(kdf) < min_needed:
+    használjuk.
+
+    JAVÍTÁS (élesben megfigyelt hiba, 2026-09-12): korábban KÖTELEZŐEN
+    180 napi (kb. 6.5 hónapos) előéletet követelt meg minden coinnál,
+    mielőtt egyáltalán megvizsgálta volna - ez pont a célközönséget
+    (friss, újonnan listázott, berobbant-majd-összeomlott meme-coinokat)
+    zárta ki, mert azoknak gyakran nincs ennyi kereskedési előéletük a
+    BingX perpetuals-on. Mostantól a csúcs-visszatekintés a RENDELKEZÉSRE
+    ÁLLÓ adathosszhoz igazodik (minimum MIN_HISTORY_DAYS_REQUIRED nap
+    elég), nem követeli meg mereven a teljes ATH_LOOKBACK_DAYS-t."""
+    if kdf is None:
         return None
 
     closed = kdf.iloc[:-1].reset_index(drop=True)
     live = kdf.iloc[-1]
-    if len(closed) < ATH_LOOKBACK_DAYS:
+    min_needed = MIN_HISTORY_DAYS_REQUIRED + PATTERN_WINDOW_DAYS
+    if len(closed) < min_needed:
         return None
 
     current_price = float(closed["close"].iloc[-1])
 
-    # --- 1) "NAGYON LOW": a 180 napos csúcshoz képest ---
-    ath_window = closed.iloc[-ATH_LOOKBACK_DAYS:]
+    # --- 1) "NAGYON LOW": a rendelkezésre álló (max. ATH_LOOKBACK_DAYS
+    # hosszú) előélet csúcsához képest ---
+    effective_ath_days = min(ATH_LOOKBACK_DAYS, len(closed))
+    ath_window = closed.iloc[-effective_ath_days:]
     peak = float(ath_window["high"].max())
     if peak <= 0:
         return None
@@ -341,6 +357,7 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
         "direction": "LONG",  # a setup jellegénél fogva mindig LONG (kitörésre várunk)
         "price": current_price,
         "peak_180d": peak,
+        "ath_days_used": effective_ath_days,
         "drop_from_peak_pct": round(drop_from_peak_pct, 2),
         "volume_growth_ratio": round(volume_growth_ratio, 2),
         "price_range_pct": round(price_range_pct, 2),
@@ -707,11 +724,18 @@ async def send_telegram_message(text: str) -> None:
 
 def format_accum_message(symbol: str, result: dict) -> str:
     header = f"🌱 <b>[FELHALMOZÁS] {symbol}</b> CSENDES FELHALMOZÁS 🟩"
+    ath_days = result.get("ath_days_used", ATH_LOOKBACK_DAYS)
+    ath_note = f"{ath_days} napos" if ath_days < ATH_LOOKBACK_DAYS else f"{ATH_LOOKBACK_DAYS} napos"
+    short_history_note = (
+        f"\n⚠️ Csak {ath_days} napos előélet állt rendelkezésre (rövidebb, mint az ideális "
+        f"{ATH_LOOKBACK_DAYS} nap) - lehet, hogy van ennél magasabb, korábbi csúcs is."
+        if ath_days < ATH_LOOKBACK_DAYS else ""
+    )
     body = (
         f"{header}\n"
         f"💰 Jelenlegi ár: {result['price']:.8f}\n"
-        f"📉 Visszaesés a {ATH_LOOKBACK_DAYS} napos csúcstól: -{result['drop_from_peak_pct']:.1f}% "
-        f"(csúcs: {result['peak_180d']:.8f})\n"
+        f"📉 Visszaesés a {ath_note} csúcstól: -{result['drop_from_peak_pct']:.1f}% "
+        f"(csúcs: {result['peak_180d']:.8f}){short_history_note}\n"
         f"📊 Volumen-növekedés az utóbbi {PATTERN_WINDOW_DAYS} napban: {result['volume_growth_ratio']:.2f}x\n"
         f"📏 Ár-szűkösség: {result['price_range_pct']:.1f}% (szűk tartomány)\n"
         f"\n"
