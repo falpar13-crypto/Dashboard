@@ -14,3 +14,4 @@
 {"ts": "2026-09-12T15:03:17.132162+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-12T15:12:31.873214+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T15:23:12.567837+00:00", "symbol": "VVV-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-12T16:04:53.610091+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
