@@ -982,6 +982,36 @@ THRESHOLD_SUGGESTION_FIELDS = [
 ]
 
 
+def _compute_quartile_stats(finals_with_meta: list, field: str) -> Optional[list]:
+    """ÚJ: numerikus mezőket 4 (nem csak 2) csoportra bont, hogy a
+    teljesítmény-görbe ALAKJA is látszódjon - pl. fokozatos romlás vs
+    éles törés egy adott értéknél. Csak akkor ad vissza valamit, ha
+    minden negyedben elég minta van (MIN_SUGGESTION_SAMPLE legalább
+    a negyedében, hogy a 4 csoport összesen még megfeleljen az elvárt
+    minimumnak)."""
+    pairs = [(r, m.get(field)) for r, m in finals_with_meta if m.get(field) is not None]
+    min_per_quartile = max(10, MIN_SUGGESTION_SAMPLE // 4)
+    if len(pairs) < min_per_quartile * 4:
+        return None
+    pairs.sort(key=lambda x: x[1])
+    n = len(pairs)
+    q = n // 4
+    quartiles = [pairs[0:q], pairs[q:2*q], pairs[2*q:3*q], pairs[3*q:]]
+    if any(len(qg) < min_per_quartile for qg in quartiles):
+        return None
+
+    stats = []
+    for qgroup in quartiles:
+        vals = [v for _, v in qgroup]
+        rets = [r["directional_return_pct"] for r, _ in qgroup]
+        stats.append({
+            "n": len(qgroup), "min_val": min(vals), "max_val": max(vals),
+            "avg_return": sum(rets) / len(rets),
+            "win_rate": sum(1 for x in rets if x > 0) / len(rets) * 100,
+        })
+    return stats
+
+
 def _compute_group_stats(finals_with_meta: list, field: str, kind: str) -> Optional[dict]:
     """Két csoportra bontja a mintát (bool: igaz/hamis; numeric: medián
     fölött/alatt), és összeveti az átlag directional_return_pct-et és a
@@ -1082,6 +1112,14 @@ def generate_threshold_suggestions() -> Optional[str]:
                     f"találati arány {stat['win_rate_lo']:.0f}% vs {stat['win_rate_hi']:.0f}%, "
                     f"n={stat['n_lo']}/{stat['n_hi']}) - meglepő, ellenőrizd, miért ront a magas érték"
                 )
+            # ÚJ: negyedelős (kvartilis) bontás - a felhasználóval
+            # egyeztetve, hogy a 2-csoportos vágás elrejti a teljesítmény-
+            # görbe ALAKJÁT (fokozatos romlás vs éles törés egy pontnál).
+            qstats = _compute_quartile_stats(finals_with_meta, field)
+            if qstats:
+                q_parts = [f"Q{i+1}({q['min_val']:.2f}-{q['max_val']:.2f}): {q['avg_return']:+.2f}%/{q['win_rate']:.0f}%"
+                           for i, q in enumerate(qstats)]
+                suggestions.append(f"    ↳ negyedelve: {' | '.join(q_parts)}")
 
     if not suggestions:
         return None
@@ -1949,24 +1987,25 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
         elif direction == "SHORT" and rsi <= 25:
             score -= 5; factors.append("-5 RSI túladott (fordulat-kockázat)")
 
-    # JAVÍTÁS (adat alapján, 2026-09-06): korábban a KIEMELKEDŐEN magas
-    # volumen-szorzó (+5) jutalmat kapott. A küszöb-hangolási rendszer
-    # 510 lezárt jelzésen (55/55 mintán) az ELLENKEZŐJÉT mutatta: a
-    # medián (2.65) ALATTI szorzójú jelzések teljesítettek jobban
-    # (+1.05% vs +0.57%, 53% vs 38% találati arány) - ugyanaz a mintázat,
-    # mint amit a scalp-nál (alert_checker.py) már korábban megfordítottunk.
-    if vol_multiplier is not None and vol_multiplier >= 2 * MIN_VOL_MULTIPLIER:
-        score -= 8; factors.append("-8 szokatlanul magas volumen (lehetséges kifulladás - climax gyertya)")
+    # JAVÍTÁS (adat alapján, negyedelős bontás 2026-09-12): a volumen-
+    # szorzó hatása FOKOZATOS romlás, nem éles törés egy pontnál (Q1:
+    # +0.66%/43%, Q2: +0.41%/51%, Q3: +0.07%/47%, Q4: -0.25%/41%) - ezért
+    # LÉPCSŐZETES büntetés indokolt egyetlen kapcsoló helyett. Csak
+    # pontszám-hatás, NEM szűr - a jelzés minden szinten kimegy.
+    if vol_multiplier is not None:
+        if vol_multiplier >= 8.0:
+            score -= 10; factors.append("-10 nagyon magas volumen (erős kifulladás-kockázat - climax gyertya)")
+        elif vol_multiplier >= 5.0:
+            score -= 6; factors.append("-6 magas volumen (kifulladás-kockázat)")
+        elif vol_multiplier >= 3.0:
+            score -= 3; factors.append("-3 emelkedett volumen (enyhe kifulladás-kockázat)")
 
-    # ÚJ (adat alapján, 2026-09-06): az OI-növekedés eddig NEM számított
-    # bele a pontszámba (csak a tüzelési küszöbnél). A küszöb-hangolási
-    # rendszer 510 lezárt jelzésen (55/55 mintán) azt mutatta, hogy a
-    # medián (6.95%) ALATTI OI-növekedésű jelzések jobban teljesítenek
-    # (+1.00% vs +0.63%, 44% vs 47% találati arány - utóbbi szám
-    # megtévesztő, az átlag hozam a lényeg). Szimmetrikusan a volumen-
-    # szorzóval, a SZOKATLANUL magas OI-ugrást is inkább kockázatnak,
-    # mint megerősítésnek tekintjük mostantól.
-    if oi_change_pct is not None and oi_change_pct >= 2 * MIN_OI_INCREASE:
+    # JAVÍTÁS (adat alapján, negyedelős bontás 2026-09-12): az OI-nél NEM
+    # fokozatos a romlás, hanem ÉLES TÖRÉS a Q1/Q2 határnál (~5.8%) - a
+    # régi 2×MIN_OI_INCREASE=8.0-as küszöb túl magasan volt ehhez képest.
+    # A küszöböt lejjebb hoztuk (6.0-ra), a büntetés mértéke változatlan.
+    # Csak pontszám-hatás, NEM szűr.
+    if oi_change_pct is not None and oi_change_pct >= 6.0:
         score -= 8; factors.append("-8 szokatlanul magas OI-ugrás (lehetséges kifulladás)")
 
     # ÚJ: bot-közi megerősítés - lásd get_cross_bot_confirmations() kommentjét.
