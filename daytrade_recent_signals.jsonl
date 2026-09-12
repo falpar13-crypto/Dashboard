@@ -25,3 +25,4 @@
 {"ts": "2026-09-12T13:21:44.295438+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T13:41:43.241870+00:00", "symbol": "ATOM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-12T13:44:14.142907+00:00", "symbol": "LAB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-12T13:49:11.775676+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
