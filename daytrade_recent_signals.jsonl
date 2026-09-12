@@ -26,3 +26,4 @@
 {"ts": "2026-09-12T08:04:39.651629+00:00", "symbol": "SIGN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-12T08:04:39.651629+00:00", "symbol": "SOLV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-12T08:06:51.489855+00:00", "symbol": "BAS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-12T08:32:47.389787+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
