@@ -20,6 +20,7 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Optional
 
 import requests
 
@@ -32,6 +33,113 @@ FF_JSON_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
 TARGET_EVENTS = ["CPI", "PPI", "FOMC", "Non-Farm", "Fed", "Interest Rate", "GDP"]
 
 STATE_FILE = Path(__file__).parent / "macro_state.json"
+
+# ----------------------------------------------------------------------------
+# ÚJ: RÖVID/HOSSZÚ TÁVÚ VÁRHATÓ HATÁS BECSLÉSE
+# ----------------------------------------------------------------------------
+# TISZTÁN TÁJÉKOZTATÓ - nem előrejelzés, csak bevált, dokumentált piaci
+# ökölszabályok (2026 szeptemberi kutatás alapján). A valós reakció mindig
+# kontextusfüggő (pozicionáltság, egyidejű hírek, a Fed hangneme stb.) - a
+# tényleges piaci mozgás ELTÉRHET ettől. FONTOS ÁRNYALAT: a munkaerőpiaci
+# adatoknál (NFP, munkanélküliség) a hatás KÉTÉLŰ - egy erős adat egyszerre
+# jó jel (egészséges gazdaság) ÉS rossz jel (inflációs/kamatemelési
+# kockázat) is lehet, a piac aktuális "narratívájától" függően. 2026
+# szeptemberében a Fed inkább KAMATEMELÉST fontolgat a tartós infláció
+# miatt (nem csökkentést) - ez a jelenlegi értelmezés alapja, ami idővel
+# változhat, ha a Fed-politika iránya megfordul.
+def _parse_numeric(value_str) -> Optional[float]:
+    """Megpróbál kinyerni egy numerikus értéket egy makró-adat mezőből
+    (pl. "3.4%", "180K", "-0.2%") - None-t ad vissza, ha nem sikerül
+    (pl. FOMC-nál gyakran egy kamatsáv vagy szöveges döntés jön, nem
+    egyetlen szám)."""
+    if not value_str or value_str in ("N/A", ""):
+        return None
+    s = str(value_str).strip().replace("%", "").replace(",", "")
+    multiplier = 1.0
+    if s[-1:].upper() == "K":
+        multiplier = 1_000.0
+        s = s[:-1]
+    elif s[-1:].upper() == "M":
+        multiplier = 1_000_000.0
+        s = s[:-1]
+    elif s[-1:].upper() == "B":
+        multiplier = 1_000_000_000.0
+        s = s[:-1]
+    try:
+        return float(s) * multiplier
+    except ValueError:
+        return None
+
+
+def estimate_market_impact(title: str, actual, forecast) -> Optional[str]:
+    """Kategória (infláció / kamatdöntés / munkaerőpiac / GDP) + a
+    tény-vs-várt meglepetés iránya alapján ad egy rövid, tájékoztató
+    jellegű becslést a várható rövid/hosszú távú hatásról."""
+    title_lower = (title or "").lower()
+    actual_val = _parse_numeric(actual)
+    forecast_val = _parse_numeric(forecast)
+
+    surprise = None
+    if actual_val is not None and forecast_val is not None:
+        diff = actual_val - forecast_val
+        if abs(diff) < 1e-9:
+            surprise = "inline"
+        elif diff > 0:
+            surprise = "higher"
+        else:
+            surprise = "lower"
+
+    # --- Inflációs adatok (CPI, PPI) ---
+    if "cpi" in title_lower or "ppi" in title_lower:
+        if surprise == "higher":
+            return ("📉 <i>Várható hatás:</i> a vártnál MAGASABB infláció jellemzően "
+                    "\"hawkish\" jel (kamatemelés esélye nő / csökkentés elhalasztódik) "
+                    "→ rövid távon RISK-OFF nyomás valószínű a kriptón. Ha a trend "
+                    "folytatódik, hosszabb távon is tartósabb nyomást jelenthet.")
+        elif surprise == "lower":
+            return ("📈 <i>Várható hatás:</i> a vártnál ALACSONYABB infláció jellemzően "
+                    "\"dovish\" jel (kamatemelési kockázat csökken) → rövid távon "
+                    "RISK-ON hangulat valószínű. Tartós dezinfláció esetén hosszabb "
+                    "távon is erősítheti a kockázatvállalási kedvet.")
+        else:
+            return ("➡️ <i>Várható hatás:</i> a várakozásnak megfelelő adat - "
+                    "jellemzően enyhe/vegyes reakció, a piac inkább a következő "
+                    "adatokra és a Fed-kommentárokra fókuszál.")
+
+    # --- Kamatdöntés (FOMC, Fed, Interest Rate) ---
+    if "fomc" in title_lower or "interest rate" in title_lower or "fed" in title_lower:
+        return ("⚖️ <i>Várható hatás:</i> kamatdöntésnél NEM elsősorban a szám "
+                "számít, hanem a Fed HANGNEME és a jövőbeli pálya (dot plot, "
+                "sajtótájékoztató). Kamatemelés/hawkish hangnem → RISK-OFF "
+                "(nyomás a kriptón). Kamatcsökkentés/dovish hangnem → RISK-ON. "
+                "2026 őszén a Fed inkább kamatemelést fontolgat a tartós "
+                "infláció miatt - ez emeli a \"hawkish meglepetés\" esélyét.")
+
+    # --- Munkaerőpiaci adatok (Non-Farm Payrolls, munkanélküliség) ---
+    if "non-farm" in title_lower or "payroll" in title_lower or "unemployment" in title_lower:
+        return ("🔀 <i>Várható hatás:</i> a munkaerőpiaci adatok hatása KÉTÉLŰ - "
+                "erős adat egyszerre jó jel (egészséges gazdaság) ÉS rossz jel "
+                "(inflációs/kamatemelési kockázat), a piac aktuális "
+                "narratívájától függően. A jelenlegi (inflációval küzdő) "
+                "környezetben az ERŐS adat inkább hawkish/RISK-OFF, a GYENGE "
+                "adat inkább dovish/RISK-ON irányba hathat - de ez gyorsan "
+                "válthat, ha a hangsúly növekedési félelmekre kerül.")
+
+    # --- GDP ---
+    if "gdp" in title_lower:
+        if surprise == "higher":
+            return ("📊 <i>Várható hatás:</i> a vártnál ERŐSEBB GDP jellemzően "
+                    "pozitív a kockázati eszközöknek, DE magas inflációs "
+                    "aggodalom mellett hawkish jelként is értelmezhető - vegyes "
+                    "reakció is elképzelhető.")
+        elif surprise == "lower":
+            return ("📊 <i>Várható hatás:</i> a vártnál GYENGÉBB GDP növekedési "
+                    "félelmeket válthat ki (kockázatkerülés), bár enyhítheti a "
+                    "kamatemelési várakozásokat is - a reakció iránya "
+                    "bizonytalanabb, mint a tiszta inflációs adatoknál.")
+        return None
+
+    return None
 
 # ÚJ: a "live" ablakot 15 percről 60 percre bővítettük. Ennek oka: a yml
 # mostantól egy sűrűbb, biztonsági-háló jellegű ütemezéssel is fut (lásd
@@ -168,10 +276,17 @@ def main():
 
             msg += f"📌 <b>{title}</b>\n"
             msg += f"Tény: <b>{actual}</b>\n"
-            msg += f"Várt: {forecast} | Előző: {previous}\n\n"
+            msg += f"Várt: {forecast} | Előző: {previous}\n"
+
+            # ÚJ: rövid/hosszú távú várható hatás - lásd
+            # estimate_market_impact() blokk-kommentjét a módszertanért.
+            impact_note = estimate_market_impact(title, actual, forecast)
+            if impact_note:
+                msg += f"{impact_note}\n"
+            msg += "\n"
             state["sent_event_ids"].append(event_id)
 
-        msg += "<i>⚠️ A piac vadul rángathat, óvatosan a nyitott pozíciókkal!</i>"
+        msg += "<i>⚠️ A piac vadul rángathat, óvatosan a nyitott pozíciókkal! A fenti hatás-becslés TÁJÉKOZTATÓ jellegű, nem garantált előrejelzés.</i>"
         send_telegram_message(msg)
         print(f"Live makró adat elküldve ({len(recent_events)} esemény).")
     else:
