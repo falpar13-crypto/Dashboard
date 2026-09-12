@@ -26,3 +26,4 @@
 {"ts": "2026-09-12T14:14:39.283903+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T14:17:09.289322+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-12T14:20:09.292680+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-12T14:26:58.536291+00:00", "symbol": "CLANKER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
