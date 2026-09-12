@@ -13,3 +13,4 @@
 {"ts": "2026-09-12T16:10:27.287545+00:00", "symbol": "AIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-12T17:08:22.262191+00:00", "symbol": "BULLA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-12T18:36:17.029254+00:00", "symbol": "SOLV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-12T18:57:22.167125+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
