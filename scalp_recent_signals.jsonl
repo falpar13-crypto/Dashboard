@@ -1,5 +1,3 @@
-{"ts": "2026-09-12T08:04:35.335691+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-09-12T08:07:05.347701+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T08:24:42.523262+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T10:39:41.238272+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-12T10:59:04.497029+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -13,3 +11,4 @@
 {"ts": "2026-09-12T13:18:39.589318+00:00", "symbol": "LSK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T13:19:09.592957+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T13:49:33.768616+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-12T14:21:16.958208+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
