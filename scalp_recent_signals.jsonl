@@ -1,4 +1,3 @@
-{"ts": "2026-09-12T17:24:09.398764+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T19:44:07.642759+00:00", "symbol": "ATOM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T20:38:29.180545+00:00", "symbol": "LAB-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-12T20:38:59.181685+00:00", "symbol": "LAB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -8,3 +7,4 @@
 {"ts": "2026-09-12T21:37:44.716035+00:00", "symbol": "GRIFFAIN-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-12T23:08:43.328132+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-12T23:18:26.689186+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-13T00:04:08.637644+00:00", "symbol": "GRIFFAIN-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
