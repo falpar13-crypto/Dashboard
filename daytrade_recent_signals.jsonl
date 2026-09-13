@@ -25,3 +25,4 @@
 {"ts": "2026-09-13T20:09:53.020438+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T20:10:25.190982+00:00", "symbol": "HOME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T20:12:57.279255+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T20:18:49.987436+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
