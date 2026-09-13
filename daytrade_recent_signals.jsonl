@@ -22,3 +22,4 @@
 {"ts": "2026-09-13T18:10:27.782425+00:00", "symbol": "NIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T18:10:57.782551+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T18:14:57.790142+00:00", "symbol": "PROMPT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T18:23:33.842209+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
