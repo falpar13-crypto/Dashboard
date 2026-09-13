@@ -20,3 +20,5 @@
 {"ts": "2026-09-13T16:35:17.433797+00:00", "symbol": "INX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T17:13:48.363064+00:00", "symbol": "ILV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T17:22:48.065103+00:00", "symbol": "BULLA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T17:35:25.668064+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T17:37:55.880969+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
