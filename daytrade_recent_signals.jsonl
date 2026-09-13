@@ -16,3 +16,4 @@
 {"ts": "2026-09-13T06:08:26.668864+00:00", "symbol": "GIGGLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T06:16:37.293582+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T07:30:31.830798+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-13T07:40:01.414364+00:00", "symbol": "AUCTION-USDT", "direction": "LONG", "signal_type": "STANDARD"}
