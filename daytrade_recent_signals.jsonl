@@ -27,3 +27,4 @@
 {"ts": "2026-09-13T22:04:28.947986+00:00", "symbol": "AWE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T22:04:28.947986+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T22:13:33.787925+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-13T22:23:55.767464+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
