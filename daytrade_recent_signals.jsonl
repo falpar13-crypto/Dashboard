@@ -16,3 +16,4 @@
 {"ts": "2026-09-13T00:58:15.435199+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T01:06:15.447707+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T01:47:16.525786+00:00", "symbol": "MERL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T01:58:35.983173+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
