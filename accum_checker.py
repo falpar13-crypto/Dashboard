@@ -71,7 +71,7 @@ ALERT_TIMEFRAME = "1d"
 HISTORY_CANDLES = 200          # fedi a 180 napos ATH-visszatekintést + puffer
 
 ATH_LOOKBACK_DAYS = 180
-MIN_DROP_FROM_PEAK_PCT = 70.0  # a csúcshoz képest legalább ennyivel lejjebb kell lennie
+MIN_DROP_FROM_PEAK_PCT = 60.0  # 70 -> 60: 557 kiértékelt párból 0 találat lett éles adaton, túl szigorú volt
 
 # ÚJ: minimum ennyi napi gyertya elég ahhoz, hogy egyáltalán megvizsgáljuk
 # a coint - NEM követeljük meg mereven a teljes ATH_LOOKBACK_DAYS-t (lásd
@@ -79,8 +79,14 @@ MIN_DROP_FROM_PEAK_PCT = 70.0  # a csúcshoz képest legalább ennyivel lejjebb 
 MIN_HISTORY_DAYS_REQUIRED = 40
 
 PATTERN_WINDOW_DAYS = 10       # a felhalmozási mintázat vizsgálati ablaka
-VOLUME_GROWTH_MIN_RATIO = 1.5  # az ablak 2. fele / 1. fele volumen-arány min.
-MAX_PRICE_RANGE_PCT = 18.0     # az ártartomány max. ennyi %-a lehet az átlagárnak
+VOLUME_GROWTH_MIN_RATIO = 1.3  # 1.5 -> 1.3: lazítva, lásd a MIN_DROP_FROM_PEAK_PCT kommentjét
+# JAVÍTÁS: az ár-szűkösséget eddig a 10 napos high-low KANÓC-tartomány
+# alapján számoltuk - ez indokolatlanul szigorú volt, mert egy EGYETLEN
+# hirtelen (de aznap visszazáró) kanóc kilőhette a küszöböt, még ha a
+# ZÁRÓÁRAK valójában stabilak maradtak. A "csendesség" lényege a záróár-
+# stabilitás, nem a kanócok hiánya - ezért az ártartomány mostantól a
+# ZÁRÓÁRAK (nem a high/low) alapján számol, és a küszöb is lazult.
+MAX_PRICE_RANGE_PCT = 25.0     # 18 -> 25, ÉS mostantól záróár-alapú, nem kanócos
 MAX_TODAY_CHANGE_PCT = 10.0    # a mai (élő) nap elmozdulása még ne legyen nagy
 
 ALERT_COOLDOWN_DAYS = 7        # a mintázat maga is 10 napos, nem érdemes gyakrabban újra jelezni
@@ -337,11 +343,13 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
         return None
 
     window_avg_price = float(pattern_window["close"].mean())
-    window_high = float(pattern_window["high"].max())
-    window_low = float(pattern_window["low"].min())
+    # JAVÍTÁS: kanócos (high/low) helyett ZÁRÓÁR-alapú tartomány - lásd a
+    # MAX_PRICE_RANGE_PCT konstans kommentjét a teljes indoklásért.
+    window_close_high = float(pattern_window["close"].max())
+    window_close_low = float(pattern_window["close"].min())
     if window_avg_price <= 0:
         return None
-    price_range_pct = (window_high - window_low) / window_avg_price * 100
+    price_range_pct = (window_close_high - window_close_low) / window_avg_price * 100
     if price_range_pct > MAX_PRICE_RANGE_PCT:
         return None
 
