@@ -32,3 +32,5 @@
 {"ts": "2026-09-13T23:03:01.751760+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T23:03:01.751760+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T23:04:01.752367+00:00", "symbol": "BANK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T23:10:57.787979+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T23:12:27.789824+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
