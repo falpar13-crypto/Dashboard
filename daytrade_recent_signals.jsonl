@@ -15,3 +15,5 @@
 {"ts": "2026-09-13T00:03:48.720458+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T00:08:48.727939+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T00:17:20.717112+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T00:25:43.332352+00:00", "symbol": "PNUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T00:27:43.335136+00:00", "symbol": "POL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
