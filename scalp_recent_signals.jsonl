@@ -9,3 +9,4 @@
 {"ts": "2026-09-13T14:53:53.905083+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T15:08:04.547558+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T15:09:04.551755+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-13T15:27:54.832917+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
