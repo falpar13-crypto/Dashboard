@@ -21,3 +21,4 @@
 {"ts": "2026-09-13T08:47:38.511136+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T08:48:08.511923+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T08:48:38.512274+00:00", "symbol": "FARTCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-13T09:08:41.194530+00:00", "symbol": "LAB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
