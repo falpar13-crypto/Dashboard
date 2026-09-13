@@ -80,6 +80,12 @@ MIN_HISTORY_DAYS_REQUIRED = 40
 
 PATTERN_WINDOW_DAYS = 10       # a felhalmozási mintázat vizsgálati ablaka
 VOLUME_GROWTH_MIN_RATIO = 1.3  # 1.5 -> 1.3: lazítva, lásd a MIN_DROP_FROM_PEAK_PCT kommentjét
+
+# ÚJ: monotonitás-ellenőrzés paraméterei - lásd az evaluate_accumulation()
+# blokk-kommentjét. A cél: fokozatos, napról napra épülő volument keresni,
+# NEM egyetlen kiugró napot, ami felhúzza az átlagot.
+ROLLING_WINDOW_FOR_TREND = 3   # napok, a napi zaj simításához
+MIN_MONOTONIC_FRACTION = 0.65  # a simított napi összevetések ennyi %-ának kell növekvőnek lennie
 # JAVÍTÁS: az ár-szűkösséget eddig a 10 napos high-low KANÓC-tartomány
 # alapján számoltuk - ez indokolatlanul szigorú volt, mert egy EGYETLEN
 # hirtelen (de aznap visszazáró) kanóc kilőhette a küszöböt, még ha a
@@ -130,6 +136,7 @@ THRESHOLD_SUGGESTION_FIELDS = [
     ("drop_from_peak_pct", "numeric", "Visszaesés a csúcstól (%)"),
     ("volume_growth_ratio", "numeric", "Volumen-növekedési arány"),
     ("price_range_pct", "numeric", "Ár-szűkösség (%)"),
+    ("monotonic_fraction", "numeric", "Volumen-monotonitás aránya"),
 ]
 
 NON_CRYPTO_PREFIXES = ("NCSK", "NCFX")
@@ -332,7 +339,7 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
         return None
 
     # --- 2) + 3) Mintázat-ablak: volumen-növekedés + ár-szűkösség ---
-    pattern_window = closed.iloc[-PATTERN_WINDOW_DAYS:]
+    pattern_window = closed.iloc[-PATTERN_WINDOW_DAYS:].reset_index(drop=True)
     half = PATTERN_WINDOW_DAYS // 2
     first_half_vol = float(pattern_window["volume"].iloc[:half].mean())
     second_half_vol = float(pattern_window["volume"].iloc[half:].mean())
@@ -340,6 +347,25 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
         return None
     volume_growth_ratio = second_half_vol / first_half_vol
     if volume_growth_ratio < VOLUME_GROWTH_MIN_RATIO:
+        return None
+
+    # ÚJ (felhasználói pontosítás alapján, 2026-09-13): a fenti (első fél
+    # vs második fél átlaga) önmagában NEM különbözteti meg a valódi,
+    # FOKOZATOS, napról napra épülő volument egyetlen KIUGRÓ naptól, ami
+    # felhúzza a második fél átlagát, miközben a mintázat egyáltalán nem
+    # "lassan épülő". Ezért egy MONOTONITÁS-ellenőrzést is hozzáadunk: egy
+    # rövid (ROLLING_WINDOW_FOR_TREND napos) mozgóátlaggal simítjuk a
+    # zajt, majd megnézzük, a napi összevetések hány %-a NÖVEKVŐ - egy
+    # valódi fokozatos felfutásnál ez magas kell legyen, egy egyetlen
+    # tüskés mintázatnál viszont alacsony marad.
+    vol_series = pattern_window["volume"]
+    rolling_vol = vol_series.rolling(ROLLING_WINDOW_FOR_TREND, min_periods=1).mean()
+    comparisons = len(rolling_vol) - 1
+    if comparisons <= 0:
+        return None
+    increases = sum(1 for i in range(1, len(rolling_vol)) if rolling_vol.iloc[i] > rolling_vol.iloc[i - 1])
+    monotonic_fraction = increases / comparisons
+    if monotonic_fraction < MIN_MONOTONIC_FRACTION:
         return None
 
     window_avg_price = float(pattern_window["close"].mean())
@@ -368,6 +394,7 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
         "ath_days_used": effective_ath_days,
         "drop_from_peak_pct": round(drop_from_peak_pct, 2),
         "volume_growth_ratio": round(volume_growth_ratio, 2),
+        "monotonic_fraction": round(monotonic_fraction, 2),
         "price_range_pct": round(price_range_pct, 2),
     }
 
@@ -744,7 +771,8 @@ def format_accum_message(symbol: str, result: dict) -> str:
         f"💰 Jelenlegi ár: {result['price']:.8f}\n"
         f"📉 Visszaesés a {ath_note} csúcstól: -{result['drop_from_peak_pct']:.1f}% "
         f"(csúcs: {result['peak_180d']:.8f}){short_history_note}\n"
-        f"📊 Volumen-növekedés az utóbbi {PATTERN_WINDOW_DAYS} napban: {result['volume_growth_ratio']:.2f}x\n"
+        f"📊 Volumen-növekedés az utóbbi {PATTERN_WINDOW_DAYS} napban: {result['volume_growth_ratio']:.2f}x "
+        f"(fokozatosság: {result['monotonic_fraction']*100:.0f}%)\n"
         f"📏 Ár-szűkösség: {result['price_range_pct']:.1f}% (szűk tartomány)\n"
         f"\n"
         f"ℹ️ MEGFIGYELÉSI jelzés, NEM pontos időzítésű belépő: a mintázat "
@@ -817,11 +845,13 @@ async def run_once(state: dict, now: datetime) -> tuple:
                                     "drop_from_peak_pct": result["drop_from_peak_pct"],
                                     "volume_growth_ratio": result["volume_growth_ratio"],
                                     "price_range_pct": result["price_range_pct"],
+                                    "monotonic_fraction": result["monotonic_fraction"],
                                 })
         _append_signal_log({
             "ts": now.isoformat(), "symbol": symbol, "direction": "LONG",
             "price": result["price"], "drop_from_peak_pct": result["drop_from_peak_pct"],
             "volume_growth_ratio": result["volume_growth_ratio"], "price_range_pct": result["price_range_pct"],
+            "monotonic_fraction": result["monotonic_fraction"],
         })
         logger.info("JELZÉS küldve: %s [FELHALMOZÁS] ár=%.8f visszaesés=%.1f%% vol-növekedés=%.2fx",
                     symbol, result["price"], result["drop_from_peak_pct"], result["volume_growth_ratio"])
