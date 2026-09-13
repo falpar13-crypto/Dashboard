@@ -1,4 +1,3 @@
-{"ts": "2026-09-13T03:33:21.712795+00:00", "symbol": "AUCTION-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T04:04:12.486848+00:00", "symbol": "HOLO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T05:05:16.676665+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T05:06:22.487870+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -23,3 +22,4 @@
 {"ts": "2026-09-13T08:48:38.512274+00:00", "symbol": "FARTCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T09:08:41.194530+00:00", "symbol": "LAB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T09:27:28.011072+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T09:43:17.845741+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
