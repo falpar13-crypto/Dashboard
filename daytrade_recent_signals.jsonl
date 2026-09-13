@@ -1,5 +1,3 @@
-{"ts": "2026-09-13T15:35:03.692576+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-13T16:03:13.513546+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T16:35:17.433797+00:00", "symbol": "INX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T17:13:48.363064+00:00", "symbol": "ILV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T17:22:48.065103+00:00", "symbol": "BULLA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -26,3 +24,5 @@
 {"ts": "2026-09-13T21:08:37.999932+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T21:19:48.485345+00:00", "symbol": "INX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-13T21:19:48.485345+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T22:04:28.947986+00:00", "symbol": "AWE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-13T22:04:28.947986+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
