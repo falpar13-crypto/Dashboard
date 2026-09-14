@@ -8,3 +8,4 @@
 {"ts": "2026-09-13T22:18:55.455148+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-13T22:34:43.589011+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T00:31:01.345009+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T00:51:48.270419+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
