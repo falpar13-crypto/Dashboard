@@ -28,3 +28,7 @@
 {"ts": "2026-09-14T03:05:32.923858+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T03:27:46.696103+00:00", "symbol": "STABLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T03:28:46.698409+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T03:35:06.177233+00:00", "symbol": "GALA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T03:35:36.177785+00:00", "symbol": "THE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T03:40:36.185109+00:00", "symbol": "AWE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T03:41:36.185682+00:00", "symbol": "F-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
