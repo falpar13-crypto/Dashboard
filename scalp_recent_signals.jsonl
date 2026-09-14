@@ -5,3 +5,6 @@
 {"ts": "2026-09-14T09:03:57.628430+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-14T09:26:12.306408+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T10:05:14.765511+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T11:07:51.703033+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-14T11:08:21.704696+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T11:08:51.706660+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
