@@ -56,3 +56,4 @@
 {"ts": "2026-09-14T11:18:29.861529+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T11:21:29.865328+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T11:23:29.867856+00:00", "symbol": "FET-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T11:31:43.659893+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
