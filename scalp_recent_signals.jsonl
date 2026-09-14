@@ -3,3 +3,4 @@
 {"ts": "2026-09-14T07:28:53.351754+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T07:49:22.936980+00:00", "symbol": "LSK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T08:34:38.126017+00:00", "symbol": "KAS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-14T09:03:57.628430+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
