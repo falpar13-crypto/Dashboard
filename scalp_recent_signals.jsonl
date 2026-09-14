@@ -12,3 +12,4 @@
 {"ts": "2026-09-14T13:14:23.125285+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T13:22:33.850601+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T13:39:37.330424+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-14T13:47:47.634954+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
