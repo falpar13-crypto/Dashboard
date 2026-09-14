@@ -48,3 +48,6 @@
 {"ts": "2026-09-14T08:24:52.046734+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T08:25:22.047806+00:00", "symbol": "ANIME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T08:26:22.049078+00:00", "symbol": "THE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T08:33:05.849276+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T08:33:05.849276+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T08:34:39.155384+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
