@@ -34,3 +34,4 @@
 {"ts": "2026-09-14T00:22:47.000445+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T00:36:21.239458+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T00:42:42.023428+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T00:58:28.136296+00:00", "symbol": "TRUMPSOL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
