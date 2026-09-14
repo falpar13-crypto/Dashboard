@@ -44,3 +44,5 @@
 {"ts": "2026-09-14T17:31:45.799798+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T17:35:15.804972+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T17:35:45.806085+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T17:50:46.913312+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T17:52:16.915236+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
