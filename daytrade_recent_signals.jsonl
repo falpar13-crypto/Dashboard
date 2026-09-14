@@ -51,3 +51,5 @@
 {"ts": "2026-09-14T08:33:05.849276+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T08:33:05.849276+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T08:34:39.155384+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T08:52:47.585687+00:00", "symbol": "SEI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T08:52:47.585687+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
