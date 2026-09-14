@@ -1,6 +1,5 @@
-{"ts": "2026-09-14T02:06:55.399775+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-14T02:29:00.032257+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T03:59:43.174582+00:00", "symbol": "ARK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T06:12:56.137683+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-14T07:28:53.351754+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T07:49:22.936980+00:00", "symbol": "LSK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T08:34:38.126017+00:00", "symbol": "KAS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
