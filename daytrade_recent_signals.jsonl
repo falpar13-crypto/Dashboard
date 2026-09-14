@@ -44,3 +44,7 @@
 {"ts": "2026-09-14T07:45:08.067083+00:00", "symbol": "F-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T07:58:15.787894+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T08:09:20.484944+00:00", "symbol": "SPX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T08:24:22.045779+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T08:24:52.046734+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T08:25:22.047806+00:00", "symbol": "ANIME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T08:26:22.049078+00:00", "symbol": "THE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
