@@ -43,3 +43,4 @@
 {"ts": "2026-09-14T06:54:18.550468+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T07:35:19.522158+00:00", "symbol": "AGT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T07:36:49.524386+00:00", "symbol": "KERNEL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T07:45:08.067083+00:00", "symbol": "F-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
