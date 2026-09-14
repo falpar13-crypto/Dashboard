@@ -1,10 +1,7 @@
-{"ts": "2026-09-14T00:31:01.345009+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-14T00:51:48.270419+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-09-14T01:03:10.032630+00:00", "symbol": "ARK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-14T01:24:24.511011+00:00", "symbol": "STEEM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T01:48:39.945804+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T01:48:39.945804+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-14T02:06:55.399775+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T02:29:00.032257+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T03:59:43.174582+00:00", "symbol": "ARK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T06:12:56.137683+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-14T07:28:53.351754+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
