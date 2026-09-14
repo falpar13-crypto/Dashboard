@@ -8,3 +8,6 @@
 {"ts": "2026-09-14T11:08:21.704696+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T11:08:51.706660+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T12:42:20.193344+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T13:13:23.121534+00:00", "symbol": "FET-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T13:13:23.121534+00:00", "symbol": "CAKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T13:14:23.125285+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
