@@ -55,3 +55,5 @@
 {"ts": "2026-09-14T09:05:48.137592+00:00", "symbol": "A-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T09:06:18.850567+00:00", "symbol": "REDSTONE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T09:10:49.126403+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T09:17:32.367631+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-14T09:20:02.371781+00:00", "symbol": "AWE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
