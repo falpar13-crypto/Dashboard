@@ -36,3 +36,4 @@
 {"ts": "2026-09-14T01:11:01.268100+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-14T01:20:53.107240+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-14T01:46:47.726444+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-14T02:04:39.163594+00:00", "symbol": "AIXBT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
