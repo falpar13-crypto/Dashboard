@@ -27,3 +27,4 @@
 {"ts": "2026-09-15T12:04:43.683800+00:00", "symbol": "BR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-15T12:05:43.685719+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-15T12:33:03.948218+00:00", "symbol": "ORDI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-15T12:39:00.007314+00:00", "symbol": "PONS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
