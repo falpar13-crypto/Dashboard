@@ -28,3 +28,8 @@
 {"ts": "2026-09-15T18:38:58.790087+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T18:39:28.791420+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T18:39:28.791420+00:00", "symbol": "LDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T18:46:21.390776+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T18:46:51.393632+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T18:49:21.407044+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-15T18:49:21.407044+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T18:51:21.419755+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
