@@ -36,3 +36,4 @@
 {"ts": "2026-09-15T14:50:11.504571+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T14:57:45.299132+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T14:59:15.301829+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T15:10:12.060941+00:00", "symbol": "COW-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
