@@ -7,3 +7,11 @@
 {"ts": "2026-09-15T14:38:01.312634+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T14:48:28.329568+00:00", "symbol": "POWER-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-15T14:49:28.335691+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:53:34.407721+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:53:34.407721+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:53:34.407721+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:53:34.407721+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:53:34.407721+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:54:05.929266+00:00", "symbol": "FARTCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:54:05.929266+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T14:59:05.962932+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
