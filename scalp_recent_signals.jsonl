@@ -33,3 +33,4 @@
 {"ts": "2026-09-15T18:51:21.419755+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T19:45:44.210413+00:00", "symbol": "POWER-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-15T20:04:32.578333+00:00", "symbol": "POWER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T20:30:37.242036+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
