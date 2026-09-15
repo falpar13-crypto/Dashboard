@@ -29,3 +29,4 @@
 {"ts": "2026-09-15T09:17:48.967299+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-15T09:18:48.968184+00:00", "symbol": "CAKE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-15T09:38:54.852970+00:00", "symbol": "ICNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-15T09:53:42.834431+00:00", "symbol": "KAITO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
