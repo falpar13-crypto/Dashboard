@@ -43,3 +43,8 @@
 {"ts": "2026-09-15T18:53:15.429577+00:00", "symbol": "PONS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T18:55:15.431631+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T18:55:15.431631+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T18:58:30.503336+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T18:58:30.503336+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T18:59:30.636080+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-15T19:03:30.644388+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-15T19:04:30.645518+00:00", "symbol": "BERA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
