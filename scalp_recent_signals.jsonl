@@ -5,3 +5,4 @@
 {"ts": "2026-09-15T11:53:41.411342+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T12:59:19.104575+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-15T13:48:14.137600+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-15T14:38:01.312634+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
