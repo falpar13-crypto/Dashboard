@@ -22,3 +22,4 @@
 {"ts": "2026-09-15T10:29:53.643956+00:00", "symbol": "KGEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-15T11:05:53.398900+00:00", "symbol": "GRIFFAIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-15T11:21:06.617748+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-15T11:26:35.373815+00:00", "symbol": "KERNEL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
