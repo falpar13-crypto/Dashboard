@@ -33,3 +33,6 @@
 {"ts": "2026-09-16T13:20:37.030069+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T13:21:37.031356+00:00", "symbol": "S-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T13:36:20.324352+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-16T13:47:57.534457+00:00", "symbol": "MOODENG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-16T13:48:27.535403+00:00", "symbol": "ANIME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-16T13:49:27.536809+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
