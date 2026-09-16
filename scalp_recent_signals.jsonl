@@ -9,3 +9,4 @@
 {"ts": "2026-09-16T22:08:43.872426+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-16T22:58:02.960404+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-16T22:59:32.972814+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-16T23:18:07.633144+00:00", "symbol": "SYN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
