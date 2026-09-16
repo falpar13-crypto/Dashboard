@@ -7,3 +7,4 @@
 {"ts": "2026-09-16T11:03:44.412408+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-16T11:12:26.904844+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-16T11:12:56.907853+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-16T11:21:17.718161+00:00", "symbol": "POWER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
