@@ -5,3 +5,5 @@
 {"ts": "2026-09-16T09:48:02.207323+00:00", "symbol": "HANA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-16T10:17:55.868117+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-16T11:03:44.412408+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-16T11:12:26.904844+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-16T11:12:56.907853+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
