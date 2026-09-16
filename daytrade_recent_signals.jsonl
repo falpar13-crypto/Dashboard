@@ -26,3 +26,4 @@
 {"ts": "2026-09-16T12:16:41.292907+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T12:31:33.955271+00:00", "symbol": "SIGN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T12:42:42.602186+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-16T12:53:17.054884+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
