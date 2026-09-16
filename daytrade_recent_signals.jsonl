@@ -34,3 +34,4 @@
 {"ts": "2026-09-16T21:15:47.256564+00:00", "symbol": "BITLIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T21:51:15.842746+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-16T21:57:52.001560+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-16T22:07:25.048717+00:00", "symbol": "WLFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
