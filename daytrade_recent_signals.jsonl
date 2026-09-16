@@ -22,3 +22,4 @@
 {"ts": "2026-09-16T09:04:42.839990+00:00", "symbol": "HOME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T09:05:12.840402+00:00", "symbol": "BANANA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T09:25:55.090154+00:00", "symbol": "SYRUP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-16T09:38:57.458810+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
