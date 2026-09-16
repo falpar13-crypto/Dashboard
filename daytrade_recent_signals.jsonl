@@ -31,3 +31,6 @@
 {"ts": "2026-09-16T19:14:31.343709+00:00", "symbol": "CFX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T20:04:35.630276+00:00", "symbol": "ICNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-16T20:05:35.632345+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-16T20:14:05.672839+00:00", "symbol": "PEOPLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-16T20:17:35.677700+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-16T20:18:05.678351+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
