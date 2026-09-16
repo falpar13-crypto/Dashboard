@@ -1,6 +1,4 @@
-{"ts": "2026-09-15T20:04:32.578333+00:00", "symbol": "POWER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-15T20:30:37.242036+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-15T21:22:34.597750+00:00", "symbol": "POWER-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-16T00:12:18.360405+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-16T00:28:21.848783+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-16T02:04:10.765343+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-16T04:11:12.327255+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
