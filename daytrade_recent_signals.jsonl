@@ -61,3 +61,5 @@
 {"ts": "2026-09-17T12:44:33.387873+00:00", "symbol": "ENS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T12:48:03.394914+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T12:50:03.398241+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T12:55:00.987770+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T12:59:00.992496+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
