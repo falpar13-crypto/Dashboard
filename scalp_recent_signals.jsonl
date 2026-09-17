@@ -13,3 +13,4 @@
 {"ts": "2026-09-17T08:14:10.708010+00:00", "symbol": "SYN-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-17T08:34:11.625681+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T08:42:50.978957+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T08:54:48.844860+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
