@@ -33,3 +33,4 @@
 {"ts": "2026-09-17T21:08:08.334406+00:00", "symbol": "ILV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T21:29:19.479028+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T21:49:27.989418+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T21:56:22.692206+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
