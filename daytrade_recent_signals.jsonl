@@ -77,3 +77,4 @@
 {"ts": "2026-09-17T05:36:57.646591+00:00", "symbol": "STBL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T05:39:57.650464+00:00", "symbol": "HOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T05:42:27.656078+00:00", "symbol": "TRUST-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T05:54:38.212085+00:00", "symbol": "ORDI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
