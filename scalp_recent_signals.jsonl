@@ -9,3 +9,6 @@
 {"ts": "2026-09-17T01:33:39.605371+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T02:12:53.170814+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T03:29:23.260671+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T03:36:38.680413+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T03:39:08.689986+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T03:39:08.689986+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
