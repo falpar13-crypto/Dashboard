@@ -72,3 +72,6 @@
 {"ts": "2026-09-17T05:15:02.387043+00:00", "symbol": "POL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T05:15:02.387043+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T05:18:02.390588+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T05:25:38.548597+00:00", "symbol": "ANIME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T05:27:08.551430+00:00", "symbol": "BITLIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T05:27:08.551430+00:00", "symbol": "DYM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
