@@ -73,3 +73,4 @@
 {"ts": "2026-09-17T09:40:27.882967+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T09:44:57.889889+00:00", "symbol": "BITLIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T09:54:17.523991+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T10:09:23.387142+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
