@@ -67,3 +67,4 @@
 {"ts": "2026-09-17T13:22:49.513799+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T13:22:49.513799+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T13:34:30.925731+00:00", "symbol": "POL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T13:42:14.734086+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
