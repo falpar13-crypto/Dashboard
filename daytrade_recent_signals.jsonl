@@ -55,3 +55,6 @@
 {"ts": "2026-09-17T17:13:14.877524+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T17:15:44.881070+00:00", "symbol": "SKYAI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T17:29:48.936357+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T17:48:35.097221+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T17:49:05.895644+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T17:55:05.907909+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
