@@ -73,3 +73,11 @@
 {"ts": "2026-09-17T04:35:15.011843+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T04:39:45.025383+00:00", "symbol": "ENS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T04:40:15.025651+00:00", "symbol": "TRB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:48:23.201586+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:48:23.201586+00:00", "symbol": "MOVE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:48:53.202690+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:48:53.202690+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:50:23.309640+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:51:23.310287+00:00", "symbol": "VIRTUAL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:51:53.311032+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T04:53:23.312696+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
