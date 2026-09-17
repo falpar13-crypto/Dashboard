@@ -37,3 +37,4 @@
 {"ts": "2026-09-17T20:08:00.724076+00:00", "symbol": "NEIROCTO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T20:13:07.307638+00:00", "symbol": "TRUST-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T20:24:44.351309+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T20:43:20.815505+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
