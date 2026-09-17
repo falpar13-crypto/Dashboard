@@ -58,3 +58,5 @@
 {"ts": "2026-09-17T01:22:31.048380+00:00", "symbol": "BITLIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T01:23:31.049025+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T01:25:31.050638+00:00", "symbol": "MOODENG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-17T01:32:33.413260+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T01:32:33.413260+00:00", "symbol": "JUP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
