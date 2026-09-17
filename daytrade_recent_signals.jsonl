@@ -66,3 +66,4 @@
 {"ts": "2026-09-17T03:26:04.806383+00:00", "symbol": "NIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-17T03:29:34.811490+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T03:29:34.811490+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T03:34:56.066710+00:00", "symbol": "ENSO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
