@@ -17,3 +17,4 @@
 {"ts": "2026-09-17T09:53:15.421351+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-17T10:01:52.027598+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-17T10:37:24.992414+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T10:48:09.381527+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
