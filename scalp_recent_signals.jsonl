@@ -10,3 +10,5 @@
 {"ts": "2026-09-17T20:28:35.805237+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T20:28:35.805237+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-17T20:29:35.810914+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T21:03:31.555734+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-17T21:04:01.557040+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
