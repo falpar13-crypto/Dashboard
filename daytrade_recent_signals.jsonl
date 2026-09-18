@@ -28,3 +28,4 @@
 {"ts": "2026-09-18T16:26:45.585567+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T16:51:42.951729+00:00", "symbol": "JASMY-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T16:53:16.415216+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-18T17:04:55.331194+00:00", "symbol": "SKYAI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
