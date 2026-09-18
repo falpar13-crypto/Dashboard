@@ -23,3 +23,4 @@
 {"ts": "2026-09-18T04:25:20.375924+00:00", "symbol": "GRASS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T05:19:41.460571+00:00", "symbol": "SOPH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T05:29:46.831791+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-18T05:41:13.139474+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
