@@ -19,3 +19,5 @@
 {"ts": "2026-09-18T15:17:42.128021+00:00", "symbol": "F-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T15:28:37.360493+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-18T15:31:07.370645+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-18T15:52:48.254306+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-18T15:53:19.396769+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
