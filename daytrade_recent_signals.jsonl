@@ -21,3 +21,4 @@
 {"ts": "2026-09-18T20:11:54.752515+00:00", "symbol": "DEEP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T20:21:35.063863+00:00", "symbol": "SOPH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T20:24:07.744126+00:00", "symbol": "LIGHTER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-18T20:38:43.077204+00:00", "symbol": "AUCTION-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
