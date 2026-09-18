@@ -1,5 +1,3 @@
-{"ts": "2026-09-18T00:37:46.302195+00:00", "symbol": "TRUST-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-18T01:04:21.200768+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T01:37:46.762027+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T01:51:42.690936+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T02:18:54.629466+00:00", "symbol": "OPENLEDGER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -14,3 +12,4 @@
 {"ts": "2026-09-18T05:41:13.139474+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T06:08:05.345223+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T06:32:23.061295+00:00", "symbol": "AIO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-18T07:32:49.983368+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
