@@ -13,3 +13,4 @@
 {"ts": "2026-09-18T07:32:49.983368+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T07:48:10.322577+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T08:11:07.142806+00:00", "symbol": "INX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-18T08:17:48.934648+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
