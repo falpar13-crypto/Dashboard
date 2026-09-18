@@ -44,6 +44,18 @@ VOLUME_MA_PERIOD = 12
 # a bevált, szigorú küszöb, és semmi nem indokolta, hogy itt lazább legyen
 MIN_VOL_MULTIPLIER = 2.5    
 
+# ÚJ (2026-09-18, felhasználóval egyeztetve): FELSŐ SAPKA a STANDARD
+# tüzelési feltételéhez (NEM csak pontszám-büntetés, hanem a trigger
+# részét képezi) - a negyedelős küszöb-hangolási adat két külön napon is
+# azt mutatta, hogy a Q1-Q2 (mérsékelt) tartomány konzisztensen jobban
+# teljesít, mint a Q3-Q4 (nagyon magas kiugrás - "climax gyertya"). A
+# STANDARD trigger a definíciójánál fogva pont ezt a rossz populációt is
+# begyűjtötte eddig. A sapka a két megfigyelt nap Q2 felső határa körül
+# van (kb. 8.3-8.8 OI-nál, kb. 3.1 volumen-szorzónál), kis pufferrel.
+# A DIVERGENCE_REVERSAL-t és az EARLY-t ez NEM érinti.
+MAX_OI_INCREASE_FOR_STANDARD = 9.0
+MAX_VOL_MULTIPLIER_FOR_STANDARD = 3.5
+
 # SZIGORÍTVA: 3.5 -> 5.0 - az EARLY egy VETÍTETT (extrapolált) szám, tehát
 # eleve zajosabb, mint a STANDARD - alacsony küszöbbel könnyen "belövi"
 # magát egy random kilengés is egy 1 órás gyertya elején. A scalp botban is
@@ -2003,9 +2015,14 @@ def compute_confidence_score(direction, htf_trend=None, bounce_confluence=False,
     # JAVÍTÁS (adat alapján, negyedelős bontás 2026-09-12): az OI-nél NEM
     # fokozatos a romlás, hanem ÉLES TÖRÉS a Q1/Q2 határnál (~5.8%) - a
     # régi 2×MIN_OI_INCREASE=8.0-as küszöb túl magasan volt ehhez képest.
-    # A küszöböt lejjebb hoztuk (6.0-ra), a büntetés mértéke változatlan.
+    # A küszöböt lejjebb hoztuk (7.0-ra), a büntetés mértéke változatlan.
+    # JAVÍTÁS (2026-09-17): két külön napon két KÜLÖNBÖZŐ töréspontot
+    # mértünk (5.9 és 8.8) - ez azt jelzi, hogy a törés maga is ingadozik
+    # (zajos mérőszám), nem egy fix érték. A 6.0-ás küszöb egy egyetlen
+    # napi mérésre épült, túl alacsony volt - 7.0-ra, a két megfigyelt
+    # törésponthoz képest óvatosabb kompromisszumra hoztuk.
     # Csak pontszám-hatás, NEM szűr.
-    if oi_change_pct is not None and oi_change_pct >= 6.0:
+    if oi_change_pct is not None and oi_change_pct >= 7.0:
         score -= 8; factors.append("-8 szokatlanul magas OI-ugrás (lehetséges kifulladás)")
 
     # ÚJ: bot-közi megerősítés - lásd get_cross_bot_confirmations() kommentjét.
@@ -2613,7 +2630,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         is_setup = (
             abs(candle["price_change_pct"]) <= MAX_PRICE_CHANGE
             and oi_change_pct >= MIN_OI_INCREASE
+            and oi_change_pct <= MAX_OI_INCREASE_FOR_STANDARD
             and candle["vol_multiplier"] >= MIN_VOL_MULTIPLIER
+            and candle["vol_multiplier"] <= MAX_VOL_MULTIPLIER_FOR_STANDARD
             and candle["candle_vol_usdt"] >= MIN_CANDLE_VOL_USDT
         )
 
