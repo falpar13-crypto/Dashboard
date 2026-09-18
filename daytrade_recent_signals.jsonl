@@ -1,5 +1,3 @@
-{"ts": "2026-09-18T05:19:41.460571+00:00", "symbol": "SOPH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-18T05:29:46.831791+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T05:41:13.139474+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T06:08:05.345223+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T06:32:23.061295+00:00", "symbol": "AIO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -18,3 +16,4 @@
 {"ts": "2026-09-18T10:53:16.294926+00:00", "symbol": "TNSR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T10:53:16.294926+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T11:10:38.220626+00:00", "symbol": "FHE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-18T11:35:37.742402+00:00", "symbol": "HAJIMI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
