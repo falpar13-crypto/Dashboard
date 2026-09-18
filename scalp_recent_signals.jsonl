@@ -11,3 +11,4 @@
 {"ts": "2026-09-18T01:34:56.047269+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T02:08:43.955907+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-18T02:34:31.731332+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-18T02:43:29.341545+00:00", "symbol": "CAKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
