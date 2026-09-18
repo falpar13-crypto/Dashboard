@@ -22,3 +22,4 @@
 {"ts": "2026-09-18T21:12:27.113075+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T21:13:27.922000+00:00", "symbol": "SKYAI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-18T21:13:58.639096+00:00", "symbol": "KAITO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-18T21:37:43.997876+00:00", "symbol": "STBL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
