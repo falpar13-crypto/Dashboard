@@ -32,3 +32,5 @@
 {"ts": "2026-09-19T16:20:21.333972+00:00", "symbol": "SOON-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T16:22:22.836249+00:00", "symbol": "HAJIMI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T16:23:54.002459+00:00", "symbol": "HUMA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T16:48:47.519502+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T16:50:17.520886+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
