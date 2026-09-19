@@ -28,3 +28,4 @@
 {"ts": "2026-09-19T03:16:23.834666+00:00", "symbol": "PENDLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T03:16:53.835452+00:00", "symbol": "WLFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T03:17:53.836695+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T03:29:41.652300+00:00", "symbol": "JASMY-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
