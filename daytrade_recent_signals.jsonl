@@ -34,3 +34,5 @@
 {"ts": "2026-09-19T07:24:32.190942+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T07:29:32.198744+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T07:43:05.072317+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T08:04:40.966314+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T08:07:44.499903+00:00", "symbol": "CC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
