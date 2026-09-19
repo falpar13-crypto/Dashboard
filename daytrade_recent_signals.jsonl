@@ -38,3 +38,6 @@
 {"ts": "2026-09-19T08:18:55.590222+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T08:53:36.288635+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T08:54:06.288919+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T08:59:03.570099+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T09:02:47.885391+00:00", "symbol": "DYDX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T09:04:25.255729+00:00", "symbol": "AIO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
