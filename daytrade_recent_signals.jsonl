@@ -41,3 +41,4 @@
 {"ts": "2026-09-19T19:08:34.264749+00:00", "symbol": "BABY-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T19:09:34.266832+00:00", "symbol": "KAIA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T19:18:49.604980+00:00", "symbol": "KAITO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T19:27:53.306541+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
