@@ -21,3 +21,5 @@
 {"ts": "2026-09-19T20:51:13.252729+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T21:04:06.007386+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-19T21:23:36.826749+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T21:32:53.569218+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T21:32:53.569218+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
