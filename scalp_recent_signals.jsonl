@@ -12,3 +12,4 @@
 {"ts": "2026-09-19T01:19:09.150474+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-19T01:59:39.249824+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T02:31:32.819411+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T02:38:47.298424+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
