@@ -29,3 +29,5 @@
 {"ts": "2026-09-19T01:16:02.282677+00:00", "symbol": "DEEP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T01:18:32.287102+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T01:19:02.287659+00:00", "symbol": "SOON-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T01:38:31.690412+00:00", "symbol": "STBL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T01:40:01.692322+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
