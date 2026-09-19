@@ -36,3 +36,5 @@
 {"ts": "2026-09-19T07:43:05.072317+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T08:04:40.966314+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T08:07:44.499903+00:00", "symbol": "CC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T08:12:53.202187+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T08:18:55.590222+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
