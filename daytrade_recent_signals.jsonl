@@ -41,3 +41,4 @@
 {"ts": "2026-09-19T17:37:15.203432+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T17:38:15.204341+00:00", "symbol": "GOAT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T17:50:42.025478+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T17:59:19.113327+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
