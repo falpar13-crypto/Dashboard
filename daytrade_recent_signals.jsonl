@@ -47,3 +47,4 @@
 {"ts": "2026-09-19T10:09:06.802425+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T10:17:32.925446+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T11:11:34.912338+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-19T11:20:22.691704+00:00", "symbol": "PUMPBTC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
