@@ -1,5 +1,3 @@
-{"ts": "2026-09-19T08:44:33.895573+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-19T08:49:40.246040+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T09:13:57.841242+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T09:14:27.843453+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T09:19:39.117100+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -15,3 +13,4 @@
 {"ts": "2026-09-19T13:52:31.292027+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T13:54:01.299189+00:00", "symbol": "ONE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T14:25:31.320308+00:00", "symbol": "SEI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T14:58:56.678007+00:00", "symbol": "ONE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
