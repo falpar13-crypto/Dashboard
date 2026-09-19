@@ -13,3 +13,5 @@
 {"ts": "2026-09-19T15:17:25.210547+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-19T15:44:03.346456+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T15:49:03.823282+00:00", "symbol": "BANANA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T15:58:28.380846+00:00", "symbol": "PONS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T15:58:28.380846+00:00", "symbol": "BR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
