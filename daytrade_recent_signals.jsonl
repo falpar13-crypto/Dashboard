@@ -34,3 +34,4 @@
 {"ts": "2026-09-19T16:23:54.002459+00:00", "symbol": "HUMA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-19T16:48:47.519502+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-19T16:50:17.520886+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-19T16:58:41.402035+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "STANDARD"}
