@@ -42,3 +42,4 @@
 {"ts": "2026-09-20T07:18:09.558919+00:00", "symbol": "KAS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T07:25:26.839603+00:00", "symbol": "SIGN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T07:28:26.846047+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T07:42:03.101668+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
