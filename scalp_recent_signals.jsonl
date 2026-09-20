@@ -17,3 +17,5 @@
 {"ts": "2026-09-20T17:57:16.223859+00:00", "symbol": "ENS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-20T18:01:50.747894+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-20T19:33:30.769057+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-20T19:44:41.849085+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-20T19:46:12.586224+00:00", "symbol": "RENDER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
