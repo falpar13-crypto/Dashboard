@@ -29,3 +29,4 @@
 {"ts": "2026-09-20T13:12:07.712909+00:00", "symbol": "NIGHT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T13:36:30.345040+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T13:56:07.710475+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-20T14:17:29.439221+00:00", "symbol": "ERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
