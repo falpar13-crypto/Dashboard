@@ -12,3 +12,4 @@
 {"ts": "2026-09-20T15:24:11.540235+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-20T15:24:11.540235+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-20T16:04:17.343885+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-20T16:13:57.429259+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
