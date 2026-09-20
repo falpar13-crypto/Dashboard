@@ -48,3 +48,4 @@
 {"ts": "2026-09-20T08:41:07.383482+00:00", "symbol": "DYM-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T08:42:08.214669+00:00", "symbol": "IMX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T08:42:39.004159+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T08:50:01.033155+00:00", "symbol": "ZAMA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
