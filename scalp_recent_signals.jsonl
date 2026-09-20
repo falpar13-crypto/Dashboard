@@ -1,5 +1,3 @@
-{"ts": "2026-09-20T15:24:11.540235+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-20T15:24:11.540235+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-20T16:04:17.343885+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-20T16:13:57.429259+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-20T16:23:05.933508+00:00", "symbol": "RENDER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -21,3 +19,4 @@
 {"ts": "2026-09-20T21:09:11.600792+00:00", "symbol": "ZEN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-20T21:14:26.527734+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-20T21:21:02.784972+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-20T21:54:36.842795+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
