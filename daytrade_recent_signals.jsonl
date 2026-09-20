@@ -40,3 +40,4 @@
 {"ts": "2026-09-20T17:30:00.214669+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T17:49:23.431713+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-20T17:50:23.432311+00:00", "symbol": "LDO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T18:08:13.039051+00:00", "symbol": "SHELL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
