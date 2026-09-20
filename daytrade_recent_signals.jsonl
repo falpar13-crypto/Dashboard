@@ -27,3 +27,6 @@
 {"ts": "2026-09-20T12:36:55.485774+00:00", "symbol": "ORCA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T12:36:55.485774+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T12:39:55.489129+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T12:45:38.300094+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T12:49:11.038934+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T12:50:42.751725+00:00", "symbol": "DYM-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
