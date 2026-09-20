@@ -63,3 +63,6 @@
 {"ts": "2026-09-20T05:10:27.189773+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T05:13:32.409247+00:00", "symbol": "ICNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T05:15:34.360721+00:00", "symbol": "ERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T05:21:24.890933+00:00", "symbol": "ILV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T05:23:24.893805+00:00", "symbol": "SYRUP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T05:25:24.896064+00:00", "symbol": "ZKP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
