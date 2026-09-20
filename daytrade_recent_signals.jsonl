@@ -37,3 +37,4 @@
 {"ts": "2026-09-20T17:10:13.847642+00:00", "symbol": "ANIME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T17:21:08.696807+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-20T17:21:08.696807+00:00", "symbol": "ATOM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-20T17:30:00.214669+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
