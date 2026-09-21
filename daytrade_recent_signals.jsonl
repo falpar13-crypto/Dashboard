@@ -13,3 +13,5 @@
 {"ts": "2026-09-21T16:15:28.499530+00:00", "symbol": "LSK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T16:41:41.704309+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T17:08:50.441853+00:00", "symbol": "BNLIFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-21T17:16:16.632264+00:00", "symbol": "XPIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-21T17:17:46.633561+00:00", "symbol": "ICNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
