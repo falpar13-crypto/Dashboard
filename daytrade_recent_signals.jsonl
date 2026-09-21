@@ -15,3 +15,5 @@
 {"ts": "2026-09-21T20:04:28.946356+00:00", "symbol": "REZ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T20:04:58.946672+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T20:58:15.679189+00:00", "symbol": "ALGO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-21T21:07:24.241789+00:00", "symbol": "LSK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-21T21:09:24.246154+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
