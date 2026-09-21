@@ -19,3 +19,4 @@
 {"ts": "2026-09-21T18:07:38.515147+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T18:08:38.516034+00:00", "symbol": "HUMA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T18:52:23.548738+00:00", "symbol": "AWE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-21T19:04:32.801841+00:00", "symbol": "BAS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
