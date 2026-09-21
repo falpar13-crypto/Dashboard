@@ -17,3 +17,5 @@
 {"ts": "2026-09-21T13:17:32.063020+00:00", "symbol": "ICNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T13:18:35.218880+00:00", "symbol": "CAKE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T13:55:37.932090+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-21T14:05:47.121775+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-21T14:07:57.743524+00:00", "symbol": "HUMA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
