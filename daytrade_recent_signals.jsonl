@@ -16,3 +16,4 @@
 {"ts": "2026-09-21T17:16:16.632264+00:00", "symbol": "XPIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T17:17:46.633561+00:00", "symbol": "ICNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T17:35:49.402908+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-21T17:52:58.748963+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
