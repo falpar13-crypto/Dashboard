@@ -28,3 +28,4 @@
 {"ts": "2026-09-21T09:08:56.158731+00:00", "symbol": "BERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T09:09:58.949328+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-21T09:11:31.867126+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-21T09:31:34.434634+00:00", "symbol": "BR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
