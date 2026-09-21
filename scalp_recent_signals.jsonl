@@ -22,3 +22,7 @@
 {"ts": "2026-09-21T09:01:08.852483+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-21T09:01:08.852483+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-21T09:13:10.844980+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-21T09:49:21.187615+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-21T09:53:41.445048+00:00", "symbol": "RENDER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-21T09:53:41.445048+00:00", "symbol": "RENDER-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-21T09:54:41.925700+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
