@@ -41,3 +41,4 @@
 {"ts": "2026-09-22T14:34:12.110112+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T14:34:44.177888+00:00", "symbol": "GOAT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T14:35:46.887362+00:00", "symbol": "PYTH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-22T14:50:58.037458+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
