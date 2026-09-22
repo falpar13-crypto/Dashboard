@@ -23,3 +23,4 @@
 {"ts": "2026-09-22T05:04:16.081591+00:00", "symbol": "SPX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T05:05:16.083289+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T05:16:32.799521+00:00", "symbol": "KITE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T05:30:33.123434+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
