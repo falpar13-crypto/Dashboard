@@ -43,3 +43,4 @@
 {"ts": "2026-09-22T15:13:54.560199+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T16:04:30.778377+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T16:05:00.778882+00:00", "symbol": "AIXBT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T16:10:04.104554+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
