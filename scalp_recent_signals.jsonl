@@ -16,3 +16,4 @@
 {"ts": "2026-09-22T00:58:46.506710+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-22T01:22:21.044904+00:00", "symbol": "ZETA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-22T01:23:22.190153+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-22T01:29:20.025813+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
