@@ -1,6 +1,3 @@
-{"ts": "2026-09-22T06:08:00.647709+00:00", "symbol": "BANANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-22T06:08:31.033106+00:00", "symbol": "CC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-22T06:09:03.078959+00:00", "symbol": "LA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T06:17:13.786315+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T07:25:03.121827+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T07:27:37.752176+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -24,3 +21,10 @@
 {"ts": "2026-09-22T12:05:34.728199+00:00", "symbol": "LA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T12:06:06.135132+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-22T12:06:37.422595+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T12:14:03.138758+00:00", "symbol": "HOLO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T12:14:36.422637+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T12:15:10.198002+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T12:15:40.860231+00:00", "symbol": "PLUME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T12:15:40.860231+00:00", "symbol": "TRADOOR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T12:15:40.860231+00:00", "symbol": "BANANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-22T12:16:42.365472+00:00", "symbol": "KAIA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
