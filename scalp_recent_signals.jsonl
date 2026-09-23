@@ -14,3 +14,5 @@
 {"ts": "2026-09-23T21:36:36.475129+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T22:11:30.201220+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T22:14:30.209487+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T22:24:33.284715+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T22:24:33.284715+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
