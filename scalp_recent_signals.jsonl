@@ -37,3 +37,4 @@
 {"ts": "2026-09-23T10:33:27.443635+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T10:33:27.443635+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T11:25:52.741815+00:00", "symbol": "1000BONK-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-23T11:32:10.149988+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
