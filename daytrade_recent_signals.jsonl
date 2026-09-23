@@ -26,3 +26,4 @@
 {"ts": "2026-09-23T13:04:20.254767+00:00", "symbol": "TRUTH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T13:04:50.255134+00:00", "symbol": "AIO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T13:13:50.998947+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T13:26:30.179659+00:00", "symbol": "BAS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
