@@ -23,3 +23,4 @@
 {"ts": "2026-09-23T12:02:34.739864+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T12:04:35.732725+00:00", "symbol": "SAFE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T12:15:54.194937+00:00", "symbol": "VANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T12:23:42.693161+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
