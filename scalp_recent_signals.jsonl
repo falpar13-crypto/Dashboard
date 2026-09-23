@@ -14,3 +14,4 @@
 {"ts": "2026-09-23T04:14:44.035879+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T04:16:44.048674+00:00", "symbol": "CAKE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-23T04:49:29.361155+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-23T05:01:29.429846+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
