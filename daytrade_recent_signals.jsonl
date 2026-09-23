@@ -32,3 +32,4 @@
 {"ts": "2026-09-23T22:30:55.797864+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T22:34:06.284231+00:00", "symbol": "BNLIFE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T22:34:42.100629+00:00", "symbol": "ILV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T22:47:14.774903+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
