@@ -38,3 +38,4 @@
 {"ts": "2026-09-23T17:16:45.100095+00:00", "symbol": "A-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T17:23:04.972609+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T17:23:36.523443+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T17:37:52.610279+00:00", "symbol": "HAJIMI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
