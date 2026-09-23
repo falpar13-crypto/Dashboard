@@ -17,3 +17,4 @@
 {"ts": "2026-09-23T00:09:17.794748+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T00:09:47.795141+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T00:38:06.936334+00:00", "symbol": "MEW-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T00:45:13.525578+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
