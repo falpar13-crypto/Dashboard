@@ -30,3 +30,4 @@
 {"ts": "2026-09-23T16:54:28.210575+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T17:01:57.396238+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T17:43:42.559677+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T17:48:41.579167+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
