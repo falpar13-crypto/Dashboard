@@ -28,3 +28,9 @@
 {"ts": "2026-09-23T14:08:20.234773+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T14:19:08.953636+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T14:20:46.242711+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T14:31:04.441709+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T14:31:04.441709+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T14:32:05.198435+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T14:33:05.199365+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T14:36:05.203532+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T14:36:35.203726+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
