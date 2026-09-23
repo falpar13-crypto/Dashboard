@@ -16,3 +16,6 @@
 {"ts": "2026-09-23T04:14:16.923312+00:00", "symbol": "WAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T04:26:43.467956+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T04:42:13.771125+00:00", "symbol": "WIF-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T04:59:23.936213+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T05:04:11.015851+00:00", "symbol": "TRUMPSOL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T05:04:44.386639+00:00", "symbol": "BITLIGHT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
