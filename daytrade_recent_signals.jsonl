@@ -17,3 +17,6 @@
 {"ts": "2026-09-23T08:03:39.710189+00:00", "symbol": "CC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T08:14:27.901388+00:00", "symbol": "WAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-23T08:38:28.254164+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T08:48:32.463153+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-23T08:51:32.469242+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-23T08:56:02.477845+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
