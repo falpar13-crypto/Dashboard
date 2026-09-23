@@ -10,3 +10,4 @@
 {"ts": "2026-09-23T01:33:44.132788+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-23T01:43:52.887609+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-23T01:46:55.658470+00:00", "symbol": "GALA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-23T02:16:46.128742+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
