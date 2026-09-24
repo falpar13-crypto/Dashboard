@@ -19,3 +19,4 @@
 {"ts": "2026-09-24T16:19:05.319048+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-24T16:34:09.378177+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T16:34:09.378177+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T16:56:43.752035+00:00", "symbol": "SEI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
