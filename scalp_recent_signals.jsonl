@@ -17,3 +17,5 @@
 {"ts": "2026-09-24T15:19:28.427617+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T16:16:32.410065+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T16:19:05.319048+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-24T16:34:09.378177+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T16:34:09.378177+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
