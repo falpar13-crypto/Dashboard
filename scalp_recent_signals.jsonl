@@ -17,3 +17,4 @@
 {"ts": "2026-09-24T21:02:09.330405+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T21:25:37.335836+00:00", "symbol": "KAS-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-24T21:28:38.868518+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T21:40:37.993759+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
