@@ -18,3 +18,4 @@
 {"ts": "2026-09-24T11:38:06.870895+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T11:38:06.870895+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-09-24T12:02:19.036331+00:00", "symbol": "DYM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T12:24:19.315806+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
