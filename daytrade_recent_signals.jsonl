@@ -28,3 +28,4 @@
 {"ts": "2026-09-24T02:12:58.066089+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T02:15:28.102959+00:00", "symbol": "PENDLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-24T02:42:17.162399+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T02:52:54.863974+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
