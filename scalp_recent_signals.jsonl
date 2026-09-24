@@ -13,3 +13,5 @@
 {"ts": "2026-09-24T02:34:33.367491+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T02:40:12.892726+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T04:56:35.897459+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T05:13:13.723606+00:00", "symbol": "TAKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T05:14:13.729016+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
