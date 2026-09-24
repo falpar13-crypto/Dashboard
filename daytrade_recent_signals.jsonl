@@ -24,3 +24,4 @@
 {"ts": "2026-09-24T00:17:49.309036+00:00", "symbol": "A-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-24T00:45:27.339704+00:00", "symbol": "BANK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-24T00:48:00.901665+00:00", "symbol": "AIO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-24T00:56:19.903486+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
