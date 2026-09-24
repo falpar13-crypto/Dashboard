@@ -27,3 +27,5 @@
 {"ts": "2026-09-24T07:08:56.309791+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-24T07:31:22.329508+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T07:39:52.497009+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-24T08:07:44.646692+00:00", "symbol": "STX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-24T08:10:51.678818+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
