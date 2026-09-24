@@ -16,3 +16,4 @@
 {"ts": "2026-09-24T12:24:19.315806+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T13:08:11.715388+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-24T13:08:11.715388+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-24T13:35:48.355431+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
