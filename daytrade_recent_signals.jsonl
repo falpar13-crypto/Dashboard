@@ -27,3 +27,4 @@
 {"ts": "2026-09-25T18:11:07.268605+00:00", "symbol": "BANANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T18:26:41.992787+00:00", "symbol": "SYRUP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T18:40:30.936130+00:00", "symbol": "COOKIE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T18:53:07.439065+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
