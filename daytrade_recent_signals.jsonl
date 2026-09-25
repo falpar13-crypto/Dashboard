@@ -27,3 +27,4 @@
 {"ts": "2026-09-25T10:14:22.903804+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T10:51:28.648054+00:00", "symbol": "FET-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T10:52:28.649385+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-25T10:59:03.503446+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
