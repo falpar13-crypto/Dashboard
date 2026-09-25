@@ -22,3 +22,5 @@
 {"ts": "2026-09-25T08:12:26.677410+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T08:14:28.080630+00:00", "symbol": "AIO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T08:23:19.005720+00:00", "symbol": "WLFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T08:40:46.767011+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-25T08:40:46.767011+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
