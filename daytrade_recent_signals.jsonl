@@ -34,3 +34,5 @@
 {"ts": "2026-09-25T21:15:51.796419+00:00", "symbol": "LA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T21:31:16.262882+00:00", "symbol": "NXPC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T21:44:16.242920+00:00", "symbol": "PAXG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T22:07:14.931048+00:00", "symbol": "TRUTH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T22:07:44.931305+00:00", "symbol": "BITLIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
