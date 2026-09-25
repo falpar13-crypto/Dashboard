@@ -39,3 +39,4 @@
 {"ts": "2026-09-25T13:24:13.639578+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T13:43:15.446237+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T13:44:15.447321+00:00", "symbol": "WLFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T13:51:45.856861+00:00", "symbol": "AVNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
