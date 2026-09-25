@@ -22,3 +22,5 @@
 {"ts": "2026-09-25T11:29:03.856615+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T11:42:32.299162+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T12:04:25.319501+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-25T12:13:31.360114+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-25T12:18:09.236948+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
