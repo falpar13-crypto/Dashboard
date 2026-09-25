@@ -13,3 +13,4 @@
 {"ts": "2026-09-25T00:09:32.690025+00:00", "symbol": "CATI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T00:46:54.967712+00:00", "symbol": "REZ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T01:13:30.468593+00:00", "symbol": "LA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T01:27:13.661608+00:00", "symbol": "XPIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
