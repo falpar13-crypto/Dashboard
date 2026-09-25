@@ -1,5 +1,3 @@
-{"ts": "2026-09-25T08:40:46.767011+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-25T08:40:46.767011+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T08:49:50.141261+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T08:51:54.455372+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T09:17:43.290720+00:00", "symbol": "DOLO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -38,3 +36,4 @@
 {"ts": "2026-09-25T14:19:24.896726+00:00", "symbol": "MERL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T14:34:33.889384+00:00", "symbol": "SOLV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T14:35:05.798660+00:00", "symbol": "RECALL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T14:45:47.380141+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
