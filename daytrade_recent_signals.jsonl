@@ -16,3 +16,5 @@
 {"ts": "2026-09-25T03:39:48.431172+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T03:53:45.781493+00:00", "symbol": "ONE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-25T04:07:46.297074+00:00", "symbol": "TURTLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T04:14:18.980887+00:00", "symbol": "AIO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T04:16:53.768299+00:00", "symbol": "CATI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
