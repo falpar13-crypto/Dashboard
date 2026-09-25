@@ -12,3 +12,4 @@
 {"ts": "2026-09-25T01:13:30.468593+00:00", "symbol": "LA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T01:27:13.661608+00:00", "symbol": "XPIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-25T02:49:36.548438+00:00", "symbol": "TRUTH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-25T03:05:06.100876+00:00", "symbol": "DOOD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
