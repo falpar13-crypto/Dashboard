@@ -21,3 +21,5 @@
 {"ts": "2026-09-26T07:47:34.348923+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-26T08:24:54.958638+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-26T08:38:02.834900+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-26T08:57:54.014396+00:00", "symbol": "AXS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-26T08:59:55.284540+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
