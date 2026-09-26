@@ -20,3 +20,4 @@
 {"ts": "2026-09-26T16:59:42.762389+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-26T17:00:50.926975+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-26T17:08:13.701371+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-26T17:25:27.649642+00:00", "symbol": "KAS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
