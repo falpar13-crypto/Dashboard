@@ -22,3 +22,4 @@
 {"ts": "2026-09-26T09:19:14.939921+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-26T09:23:35.911217+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-26T09:39:38.821556+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-26T09:58:55.749445+00:00", "symbol": "RUNE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
