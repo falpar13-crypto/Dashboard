@@ -25,3 +25,5 @@
 {"ts": "2026-09-26T01:06:27.777312+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T01:10:12.398235+00:00", "symbol": "AIO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T01:46:21.770240+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-26T01:55:47.797571+00:00", "symbol": "NXPC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-26T01:56:23.512804+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
