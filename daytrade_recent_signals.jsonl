@@ -1,9 +1,3 @@
-{"ts": "2026-09-26T09:10:51.890630+00:00", "symbol": "RIVER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-26T09:11:21.890836+00:00", "symbol": "AXS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-26T09:12:21.892096+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-26T09:13:51.893442+00:00", "symbol": "ALCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-26T09:22:29.473166+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-26T09:23:01.158486+00:00", "symbol": "ZKP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T09:24:02.977561+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T09:25:37.204636+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T09:47:14.313448+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -32,3 +26,6 @@
 {"ts": "2026-09-26T14:19:01.731145+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T14:55:56.993646+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-26T15:09:40.232923+00:00", "symbol": "PROMPT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-26T15:19:13.532468+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-26T15:22:14.956528+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-26T15:23:44.957954+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
