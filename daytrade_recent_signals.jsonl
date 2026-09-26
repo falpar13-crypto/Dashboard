@@ -37,3 +37,6 @@
 {"ts": "2026-09-26T08:06:44.511986+00:00", "symbol": "GOAT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T08:19:42.088244+00:00", "symbol": "AIXBT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-26T08:20:12.088581+00:00", "symbol": "APE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-26T08:29:28.745522+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-26T08:29:58.746245+00:00", "symbol": "PI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-26T08:32:58.752045+00:00", "symbol": "BITLIGHT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
