@@ -19,3 +19,5 @@
 {"ts": "2026-09-26T02:18:14.719697+00:00", "symbol": "PHA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-26T03:09:36.805401+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-26T03:09:36.805401+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-26T03:26:10.076891+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-26T03:33:12.581700+00:00", "symbol": "AXS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
