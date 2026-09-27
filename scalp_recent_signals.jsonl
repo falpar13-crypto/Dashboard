@@ -18,3 +18,6 @@
 {"ts": "2026-09-27T15:29:26.446771+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T15:34:02.210410+00:00", "symbol": "W-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T16:13:02.598744+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T16:19:22.761337+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-27T16:21:59.066128+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T16:21:59.066128+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
