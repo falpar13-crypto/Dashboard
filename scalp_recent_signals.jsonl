@@ -16,3 +16,5 @@
 {"ts": "2026-09-27T07:12:16.215388+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T07:19:28.102701+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T07:44:21.154409+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T07:56:02.721354+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-27T07:59:32.743534+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
