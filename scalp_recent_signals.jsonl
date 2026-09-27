@@ -19,3 +19,5 @@
 {"ts": "2026-09-27T17:04:27.509044+00:00", "symbol": "APE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T17:38:07.628049+00:00", "symbol": "APE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T18:06:18.906255+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-27T18:13:30.559428+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T18:14:31.509960+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
