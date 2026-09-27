@@ -20,3 +20,5 @@
 {"ts": "2026-09-27T09:58:55.899137+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T11:15:40.747771+00:00", "symbol": "WIF-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T11:17:10.760468+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-27T11:33:39.488898+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T11:34:39.492136+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
