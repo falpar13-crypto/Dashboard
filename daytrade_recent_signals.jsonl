@@ -31,3 +31,4 @@
 {"ts": "2026-09-27T15:06:32.012492+00:00", "symbol": "SXT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-27T15:22:17.343153+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T15:24:23.789007+00:00", "symbol": "APE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-27T15:32:18.402288+00:00", "symbol": "STABLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
