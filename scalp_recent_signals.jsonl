@@ -17,3 +17,4 @@
 {"ts": "2026-09-27T01:22:32.840906+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T01:23:34.427120+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-27T01:29:08.776892+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T01:34:02.029937+00:00", "symbol": "NOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
