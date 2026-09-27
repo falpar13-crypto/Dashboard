@@ -15,3 +15,4 @@
 {"ts": "2026-09-27T19:11:34.567611+00:00", "symbol": "XPL-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-27T19:28:37.873527+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T20:18:26.288098+00:00", "symbol": "W-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T20:28:02.726825+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
