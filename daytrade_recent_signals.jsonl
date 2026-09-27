@@ -36,3 +36,4 @@
 {"ts": "2026-09-27T07:31:15.888852+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-27T08:11:44.893234+00:00", "symbol": "BABY-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-27T08:14:14.896744+00:00", "symbol": "STO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-27T08:25:05.237266+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
