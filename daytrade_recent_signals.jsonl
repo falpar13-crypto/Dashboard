@@ -30,3 +30,6 @@
 {"ts": "2026-09-27T06:12:54.297475+00:00", "symbol": "HAJIMI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-27T06:52:38.248975+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-27T07:06:57.032996+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-27T07:15:34.975367+00:00", "symbol": "JTO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-27T07:18:08.734844+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-27T07:19:10.516218+00:00", "symbol": "BAS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
