@@ -27,3 +27,5 @@
 {"ts": "2026-09-27T22:04:37.648583+00:00", "symbol": "WET-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-27T23:03:49.200069+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-27T23:04:50.936583+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-27T23:32:25.403440+00:00", "symbol": "PUMPBTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-27T23:35:55.408500+00:00", "symbol": "F-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
