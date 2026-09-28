@@ -13,3 +13,5 @@
 {"ts": "2026-09-28T06:41:52.038933+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T07:28:51.125093+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T08:12:41.859746+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T08:17:20.825588+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T08:17:20.825588+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
