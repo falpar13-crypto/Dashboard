@@ -32,3 +32,4 @@
 {"ts": "2026-09-28T08:04:31.936398+00:00", "symbol": "AIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T08:15:44.277025+00:00", "symbol": "ONE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T08:17:14.279240+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T08:24:11.912492+00:00", "symbol": "POL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
