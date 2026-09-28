@@ -32,3 +32,4 @@
 {"ts": "2026-09-28T01:19:30.170842+00:00", "symbol": "PENDLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T01:30:37.501522+00:00", "symbol": "NEIROCTO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T01:49:42.716340+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T01:59:28.526438+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
