@@ -33,3 +33,4 @@
 {"ts": "2026-09-28T16:24:38.600055+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T16:24:38.600055+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T16:49:38.622321+00:00", "symbol": "CAKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T17:17:28.149740+00:00", "symbol": "PENDLE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
