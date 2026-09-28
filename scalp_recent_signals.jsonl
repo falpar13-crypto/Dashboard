@@ -32,3 +32,5 @@
 {"ts": "2026-09-28T16:17:54.492960+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T16:17:54.492960+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-28T16:18:24.495166+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T16:24:38.600055+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T16:24:38.600055+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
