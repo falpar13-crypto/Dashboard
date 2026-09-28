@@ -11,3 +11,5 @@
 {"ts": "2026-09-28T04:48:09.791096+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T05:58:08.654236+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T06:02:11.217300+00:00", "symbol": "GALA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T06:13:12.976856+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-28T06:13:43.865249+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
