@@ -40,3 +40,5 @@
 {"ts": "2026-09-28T22:47:27.652644+00:00", "symbol": "RENDER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T22:49:29.567182+00:00", "symbol": "BNLIFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T23:06:12.115356+00:00", "symbol": "DOOD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-28T23:46:12.563344+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T23:47:13.913257+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
