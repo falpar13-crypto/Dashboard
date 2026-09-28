@@ -22,3 +22,5 @@
 {"ts": "2026-09-28T23:28:13.554518+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T23:28:13.554518+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T23:28:13.554518+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
+{"ts": "2026-09-28T23:37:46.592086+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T23:44:16.623995+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
