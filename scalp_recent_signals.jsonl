@@ -27,3 +27,5 @@
 {"ts": "2026-09-28T18:23:38.271778+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T18:28:51.237304+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T18:52:29.654789+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T19:03:14.817435+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T19:03:14.817435+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
