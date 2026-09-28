@@ -22,3 +22,5 @@
 {"ts": "2026-09-28T13:17:06.600321+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T13:36:44.843186+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-28T13:39:18.203326+00:00", "symbol": "HBAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T13:48:21.049540+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T13:52:00.147967+00:00", "symbol": "MARSCOIN-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
