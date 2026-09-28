@@ -1,5 +1,3 @@
-{"ts": "2026-09-28T14:43:09.920689+00:00", "symbol": "PENDLE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T14:51:10.469943+00:00", "symbol": "PYTH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T14:56:18.825120+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T15:26:56.667604+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T16:31:13.924313+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -40,3 +38,5 @@
 {"ts": "2026-09-28T20:23:02.671669+00:00", "symbol": "CFX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T20:24:03.509952+00:00", "symbol": "ENSO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T20:39:43.137034+00:00", "symbol": "SOLV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-28T20:51:09.213908+00:00", "symbol": "PNUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-28T20:53:19.943769+00:00", "symbol": "WCT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
