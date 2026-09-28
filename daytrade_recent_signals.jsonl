@@ -31,3 +31,5 @@
 {"ts": "2026-09-28T02:52:49.631899+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T02:58:58.429577+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T02:58:58.429577+00:00", "symbol": "ETC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-28T03:05:23.327285+00:00", "symbol": "POPCAT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-28T03:05:53.329137+00:00", "symbol": "STABLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
