@@ -1,11 +1,3 @@
-{"ts": "2026-09-28T07:47:01.476339+00:00", "symbol": "LDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T07:56:44.906039+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T07:56:44.906039+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T07:59:35.574663+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-28T08:03:58.770166+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-28T08:04:31.936398+00:00", "symbol": "AIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-28T08:15:44.277025+00:00", "symbol": "ONE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-09-28T08:17:14.279240+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T08:24:11.912492+00:00", "symbol": "POL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T08:39:33.552604+00:00", "symbol": "STABLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T08:41:04.693517+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -51,3 +43,6 @@
 {"ts": "2026-09-28T13:22:37.549037+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T13:33:40.393752+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-28T13:34:45.645827+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-28T14:14:05.144861+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-28T14:16:17.058339+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-28T14:17:23.165475+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
