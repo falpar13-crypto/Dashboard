@@ -66,3 +66,5 @@
 {"ts": "2026-09-29T13:22:13.282804+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T13:23:14.854334+00:00", "symbol": "RENDER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T13:25:14.856765+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T13:36:53.732021+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T13:36:53.732021+00:00", "symbol": "ANIME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
