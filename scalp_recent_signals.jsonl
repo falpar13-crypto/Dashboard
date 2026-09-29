@@ -1,13 +1,3 @@
-{"ts": "2026-09-28T22:03:59.808115+00:00", "symbol": "NMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T22:22:06.754591+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T22:38:23.955216+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T22:49:04.566899+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T23:03:33.068952+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T23:28:13.554518+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T23:28:13.554518+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T23:28:13.554518+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
-{"ts": "2026-09-28T23:37:46.592086+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-09-28T23:44:16.623995+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T23:58:04.041831+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-28T23:58:04.041831+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-29T00:04:39.777643+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -31,3 +21,6 @@
 {"ts": "2026-09-29T03:07:48.890207+00:00", "symbol": "XPL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-29T03:46:02.946791+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-29T03:59:33.381234+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T05:47:41.941371+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T05:48:11.945284+00:00", "symbol": "XPL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T05:48:41.947261+00:00", "symbol": "XPL-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
