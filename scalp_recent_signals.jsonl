@@ -29,3 +29,7 @@
 {"ts": "2026-09-29T01:13:16.492297+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-29T01:37:50.626448+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-29T02:26:46.909246+00:00", "symbol": "RENDER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T02:39:45.900913+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T02:43:45.921750+00:00", "symbol": "ATOM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T02:44:15.924102+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-29T02:44:15.924102+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
