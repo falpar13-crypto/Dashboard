@@ -62,3 +62,6 @@
 {"ts": "2026-09-29T03:24:04.311543+00:00", "symbol": "ENS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T03:24:04.311543+00:00", "symbol": "RIVER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T03:24:04.311543+00:00", "symbol": "MEW-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T03:29:16.778174+00:00", "symbol": "ICNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T03:32:47.167945+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T03:33:17.168927+00:00", "symbol": "ZKP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
