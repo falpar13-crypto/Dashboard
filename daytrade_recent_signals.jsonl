@@ -68,3 +68,4 @@
 {"ts": "2026-09-29T04:26:57.075886+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T04:40:24.999391+00:00", "symbol": "PUMPBTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T05:08:23.056501+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T05:23:59.365170+00:00", "symbol": "LDO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
