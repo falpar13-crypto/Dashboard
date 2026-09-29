@@ -1,6 +1,3 @@
-{"ts": "2026-09-29T01:48:14.043043+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-29T01:55:03.998562+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-09-29T02:14:28.393997+00:00", "symbol": "XPIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T02:38:36.535464+00:00", "symbol": "ENSO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T02:39:37.122034+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-29T02:43:08.002867+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -48,3 +45,12 @@
 {"ts": "2026-09-29T06:14:42.025077+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T06:19:12.231071+00:00", "symbol": "GOAT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-29T07:09:08.190674+00:00", "symbol": "EVAA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:13:32.957539+00:00", "symbol": "STBL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:14:07.070133+00:00", "symbol": "YB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:15:37.071988+00:00", "symbol": "AWE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:16:37.073132+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:16:37.073132+00:00", "symbol": "TURTLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:16:37.073132+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:17:11.317814+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:17:41.318028+00:00", "symbol": "WET-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-29T08:17:41.318028+00:00", "symbol": "ALLO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
