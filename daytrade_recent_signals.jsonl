@@ -18,3 +18,5 @@
 {"ts": "2026-09-30T06:35:18.777612+00:00", "symbol": "LYN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T06:48:31.366181+00:00", "symbol": "AWE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T06:55:46.802311+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-30T07:12:31.113085+00:00", "symbol": "BULLA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-30T07:13:31.114276+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
