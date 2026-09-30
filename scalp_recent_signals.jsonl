@@ -10,3 +10,5 @@
 {"ts": "2026-09-30T06:54:32.780854+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-09-30T07:19:34.888679+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-09-30T07:24:35.565151+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-09-30T07:37:13.594844+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-09-30T07:38:13.603872+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
