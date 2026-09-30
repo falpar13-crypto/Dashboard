@@ -17,3 +17,4 @@
 {"ts": "2026-09-30T08:04:24.423529+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T08:05:24.425149+00:00", "symbol": "SOPH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T08:20:55.845003+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-30T08:54:17.496269+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
