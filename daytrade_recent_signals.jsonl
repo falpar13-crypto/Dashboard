@@ -35,3 +35,4 @@
 {"ts": "2026-09-30T18:02:03.103797+00:00", "symbol": "YFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T18:08:03.113835+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T18:20:11.479602+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-30T18:32:10.138973+00:00", "symbol": "BROCCOLI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
