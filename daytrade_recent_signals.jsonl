@@ -31,3 +31,4 @@
 {"ts": "2026-09-30T13:27:16.405133+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T13:45:32.079722+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-30T13:46:02.079895+00:00", "symbol": "PENGU-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-09-30T13:56:11.139098+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
