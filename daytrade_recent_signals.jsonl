@@ -24,3 +24,4 @@
 {"ts": "2026-09-30T18:20:11.479602+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T18:32:10.138973+00:00", "symbol": "BROCCOLI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T19:10:43.798267+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-30T19:26:16.045687+00:00", "symbol": "SIGN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
