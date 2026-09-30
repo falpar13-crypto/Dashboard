@@ -18,3 +18,4 @@
 {"ts": "2026-09-30T08:20:55.845003+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T08:54:17.496269+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-09-30T09:06:54.193881+00:00", "symbol": "NIGHT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-30T09:25:13.955916+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
