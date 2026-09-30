@@ -21,3 +21,4 @@
 {"ts": "2026-09-30T05:07:49.223053+00:00", "symbol": "PENDLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T05:14:19.232809+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-09-30T05:25:08.118631+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-09-30T05:47:15.840589+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
