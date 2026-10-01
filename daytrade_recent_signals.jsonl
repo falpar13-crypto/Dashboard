@@ -16,3 +16,4 @@
 {"ts": "2026-10-01T07:09:28.591863+00:00", "symbol": "ZORA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T07:21:57.823243+00:00", "symbol": "HOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T07:29:57.836078+00:00", "symbol": "AT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-01T07:37:05.885045+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
