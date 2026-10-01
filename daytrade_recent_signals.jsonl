@@ -1,5 +1,3 @@
-{"ts": "2026-10-01T05:05:27.202419+00:00", "symbol": "CC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-01T05:10:27.210118+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T07:05:28.585742+00:00", "symbol": "NIL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T07:05:58.586366+00:00", "symbol": "TRUST-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T07:08:28.589783+00:00", "symbol": "COOKIE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -19,3 +17,4 @@
 {"ts": "2026-10-01T10:14:36.350065+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-01T10:42:56.959331+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-01T11:04:18.963302+00:00", "symbol": "BTR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-01T11:10:49.595650+00:00", "symbol": "COOKIE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
