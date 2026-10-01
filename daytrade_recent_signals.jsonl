@@ -19,3 +19,4 @@
 {"ts": "2026-10-01T11:04:18.963302+00:00", "symbol": "BTR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T11:10:49.595650+00:00", "symbol": "COOKIE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T11:31:49.841424+00:00", "symbol": "AT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-01T11:38:08.716055+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
