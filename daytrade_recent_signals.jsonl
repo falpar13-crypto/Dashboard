@@ -24,3 +24,4 @@
 {"ts": "2026-10-01T21:12:42.127058+00:00", "symbol": "AIO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T21:12:42.127058+00:00", "symbol": "FHE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T21:13:42.128438+00:00", "symbol": "COW-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-01T21:50:37.231874+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
