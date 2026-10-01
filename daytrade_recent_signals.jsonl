@@ -22,3 +22,4 @@
 {"ts": "2026-10-01T00:40:32.750481+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T00:44:32.754310+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T00:44:32.754310+00:00", "symbol": "EUL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-01T00:58:40.787865+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
