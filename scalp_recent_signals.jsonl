@@ -8,3 +8,4 @@
 {"ts": "2026-10-01T13:48:45.287004+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-01T14:03:14.985915+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-01T14:04:14.990201+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-01T14:28:43.797307+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
