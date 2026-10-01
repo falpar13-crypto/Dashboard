@@ -22,3 +22,4 @@
 {"ts": "2026-10-01T18:07:34.353571+00:00", "symbol": "RECALL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T19:02:28.238545+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-01T19:12:04.244191+00:00", "symbol": "SOLV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-01T19:26:07.779734+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
