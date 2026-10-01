@@ -3,3 +3,5 @@
 {"ts": "2026-09-30T22:33:51.709657+00:00", "symbol": "ATOM-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-09-30T22:35:21.713359+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-01T02:14:01.619475+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-01T02:47:31.925122+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-01T02:47:31.925122+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
