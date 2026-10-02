@@ -27,3 +27,5 @@
 {"ts": "2026-10-02T16:14:20.795605+00:00", "symbol": "MOVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T16:14:50.795890+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T16:14:50.795890+00:00", "symbol": "CC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T16:29:34.746518+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T16:34:04.752622+00:00", "symbol": "SKY-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
