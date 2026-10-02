@@ -23,3 +23,4 @@
 {"ts": "2026-10-02T12:55:46.130966+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-02T13:05:32.724123+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T13:10:32.731271+00:00", "symbol": "INX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T13:23:17.341128+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
