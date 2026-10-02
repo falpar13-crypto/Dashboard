@@ -23,3 +23,5 @@
 {"ts": "2026-10-02T13:23:17.341128+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T13:52:19.844305+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T14:04:38.158697+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T14:34:57.325796+00:00", "symbol": "ORCA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T14:35:27.326908+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
