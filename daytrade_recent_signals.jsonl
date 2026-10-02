@@ -26,3 +26,4 @@
 {"ts": "2026-10-02T14:35:27.326908+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T14:50:12.220089+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-02T14:54:12.226951+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-02T15:24:19.024555+00:00", "symbol": "BITLIGHT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
