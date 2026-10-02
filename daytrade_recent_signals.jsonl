@@ -21,3 +21,4 @@
 {"ts": "2026-10-02T20:15:39.210137+00:00", "symbol": "DRIFT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T20:17:42.607827+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T21:25:19.052394+00:00", "symbol": "XPL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T21:34:34.001674+00:00", "symbol": "KAIA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
