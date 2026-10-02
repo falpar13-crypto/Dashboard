@@ -10,3 +10,5 @@
 {"ts": "2026-10-02T05:14:45.831536+00:00", "symbol": "RESOLV-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-02T06:37:34.033627+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-02T07:04:16.529311+00:00", "symbol": "ALGO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-02T07:22:40.349225+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-02T07:23:10.351685+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
