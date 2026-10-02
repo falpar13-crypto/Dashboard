@@ -23,3 +23,4 @@
 {"ts": "2026-10-02T07:04:06.420112+00:00", "symbol": "FLOCK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T07:31:26.800793+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T07:35:26.808658+00:00", "symbol": "BEAT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T07:57:21.486836+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
