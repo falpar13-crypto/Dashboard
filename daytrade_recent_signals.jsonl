@@ -18,3 +18,4 @@
 {"ts": "2026-10-02T12:10:09.690341+00:00", "symbol": "DRIFT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T12:12:39.694671+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-02T12:13:39.695867+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-02T12:24:12.646053+00:00", "symbol": "TURTLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
