@@ -10,3 +10,4 @@
 {"ts": "2026-10-03T06:17:10.276866+00:00", "symbol": "AXS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-03T06:19:10.688757+00:00", "symbol": "MANA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-03T07:43:54.571503+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-03T08:08:19.568036+00:00", "symbol": "VELVET-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
