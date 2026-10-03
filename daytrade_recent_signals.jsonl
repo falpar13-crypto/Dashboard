@@ -21,3 +21,5 @@
 {"ts": "2026-10-03T01:11:15.153684+00:00", "symbol": "BR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-03T01:21:36.470621+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-03T01:22:36.473446+00:00", "symbol": "TRUST-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-03T01:34:56.711444+00:00", "symbol": "KAIA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-03T01:36:56.715085+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
