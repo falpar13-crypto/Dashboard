@@ -18,3 +18,4 @@
 {"ts": "2026-10-03T05:03:49.496741+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-03T05:13:11.671299+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-03T05:19:11.680075+00:00", "symbol": "PYTH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-03T05:32:39.058468+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
