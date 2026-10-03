@@ -9,3 +9,5 @@
 {"ts": "2026-10-03T19:00:55.789179+00:00", "symbol": "SAND-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-03T19:03:55.804465+00:00", "symbol": "KAITO-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-10-03T19:29:33.486568+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-03T19:57:46.587292+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-03T20:02:16.616978+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
