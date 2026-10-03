@@ -9,3 +9,4 @@
 {"ts": "2026-10-03T13:06:13.919599+00:00", "symbol": "NIGHT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-03T14:04:22.708275+00:00", "symbol": "GRIFFAIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-03T14:06:22.711080+00:00", "symbol": "OG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-03T14:34:36.452250+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
