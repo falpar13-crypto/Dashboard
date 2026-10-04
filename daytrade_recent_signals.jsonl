@@ -20,3 +20,5 @@
 {"ts": "2026-10-04T12:12:12.340104+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T12:16:42.345980+00:00", "symbol": "CLANKER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T12:47:43.721660+00:00", "symbol": "LA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-04T12:59:21.834657+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-04T13:07:21.848612+00:00", "symbol": "WCT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
