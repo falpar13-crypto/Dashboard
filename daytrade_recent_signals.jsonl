@@ -20,3 +20,4 @@
 {"ts": "2026-10-04T09:51:35.824238+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-04T09:52:35.824693+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T09:55:35.830400+00:00", "symbol": "FET-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-04T10:11:05.301608+00:00", "symbol": "FLOCK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
