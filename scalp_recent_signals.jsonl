@@ -12,3 +12,5 @@
 {"ts": "2026-10-04T20:54:11.251076+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-04T21:57:27.471842+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-04T21:58:57.479775+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-04T22:09:19.461521+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-04T22:09:19.461521+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
