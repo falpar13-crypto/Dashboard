@@ -15,3 +15,4 @@
 {"ts": "2026-10-04T06:30:23.671962+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-04T07:18:23.996146+00:00", "symbol": "DRIFT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T07:19:23.997619+00:00", "symbol": "HAJIMI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-04T07:50:54.855453+00:00", "symbol": "ATH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
