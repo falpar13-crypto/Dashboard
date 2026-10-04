@@ -13,3 +13,4 @@
 {"ts": "2026-10-04T06:18:06.039119+00:00", "symbol": "TRADOOR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T06:19:36.041064+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T06:19:36.041064+00:00", "symbol": "MYX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-04T06:30:23.671962+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
