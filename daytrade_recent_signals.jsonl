@@ -22,3 +22,4 @@
 {"ts": "2026-10-04T20:45:20.940762+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T20:46:50.942529+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T20:49:50.945952+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-04T20:57:26.153105+00:00", "symbol": "QNT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
