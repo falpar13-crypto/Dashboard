@@ -21,3 +21,5 @@
 {"ts": "2026-10-04T10:11:05.301608+00:00", "symbol": "FLOCK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T10:25:41.008236+00:00", "symbol": "MYX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T10:29:11.013056+00:00", "symbol": "DEEP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-04T10:54:44.656769+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-04T10:58:14.661749+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
