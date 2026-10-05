@@ -26,3 +26,7 @@
 {"ts": "2026-10-05T12:19:26.051618+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T12:47:04.104091+00:00", "symbol": "AIXBT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T12:47:34.283931+00:00", "symbol": "ANIME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T13:05:53.406058+00:00", "symbol": "POL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T13:05:53.406058+00:00", "symbol": "COW-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T13:08:23.408737+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T13:09:23.410269+00:00", "symbol": "SOPH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
