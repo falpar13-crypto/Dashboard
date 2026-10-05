@@ -14,3 +14,4 @@
 {"ts": "2026-10-05T08:25:51.187070+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-05T08:43:45.155380+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-05T10:04:30.535836+00:00", "symbol": "MOVR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-05T10:18:23.838459+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
