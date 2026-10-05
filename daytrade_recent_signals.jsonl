@@ -23,3 +23,5 @@
 {"ts": "2026-10-05T03:54:49.598460+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T04:06:13.276014+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T04:07:43.279522+00:00", "symbol": "CLANKER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T04:20:03.208278+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T04:21:33.209478+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
