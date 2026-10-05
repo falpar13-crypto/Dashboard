@@ -1,4 +1,3 @@
-{"ts": "2026-10-05T10:26:23.912021+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T10:42:20.763621+00:00", "symbol": "DRIFT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T10:53:31.560513+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T11:41:26.203394+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -37,3 +36,4 @@
 {"ts": "2026-10-05T16:24:18.861493+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T16:24:48.862518+00:00", "symbol": "SIGN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T16:24:48.862518+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T16:37:19.136413+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
