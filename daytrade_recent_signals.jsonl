@@ -1,4 +1,3 @@
-{"ts": "2026-10-04T20:45:20.940762+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T20:46:50.942529+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T20:49:50.945952+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-04T20:57:26.153105+00:00", "symbol": "QNT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -22,3 +21,4 @@
 {"ts": "2026-10-05T01:26:14.857887+00:00", "symbol": "2Z-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T01:38:24.505551+00:00", "symbol": "THE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T02:35:03.244020+00:00", "symbol": "AIXBT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T02:46:11.800632+00:00", "symbol": "TURTLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
