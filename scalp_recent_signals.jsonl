@@ -1,13 +1,3 @@
-{"ts": "2026-10-05T12:20:50.111614+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-10-05T12:36:42.762852+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-05T13:06:24.593024+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-10-05T13:41:54.046276+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-05T13:54:42.888533+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-05T14:23:54.151296+00:00", "symbol": "BERA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-10-05T14:24:54.159585+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-10-05T14:34:30.331032+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-10-05T14:34:30.331032+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-05T15:07:50.320231+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T16:22:26.403283+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T16:23:56.412657+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T17:23:43.411110+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -16,3 +6,4 @@
 {"ts": "2026-10-05T17:57:42.353409+00:00", "symbol": "MOVR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T18:13:15.003157+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T18:13:15.003157+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-05T21:54:23.687283+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
