@@ -1,7 +1,3 @@
-{"ts": "2026-10-05T09:05:20.000409+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-05T09:05:50.001144+00:00", "symbol": "COW-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-05T09:06:20.002945+00:00", "symbol": "YB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-05T09:06:50.004152+00:00", "symbol": "ZORA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T09:20:55.849502+00:00", "symbol": "ENSO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T10:10:38.518778+00:00", "symbol": "ALCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T10:26:23.912021+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -33,3 +29,4 @@
 {"ts": "2026-10-05T15:04:49.934628+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T15:04:49.934628+00:00", "symbol": "SHELL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-05T15:05:19.935524+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T15:18:03.881178+00:00", "symbol": "TRUTH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
