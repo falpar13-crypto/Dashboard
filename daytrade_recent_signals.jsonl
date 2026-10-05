@@ -21,3 +21,5 @@
 {"ts": "2026-10-05T10:53:31.560513+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T11:41:26.203394+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-05T11:43:56.207729+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T11:59:48.749607+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-05T12:02:18.754009+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
