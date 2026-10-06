@@ -1,12 +1,3 @@
-{"ts": "2026-10-06T14:23:10.650004+00:00", "symbol": "NXPC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-06T14:34:09.610793+00:00", "symbol": "INX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-06T14:36:39.614935+00:00", "symbol": "ZK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-06T14:36:39.614935+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-06T14:38:09.616710+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-06T14:42:09.622916+00:00", "symbol": "TRUST-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-06T15:08:32.521185+00:00", "symbol": "ON-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-06T15:10:02.522914+00:00", "symbol": "SXT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-06T15:12:02.526717+00:00", "symbol": "ENSO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-06T15:13:02.528921+00:00", "symbol": "TURTLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-06T15:54:43.976297+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-06T15:55:13.977711+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
@@ -35,3 +26,7 @@
 {"ts": "2026-10-06T20:19:33.931463+00:00", "symbol": "FOLKS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-06T20:21:03.934313+00:00", "symbol": "ENSO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-06T20:21:03.934313+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-06T21:04:58.925951+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-06T21:05:28.926926+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-06T21:10:28.933899+00:00", "symbol": "TRUTH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-06T21:12:58.937858+00:00", "symbol": "OPENLEDGER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
