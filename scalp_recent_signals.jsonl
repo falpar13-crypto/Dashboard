@@ -17,3 +17,4 @@
 {"ts": "2026-10-06T19:19:28.495407+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-06T19:20:58.499098+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-06T19:20:58.499098+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-06T20:09:01.460377+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
