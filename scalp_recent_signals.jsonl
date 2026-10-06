@@ -1,6 +1,7 @@
-{"ts": "2026-10-06T02:41:55.330236+00:00", "symbol": "FARTCOIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-06T06:07:17.464040+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-06T06:34:29.143663+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-06T07:34:45.668142+00:00", "symbol": "API3-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-06T07:49:10.788868+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-06T07:49:40.789776+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-06T09:03:22.225561+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-06T09:08:52.250916+00:00", "symbol": "ORCA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
