@@ -35,3 +35,4 @@
 {"ts": "2026-10-06T17:05:18.451832+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-06T17:07:48.457660+00:00", "symbol": "BABY-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-06T17:09:18.460303+00:00", "symbol": "SAND-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-06T17:32:14.470321+00:00", "symbol": "FLOCK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
