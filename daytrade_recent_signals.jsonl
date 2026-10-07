@@ -38,3 +38,4 @@
 {"ts": "2026-10-07T20:15:42.926818+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T20:16:14.422927+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T20:35:07.087491+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-07T20:52:33.176045+00:00", "symbol": "GRAMTON-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
