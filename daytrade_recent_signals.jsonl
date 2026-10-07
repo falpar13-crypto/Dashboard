@@ -21,3 +21,5 @@
 {"ts": "2026-10-07T15:33:31.694239+00:00", "symbol": "SXT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T15:34:01.694912+00:00", "symbol": "SOPH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T15:34:31.696964+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-07T16:06:38.043928+00:00", "symbol": "BTR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-07T16:07:08.044377+00:00", "symbol": "BAS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
