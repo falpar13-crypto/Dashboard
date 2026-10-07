@@ -25,3 +25,6 @@
 {"ts": "2026-10-07T01:59:41.238085+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-07T02:27:28.898744+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-07T02:49:20.961786+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-07T02:58:01.041782+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-07T02:58:31.043191+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-07T03:04:31.057028+00:00", "symbol": "SPX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
