@@ -1,4 +1,3 @@
-{"ts": "2026-10-07T14:25:52.128882+00:00", "symbol": "SKYAI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T15:29:31.689791+00:00", "symbol": "MERL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T15:32:01.692689+00:00", "symbol": "ON-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T15:33:31.694239+00:00", "symbol": "SXT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -38,3 +37,4 @@
 {"ts": "2026-10-07T20:15:10.716789+00:00", "symbol": "KERNEL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T20:15:42.926818+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T20:16:14.422927+00:00", "symbol": "SAFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-07T20:35:07.087491+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
