@@ -28,3 +28,4 @@
 {"ts": "2026-10-07T19:08:32.782070+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T19:09:32.782990+00:00", "symbol": "FOLKS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T19:45:34.299980+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-07T20:01:42.638027+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
