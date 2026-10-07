@@ -10,3 +10,5 @@
 {"ts": "2026-10-07T10:44:29.961868+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-07T11:30:48.970803+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-07T12:02:49.416905+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-07T12:34:50.886115+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-07T12:35:20.889379+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
