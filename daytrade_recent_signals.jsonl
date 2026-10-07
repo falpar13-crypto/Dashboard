@@ -19,3 +19,4 @@
 {"ts": "2026-10-07T13:09:00.335522+00:00", "symbol": "WAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-07T13:39:59.899886+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-07T13:45:29.907822+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-07T14:01:45.038611+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
