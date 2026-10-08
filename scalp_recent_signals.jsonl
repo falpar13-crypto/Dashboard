@@ -12,3 +12,4 @@
 {"ts": "2026-10-08T04:23:00.380727+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-08T04:24:01.158500+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-08T04:28:31.191532+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-08T05:06:44.332158+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
