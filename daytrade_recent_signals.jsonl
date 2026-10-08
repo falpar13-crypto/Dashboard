@@ -49,3 +49,4 @@
 {"ts": "2026-10-08T15:23:24.524777+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-08T15:24:59.241567+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-08T15:26:29.243619+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-08T15:36:36.005453+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
