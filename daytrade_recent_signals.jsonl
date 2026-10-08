@@ -46,3 +46,4 @@
 {"ts": "2026-10-08T15:26:29.243619+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-08T15:36:36.005453+00:00", "symbol": "DASH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-08T16:11:59.278741+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-08T17:07:07.726969+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
