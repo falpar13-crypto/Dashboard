@@ -3,3 +3,5 @@
 {"ts": "2026-10-08T05:57:43.113926+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-08T06:23:47.659626+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-08T10:38:53.867337+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-08T10:53:02.531783+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-08T10:53:33.206184+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
