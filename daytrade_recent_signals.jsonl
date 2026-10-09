@@ -11,3 +11,5 @@
 {"ts": "2026-10-09T12:25:09.421530+00:00", "symbol": "PARTI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-09T12:49:37.415090+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-09T13:12:55.338864+00:00", "symbol": "GRASS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-09T13:24:04.110123+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-09T13:28:42.147082+00:00", "symbol": "CC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
