@@ -9,3 +9,4 @@
 {"ts": "2026-10-09T11:33:02.324638+00:00", "symbol": "SOLV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-09T12:08:40.488928+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-09T12:25:09.421530+00:00", "symbol": "PARTI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-09T12:49:37.415090+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
