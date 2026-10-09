@@ -16,3 +16,5 @@
 {"ts": "2026-10-09T05:17:42.439516+00:00", "symbol": "CC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-09T05:18:12.439972+00:00", "symbol": "PAXG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-09T05:18:42.440443+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-09T05:53:49.789253+00:00", "symbol": "PIEVERSE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-09T05:56:53.971740+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
