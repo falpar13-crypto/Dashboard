@@ -1,3 +1,4 @@
 {"ts": "2026-09-13T19:37:24.541194+00:00", "symbol": "DYM-USDT", "direction": "LONG", "price": 0.01467, "drop_from_peak_pct": 61.32, "volume_growth_ratio": 4.15, "price_range_pct": 11.21}
 {"ts": "2026-09-13T19:37:24.541194+00:00", "symbol": "ORDI-USDT", "direction": "LONG", "price": 4.172, "drop_from_peak_pct": 61.15, "volume_growth_ratio": 4.41, "price_range_pct": 10.24}
 {"ts": "2026-09-13T19:37:24.541194+00:00", "symbol": "GALA-USDT", "direction": "LONG", "price": 0.001673, "drop_from_peak_pct": 62.99, "volume_growth_ratio": 6.18, "price_range_pct": 13.32}
+{"ts": "2026-10-09T03:01:06.994198+00:00", "symbol": "BASECAT-USDT", "direction": "LONG", "price": 0.01169, "drop_from_peak_pct": 85.21, "volume_growth_ratio": 1.61, "price_range_pct": 23.56, "monotonic_fraction": 0.67}
