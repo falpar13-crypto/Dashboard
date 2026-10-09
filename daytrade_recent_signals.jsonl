@@ -13,3 +13,5 @@
 {"ts": "2026-10-09T03:07:50.390953+00:00", "symbol": "SOMI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-09T04:10:59.356492+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-09T04:34:25.939229+00:00", "symbol": "WLFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-09T05:04:38.630541+00:00", "symbol": "SOLV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-09T05:04:38.630541+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
