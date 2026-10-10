@@ -10,3 +10,4 @@
 {"ts": "2026-10-10T02:42:48.533649+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-10T03:31:30.618470+00:00", "symbol": "XLM-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-10T04:07:46.124639+00:00", "symbol": "HAJIMI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-10T04:41:57.174320+00:00", "symbol": "MOVE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
