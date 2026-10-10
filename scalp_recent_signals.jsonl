@@ -5,3 +5,4 @@
 {"ts": "2026-10-10T06:42:57.985424+00:00", "symbol": "KAIA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-10T07:09:31.570039+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-10T07:13:01.582029+00:00", "symbol": "MAGIC-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-10T07:29:40.338353+00:00", "symbol": "MAGIC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
