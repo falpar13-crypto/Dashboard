@@ -11,3 +11,4 @@
 {"ts": "2026-10-10T02:13:27.050223+00:00", "symbol": "SOPH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-10T02:13:57.050581+00:00", "symbol": "GRASS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-10T02:24:37.167630+00:00", "symbol": "PYTH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-10T02:42:48.533649+00:00", "symbol": "ETC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
