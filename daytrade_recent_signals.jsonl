@@ -20,3 +20,5 @@
 {"ts": "2026-10-11T00:42:34.355985+00:00", "symbol": "ZORA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T00:43:04.357039+00:00", "symbol": "VANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T00:57:18.650412+00:00", "symbol": "SAND-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-11T01:09:40.738897+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-11T01:13:40.747088+00:00", "symbol": "EUL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
