@@ -37,3 +37,4 @@
 {"ts": "2026-10-11T17:38:42.015197+00:00", "symbol": "A-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T17:42:42.020987+00:00", "symbol": "OG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T17:57:53.843313+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-11T18:14:09.691537+00:00", "symbol": "STABLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
