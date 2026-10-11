@@ -19,3 +19,4 @@
 {"ts": "2026-10-11T00:39:04.349765+00:00", "symbol": "REZ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T00:42:34.355985+00:00", "symbol": "ZORA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T00:43:04.357039+00:00", "symbol": "VANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-11T00:57:18.650412+00:00", "symbol": "SAND-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
