@@ -1,4 +1,3 @@
-{"ts": "2026-10-11T07:58:43.050075+00:00", "symbol": "YFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T08:34:23.850570+00:00", "symbol": "GRASS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T09:34:25.697847+00:00", "symbol": "STO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T09:47:36.041230+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -31,3 +30,4 @@
 {"ts": "2026-10-11T13:53:09.639105+00:00", "symbol": "YFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T13:54:09.640533+00:00", "symbol": "HOLO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-11T13:57:39.644732+00:00", "symbol": "ZKP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-11T14:13:27.411407+00:00", "symbol": "ZEC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
