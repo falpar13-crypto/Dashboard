@@ -9,3 +9,4 @@
 {"ts": "2026-10-12T16:49:43.582390+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-12T16:49:43.582390+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-12T17:09:22.774857+00:00", "symbol": "GTC-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-12T17:24:31.220790+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
