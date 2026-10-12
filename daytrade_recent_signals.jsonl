@@ -17,3 +17,4 @@
 {"ts": "2026-10-12T20:05:56.898105+00:00", "symbol": "AWE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T20:37:07.652391+00:00", "symbol": "CATI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T20:43:37.658626+00:00", "symbol": "STABLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T20:57:50.980268+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
