@@ -26,3 +26,4 @@
 {"ts": "2026-10-12T16:29:22.594237+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T16:29:22.594237+00:00", "symbol": "HOLO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T16:29:52.594755+00:00", "symbol": "BERA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T16:48:41.223319+00:00", "symbol": "COW-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
