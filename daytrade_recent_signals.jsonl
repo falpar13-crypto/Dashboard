@@ -18,3 +18,11 @@
 {"ts": "2026-10-12T11:52:47.714779+00:00", "symbol": "ENSO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T12:24:21.642124+00:00", "symbol": "DOOD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T12:37:26.159869+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-12T12:47:42.231959+00:00", "symbol": "POPCAT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T12:48:12.232851+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T12:48:12.232851+00:00", "symbol": "STABLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T12:52:42.238165+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T12:53:12.238583+00:00", "symbol": "MYX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T12:53:12.238583+00:00", "symbol": "NEIROCTO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T12:53:42.238912+00:00", "symbol": "LIGHTER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T12:54:42.240701+00:00", "symbol": "VANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
