@@ -25,3 +25,5 @@
 {"ts": "2026-10-12T07:04:39.306058+00:00", "symbol": "EVAA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T07:20:39.730464+00:00", "symbol": "VANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T07:29:09.743022+00:00", "symbol": "SOON-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T07:37:33.680571+00:00", "symbol": "BAT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T07:43:03.688373+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
