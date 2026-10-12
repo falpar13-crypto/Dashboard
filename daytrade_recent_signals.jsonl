@@ -25,3 +25,4 @@
 {"ts": "2026-10-12T02:38:33.798180+00:00", "symbol": "WET-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T02:43:33.803144+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-12T02:58:07.635002+00:00", "symbol": "STABLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-12T03:14:24.661530+00:00", "symbol": "BNLIFE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
