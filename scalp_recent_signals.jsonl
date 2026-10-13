@@ -1,3 +1,4 @@
 {"ts": "2026-10-13T15:54:38.523663+00:00", "symbol": "AIO-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-13T18:20:54.876648+00:00", "symbol": "USELESS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-13T18:59:40.711547+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-13T19:13:58.508914+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
