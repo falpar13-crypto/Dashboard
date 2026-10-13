@@ -8,3 +8,4 @@
 {"ts": "2026-10-13T11:13:28.743725+00:00", "symbol": "QNT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-13T11:38:38.376393+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-13T11:39:38.381667+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-13T12:47:54.086947+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
