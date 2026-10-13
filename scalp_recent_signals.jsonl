@@ -3,3 +3,5 @@
 {"ts": "2026-10-13T09:03:03.679926+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-13T09:29:49.024244+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-13T09:33:49.037776+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-13T09:48:03.326680+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-13T09:48:03.326680+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
