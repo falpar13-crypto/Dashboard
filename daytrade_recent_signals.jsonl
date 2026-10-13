@@ -8,3 +8,4 @@
 {"ts": "2026-10-13T12:34:31.272558+00:00", "symbol": "ORCA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-13T12:38:01.276908+00:00", "symbol": "WLFI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-13T12:52:53.407966+00:00", "symbol": "ENSO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-13T13:56:32.086044+00:00", "symbol": "S-USDT", "direction": "LONG", "signal_type": "STANDARD"}
