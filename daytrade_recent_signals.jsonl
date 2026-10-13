@@ -5,3 +5,4 @@
 {"ts": "2026-10-13T11:43:47.172811+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-13T11:47:47.178789+00:00", "symbol": "SOON-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-13T11:47:47.178789+00:00", "symbol": "PAXG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-13T11:55:50.037437+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
