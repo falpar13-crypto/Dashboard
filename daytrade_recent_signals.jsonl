@@ -6,3 +6,5 @@
 {"ts": "2026-10-13T15:26:10.138892+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-13T16:08:07.752363+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-13T18:10:48.668973+00:00", "symbol": "PAXG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-13T18:27:31.577555+00:00", "symbol": "CATI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-13T18:28:31.579496+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
