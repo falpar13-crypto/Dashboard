@@ -6,3 +6,4 @@
 {"ts": "2026-10-14T06:44:31.355929+00:00", "symbol": "DIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-14T07:54:08.017210+00:00", "symbol": "CATI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-14T08:15:47.538215+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-14T08:47:11.850335+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
