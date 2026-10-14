@@ -10,3 +10,4 @@
 {"ts": "2026-10-14T09:28:33.069709+00:00", "symbol": "WAL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-14T09:29:03.074403+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-14T09:32:33.111919+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-14T10:32:35.023696+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
