@@ -1,4 +1,4 @@
-{"ts": "2026-10-13T21:12:59.238033+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-14T00:17:15.230382+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-14T00:49:43.627088+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-14T02:33:11.456960+00:00", "symbol": "Q-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-14T05:19:38.441995+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
