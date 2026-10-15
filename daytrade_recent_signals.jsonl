@@ -28,3 +28,4 @@
 {"ts": "2026-10-15T14:49:24.306276+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-15T15:42:28.298960+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-15T16:08:08.138791+00:00", "symbol": "FF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-15T16:21:30.329669+00:00", "symbol": "TNSR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
