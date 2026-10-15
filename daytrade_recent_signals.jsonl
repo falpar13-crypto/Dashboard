@@ -23,3 +23,5 @@
 {"ts": "2026-10-15T20:42:02.021095+00:00", "symbol": "USELESS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-15T20:42:32.021570+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-15T20:57:50.760949+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-15T21:21:42.482053+00:00", "symbol": "AT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-15T21:22:12.482443+00:00", "symbol": "SPX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
