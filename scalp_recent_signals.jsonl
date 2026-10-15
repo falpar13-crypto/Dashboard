@@ -12,3 +12,5 @@
 {"ts": "2026-10-15T11:37:57.937157+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-15T12:26:59.323939+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-15T12:43:10.439133+00:00", "symbol": "W-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-15T13:24:10.866496+00:00", "symbol": "WAL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-15T13:24:10.866496+00:00", "symbol": "WAL-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
