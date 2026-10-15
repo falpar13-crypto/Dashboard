@@ -28,3 +28,4 @@
 {"ts": "2026-10-15T13:22:37.209813+00:00", "symbol": "ENA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-15T13:24:07.211963+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-15T13:24:07.211963+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-15T13:36:28.925136+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
