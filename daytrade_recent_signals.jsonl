@@ -11,3 +11,4 @@
 {"ts": "2026-10-15T00:10:39.016935+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-15T01:20:56.756146+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-15T01:23:26.759992+00:00", "symbol": "YFI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-15T01:51:59.449353+00:00", "symbol": "BNLIFE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
