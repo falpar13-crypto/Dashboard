@@ -10,3 +10,4 @@
 {"ts": "2026-10-17T06:41:57.051121+00:00", "symbol": "TRADOOR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T06:42:57.053398+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T08:28:34.994651+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-17T08:38:28.197228+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
