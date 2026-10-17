@@ -10,3 +10,5 @@
 {"ts": "2026-10-17T16:57:39.989632+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T16:58:09.992276+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T16:58:39.996004+00:00", "symbol": "HBAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-17T17:22:08.610535+00:00", "symbol": "BR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-17T17:22:08.610535+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
