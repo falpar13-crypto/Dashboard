@@ -8,3 +8,4 @@
 {"ts": "2026-10-17T09:13:09.807441+00:00", "symbol": "PARTI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T09:17:39.816801+00:00", "symbol": "SWARMS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T10:42:57.569171+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-17T10:52:17.438919+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
