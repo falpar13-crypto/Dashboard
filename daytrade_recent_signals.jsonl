@@ -10,3 +10,4 @@
 {"ts": "2026-10-17T01:38:34.854455+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T03:12:55.519041+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T03:17:37.295702+00:00", "symbol": "W-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-17T03:33:00.488729+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
