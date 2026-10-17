@@ -11,3 +11,4 @@
 {"ts": "2026-10-17T17:36:05.398251+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T17:57:57.064400+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T18:48:55.891144+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-17T19:03:42.530467+00:00", "symbol": "GALA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
