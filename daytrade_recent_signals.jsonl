@@ -10,3 +10,4 @@
 {"ts": "2026-10-17T10:42:57.569171+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T10:52:17.438919+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T11:12:36.810842+00:00", "symbol": "TRADOOR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-17T12:18:56.216860+00:00", "symbol": "SHELL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
