@@ -10,3 +10,4 @@
 {"ts": "2026-10-17T19:43:56.235108+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T21:54:40.324365+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T21:58:40.328860+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-17T22:18:03.661680+00:00", "symbol": "NMR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
