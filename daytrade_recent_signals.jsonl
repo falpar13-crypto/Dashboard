@@ -6,3 +6,4 @@
 {"ts": "2026-10-17T16:57:47.018594+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T17:11:59.348657+00:00", "symbol": "XPIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T17:17:01.183480+00:00", "symbol": "A-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-17T17:32:28.938983+00:00", "symbol": "ICNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
