@@ -8,3 +8,5 @@
 {"ts": "2026-10-17T17:32:28.938983+00:00", "symbol": "ICNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T18:57:56.403169+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T18:57:56.403169+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-17T19:43:56.235108+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-17T19:43:56.235108+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
