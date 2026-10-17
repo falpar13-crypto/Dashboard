@@ -11,3 +11,5 @@
 {"ts": "2026-10-17T03:33:00.488729+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-17T04:11:50.159941+00:00", "symbol": "SPX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T04:12:50.161437+00:00", "symbol": "API3-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-17T04:42:54.670316+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-17T04:42:54.670316+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
