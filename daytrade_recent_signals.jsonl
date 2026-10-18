@@ -18,3 +18,5 @@
 {"ts": "2026-10-18T06:52:32.406056+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-18T07:48:05.762855+00:00", "symbol": "PYTH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-18T08:09:52.079338+00:00", "symbol": "MYX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-18T08:21:30.831255+00:00", "symbol": "APE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-18T08:22:00.875034+00:00", "symbol": "KAIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
