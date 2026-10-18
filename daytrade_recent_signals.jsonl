@@ -11,3 +11,4 @@
 {"ts": "2026-10-18T22:43:52.665326+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-18T22:59:13.693131+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-18T23:07:43.702903+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-18T23:23:04.875551+00:00", "symbol": "PARTI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
