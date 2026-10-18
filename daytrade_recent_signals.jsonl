@@ -12,3 +12,4 @@
 {"ts": "2026-10-18T15:19:23.372005+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-18T15:38:59.656219+00:00", "symbol": "KGEN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-18T15:53:56.781700+00:00", "symbol": "ARIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-18T17:23:39.665854+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
