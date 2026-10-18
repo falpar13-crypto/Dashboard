@@ -7,3 +7,5 @@
 {"ts": "2026-10-18T21:09:31.989001+00:00", "symbol": "SAND-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-18T21:24:36.260740+00:00", "symbol": "BLESS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-18T22:11:12.090294+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-18T22:43:52.665326+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-18T22:43:52.665326+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
