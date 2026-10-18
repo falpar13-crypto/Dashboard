@@ -12,3 +12,5 @@
 {"ts": "2026-10-18T01:29:06.934286+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-18T01:44:49.445931+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-18T01:44:49.445931+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-18T02:04:45.497348+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-18T02:07:45.525193+00:00", "symbol": "AVA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
