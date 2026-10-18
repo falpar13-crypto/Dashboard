@@ -6,3 +6,6 @@
 {"ts": "2026-10-17T22:37:23.848977+00:00", "symbol": "HBAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-17T23:13:32.573214+00:00", "symbol": "TRUMPSOL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-18T02:01:07.723764+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-18T02:27:04.362207+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-18T02:34:04.371773+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-18T02:34:04.371773+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
