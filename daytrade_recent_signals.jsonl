@@ -12,3 +12,4 @@
 {"ts": "2026-10-19T14:47:39.971562+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T15:23:16.399372+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T15:34:29.549988+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-19T15:51:57.309403+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
