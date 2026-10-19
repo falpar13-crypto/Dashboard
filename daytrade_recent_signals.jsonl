@@ -1,4 +1,3 @@
-{"ts": "2026-10-18T22:11:12.090294+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-18T22:43:52.665326+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-18T22:43:52.665326+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-18T22:59:13.693131+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
@@ -8,3 +7,4 @@
 {"ts": "2026-10-19T02:38:49.631861+00:00", "symbol": "INIT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T03:13:33.238076+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T03:38:44.490874+00:00", "symbol": "BABY-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-19T04:23:47.392436+00:00", "symbol": "KAS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
