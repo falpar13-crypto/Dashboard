@@ -8,3 +8,4 @@
 {"ts": "2026-10-19T04:58:21.091503+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-19T05:35:06.087606+00:00", "symbol": "BR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T07:18:44.330258+00:00", "symbol": "ORCA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-19T07:56:16.640068+00:00", "symbol": "BR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
