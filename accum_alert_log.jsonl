@@ -3,3 +3,4 @@
 {"ts": "2026-09-13T19:37:24.541194+00:00", "symbol": "GALA-USDT", "direction": "LONG", "price": 0.001673, "drop_from_peak_pct": 62.99, "volume_growth_ratio": 6.18, "price_range_pct": 13.32}
 {"ts": "2026-10-09T03:01:06.994198+00:00", "symbol": "BASECAT-USDT", "direction": "LONG", "price": 0.01169, "drop_from_peak_pct": 85.21, "volume_growth_ratio": 1.61, "price_range_pct": 23.56, "monotonic_fraction": 0.67}
 {"ts": "2026-10-18T03:12:24.133233+00:00", "symbol": "AVAAI-USDT", "direction": "LONG", "price": 0.00734, "drop_from_peak_pct": 65.83, "volume_growth_ratio": 1.73, "price_range_pct": 24.75, "monotonic_fraction": 0.67}
+{"ts": "2026-10-19T03:01:06.871572+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "price": 0.002939, "drop_from_peak_pct": 64.58, "volume_growth_ratio": 2.62, "price_range_pct": 16.79, "monotonic_fraction": 0.67}
