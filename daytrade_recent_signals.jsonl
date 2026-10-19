@@ -1,4 +1,3 @@
-{"ts": "2026-10-19T13:48:44.908061+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T13:52:48.824959+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T13:53:51.662579+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T14:47:39.971562+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -10,3 +9,5 @@
 {"ts": "2026-10-19T18:17:09.165988+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T19:13:04.048835+00:00", "symbol": "FHE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-19T19:13:34.189374+00:00", "symbol": "BNLIFE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-19T19:48:45.728939+00:00", "symbol": "PENDLE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-19T19:52:45.735848+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
