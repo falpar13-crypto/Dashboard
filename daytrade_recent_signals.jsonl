@@ -33,3 +33,4 @@
 {"ts": "2026-10-20T15:57:14.352832+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T15:57:14.352832+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T15:58:44.354973+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T16:38:45.684276+00:00", "symbol": "DEEP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
