@@ -12,3 +12,4 @@
 {"ts": "2026-10-20T04:44:05.482482+00:00", "symbol": "AVA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T05:18:21.262268+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T05:18:21.262268+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-20T05:52:51.502391+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
