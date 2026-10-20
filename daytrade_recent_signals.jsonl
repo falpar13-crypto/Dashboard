@@ -22,3 +22,8 @@
 {"ts": "2026-10-20T12:59:19.740176+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T12:59:19.740176+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T13:38:52.190299+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T13:53:53.654054+00:00", "symbol": "TAO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T13:53:53.654054+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T13:54:23.654329+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T13:54:23.654329+00:00", "symbol": "VANA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T13:58:25.544662+00:00", "symbol": "MOVE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
