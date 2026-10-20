@@ -6,3 +6,5 @@
 {"ts": "2026-10-20T11:49:04.840372+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T12:23:00.057541+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T12:36:50.540824+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T13:13:36.261463+00:00", "symbol": "JCT-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-20T13:19:06.303486+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
