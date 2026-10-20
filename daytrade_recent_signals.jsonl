@@ -14,3 +14,5 @@
 {"ts": "2026-10-20T21:21:28.085444+00:00", "symbol": "SOON-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-20T22:57:13.506106+00:00", "symbol": "AIO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-20T22:59:47.378239+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T23:18:40.318935+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T23:23:10.327573+00:00", "symbol": "ILV-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
