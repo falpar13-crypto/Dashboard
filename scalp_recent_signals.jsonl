@@ -1,6 +1,5 @@
-{"ts": "2026-10-20T05:18:21.262268+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-20T05:18:21.262268+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-20T05:52:51.502391+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T09:49:15.804001+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T10:42:07.342469+00:00", "symbol": "LDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T10:54:00.319731+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T11:36:14.096181+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
