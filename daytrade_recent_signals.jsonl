@@ -27,3 +27,5 @@
 {"ts": "2026-10-20T13:54:23.654329+00:00", "symbol": "PI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-20T13:54:23.654329+00:00", "symbol": "VANA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-20T13:58:25.544662+00:00", "symbol": "MOVE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T14:16:15.027369+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T14:16:15.027369+00:00", "symbol": "PAXG-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
