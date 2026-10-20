@@ -23,3 +23,5 @@
 {"ts": "2026-10-20T05:24:08.258560+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-20T05:33:36.437443+00:00", "symbol": "Q-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T05:37:39.072105+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T05:54:35.262012+00:00", "symbol": "PAXG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T05:58:09.580102+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
