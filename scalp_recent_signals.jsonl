@@ -7,3 +7,6 @@
 {"ts": "2026-10-20T03:29:09.838574+00:00", "symbol": "PHA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T03:29:09.838574+00:00", "symbol": "PHA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-20T04:10:54.805566+00:00", "symbol": "RUNE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T04:43:35.480925+00:00", "symbol": "AVA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-20T04:43:35.480925+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T04:44:05.482482+00:00", "symbol": "AVA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
