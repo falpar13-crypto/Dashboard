@@ -18,3 +18,5 @@
 {"ts": "2026-10-20T02:23:29.715825+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-20T02:53:33.547136+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-20T02:58:33.553011+00:00", "symbol": "ILV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T03:36:48.649206+00:00", "symbol": "EVAA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-20T03:37:48.649993+00:00", "symbol": "MERL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
