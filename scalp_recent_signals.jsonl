@@ -11,3 +11,5 @@
 {"ts": "2026-10-20T13:48:49.046693+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T14:09:58.169541+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-20T14:09:58.169541+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T14:24:04.746121+00:00", "symbol": "Q-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-20T14:24:04.746121+00:00", "symbol": "MEW-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
