@@ -4,3 +4,4 @@
 {"ts": "2026-10-21T21:06:41.557635+00:00", "symbol": "TOSHI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-21T21:23:02.574343+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-21T21:42:57.283291+00:00", "symbol": "TRADOOR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T23:36:51.769895+00:00", "symbol": "PENDLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
