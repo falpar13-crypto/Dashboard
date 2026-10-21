@@ -9,3 +9,4 @@
 {"ts": "2026-10-21T03:38:15.920209+00:00", "symbol": "PLUME-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-21T03:38:50.837546+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-21T03:38:50.837546+00:00", "symbol": "ZK-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T03:51:08.199941+00:00", "symbol": "COMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
