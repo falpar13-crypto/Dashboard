@@ -15,3 +15,9 @@
 {"ts": "2026-10-21T07:50:48.221096+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-21T08:08:23.433098+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-21T08:22:42.828245+00:00", "symbol": "SAPIEN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T08:36:34.209849+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T08:36:34.209849+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T08:37:08.431587+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T08:43:09.431644+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T08:44:15.688857+00:00", "symbol": "MOODENG-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T08:44:15.688857+00:00", "symbol": "PEOPLE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
