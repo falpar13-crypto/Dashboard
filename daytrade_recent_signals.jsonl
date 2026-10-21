@@ -12,3 +12,4 @@
 {"ts": "2026-10-21T03:51:08.199941+00:00", "symbol": "COMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-21T04:06:59.237061+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-21T04:13:59.785553+00:00", "symbol": "CFX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-21T04:47:55.372804+00:00", "symbol": "BANANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
