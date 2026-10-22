@@ -6,3 +6,4 @@
 {"ts": "2026-10-22T14:59:27.968877+00:00", "symbol": "DYDX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-22T14:59:27.968877+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-22T15:58:55.155663+00:00", "symbol": "CRV-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-22T17:12:26.761412+00:00", "symbol": "HYPERLANE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
