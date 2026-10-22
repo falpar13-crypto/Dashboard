@@ -12,3 +12,7 @@
 {"ts": "2026-10-22T04:22:50.645944+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-22T04:22:50.645944+00:00", "symbol": "SOON-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-22T04:25:50.650025+00:00", "symbol": "AWE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-22T05:32:42.388304+00:00", "symbol": "OP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-22T05:32:42.388304+00:00", "symbol": "SHELL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-22T05:32:42.388304+00:00", "symbol": "VIRTUAL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-22T05:35:43.955272+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
