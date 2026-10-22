@@ -16,3 +16,4 @@
 {"ts": "2026-10-22T08:17:31.773214+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-22T08:57:37.921548+00:00", "symbol": "TRB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-22T08:57:37.921548+00:00", "symbol": "2Z-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-22T09:43:37.610041+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
