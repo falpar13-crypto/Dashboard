@@ -4,3 +4,5 @@
 {"ts": "2026-10-23T14:02:20.437714+00:00", "symbol": "COMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-23T14:23:05.453676+00:00", "symbol": "DASH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-23T15:42:49.411868+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-23T15:57:36.900888+00:00", "symbol": "WIF-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-23T15:59:06.904233+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
