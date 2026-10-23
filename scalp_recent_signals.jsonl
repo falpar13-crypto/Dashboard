@@ -6,3 +6,4 @@
 {"ts": "2026-10-23T15:57:36.900888+00:00", "symbol": "WIF-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-23T15:59:06.904233+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-23T16:32:45.079789+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-23T16:54:06.694832+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
