@@ -14,3 +14,5 @@
 {"ts": "2026-10-23T16:58:09.716635+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-23T17:13:45.059588+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-23T17:14:15.060248+00:00", "symbol": "CLANKER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-23T17:46:39.709808+00:00", "symbol": "COMP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-23T17:46:39.709808+00:00", "symbol": "HUMA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
