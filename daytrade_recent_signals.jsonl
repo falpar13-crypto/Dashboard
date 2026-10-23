@@ -3,3 +3,6 @@
 {"ts": "2026-10-23T10:26:49.080215+00:00", "symbol": "YFI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-23T10:26:49.080215+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-23T10:58:36.454763+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-23T11:54:19.514012+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-23T11:56:49.519236+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-23T11:59:49.523082+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
