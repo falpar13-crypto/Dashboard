@@ -12,3 +12,6 @@
 {"ts": "2026-10-24T16:52:23.024520+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-24T16:57:43.540215+00:00", "symbol": "ON-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-24T16:58:17.533847+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-24T17:13:03.559269+00:00", "symbol": "KERNEL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-24T17:13:03.559269+00:00", "symbol": "BTR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-24T17:19:33.569918+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
