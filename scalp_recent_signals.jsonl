@@ -5,3 +5,5 @@
 {"ts": "2026-10-24T02:43:54.745877+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-24T03:38:30.894491+00:00", "symbol": "LTC-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-24T03:44:32.191299+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-24T05:23:50.040012+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-24T05:28:21.159891+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
