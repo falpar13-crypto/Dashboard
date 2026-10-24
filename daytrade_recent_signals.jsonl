@@ -15,3 +15,5 @@
 {"ts": "2026-10-24T17:13:03.559269+00:00", "symbol": "KERNEL-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-24T17:13:03.559269+00:00", "symbol": "BTR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-24T17:19:33.569918+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-24T18:48:09.833190+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-24T18:52:49.248094+00:00", "symbol": "FOLKS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
