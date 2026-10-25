@@ -6,3 +6,4 @@
 {"ts": "2026-10-25T09:18:15.251490+00:00", "symbol": "ORDER-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-25T09:18:15.251490+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-25T10:17:56.276303+00:00", "symbol": "BIRB-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-25T10:28:09.950129+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
