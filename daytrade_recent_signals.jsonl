@@ -29,3 +29,8 @@
 {"ts": "2026-10-25T22:23:08.129303+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-25T22:34:11.816825+00:00", "symbol": "YFI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-25T22:37:11.823674+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-25T22:47:29.800818+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-25T22:48:00.697832+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-25T22:48:00.697832+00:00", "symbol": "FF-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-25T22:48:31.571512+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-25T22:54:31.582594+00:00", "symbol": "BERA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
