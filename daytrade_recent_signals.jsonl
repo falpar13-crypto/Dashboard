@@ -10,3 +10,4 @@
 {"ts": "2026-10-25T07:27:34.160049+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-25T08:23:47.472727+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-25T08:28:26.616294+00:00", "symbol": "ALCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-25T08:38:46.753929+00:00", "symbol": "HANA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
