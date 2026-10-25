@@ -23,3 +23,5 @@
 {"ts": "2026-10-25T19:13:48.646127+00:00", "symbol": "SYRUP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-25T19:48:28.058200+00:00", "symbol": "ICP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-25T19:48:28.058200+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-25T20:07:56.475851+00:00", "symbol": "MMT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-25T20:07:56.475851+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
