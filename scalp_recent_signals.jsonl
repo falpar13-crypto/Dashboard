@@ -11,3 +11,5 @@
 {"ts": "2026-10-25T17:04:49.095062+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-25T17:48:08.637666+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-25T17:54:45.819092+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-25T18:22:47.268798+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-25T18:24:27.394010+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
