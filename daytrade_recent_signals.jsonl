@@ -25,3 +25,5 @@
 {"ts": "2026-10-26T06:12:44.737655+00:00", "symbol": "AIN-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T06:47:55.670579+00:00", "symbol": "GRASS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T07:21:39.554342+00:00", "symbol": "DOLO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-26T07:37:50.403801+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-26T07:38:20.404644+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
