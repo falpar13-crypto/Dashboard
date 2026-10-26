@@ -1,4 +1,3 @@
-{"ts": "2026-10-26T15:58:31.499109+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-26T16:38:29.817389+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T17:11:20.856375+00:00", "symbol": "THE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T18:17:08.932389+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
@@ -15,3 +14,4 @@
 {"ts": "2026-10-26T20:17:26.842648+00:00", "symbol": "10000SATS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T20:37:42.733811+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T21:44:43.290533+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-26T21:58:51.286662+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
