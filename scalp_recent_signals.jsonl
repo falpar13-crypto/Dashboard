@@ -7,3 +7,5 @@
 {"ts": "2026-10-26T03:04:01.715563+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-26T03:19:47.171785+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-26T03:24:17.192289+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-26T04:06:56.080197+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-26T04:13:56.103247+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
