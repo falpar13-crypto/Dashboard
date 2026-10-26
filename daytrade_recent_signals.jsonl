@@ -32,3 +32,5 @@
 {"ts": "2026-10-26T08:24:25.933147+00:00", "symbol": "ALLO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T08:27:27.240471+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T08:35:59.428546+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-26T08:53:50.853338+00:00", "symbol": "FLOKI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-26T08:57:50.858987+00:00", "symbol": "JTO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
