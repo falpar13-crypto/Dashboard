@@ -17,3 +17,6 @@
 {"ts": "2026-10-26T08:38:23.322345+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-26T08:38:53.325384+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-26T08:38:53.325384+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-26T08:48:49.006238+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-26T08:48:49.006238+00:00", "symbol": "ARIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-26T08:49:19.008158+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
