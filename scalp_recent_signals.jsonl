@@ -7,3 +7,4 @@
 {"ts": "2026-10-26T05:08:11.892980+00:00", "symbol": "Q-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-26T05:28:27.986003+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-26T05:58:20.014937+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-26T06:14:14.489412+00:00", "symbol": "ERA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
