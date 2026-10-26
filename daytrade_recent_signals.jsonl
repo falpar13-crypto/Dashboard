@@ -24,3 +24,4 @@
 {"ts": "2026-10-26T18:49:30.399787+00:00", "symbol": "BLUAI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T18:49:30.399787+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-26T19:09:21.212582+00:00", "symbol": "TRADOOR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-26T19:22:51.400088+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
