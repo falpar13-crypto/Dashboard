@@ -15,3 +15,4 @@
 {"ts": "2026-10-26T20:37:42.733811+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T21:44:43.290533+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T21:58:51.286662+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-26T22:29:09.004194+00:00", "symbol": "LA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
