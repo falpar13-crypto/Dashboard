@@ -31,3 +31,4 @@
 {"ts": "2026-10-26T08:23:54.384653+00:00", "symbol": "SHELL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T08:24:25.933147+00:00", "symbol": "ALLO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-26T08:27:27.240471+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-26T08:35:59.428546+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
