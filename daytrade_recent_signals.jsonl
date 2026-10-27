@@ -27,3 +27,4 @@
 {"ts": "2026-10-27T01:23:28.611491+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-27T01:23:58.611689+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-27T01:24:28.612961+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-27T01:35:48.783330+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
