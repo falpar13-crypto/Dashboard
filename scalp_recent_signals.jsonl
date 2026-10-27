@@ -1,6 +1,4 @@
-{"ts": "2026-10-27T13:49:48.503114+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-10-27T13:49:48.503114+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-27T13:49:48.503114+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-27T15:13:29.059612+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-27T15:13:29.059612+00:00", "symbol": "ON-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-27T18:47:27.832830+00:00", "symbol": "APR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-27T19:57:28.383248+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
