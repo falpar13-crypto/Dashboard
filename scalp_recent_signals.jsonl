@@ -4,3 +4,4 @@
 {"ts": "2026-10-27T03:07:37.246894+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-27T04:09:28.885446+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-10-27T04:39:46.438011+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
+{"ts": "2026-10-27T05:13:19.589452+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
