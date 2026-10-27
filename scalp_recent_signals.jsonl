@@ -3,3 +3,4 @@
 {"ts": "2026-10-27T02:27:41.484997+00:00", "symbol": "DYDX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-27T03:07:37.246894+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-27T04:09:28.885446+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
+{"ts": "2026-10-27T04:39:46.438011+00:00", "symbol": "1INCH-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
