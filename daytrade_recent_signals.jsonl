@@ -23,3 +23,5 @@
 {"ts": "2026-10-27T07:58:05.606956+00:00", "symbol": "WLD-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-27T07:58:05.606956+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-27T07:58:35.607741+00:00", "symbol": "XLM-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-27T08:18:07.420110+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-27T08:18:07.420110+00:00", "symbol": "EVAA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
