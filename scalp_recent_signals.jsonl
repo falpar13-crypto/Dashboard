@@ -1,5 +1,2 @@
-{"ts": "2026-10-28T05:21:42.292197+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-10-28T05:51:41.357782+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-28T09:37:36.621452+00:00", "symbol": "FIL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-10-28T09:38:06.622038+00:00", "symbol": "APR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-28T11:14:06.515991+00:00", "symbol": "Q-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-28T15:49:29.470338+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
