@@ -3,3 +3,4 @@
 {"ts": "2026-10-28T01:23:09.641316+00:00", "symbol": "API3-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-28T03:57:33.249624+00:00", "symbol": "ETHFI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-28T05:37:46.499370+00:00", "symbol": "PEOPLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-28T05:49:42.473356+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
