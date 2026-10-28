@@ -1,8 +1,5 @@
-{"ts": "2026-10-28T09:32:37.553335+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-10-28T09:43:55.961737+00:00", "symbol": "KAS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-28T09:43:55.961737+00:00", "symbol": "PEOPLE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-10-28T09:44:26.845429+00:00", "symbol": "ILV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-28T09:44:56.846321+00:00", "symbol": "COOKIE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-28T10:34:25.028880+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-28T15:24:46.652299+00:00", "symbol": "S-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-28T15:24:46.652299+00:00", "symbol": "CRV-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-28T15:44:29.457819+00:00", "symbol": "YB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
