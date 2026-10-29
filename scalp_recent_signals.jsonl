@@ -9,3 +9,5 @@
 {"ts": "2026-10-29T08:59:37.426957+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-29T08:59:37.426957+00:00", "symbol": "APR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-29T09:13:02.886442+00:00", "symbol": "BANK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-29T09:53:45.941841+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-29T09:53:45.941841+00:00", "symbol": "ATOM-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
