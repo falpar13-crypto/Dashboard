@@ -8,3 +8,4 @@
 {"ts": "2026-10-29T08:52:37.393264+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-10-29T08:59:37.426957+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-29T08:59:37.426957+00:00", "symbol": "APR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-29T09:13:02.886442+00:00", "symbol": "BANK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
