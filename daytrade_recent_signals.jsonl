@@ -24,3 +24,4 @@
 {"ts": "2026-10-29T10:13:49.935738+00:00", "symbol": "FET-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-29T10:22:37.551735+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-29T10:24:07.553931+00:00", "symbol": "FLOKI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-29T10:58:31.510550+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
