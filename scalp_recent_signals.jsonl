@@ -1,4 +1,3 @@
-{"ts": "2026-10-30T10:27:51.641074+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-30T14:39:02.184388+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-10-30T14:39:32.189912+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-30T14:44:32.237582+00:00", "symbol": "NOT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
@@ -8,3 +7,4 @@
 {"ts": "2026-10-30T16:04:30.291114+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-30T16:04:30.291114+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-30T16:19:38.340471+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-30T16:57:50.017906+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
