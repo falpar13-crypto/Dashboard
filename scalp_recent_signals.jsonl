@@ -13,3 +13,4 @@
 {"ts": "2026-10-30T03:39:01.654075+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-30T04:03:34.063051+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-30T04:22:42.246462+00:00", "symbol": "MEW-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-30T05:03:11.205224+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
