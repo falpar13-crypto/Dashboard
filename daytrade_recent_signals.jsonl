@@ -4,3 +4,4 @@
 {"ts": "2026-10-30T20:29:09.663704+00:00", "symbol": "AUCTION-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-30T20:29:09.663704+00:00", "symbol": "HOME-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-30T23:17:19.189945+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-30T23:42:12.758545+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
