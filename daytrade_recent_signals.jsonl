@@ -4,3 +4,4 @@
 {"ts": "2026-10-30T16:28:28.121395+00:00", "symbol": "SOON-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-30T19:34:13.092964+00:00", "symbol": "XMR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-30T19:58:07.450043+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-30T20:11:50.752251+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
