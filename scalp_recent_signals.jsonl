@@ -13,3 +13,4 @@
 {"ts": "2026-10-30T18:04:57.308602+00:00", "symbol": "DYDX-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-30T18:04:57.308602+00:00", "symbol": "LSK-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-30T18:49:49.587873+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-10-30T19:37:56.488773+00:00", "symbol": "BIRB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
