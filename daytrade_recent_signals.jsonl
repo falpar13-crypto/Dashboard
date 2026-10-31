@@ -6,3 +6,5 @@
 {"ts": "2026-10-31T09:37:50.773857+00:00", "symbol": "KAS-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-31T10:59:27.449946+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-31T12:22:38.316475+00:00", "symbol": "SEI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-31T12:51:46.032811+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-31T12:51:46.032811+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
