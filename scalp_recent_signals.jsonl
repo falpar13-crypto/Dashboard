@@ -6,3 +6,5 @@
 {"ts": "2026-10-31T13:58:31.635631+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-31T14:29:19.975594+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-31T14:32:19.992292+00:00", "symbol": "KAS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-31T15:53:13.799037+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-31T15:53:13.799037+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
