@@ -5,3 +5,4 @@
 {"ts": "2026-10-31T07:33:45.963851+00:00", "symbol": "AIN-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-31T08:08:40.504030+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-10-31T11:09:03.628560+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-31T11:28:00.050414+00:00", "symbol": "IDOL-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
