@@ -5,3 +5,4 @@
 {"ts": "2026-10-31T19:13:23.415673+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-31T22:01:33.224061+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-31T22:04:03.237982+00:00", "symbol": "BANANA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-10-31T22:38:12.353606+00:00", "symbol": "SEI-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
