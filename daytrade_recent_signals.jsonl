@@ -3,3 +3,4 @@
 {"ts": "2026-10-31T05:41:26.322631+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-10-31T07:59:47.059353+00:00", "symbol": "LSK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-31T08:02:47.063014+00:00", "symbol": "BCH-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-10-31T09:08:08.002090+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
