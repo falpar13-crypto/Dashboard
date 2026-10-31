@@ -15,3 +15,4 @@
 {"ts": "2026-10-31T01:03:26.568853+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-10-31T01:03:26.568853+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-10-31T01:09:56.617069+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-10-31T01:19:51.997763+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
