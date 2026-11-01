@@ -1,7 +1,5 @@
-{"ts": "2026-11-01T00:54:16.923868+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-01T01:37:13.257255+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-01T01:56:29.587223+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-01T03:38:35.477613+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-01T05:51:15.208555+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-01T06:16:41.910639+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-01T06:37:32.800486+00:00", "symbol": "RUNE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-01T07:59:33.816749+00:00", "symbol": "BEAT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
