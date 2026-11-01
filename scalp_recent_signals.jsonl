@@ -7,3 +7,4 @@
 {"ts": "2026-11-01T12:19:56.566960+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-01T12:34:42.426478+00:00", "symbol": "BEAT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-01T13:02:41.726271+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-01T13:48:56.481011+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
