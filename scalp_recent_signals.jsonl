@@ -7,3 +7,4 @@
 {"ts": "2026-11-01T14:04:55.976904+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-01T17:29:24.237338+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-01T17:49:47.752909+00:00", "symbol": "AIN-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-01T17:59:34.118333+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
