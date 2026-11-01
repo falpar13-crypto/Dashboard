@@ -11,3 +11,4 @@
 {"ts": "2026-11-01T20:41:48.956323+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-01T21:35:49.419478+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-01T21:40:19.427523+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-01T22:20:36.596315+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
