@@ -4,3 +4,4 @@
 {"ts": "2026-10-31T23:18:16.435078+00:00", "symbol": "LSK-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-01T00:08:32.237431+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-01T01:29:00.941327+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-01T02:41:20.438697+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
