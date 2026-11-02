@@ -12,3 +12,4 @@
 {"ts": "2026-11-02T07:47:57.725498+00:00", "symbol": "TRX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T07:59:20.901977+00:00", "symbol": "STRK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T08:02:50.937901+00:00", "symbol": "JUP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-02T08:18:51.279279+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
