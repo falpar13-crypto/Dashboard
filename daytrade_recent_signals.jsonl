@@ -7,3 +7,4 @@
 {"ts": "2026-11-02T07:37:09.641620+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T07:46:46.521551+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T08:24:53.088030+00:00", "symbol": "QNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-02T09:17:36.274361+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
