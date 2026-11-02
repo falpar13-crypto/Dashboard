@@ -14,3 +14,4 @@
 {"ts": "2026-11-02T01:32:25.757805+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T01:35:55.761710+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-02T01:55:39.935515+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-02T02:23:26.980348+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
