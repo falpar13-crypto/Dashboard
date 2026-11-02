@@ -10,3 +10,4 @@
 {"ts": "2026-11-02T04:42:38.267299+00:00", "symbol": "MEW-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-02T05:12:56.127643+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-02T05:58:13.105177+00:00", "symbol": "BEAT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-02T06:42:43.370566+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
