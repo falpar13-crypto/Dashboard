@@ -14,3 +14,6 @@
 {"ts": "2026-11-02T08:02:50.937901+00:00", "symbol": "JUP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-02T08:18:51.279279+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T08:54:36.891942+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-02T09:08:40.104380+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-02T09:08:40.104380+00:00", "symbol": "JUP-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
+{"ts": "2026-11-02T09:08:40.104380+00:00", "symbol": "JUP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
