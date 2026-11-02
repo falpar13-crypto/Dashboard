@@ -13,3 +13,5 @@
 {"ts": "2026-11-02T17:59:29.198254+00:00", "symbol": "NEAR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T17:59:29.198254+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-02T17:59:29.198254+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-02T18:34:19.591016+00:00", "symbol": "BOME-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-02T18:37:49.598336+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
