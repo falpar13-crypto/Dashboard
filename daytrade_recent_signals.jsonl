@@ -9,3 +9,4 @@
 {"ts": "2026-11-02T13:39:35.855538+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-02T13:39:35.855538+00:00", "symbol": "CFX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-02T13:56:20.160999+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-02T14:18:13.678465+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
