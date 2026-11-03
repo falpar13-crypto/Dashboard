@@ -6,3 +6,4 @@
 {"ts": "2026-11-03T09:13:05.512854+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-03T09:59:32.186511+00:00", "symbol": "JTO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-03T11:08:26.112934+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-03T11:43:01.619075+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
