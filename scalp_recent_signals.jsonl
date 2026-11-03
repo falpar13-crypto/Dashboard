@@ -1,10 +1,1 @@
-{"ts": "2026-11-03T09:49:50.618985+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-11-03T10:42:41.193429+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-11-03T10:43:11.197610+00:00", "symbol": "BEAT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-11-03T11:12:44.853416+00:00", "symbol": "BEAT-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-11-03T13:24:22.807601+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-11-03T14:27:51.599288+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-03T14:28:51.603179+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-11-03T15:19:45.590569+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-11-03T15:19:45.590569+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-03T15:41:55.630860+00:00", "symbol": "ZRO-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
+{"ts": "2026-11-03T23:04:18.981324+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
