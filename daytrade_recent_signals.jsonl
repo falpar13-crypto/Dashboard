@@ -11,3 +11,4 @@
 {"ts": "2026-11-03T23:29:24.618612+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-03T23:29:54.618845+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-03T23:32:54.624493+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-03T23:53:18.500153+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
