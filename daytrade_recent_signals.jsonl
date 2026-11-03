@@ -5,3 +5,4 @@
 {"ts": "2026-11-03T07:55:45.969825+00:00", "symbol": "UNI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-03T08:34:49.885020+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-03T08:55:45.005406+00:00", "symbol": "JASMY-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-03T09:13:05.512854+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
