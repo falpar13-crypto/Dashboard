@@ -8,3 +8,7 @@
 {"ts": "2026-11-03T11:43:01.619075+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-03T12:23:31.849269+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-03T12:23:31.849269+00:00", "symbol": "LDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-03T12:47:40.053877+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-03T12:50:10.061394+00:00", "symbol": "ETHFI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-03T12:53:10.065033+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-03T12:53:40.065480+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
