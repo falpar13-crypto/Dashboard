@@ -10,3 +10,5 @@
 {"ts": "2026-11-03T09:02:38.121764+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-03T09:39:16.527559+00:00", "symbol": "JTO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-03T09:49:50.618985+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-03T10:42:41.193429+00:00", "symbol": "STX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-03T10:43:11.197610+00:00", "symbol": "BEAT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
