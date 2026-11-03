@@ -5,3 +5,4 @@
 {"ts": "2026-11-03T02:54:24.960841+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-03T04:29:18.310111+00:00", "symbol": "XMR-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-03T04:33:18.315442+00:00", "symbol": "BTW-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-03T05:43:21.061429+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
