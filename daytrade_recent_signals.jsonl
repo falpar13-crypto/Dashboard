@@ -17,3 +17,5 @@
 {"ts": "2026-11-04T03:53:37.202980+00:00", "symbol": "ICP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-04T04:09:11.747853+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-04T04:09:41.748371+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-04T04:22:23.988071+00:00", "symbol": "TRB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-04T04:25:53.994344+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
