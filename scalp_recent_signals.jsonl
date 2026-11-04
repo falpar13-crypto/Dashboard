@@ -1,9 +1,7 @@
-{"ts": "2026-11-04T09:29:51.878897+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-04T09:30:21.881552+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-04T09:44:02.671863+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-04T13:58:48.184108+00:00", "symbol": "CLANKER-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-04T13:59:48.187668+00:00", "symbol": "EVAA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-04T14:02:48.195436+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-04T14:49:11.180422+00:00", "symbol": "XRP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-04T14:49:11.180422+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-04T15:14:18.127824+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-04T19:34:06.739713+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
