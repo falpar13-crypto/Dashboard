@@ -10,3 +10,4 @@
 {"ts": "2026-11-04T14:42:16.613972+00:00", "symbol": "OP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-04T14:58:14.833588+00:00", "symbol": "ATH-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-04T14:58:44.834141+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-04T15:51:42.484420+00:00", "symbol": "HBAR-USDT", "direction": "LONG", "signal_type": "STANDARD"}
