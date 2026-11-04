@@ -16,3 +16,4 @@
 {"ts": "2026-11-04T09:08:26.280974+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-04T09:29:51.878897+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-04T09:30:21.881552+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-04T09:44:02.671863+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
