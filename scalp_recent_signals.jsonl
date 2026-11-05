@@ -4,3 +4,4 @@
 {"ts": "2026-11-05T03:51:31.374968+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-05T05:23:04.865543+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-05T08:23:27.865255+00:00", "symbol": "BTW-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-05T08:43:42.887080+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "STANDARD"}
