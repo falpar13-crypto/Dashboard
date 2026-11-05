@@ -8,3 +8,4 @@
 {"ts": "2026-11-05T05:48:54.448773+00:00", "symbol": "JASMY-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-05T06:32:48.650437+00:00", "symbol": "GALA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-05T07:12:56.248695+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-05T07:27:57.245496+00:00", "symbol": "UAI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
