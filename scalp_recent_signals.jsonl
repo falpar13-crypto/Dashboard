@@ -1,3 +1,4 @@
 {"ts": "2026-11-06T22:49:47.640416+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-07T01:59:29.088272+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-07T01:59:29.088272+00:00", "symbol": "CYBER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-07T02:34:34.406411+00:00", "symbol": "1000PEPE-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
