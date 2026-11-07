@@ -8,3 +8,5 @@
 {"ts": "2026-11-07T10:33:27.105613+00:00", "symbol": "LINK-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-07T10:33:27.105613+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-07T11:03:17.236398+00:00", "symbol": "BEAT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-07T11:33:26.891530+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-07T11:34:26.897483+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
