@@ -9,3 +9,5 @@
 {"ts": "2026-11-08T12:57:43.772974+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-08T13:16:13.908864+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-08T14:23:23.783857+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T14:34:42.748086+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-08T14:34:42.748086+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
