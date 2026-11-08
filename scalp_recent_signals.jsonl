@@ -8,3 +8,4 @@
 {"ts": "2026-11-08T07:59:23.353232+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-08T08:19:06.829924+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-08T08:19:06.829924+00:00", "symbol": "UAI-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-08T08:33:59.847221+00:00", "symbol": "IDOL-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
