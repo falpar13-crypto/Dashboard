@@ -3,10 +3,6 @@
   "ZEC-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 79134501.92
-      },
-      {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 77074866.43
       },
@@ -193,10 +189,22 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 67138069.54
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 68192323.93
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 68192323.93
+      },
+      {
+        "ts": "2026-11-08T17:12:03.008436+00:00",
+        "oi": 68192323.93
       }
     ],
     "last_alert_ts": "2026-11-03T11:43:01.619075+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:12:03.008436+00:00",
     "prev_funding_rate": 0.008,
     "funding_history": [
       {
@@ -252,14 +260,6 @@
   },
   "HYPE-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 24204414.312
-      },
-      {
-        "ts": "2026-11-08T11:06:35.784395+00:00",
-        "oi": 24498779.24
-      },
       {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 24884588.416
@@ -447,10 +447,22 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 24121106.475
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 24484072.702
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 24484072.702
+      },
+      {
+        "ts": "2026-11-08T17:12:03.008436+00:00",
+        "oi": 24484072.702
       }
     ],
     "last_alert_ts": "2026-11-03T14:56:43.305196+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:12:03.008436+00:00",
     "prev_funding_rate": 0.005,
     "last_accum_alert_ts": "2026-08-26T12:30:26.815154+00:00",
     "funding_history": [
@@ -511,14 +523,6 @@
   },
   "1000PEPE-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 20229834.6320014
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 20229834.6320014
-      },
       {
         "ts": "2026-11-08T11:32:38.590577+00:00",
         "oi": 20059608.0611204
@@ -634,10 +638,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 22315669.5884696
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 22525649.8119943
       }
     ],
     "last_alert_ts": "2026-11-08T03:36:07.192927+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T12:25:44.547421+00:00",
     "funding_history": [
@@ -674,14 +682,6 @@
   },
   "DOGE-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 6252215.1136
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 6252215.1136
-      },
       {
         "ts": "2026-11-08T11:32:38.590577+00:00",
         "oi": 6097485.24357
@@ -853,10 +853,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 6583267.4799
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 6681938.69148
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 6681938.69148
       }
     ],
     "last_alert_ts": "2026-11-08T09:40:37.782485+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.01,
     "funding_history": [
       {
@@ -904,14 +912,6 @@
   },
   "ENA-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 8568275.70959
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 8568275.70959
-      },
       {
         "ts": "2026-11-08T11:23:07.191827+00:00",
         "oi": 8515039.34749
@@ -1075,10 +1075,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 8011759.15476
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 8062232.64284
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 8062232.64284
       }
     ],
     "last_alert_ts": "2026-11-05T13:42:03.456958+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.005,
     "funding_history": [
       {
@@ -1122,14 +1130,6 @@
   },
   "LINK-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 5616876.788
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 5616876.788
-      },
       {
         "ts": "2026-11-08T11:32:38.590577+00:00",
         "oi": 5634371.1
@@ -1281,10 +1281,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 6010100.159
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 6066864.997
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 6066864.997
       }
     ],
     "last_alert_ts": "2026-11-08T16:53:20.787953+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T15:43:20.522371+00:00",
     "funding_history": [
@@ -1325,10 +1333,6 @@
   },
   "AVAX-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 19083065.512
-      },
       {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 19133066.264
@@ -1516,10 +1520,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 19208842.816
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 19396118.288
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 19396118.288
       }
     ],
     "last_alert_ts": "2026-11-08T09:40:37.782485+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.0041,
     "last_accum_alert_ts": "2026-08-26T12:26:43.250344+00:00",
     "funding_history": [
@@ -1576,10 +1588,6 @@
   },
   "BNB-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 11006827.34
-      },
       {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 11020261.3
@@ -1759,10 +1767,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 12156214.95
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 12369860.23
       }
     ],
     "last_alert_ts": "2026-11-02T07:46:46.521551+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.01,
     "funding_history": [
       {
@@ -1818,14 +1830,6 @@
   },
   "SUI-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 6616039.1933
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 6616039.1933
-      },
       {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 6500558.9987
@@ -1993,10 +1997,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 7524334.3364
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 7662622.1724
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 7662622.1724
       }
     ],
     "last_alert_ts": "2026-11-08T14:23:23.783857+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T15:43:20.522371+00:00",
     "funding_history": [
@@ -2041,10 +2053,6 @@
   },
   "NEAR-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 17607784.383
-      },
       {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 17316453.792
@@ -2224,10 +2232,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 18430991.866
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 19802414.325
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 19802414.325
       }
     ],
     "last_alert_ts": "2026-11-02T17:59:29.198254+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.01,
     "funding_history": [
       {
@@ -2279,14 +2295,6 @@
   },
   "ADA-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 3064163.44
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 3064163.44
-      },
       {
         "ts": "2026-11-08T11:20:07.187002+00:00",
         "oi": 3061773.28
@@ -2414,10 +2422,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 3154015.76
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 3221458.128
       }
     ],
     "last_alert_ts": "2026-11-04T00:57:55.118478+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.01,
     "funding_history": [
       {
@@ -2453,14 +2465,6 @@
   },
   "LTC-USDT": {
     "oi_history": [
-      {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 4412819.55
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 4412819.55
-      },
       {
         "ts": "2026-11-08T11:32:38.590577+00:00",
         "oi": 4342939.24
@@ -2608,10 +2612,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 4116264.3
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 4173622.27
       }
     ],
     "last_alert_ts": "2026-11-02T01:55:39.935515+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T12:23:26.449978+00:00",
     "funding_history": [
@@ -3766,14 +3774,6 @@
   "ARB-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 5159216.296
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 5159216.296
-      },
-      {
         "ts": "2026-11-08T11:32:38.590577+00:00",
         "oi": 5160072.848
       },
@@ -3920,10 +3920,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 5541122.872
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 5618599.92
       }
     ],
     "last_alert_ts": "2026-11-08T16:47:50.778892+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.01,
     "funding_history": [
       {
@@ -13993,14 +13997,6 @@
   "AIOT-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 3040795.1322
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 3039134.16738
-      },
-      {
         "ts": "2026-11-08T11:20:07.187002+00:00",
         "oi": 2967008.23103
       },
@@ -14115,10 +14111,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 4231239.27122
+      },
+      {
+        "ts": "2026-11-08T17:11:33.007748+00:00",
+        "oi": 4277692.14237
       }
     ],
     "last_alert_ts": null,
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:11:33.007748+00:00",
     "prev_funding_rate": 0.0142,
     "funding_history": [
       {
@@ -19030,14 +19030,6 @@
   "DOT-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 3399751.2914
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 3399751.2914
-      },
-      {
         "ts": "2026-11-08T11:20:07.187002+00:00",
         "oi": 3420525.2911
       },
@@ -19156,10 +19148,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 3755043.3553
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 3871510.9757
       }
     ],
     "last_alert_ts": "2026-11-08T01:58:25.761267+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T14:38:44.274311+00:00",
     "funding_history": [
@@ -47844,14 +47840,6 @@
   "INJ-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 7136219.805
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 7136219.805
-      },
-      {
         "ts": "2026-11-08T11:23:07.191827+00:00",
         "oi": 7264804.018
       },
@@ -48018,10 +48006,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 7145420.74
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 7310759.964
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 7310759.964
       }
     ],
     "last_alert_ts": "2026-11-06T14:59:50.429039+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.0211,
     "funding_history": [
       {
@@ -130043,10 +130039,6 @@
   "AAVE-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 17098746.64
-      },
-      {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 17300337.74
       },
@@ -130233,10 +130225,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 17899001.72
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 18022108.68
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 18022108.68
       }
     ],
     "last_alert_ts": "2026-10-05T16:37:19.136413+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.01,
     "funding_history": [
       {
@@ -168243,14 +168243,6 @@
   "TAO-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 5092091.6
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 5072655.91
-      },
-      {
         "ts": "2026-11-08T11:20:07.187002+00:00",
         "oi": 5087077.46
       },
@@ -168365,10 +168357,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 5736077.0
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 5900785.34
       }
     ],
     "last_alert_ts": "2026-11-07T20:48:32.541756+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.005,
     "last_accum_alert_ts": "2026-08-26T12:36:29.819426+00:00",
     "funding_history": [
@@ -208342,14 +208338,6 @@
   "PUMP-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 5379136.275847
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 5379136.275847
-      },
-      {
         "ts": "2026-11-08T11:20:07.187002+00:00",
         "oi": 5361670.998089
       },
@@ -208468,10 +208456,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 4014183.80367
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 4005765.414125
       }
     ],
     "last_alert_ts": "2026-11-03T13:59:51.687646+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": -0.0041,
     "funding_history": [
       {
@@ -234783,14 +234775,6 @@
   "ONDO-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 3291995.0685
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 3291995.0685
-      },
-      {
         "ts": "2026-11-08T11:32:38.590577+00:00",
         "oi": 3310933.0263
       },
@@ -234909,10 +234893,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 3440988.3964
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 3580525.4164
       }
     ],
     "last_alert_ts": "2026-11-08T12:54:43.767401+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.005,
     "funding_history": [
       {
@@ -274737,14 +274725,6 @@
   "IDOL-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 10422918.969564
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 10422918.969564
-      },
-      {
         "ts": "2026-11-08T11:20:07.187002+00:00",
         "oi": 10591268.448777
       },
@@ -274863,10 +274843,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 8345243.010128
+      },
+      {
+        "ts": "2026-11-08T17:11:33.007748+00:00",
+        "oi": 7157029.137136
       }
     ],
     "last_alert_ts": null,
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:11:33.007748+00:00",
     "prev_funding_rate": 0.005,
     "funding_history": [
       {
@@ -279465,14 +279449,6 @@
   "UNI-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 8926571.574
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 8926571.574
-      },
-      {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 8924773.502
       },
@@ -279643,10 +279619,18 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 8569827.297
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 8562081.251
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 8562081.251
       }
     ],
     "last_alert_ts": "2026-11-05T10:29:51.961420+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:09:03.003582+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T02:01:21.489651+00:00",
     "funding_history": [
@@ -288485,14 +288469,6 @@
   "WLD-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 4836150.042
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 4836150.042
-      },
-      {
         "ts": "2026-11-08T11:32:38.590577+00:00",
         "oi": 4870911.3974
       },
@@ -288635,10 +288611,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 5970221.1974
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 5996741.4979
       }
     ],
     "last_alert_ts": "2026-11-08T12:57:43.772974+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T17:05:53.187100+00:00",
     "funding_history": [
@@ -303862,14 +303842,6 @@
   "AIN-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 3925453.41734
-      },
-      {
-        "ts": "2026-11-08T11:03:35.779319+00:00",
-        "oi": 3925453.41734
-      },
-      {
         "ts": "2026-11-08T11:20:07.187002+00:00",
         "oi": 3909821.25887
       },
@@ -303984,10 +303956,14 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 3006632.94689
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 2858031.44969
       }
     ],
     "last_alert_ts": "2026-11-08T03:35:07.190814+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:06:02.998525+00:00",
     "prev_funding_rate": 0.005,
     "funding_history": [
       {
@@ -308932,18 +308908,6 @@
   "XRP-USDT": {
     "oi_history": [
       {
-        "ts": "2026-11-08T10:58:05.764874+00:00",
-        "oi": 23025427.6558
-      },
-      {
-        "ts": "2026-11-08T11:01:05.773945+00:00",
-        "oi": 23025427.6558
-      },
-      {
-        "ts": "2026-11-08T11:06:35.784395+00:00",
-        "oi": 23025427.6558
-      },
-      {
         "ts": "2026-11-08T11:17:37.183219+00:00",
         "oi": 22633491.697
       },
@@ -309142,10 +309106,22 @@
       {
         "ts": "2026-11-08T16:53:50.789041+00:00",
         "oi": 23601937.068
+      },
+      {
+        "ts": "2026-11-08T17:06:02.998525+00:00",
+        "oi": 24189595.9497
+      },
+      {
+        "ts": "2026-11-08T17:09:03.003582+00:00",
+        "oi": 24189595.9497
+      },
+      {
+        "ts": "2026-11-08T17:12:03.008436+00:00",
+        "oi": 24189595.9497
       }
     ],
     "last_alert_ts": "2026-11-08T14:53:13.013619+00:00",
-    "last_seen": "2026-11-08T16:53:50.789041+00:00",
+    "last_seen": "2026-11-08T17:12:03.008436+00:00",
     "prev_funding_rate": 0.01,
     "last_accum_alert_ts": "2026-08-26T14:02:30.426453+00:00",
     "funding_history": [
@@ -316496,162 +316472,6 @@
   },
   "_audit_pending": [
     {
-      "signal_id": "4c216328-681d-405d-b036-073428c9439e",
-      "symbol": "ONDO-USDT",
-      "direction": "SHORT",
-      "signal_type": "STANDARD",
-      "score": 46,
-      "timeframe": "1h",
-      "entry_price": 0.3621,
-      "entry_ts": "2026-11-08T12:54:43.767401+00:00",
-      "windows": {
-        "5m": {
-          "target_minutes": 5,
-          "resolved": true,
-          "future_price": 0.362,
-          "directional_return_pct": 0.028,
-          "mfe_pct": 0.028,
-          "mae_pct": -0.055,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T13:26:02.214635+00:00"
-        },
-        "15m": {
-          "target_minutes": 15,
-          "resolved": true,
-          "future_price": 0.3634,
-          "directional_return_pct": -0.359,
-          "mfe_pct": 0.028,
-          "mae_pct": -0.552,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T13:26:02.214635+00:00"
-        },
-        "30m": {
-          "target_minutes": 30,
-          "resolved": true,
-          "future_price": 0.363,
-          "directional_return_pct": -0.249,
-          "mfe_pct": 0.028,
-          "mae_pct": -0.994,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T13:26:02.214635+00:00"
-        },
-        "1h": {
-          "target_minutes": 60,
-          "resolved": true,
-          "future_price": 0.3607,
-          "directional_return_pct": 0.387,
-          "mfe_pct": 0.497,
-          "mae_pct": -0.994,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T14:00:23.592951+00:00"
-        },
-        "2h": {
-          "target_minutes": 120,
-          "resolved": true,
-          "future_price": 0.3615,
-          "directional_return_pct": 0.166,
-          "mfe_pct": 0.856,
-          "mae_pct": -0.994,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T15:07:48.461801+00:00"
-        },
-        "4h": {
-          "target_minutes": 240,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
-        }
-      },
-      "time_to_move": {
-        "0.5": 60.3,
-        "1.0": null,
-        "2.0": null,
-        "3.0": null
-      }
-    },
-    {
-      "signal_id": "f3861c7e-e5aa-4ccd-b279-197bd94c9124",
-      "symbol": "WLD-USDT",
-      "direction": "SHORT",
-      "signal_type": "STANDARD",
-      "score": 51,
-      "timeframe": "1h",
-      "entry_price": 0.3262,
-      "entry_ts": "2026-11-08T12:57:43.772974+00:00",
-      "windows": {
-        "5m": {
-          "target_minutes": 5,
-          "resolved": true,
-          "future_price": 0.3268,
-          "directional_return_pct": -0.184,
-          "mfe_pct": 0.092,
-          "mae_pct": -0.245,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T13:26:02.214635+00:00"
-        },
-        "15m": {
-          "target_minutes": 15,
-          "resolved": true,
-          "future_price": 0.327,
-          "directional_return_pct": -0.245,
-          "mfe_pct": 0.092,
-          "mae_pct": -0.337,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T13:26:02.214635+00:00"
-        },
-        "30m": {
-          "target_minutes": 30,
-          "resolved": true,
-          "future_price": 0.3257,
-          "directional_return_pct": 0.153,
-          "mfe_pct": 0.276,
-          "mae_pct": -0.613,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T14:00:23.592951+00:00"
-        },
-        "1h": {
-          "target_minutes": 60,
-          "resolved": true,
-          "future_price": 0.325,
-          "directional_return_pct": 0.368,
-          "mfe_pct": 0.766,
-          "mae_pct": -0.613,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T14:00:23.592951+00:00"
-        },
-        "2h": {
-          "target_minutes": 120,
-          "resolved": true,
-          "future_price": 0.3272,
-          "directional_return_pct": -0.307,
-          "mfe_pct": 0.828,
-          "mae_pct": -0.644,
-          "classification": "NEUTRAL",
-          "resolved_ts": "2026-11-08T15:07:48.461801+00:00"
-        },
-        "4h": {
-          "target_minutes": 240,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
-        }
-      },
-      "time_to_move": {
-        "0.5": 42.3,
-        "1.0": null,
-        "2.0": null,
-        "3.0": null
-      }
-    },
-    {
       "signal_id": "ce795fff-3bbd-4c18-97eb-227d54f21dff",
       "symbol": "INJ-USDT",
       "direction": "LONG",
@@ -316781,13 +316601,13 @@
         },
         "2h": {
           "target_minutes": 120,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 0.8492,
+          "directional_return_pct": -0.283,
+          "mfe_pct": 0.106,
+          "mae_pct": -0.791,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "4h": {
           "target_minutes": 240,
@@ -316801,7 +316621,7 @@
         }
       },
       "time_to_move": {
-        "0.5": null,
+        "0.5": 146.6,
         "1.0": null,
         "2.0": null,
         "3.0": null
@@ -316859,13 +316679,13 @@
         },
         "2h": {
           "target_minutes": 120,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 8.201,
+          "directional_return_pct": 0.171,
+          "mfe_pct": 0.977,
+          "mae_pct": -0.012,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "4h": {
           "target_minutes": 240,
@@ -316937,13 +316757,13 @@
         },
         "2h": {
           "target_minutes": 120,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 3.685,
+          "directional_return_pct": -0.298,
+          "mfe_pct": 0.785,
+          "mae_pct": -0.406,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "4h": {
           "target_minutes": 240,
@@ -317015,13 +316835,13 @@
         },
         "2h": {
           "target_minutes": 120,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 1.1547,
+          "directional_return_pct": -0.807,
+          "mfe_pct": -0.137,
+          "mae_pct": -1.082,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "4h": {
           "target_minutes": 240,
@@ -317083,23 +316903,23 @@
         },
         "1h": {
           "target_minutes": 60,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 0.07143,
+          "directional_return_pct": 0.098,
+          "mfe_pct": 0.084,
+          "mae_pct": -0.21,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "2h": {
           "target_minutes": 120,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 0.07101,
+          "directional_return_pct": -0.49,
+          "mfe_pct": 0.126,
+          "mae_pct": -0.687,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "4h": {
           "target_minutes": 240,
@@ -317161,23 +316981,23 @@
         },
         "1h": {
           "target_minutes": 60,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 0.1809,
+          "directional_return_pct": 0.166,
+          "mfe_pct": 0.111,
+          "mae_pct": -0.221,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "2h": {
           "target_minutes": 120,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 0.1791,
+          "directional_return_pct": -0.831,
+          "mfe_pct": 0.221,
+          "mae_pct": -0.941,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "4h": {
           "target_minutes": 240,
@@ -317209,43 +317029,43 @@
       "windows": {
         "5m": {
           "target_minutes": 5,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 1.5887,
+          "directional_return_pct": -0.126,
+          "mfe_pct": 0.239,
+          "mae_pct": -0.094,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "15m": {
           "target_minutes": 15,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 1.5893,
+          "directional_return_pct": -0.088,
+          "mfe_pct": 0.239,
+          "mae_pct": -0.233,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "30m": {
           "target_minutes": 30,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 1.5926,
+          "directional_return_pct": 0.119,
+          "mfe_pct": 0.415,
+          "mae_pct": -0.233,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "1h": {
           "target_minutes": 60,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 1.582,
+          "directional_return_pct": -0.547,
+          "mfe_pct": 0.415,
+          "mae_pct": -0.886,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "2h": {
           "target_minutes": 120,
@@ -317287,23 +317107,23 @@
       "windows": {
         "5m": {
           "target_minutes": 5,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 0.16867,
+          "directional_return_pct": 0.101,
+          "mfe_pct": 0.095,
+          "mae_pct": -0.166,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "15m": {
           "target_minutes": 15,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 0.16834,
+          "directional_return_pct": 0.296,
+          "mfe_pct": 0.521,
+          "mae_pct": -0.166,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "30m": {
           "target_minutes": 30,
@@ -317347,7 +317167,7 @@
         }
       },
       "time_to_move": {
-        "0.5": null,
+        "0.5": 14.2,
         "1.0": null,
         "2.0": null,
         "3.0": null
@@ -317365,23 +317185,23 @@
       "windows": {
         "5m": {
           "target_minutes": 5,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 51.61,
+          "directional_return_pct": 0.116,
+          "mfe_pct": 0.194,
+          "mae_pct": 0.077,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "15m": {
           "target_minutes": 15,
-          "resolved": false,
-          "future_price": null,
-          "directional_return_pct": null,
-          "mfe_pct": null,
-          "mae_pct": null,
-          "classification": null,
-          "resolved_ts": null
+          "resolved": true,
+          "future_price": 51.49,
+          "directional_return_pct": 0.348,
+          "mfe_pct": 0.464,
+          "mae_pct": 0.077,
+          "classification": "NEUTRAL",
+          "resolved_ts": "2026-11-08T17:03:26.220945+00:00"
         },
         "30m": {
           "target_minutes": 30,
@@ -317425,7 +317245,7 @@
         }
       },
       "time_to_move": {
-        "0.5": null,
+        "0.5": 17.2,
         "1.0": null,
         "2.0": null,
         "3.0": null
@@ -321246,7 +321066,6 @@
       "VERY_GOOD"
     ],
     "WLD-USDT": [
-      "NEUTRAL",
       "BAD",
       "BAD",
       "BAD",
@@ -321255,7 +321074,8 @@
       "GOOD",
       "GOOD",
       "BAD",
-      "NEUTRAL"
+      "NEUTRAL",
+      "GOOD"
     ],
     "CC-USDT": [
       "BAD",
@@ -321685,7 +321505,6 @@
       "BAD"
     ],
     "ONDO-USDT": [
-      "NEUTRAL",
       "VERY_GOOD",
       "VERY_GOOD",
       "NEUTRAL",
@@ -321694,6 +321513,7 @@
       "NEUTRAL",
       "GOOD",
       "NEUTRAL",
+      "GOOD",
       "GOOD"
     ],
     "WIF-USDT": [
