@@ -1,10 +1,8 @@
-{"ts": "2026-11-08T03:04:18.659798+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-08T03:15:19.835159+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-08T03:18:19.839771+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-08T03:35:07.190814+00:00", "symbol": "AIN-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
-{"ts": "2026-11-08T03:36:07.192927+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-08T04:18:54.566139+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-08T06:32:55.224622+00:00", "symbol": "UNI-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-08T07:54:06.307058+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-08T08:19:09.794911+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-08T08:42:42.928642+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T09:40:37.782485+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T09:40:37.782485+00:00", "symbol": "NEAR-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-08T09:40:37.782485+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
