@@ -9,3 +9,4 @@
 {"ts": "2026-11-08T12:34:56.754431+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-08T12:54:43.767401+00:00", "symbol": "ONDO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-08T12:57:43.772974+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T13:16:13.908864+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
