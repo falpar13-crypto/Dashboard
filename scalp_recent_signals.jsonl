@@ -1,7 +1,4 @@
-{"ts": "2026-11-08T08:48:56.512650+00:00", "symbol": "AIOT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-08T09:39:55.829322+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-11-08T11:25:01.033178+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "EMA_SQUEEZE"}
-{"ts": "2026-11-08T11:25:01.033178+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-08T12:11:38.586095+00:00", "symbol": "ONDO-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-08T14:09:45.892012+00:00", "symbol": "ICNT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-08T14:44:51.718859+00:00", "symbol": "HOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T17:54:16.748880+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
