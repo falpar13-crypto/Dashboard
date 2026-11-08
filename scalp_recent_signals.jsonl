@@ -1,4 +1,5 @@
-{"ts": "2026-11-08T14:09:45.892012+00:00", "symbol": "ICNT-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
-{"ts": "2026-11-08T14:44:51.718859+00:00", "symbol": "HOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-08T17:54:16.748880+00:00", "symbol": "BCH-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-08T20:09:16.073472+00:00", "symbol": "ICNT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T21:47:56.303142+00:00", "symbol": "HYPE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T21:53:56.314614+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-08T21:53:56.314614+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
