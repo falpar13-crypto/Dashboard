@@ -12,3 +12,4 @@
 {"ts": "2026-11-04T04:58:29.278979+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "price": 0.002886, "drop_from_peak_pct": 65.22, "volume_growth_ratio": 1.63, "price_range_pct": 12.38, "monotonic_fraction": 0.67}
 {"ts": "2026-11-08T04:39:30.082110+00:00", "symbol": "SWARMS-USDT", "direction": "LONG", "price": 0.007174, "drop_from_peak_pct": 65.39, "volume_growth_ratio": 1.65, "price_range_pct": 22.71, "monotonic_fraction": 0.67}
 {"ts": "2026-11-08T04:39:30.082110+00:00", "symbol": "ALCH-USDT", "direction": "LONG", "price": 0.03257, "drop_from_peak_pct": 67.89, "volume_growth_ratio": 1.86, "price_range_pct": 17.14, "monotonic_fraction": 0.67}
+{"ts": "2026-11-09T04:50:12.440599+00:00", "symbol": "GRIFFAIN-USDT", "direction": "LONG", "price": 0.010056, "drop_from_peak_pct": 65.46, "volume_growth_ratio": 2.4, "price_range_pct": 17.81, "monotonic_fraction": 0.67}
