@@ -8,3 +8,4 @@
 {"ts": "2026-11-09T11:14:23.650040+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-09T11:46:05.352238+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-09T12:05:47.362405+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-09T12:42:58.424994+00:00", "symbol": "ARB-USDT", "direction": "LONG", "signal_type": "STANDARD"}
