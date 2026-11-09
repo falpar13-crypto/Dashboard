@@ -4,3 +4,5 @@
 {"ts": "2026-11-09T17:08:34.880691+00:00", "symbol": "HYPE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-09T17:08:34.880691+00:00", "symbol": "LIGHTER-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-09T20:12:45.163780+00:00", "symbol": "BEAT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-09T20:40:45.707267+00:00", "symbol": "QNT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-09T20:46:45.719496+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
