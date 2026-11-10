@@ -1,2 +1,4 @@
-{"ts": "2026-11-10T01:04:35.857211+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-10T06:13:37.533841+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-10T10:52:41.805012+00:00", "symbol": "APT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-10T10:52:41.805012+00:00", "symbol": "LINK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-10T10:52:41.805012+00:00", "symbol": "ASTER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
