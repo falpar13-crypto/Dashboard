@@ -2,3 +2,4 @@
 {"ts": "2026-11-09T23:32:24.257629+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "EMA_SQUEEZE"}
 {"ts": "2026-11-10T00:39:44.052831+00:00", "symbol": "1000PEPE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-10T03:09:30.162464+00:00", "symbol": "PIEVERSE-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-10T03:29:06.012972+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
