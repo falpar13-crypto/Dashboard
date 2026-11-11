@@ -3,3 +3,4 @@
 {"ts": "2026-11-11T15:29:07.938393+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-11T15:43:03.279764+00:00", "symbol": "DOT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-11T17:04:43.615531+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-11T18:28:48.036399+00:00", "symbol": "WLD-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
