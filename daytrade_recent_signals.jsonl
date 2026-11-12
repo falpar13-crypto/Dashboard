@@ -1,3 +1,4 @@
 {"ts": "2026-11-12T09:58:22.201185+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-12T11:44:33.467851+00:00", "symbol": "XRP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-12T11:58:54.765335+00:00", "symbol": "SUI-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-12T12:17:21.368577+00:00", "symbol": "ZRO-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
