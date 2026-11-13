@@ -1,10 +1,6 @@
-{"ts": "2026-11-13T09:08:17.898209+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-13T09:41:58.391663+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-13T09:44:58.396285+00:00", "symbol": "FARTCOIN-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-13T10:03:30.520957+00:00", "symbol": "LTC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-13T10:49:41.954910+00:00", "symbol": "AAVE-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-13T11:57:59.096476+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-13T12:13:23.017781+00:00", "symbol": "SUI-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-13T12:29:37.929290+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-13T12:53:13.690815+00:00", "symbol": "BARD-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-13T15:00:07.182160+00:00", "symbol": "INJ-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-13T17:31:14.683065+00:00", "symbol": "ADA-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
