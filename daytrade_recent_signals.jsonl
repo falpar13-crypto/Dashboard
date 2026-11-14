@@ -3,3 +3,4 @@
 {"ts": "2026-11-14T02:43:18.839404+00:00", "symbol": "DOGE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-14T02:49:48.850304+00:00", "symbol": "AVAX-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-14T06:28:06.615634+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-14T06:38:45.059930+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
