@@ -1,3 +1,5 @@
 {"ts": "2026-11-14T02:22:49.443078+00:00", "symbol": "ARB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-14T02:22:49.443078+00:00", "symbol": "PUMP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-14T04:28:44.421851+00:00", "symbol": "ASTER-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-14T05:17:25.711449+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-14T05:19:55.718169+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
