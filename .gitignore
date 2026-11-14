@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Futás közbeni állapot- és naplófájlok: az élő állapot a state-* ágakon van
+# (a workflow-k futáskor onnan töltik be, és oda mentik vissza), a main ágra nem kerülnek.
+*_state.json
+*_alert_log*.jsonl*
+*_audit_*.jsonl
+*_recent_signals.jsonl
+alert_log*.jsonl*
+trader_log.jsonl

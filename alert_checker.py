@@ -1604,8 +1604,12 @@ async def maybe_send_daily_summary(state: dict, now: datetime) -> None:
 def load_state() -> dict:
     if STATE_FILE.exists():
         try:
-            return json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
+            loaded = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+            # JAVÍTVA: csak dict az érvényes state (pl. egy "[]" vagy "null" tartalom
+            # később AttributeError-t dobna); OSError/UnicodeDecodeError is lekezelve
+            return loaded if isinstance(loaded, dict) else {}
+        except (ValueError, OSError):  # JSONDecodeError és UnicodeDecodeError is ValueError
+            logger.warning("A state fájl sérült vagy nem olvasható - üres state-tel indulunk.")
             return {}
     return {}
 
@@ -1714,11 +1718,13 @@ async def _get_json(session, url, params=None):
 
 async def fetch_all_tickers(session):
     data = await _get_json(session, TICKER_ENDPOINT)
-    if not data or "data" not in data:
-        return {}
+    if not data or not isinstance(data, dict) or not isinstance(data.get("data"), list):
+        return {}  # JAVÍTVA: váratlan válaszalak (None/dict "data") ne dobjon TypeError-t
     result = {}
     for t in data["data"]:
-        symbol = t.get("symbol", "")
+        if not isinstance(t, dict):
+            continue
+        symbol = t.get("symbol", "") or ""
         if not symbol.endswith("-USDT"):
             continue
         try:
@@ -1738,11 +1744,11 @@ async def fetch_all_tickers(session):
 
 async def fetch_valid_contract_symbols(session):
     data = await _get_json(session, CONTRACTS_ENDPOINT)
-    if not data or "data" not in data:
-        return None
+    if not data or not isinstance(data, dict) or not isinstance(data.get("data"), list):
+        return None  # JAVÍTVA: váratlan válaszalak ne dobjon TypeError-t
     return {
         c["symbol"] for c in data["data"]
-        if c.get("symbol", "").endswith("-USDT") and c.get("status", 1) == 1
+        if isinstance(c, dict) and (c.get("symbol") or "").endswith("-USDT") and c.get("status", 1) == 1
     }
 
 
@@ -1753,7 +1759,13 @@ async def fetch_open_interest(session, semaphore, symbol):
         if not data or "data" not in data or not data["data"]:
             return symbol, None
         try:
-            return symbol, float(data["data"].get("openInterest", 0))
+            # JAVÍTVA: ha a "data" lista/nem dict, az .get() AttributeError-t dobna
+            oi_payload = data["data"]
+            if isinstance(oi_payload, list):
+                oi_payload = oi_payload[0] if oi_payload else None
+            if not isinstance(oi_payload, dict):
+                return symbol, None
+            return symbol, float(oi_payload.get("openInterest", 0))
         except (TypeError, ValueError):
             return symbol, None
 
@@ -1808,6 +1820,8 @@ async def fetch_orderbook_imbalance(symbol: str, limit: int = ORDERBOOK_LEVELS_L
     if not data or "data" not in data or not data["data"]:
         return None
     payload = data["data"]
+    if not isinstance(payload, dict):
+        return None  # JAVÍTVA: nem dict válasz esetén az .get() AttributeError-t dobna
     try:
         bids = payload.get("bids", []) or []
         asks = payload.get("asks", []) or []
