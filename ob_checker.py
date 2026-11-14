@@ -224,8 +224,12 @@ def load_state() -> dict:
     if STATE_FILE.exists():
         try:
             with STATE_FILE.open("r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
+                loaded = json.load(f)
+            # JAVÍTVA: ha a fájl valid JSON, de nem dict (pl. lista), üres állapotból indulunk
+            if isinstance(loaded, dict):
+                return loaded
+            logger.warning("A state fájl tartalma nem dict, üres állapotból indulunk.")
+        except (json.JSONDecodeError, OSError, UnicodeDecodeError):
             logger.warning("A state fájl olvasása sikertelen, üres állapotból indulunk.")
     return {}
 
@@ -235,7 +239,7 @@ def save_state(state: dict) -> None:
         with tmp_path.open("w", encoding="utf-8") as f:
             json.dump(state, f)
         os.replace(tmp_path, STATE_FILE)
-    except OSError:
+    except (OSError, TypeError, ValueError):  # JAVÍTVA: nem szerializálható érték se dobjon kivételt a finally-ban
         try:
             tmp_path.unlink(missing_ok=True)
         except OSError:
@@ -375,15 +379,20 @@ async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -
         else:
             interval, limit = "5m", min(300, int(age_minutes / 5) + 10)
 
+        # JAVÍTVA: a végleg adat nélküli (pl. delistelt) jelzések örökre bent maradtak,
+        # és mivel a legrégebbiek mennek elöl, kiéheztették az újakat a körönkénti limitből.
+        stale = age_minutes > 24 * 60
         _, kdf = await fetch_klines(session, semaphore, rec["symbol"], interval, limit)
         if kdf is None or len(kdf) == 0:
-            still_pending.append(rec)
+            if not stale:
+                still_pending.append(rec)
             continue
 
         entry_ts_naive = pd.Timestamp(entry_dt.replace(tzinfo=None))
         after = kdf[kdf["timestamp"] >= entry_ts_naive].reset_index(drop=True)
         if after.empty:
-            still_pending.append(rec)
+            if not stale:
+                still_pending.append(rec)
             continue
 
         direction = rec["direction"]
@@ -811,7 +820,8 @@ async def _get_json(session, url, params=None):
     last_error = None
     for attempt in range(RETRY_COUNT):
         try:
-            async with session.get(url, params=params, timeout=REQUEST_TIMEOUT) as resp:
+            # JAVÍTVA: egész szám helyett ClientTimeout (az int timeout elavult, újabb aiohttp-ban hibát dob)
+            async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=REQUEST_TIMEOUT)) as resp:
                 if resp.status == 429:
                     last_error = "HTTP 429 (rate limit)"
                     await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
@@ -847,11 +857,13 @@ async def _get_json(session, url, params=None):
 
 async def fetch_all_tickers(session):
     data = await _get_json(session, TICKER_ENDPOINT)
-    if not data or "data" not in data:
+    if not data or not isinstance(data, dict) or not isinstance(data.get("data"), list):  # JAVÍTVA: váratlan válaszforma ne döntse el a futást
         return {}
     result = {}
     for t in data["data"]:
-        symbol = t.get("symbol", "")
+        if not isinstance(t, dict):  # JAVÍTVA
+            continue
+        symbol = t.get("symbol", "") or ""
         if not symbol.endswith("-USDT"):
             continue
         try:
@@ -1167,12 +1179,26 @@ def _send_telegram_message_sync(text: str) -> None:
         logger.error("Hiányzik a TELEGRAM_BOT_TOKEN vagy TELEGRAM_CHAT_ID env változó.")
         return
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    try:
-        resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
-        if resp.status_code != 200:
-            logger.error("Telegram hiba (%s): %s", resp.status_code, resp.text)
-    except Exception as e:
-        logger.error("Telegram küldési hiba: %s", e)
+    # JAVÍTVA: a Telegram max. 4096 karaktert enged, a hosszabb üzenetet elutasítja
+    if len(text) > 4096:
+        text = text[:4090] + "\n..."
+    # JAVÍTVA: 429 (rate limit) esetén retry_after szerinti várakozás és újrapróbálás
+    for attempt in range(3):
+        try:
+            resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
+            if resp.status_code == 429 and attempt < 2:
+                try:
+                    wait = float(resp.json().get("parameters", {}).get("retry_after", 2))
+                except Exception:
+                    wait = 2.0
+                time.sleep(min(max(wait, 1.0), 30.0))
+                continue
+            if resp.status_code != 200:
+                logger.error("Telegram hiba (%s): %s", resp.status_code, resp.text)
+            return
+        except Exception as e:
+            logger.error("Telegram küldési hiba: %s", e)
+            return
 
 async def send_telegram_message(text: str) -> None:
     await asyncio.to_thread(_send_telegram_message_sync, text)
@@ -1313,8 +1339,13 @@ async def run_once(state: dict, now: datetime) -> tuple:
             zone_key = f"{zone['anchor_ts']}_{zone['bullish']}"
             last_alert_ts = entry["alerted_zones"].get(zone_key)
             if last_alert_ts:
-                last_dt = datetime.fromisoformat(last_alert_ts)
-                if (now - last_dt) < timedelta(hours=ALERT_COOLDOWN_HOURS):
+                try:
+                    last_dt = datetime.fromisoformat(last_alert_ts)
+                    if last_dt.tzinfo is None:  # JAVÍTVA: naiv időbélyeg ne okozzon TypeError-t
+                        last_dt = last_dt.replace(tzinfo=timezone.utc)
+                except (TypeError, ValueError):  # JAVÍTVA: sérült state-bejegyzés ne döntse el a futást
+                    last_dt = None
+                if last_dt is not None and (now - last_dt) < timedelta(hours=ALERT_COOLDOWN_HOURS):
                     continue
 
             # ÚJ: trend-egyezés ellenőrzése - bullish zóna csak LONG
@@ -1402,12 +1433,22 @@ async def run_once(state: dict, now: datetime) -> tuple:
 
     # a state ne nőjön korlátlanul - régi zóna-bejegyzések eldobása
     cutoff = now - timedelta(days=14)
+    def _ts_recent(v) -> bool:
+        # JAVÍTVA: hibás/naiv időbélyeg ne dobjon kivételt a takarításnál
+        try:
+            dt = datetime.fromisoformat(v)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt >= cutoff
+        except (TypeError, ValueError):
+            return False
+
     for symbol, entry in state.items():
-        if not isinstance(entry, dict) or "alerted_zones" not in entry:
+        if not isinstance(entry, dict) or not isinstance(entry.get("alerted_zones"), dict):
             continue
         entry["alerted_zones"] = {
             k: v for k, v in entry["alerted_zones"].items()
-            if datetime.fromisoformat(v) >= cutoff
+            if _ts_recent(v)
         }
 
     return alerts_sent, evaluated

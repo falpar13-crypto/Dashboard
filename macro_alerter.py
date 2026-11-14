@@ -16,8 +16,10 @@ state fájl (macro_state.json) nyilvántartja, mely eseményeket és mely
 napi összefoglalót küldtük már ki - ezek nem mennek ki újra.
 """
 
+import html
 import json
 import os
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
@@ -101,10 +103,12 @@ def estimate_market_impact(title: str, actual, forecast) -> Optional[str]:
                     "\"dovish\" jel (kamatemelési kockázat csökken) → rövid távon "
                     "RISK-ON hangulat valószínű. Tartós dezinfláció esetén hosszabb "
                     "távon is erősítheti a kockázatvállalási kedvet.")
-        else:
+        elif surprise == "inline":
             return ("➡️ <i>Várható hatás:</i> a várakozásnak megfelelő adat - "
                     "jellemzően enyhe/vegyes reakció, a piac inkább a következő "
                     "adatokra és a Fed-kommentárokra fókuszál.")
+        # JAVÍTVA: ha nincs szám (surprise=None, pl. "N/A"), ne állítsuk, hogy "inline" volt
+        return None
 
     # --- Kamatdöntés (FOMC, Fed, Interest Rate) ---
     if "fomc" in title_lower or "interest rate" in title_lower or "fed" in title_lower:
@@ -158,8 +162,12 @@ def load_state() -> dict:
     if STATE_FILE.exists():
         try:
             with STATE_FILE.open("r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
+                loaded = json.load(f)
+            # JAVÍTVA: érvényes JSON, de nem dict (pl. lista) -> a setdefault() elszállt volna
+            if isinstance(loaded, dict):
+                return loaded
+            print("A state fájl formátuma hibás, üres állapotból indulunk.")
+        except (json.JSONDecodeError, OSError, UnicodeDecodeError):
             print("A state fájl olvasása sikertelen, üres állapotból indulunk.")
     return {"sent_event_ids": [], "sent_summary_dates": []}
 
@@ -180,17 +188,48 @@ def _event_id(event: dict) -> str:
     return f"{event.get('title', '')}|{event.get('date', '')}"
 
 
-def send_telegram_message(text: str):
+def send_telegram_message(text: str) -> bool:
+    """JAVÍTVA: bool-t ad vissza (sikeres volt-e a küldés), 4096 karakteres
+    limit miatt sorok mentén darabol, 429 esetén egyszer újrapróbál."""
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("HIBA: Hiányzó Telegram hitelesítő adatok!")
-        return
+        return False
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    try:
-        resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
-        if resp.status_code != 200:
-            print(f"Telegram hiba ({resp.status_code}): {resp.text}")
-    except Exception as e:
-        print(f"Telegram küldési hiba: {e}")
+
+    chunks, cur = [], ""
+    for line in text.split("\n"):
+        line = line[:4000]
+        if cur and len(cur) + len(line) + 1 > 4000:
+            chunks.append(cur)
+            cur = line
+        else:
+            cur = f"{cur}\n{line}" if cur else line
+    if cur:
+        chunks.append(cur)
+
+    for chunk in chunks:
+        ok = False
+        for attempt in range(2):
+            try:
+                resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": chunk, "parse_mode": "HTML"}, timeout=10)
+                if resp.status_code == 429 and attempt == 0:
+                    try:
+                        wait = float(resp.json().get("parameters", {}).get("retry_after", 3))
+                    except Exception:
+                        wait = 3.0
+                    time.sleep(min(max(wait, 1.0), 30.0))
+                    continue
+                if resp.status_code == 200:
+                    ok = True
+                else:
+                    print(f"Telegram hiba ({resp.status_code}): {resp.text}")
+                break
+            except Exception as e:
+                print(f"Telegram küldési hiba: {e}")
+                break
+        if not ok:
+            return False
+    return True
 
 
 def get_macro_data():
@@ -198,10 +237,16 @@ def get_macro_data():
         headers = {"User-Agent": "Mozilla/5.0"}
         response = requests.get(FF_JSON_URL, headers=headers, timeout=10)
         response.raise_for_status()
-        return response.json()
+        data = response.json()
+        # JAVÍTVA: nem lista alakú válasz (pl. hibaobjektum) esetén is None, ne iteráljunk kulcsokon
+        if not isinstance(data, list):
+            print("Váratlan alakú válasz a ForexFactory végpontról.")
+            return None
+        return data
     except Exception as e:
         print(f"Hiba az adatok lekérésekor: {e}")
-        return []
+        # JAVÍTVA: None (nem üres lista), hogy a hívó meg tudja különböztetni a hibát a "nincs esemény"-től
+        return None
 
 
 def main():
@@ -212,17 +257,23 @@ def main():
     state.setdefault("sent_summary_dates", [])
 
     events = get_macro_data()
+    if events is None:
+        # JAVÍTVA: lekérési hiba esetén NE jelöljük késznek a mai összefoglalót és ne mentsünk state-et
+        print("Nincs adat (lekérési hiba) - a futás kihagyva, state érintetlen.")
+        return
 
     today_events = []
     recent_events = []
 
     for event in events:
         # Csak a magas prioritású USD események érdekelnek minket
+        if not isinstance(event, dict):  # JAVÍTVA: nem dict elem nem dönti el a futást
+            continue
         if event.get("country") != "USD" or event.get("impact") != "High":
             continue
 
         # Címke szűrés (Hogy ne kapjunk értesítést minden apróságról)
-        title = event.get("title", "")
+        title = event.get("title") or ""  # JAVÍTVA: None cím esetén nem szállunk el a .lower()-en
         if not any(keyword.lower() in title.lower() for keyword in TARGET_EVENTS):
             continue
 
@@ -240,6 +291,10 @@ def main():
         # adatközlés, ÉS még nem küldtük ki (dedup az event_id alapján)
         time_diff = (now_utc - event_time).total_seconds() / 60
         if 0 <= time_diff <= LIVE_WINDOW_MINUTES:
+            # JAVÍTVA: ha a feed még nem frissítette a "tény" mezőt (friss közlés), ne küldjünk
+            # "N/A" üzenetet és ne jelöljük kiküldöttnek - egy későbbi futás pótolhatja
+            if not event.get("actual") and time_diff < 10:
+                continue
             event_id = _event_id(event)
             if event_id not in state["sent_event_ids"]:
                 recent_events.append((event_id, event))
@@ -256,8 +311,11 @@ def main():
             msg = "📅 <b>NAPI MAKRÓ FIGYELMEZTETÉS</b>\n<i>Extrém volatilitás várható ma!</i>\n\n"
             for etime, ev in sorted(today_events, key=lambda x: x[0]):
                 time_str = etime.strftime("%H:%M (UTC)")
-                msg += f"⏰ {time_str} - <b>{ev['title']}</b>\n"
-            send_telegram_message(msg)
+                msg += f"⏰ {time_str} - <b>{html.escape(str(ev.get('title', '')))}</b>\n"  # JAVÍTVA: HTML escape
+            # JAVÍTVA: csak sikeres küldés esetén jelöljük késznek a napot
+            if not send_telegram_message(msg):
+                print("Reggeli összefoglaló küldése sikertelen - később újrapróbáljuk.")
+                return
             print("Reggeli összefoglaló elküldve.")
         else:
             print("Ma nincs High Impact USD esemény.")
@@ -268,15 +326,17 @@ def main():
     # --- 2. MÓD: LIVE ADATKÖZLÉS (Napközbeni futások) ---
     if recent_events:
         msg = "🚨 <b>MAKRÓ ADAT MEGJELENT!</b> 🚨\n\n"
+        sent_ids = []
         for event_id, ev in recent_events:
-            title = ev.get("title", "Ismeretlen")
+            title = ev.get("title") or "Ismeretlen"
             actual = ev.get("actual", "") or "N/A"
             forecast = ev.get("forecast", "") or "N/A"
             previous = ev.get("previous", "") or "N/A"
 
-            msg += f"📌 <b>{title}</b>\n"
-            msg += f"Tény: <b>{actual}</b>\n"
-            msg += f"Várt: {forecast} | Előző: {previous}\n"
+            # JAVÍTVA: HTML escape (pl. "<0.1%" vagy "&" a mezőkben elrontaná a Telegram HTML parse-t)
+            msg += f"📌 <b>{html.escape(str(title))}</b>\n"
+            msg += f"Tény: <b>{html.escape(str(actual))}</b>\n"
+            msg += f"Várt: {html.escape(str(forecast))} | Előző: {html.escape(str(previous))}\n"
 
             # ÚJ: rövid/hosszú távú várható hatás - lásd
             # estimate_market_impact() blokk-kommentjét a módszertanért.
@@ -284,11 +344,15 @@ def main():
             if impact_note:
                 msg += f"{impact_note}\n"
             msg += "\n"
-            state["sent_event_ids"].append(event_id)
+            sent_ids.append(event_id)
 
         msg += "<i>⚠️ A piac vadul rángathat, óvatosan a nyitott pozíciókkal! A fenti hatás-becslés TÁJÉKOZTATÓ jellegű, nem garantált előrejelzés.</i>"
-        send_telegram_message(msg)
-        print(f"Live makró adat elküldve ({len(recent_events)} esemény).")
+        # JAVÍTVA: csak sikeres küldés után kerül az event a state-be (különben végleg elveszne)
+        if send_telegram_message(msg):
+            state["sent_event_ids"].extend(sent_ids)
+            print(f"Live makró adat elküldve ({len(recent_events)} esemény).")
+        else:
+            print("Live makró üzenet küldése sikertelen - a következő futás újrapróbálja.")
     else:
         print("Nem volt új (még ki nem küldött) adatközlés a live-ablakban.")
 

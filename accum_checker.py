@@ -53,8 +53,7 @@ from typing import Optional
 from zoneinfo import ZoneInfo
 
 import aiohttp
-import numpy as np
-import pandas as pd
+import pandas as pd  # JAVÍTVA: a használatlan numpy import törölve
 import requests
 
 logging.basicConfig(
@@ -176,8 +175,12 @@ def load_state() -> dict:
     if STATE_FILE.exists():
         try:
             with STATE_FILE.open("r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
+                loaded = json.load(f)
+            # JAVÍTVA: nem-dict tartalom (pl. lista) később összeomlasztaná a futást
+            if isinstance(loaded, dict):
+                return loaded
+            logger.warning("A state fájl formátuma érvénytelen, üres állapotból indulunk.")
+        except (json.JSONDecodeError, OSError, UnicodeDecodeError):
             logger.warning("A state fájl olvasása sikertelen, üres állapotból indulunk.")
     return {}
 
@@ -259,8 +262,13 @@ async def fetch_all_tickers(session):
     if not data or "data" not in data:
         return {}
     result = {}
+    # JAVÍTVA: váratlan válaszforma (nem lista / nem dict elem) ne döntse el a futást
+    if not isinstance(data["data"], list):
+        return {}
     for t in data["data"]:
-        symbol = t.get("symbol", "")
+        if not isinstance(t, dict):
+            continue
+        symbol = t.get("symbol") or ""
         if not symbol.endswith("-USDT"):
             continue
         try:
@@ -294,6 +302,10 @@ async def fetch_klines(session, semaphore, symbol, interval, limit=HISTORY_CANDL
         df = df.rename(columns={"time": "timestamp"})
         for col in ["open", "close", "high", "low", "volume"]:
             df[col] = pd.to_numeric(df[col], errors="coerce")
+        # JAVÍTVA: NaN-os (nem számmá alakítható) sorok eldobása, különben NaN terjed a számításokban
+        df = df.dropna(subset=["open", "close", "high", "low", "volume", "timestamp"])
+        if df.empty:
+            return symbol, None
         df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
         df = df.sort_values("timestamp").reset_index(drop=True)
         return symbol, df
@@ -316,7 +328,7 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
     BingX perpetuals-on. Mostantól a csúcs-visszatekintés a RENDELKEZÉSRE
     ÁLLÓ adathosszhoz igazodik (minimum MIN_HISTORY_DAYS_REQUIRED nap
     elég), nem követeli meg mereven a teljes ATH_LOOKBACK_DAYS-t."""
-    if kdf is None:
+    if kdf is None or len(kdf) < 2:  # JAVÍTVA: üres DataFrame-nél iloc[-1] IndexError-t dobna
         return None
 
     closed = kdf.iloc[:-1].reset_index(drop=True)
@@ -326,6 +338,9 @@ def evaluate_accumulation(kdf: pd.DataFrame) -> Optional[dict]:
         return None
 
     current_price = float(closed["close"].iloc[-1])
+    # JAVÍTVA: 0 ár esetén az audit (entry_price osztás) ZeroDivisionError-t dobna és beragadna
+    if current_price <= 0:
+        return None
 
     # --- 1) "NAGYON LOW": a rendelkezésre álló (max. ATH_LOOKBACK_DAYS
     # hosszú) előélet csúcsához képest ---
@@ -551,6 +566,8 @@ def is_symbol_banned(state: dict, symbol: str, now: datetime) -> bool:
         ban_until = datetime.fromisoformat(ban_until_str)
     except ValueError:
         return False
+    if ban_until.tzinfo is None:  # JAVÍTVA: naiv időbélyeg összehasonlítása TypeError-t dobna
+        ban_until = ban_until.replace(tzinfo=timezone.utc)
     if now >= ban_until:
         del bans[symbol]
         return False
@@ -746,8 +763,20 @@ def _send_telegram_message_sync(text: str) -> None:
         logger.error("Hiányzik a TELEGRAM_BOT_TOKEN vagy TELEGRAM_CHAT_ID env változó.")
         return
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    # JAVÍTVA: Telegram 4096 karakteres limit - soronként vágunk, hogy a HTML tag ne csonkuljon
+    if len(text) > 4000:
+        cut = text.rfind("\n", 0, 4000)
+        text = text[:cut if cut > 0 else 4000] + "\n…"
     try:
         resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
+        # JAVÍTVA: 429 esetén egyszeri újrapróbálkozás a retry_after után
+        if resp.status_code == 429:
+            try:
+                wait = min(int(resp.json().get("parameters", {}).get("retry_after", 5)), 30)
+            except Exception:
+                wait = 5
+            time.sleep(wait)
+            resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
         if resp.status_code != 200:
             logger.error("Telegram hiba (%s): %s", resp.status_code, resp.text)
     except Exception as e:
@@ -831,9 +860,15 @@ async def run_once(state: dict, now: datetime) -> tuple:
 
         entry = state.setdefault(symbol, {"last_alert_ts": None})
         if entry.get("last_alert_ts"):
-            last_dt = datetime.fromisoformat(entry["last_alert_ts"])
-            if (now - last_dt) < timedelta(days=ALERT_COOLDOWN_DAYS):
-                continue
+            # JAVÍTVA: sérült/naiv időbélyeg ne döntse el a teljes futást
+            try:
+                last_dt = datetime.fromisoformat(entry["last_alert_ts"])
+                if last_dt.tzinfo is None:
+                    last_dt = last_dt.replace(tzinfo=timezone.utc)
+                if (now - last_dt) < timedelta(days=ALERT_COOLDOWN_DAYS):
+                    continue
+            except (ValueError, TypeError):
+                pass
 
         msg = format_accum_message(symbol, result)
         await send_telegram_message(msg)

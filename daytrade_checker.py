@@ -625,14 +625,18 @@ async def resolve_signal_audit(state: dict, session, semaphore, now: datetime) -
             interval, limit = "5m", min(300, int(age_minutes / 5) + 10)
 
         _, kdf = await fetch_klines(session, semaphore, rec["symbol"], interval, limit)
+        # JAVÍTVA: tartósan lekérhetetlen (pl. delistelt) symbol jelzése örökre a pending listában ragadt -> korhatár
+        too_old = age_minutes > AUDIT_MAX_WINDOW_MINUTES + 360
         if kdf is None or len(kdf) == 0:
-            still_pending.append(rec)
+            if not too_old:
+                still_pending.append(rec)
             continue
 
-        entry_ts_naive = pd.Timestamp(entry_dt.replace(tzinfo=None))
+        entry_ts_naive = pd.Timestamp(entry_dt.astimezone(timezone.utc).replace(tzinfo=None))
         after = kdf[kdf["timestamp"] >= entry_ts_naive].reset_index(drop=True)
         if after.empty:
-            still_pending.append(rec)
+            if not too_old:
+                still_pending.append(rec)
             continue
 
         direction = rec["direction"]
@@ -1333,7 +1337,9 @@ def _cleanup_stale_state_entries(state: dict, now: datetime) -> None:
             continue  
         try:
             last_seen_dt = datetime.fromisoformat(last_seen)
-        except ValueError:
+            if last_seen_dt.tzinfo is None:  # JAVÍTVA: naiv/aware összehasonlítás TypeError-ja ellen
+                last_seen_dt = last_seen_dt.replace(tzinfo=timezone.utc)
+        except (ValueError, TypeError):
             continue
         if last_seen_dt < cutoff:
             stale_symbols.append(key)
@@ -1374,8 +1380,10 @@ async def maybe_send_daily_summary(state: dict, now: datetime) -> None:
 def load_state() -> dict:
     if STATE_FILE.exists():
         try:
-            return json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
+            loaded = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+            # JAVÍTVA: nem-dict tartalom (pl. lista) vagy olvasási/kódolási hiba se omlassza össze a futást
+            return loaded if isinstance(loaded, dict) else {}
+        except (ValueError, OSError):
             return {}
     return {}
 
@@ -1405,7 +1413,8 @@ async def _get_json(session, url, params=None):
     last_error = None
     for attempt in range(RETRY_COUNT):
         try:
-            async with session.get(url, params=params, timeout=REQUEST_TIMEOUT) as resp:
+            # JAVÍTVA: a puszta int timeout elavult az aiohttp-ban, explicit ClientTimeout kell
+            async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=REQUEST_TIMEOUT)) as resp:
                 if resp.status == 429:
                     last_error = "HTTP 429 (rate limit)"
                     await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
@@ -1440,11 +1449,14 @@ async def _get_json(session, url, params=None):
 
 async def fetch_all_tickers(session):
     data = await _get_json(session, TICKER_ENDPOINT)
-    if not data or "data" not in data:
+    # JAVÍTVA: "data": null / nem lista válasz nem dobhat TypeError-t
+    if not data or not isinstance(data, dict) or not isinstance(data.get("data"), list):
         return {}
     result = {}
     for t in data["data"]:
-        symbol = t.get("symbol", "")
+        if not isinstance(t, dict):
+            continue
+        symbol = t.get("symbol") or ""
         if not symbol.endswith("-USDT"):
             continue
         try:
@@ -1458,11 +1470,12 @@ async def fetch_all_tickers(session):
 
 async def fetch_valid_contract_symbols(session):
     data = await _get_json(session, CONTRACTS_ENDPOINT)
-    if not data or "data" not in data:
+    # JAVÍTVA: "data": null / nem lista válasz nem dobhat TypeError-t
+    if not data or not isinstance(data, dict) or not isinstance(data.get("data"), list):
         return None
     return {
         c["symbol"] for c in data["data"]
-        if c.get("symbol", "").endswith("-USDT") and c.get("status", 1) == 1
+        if isinstance(c, dict) and (c.get("symbol") or "").endswith("-USDT") and c.get("status", 1) == 1
     }
 
 async def fetch_open_interest(session, semaphore, symbol):
@@ -1473,7 +1486,7 @@ async def fetch_open_interest(session, semaphore, symbol):
             return symbol, None
         try:
             return symbol, float(data["data"].get("openInterest", 0))
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, AttributeError):  # JAVÍTVA: lista-alakú "data" AttributeError-t dobna
             return symbol, None
 
 async def fetch_funding_rate(session, semaphore, symbol):
@@ -1512,6 +1525,8 @@ async def fetch_orderbook_imbalance(symbol: str, limit: int = ORDERBOOK_LEVELS_L
     if not data or "data" not in data or not data["data"]:
         return None
     payload = data["data"]
+    if not isinstance(payload, dict):  # JAVÍTVA: váratlan alak ne dobjon AttributeError-t
+        return None
     try:
         bids = payload.get("bids", []) or []
         asks = payload.get("asks", []) or []
@@ -1890,17 +1905,56 @@ def _patch_live_candle_with_ws(kdf: pd.DataFrame, symbol: str, store: Optional["
     kdf.loc[last_idx, "volume"] = live_ws["volume_base"]
     return kdf, True
 
+def _split_telegram_text(text: str, limit: int = 4000) -> list:
+    # JAVÍTVA: a Telegram 4096 karakternél hosszabb üzenetet elutasít - sorhatáron darabolunk
+    if len(text) <= limit:
+        return [text]
+    chunks, current = [], ""
+    for line in text.split("\n"):
+        while len(line) > limit:
+            if current:
+                chunks.append(current)
+                current = ""
+            chunks.append(line[:limit])
+            line = line[limit:]
+        if current and len(current) + 1 + len(line) > limit:
+            chunks.append(current)
+            current = line
+        else:
+            current = f"{current}\n{line}" if current else line
+    if current:
+        chunks.append(current)
+    return chunks
+
+
 def _send_telegram_message_sync(text: str) -> None:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         logger.error("Hiányzik a TELEGRAM_BOT_TOKEN vagy TELEGRAM_CHAT_ID env változó.")
         return
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    try:
-        resp = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}, timeout=10)
-        if resp.status_code != 200:
-            logger.error("Telegram hiba (%s): %s", resp.status_code, resp.text)
-    except Exception as e:
-        logger.error("Telegram küldési hiba: %s", e)
+    for chunk in _split_telegram_text(text):
+        payload = {"chat_id": TELEGRAM_CHAT_ID, "text": chunk, "parse_mode": "HTML"}
+        # JAVÍTVA: 429 (retry_after) és HTML-parse hiba (400) kezelése, a token kimaszkolása a logból
+        for attempt in range(3):
+            try:
+                resp = requests.post(url, json=payload, timeout=10)
+                if resp.status_code == 200:
+                    break
+                if resp.status_code == 429:
+                    try:
+                        wait = float(resp.json().get("parameters", {}).get("retry_after", 2))
+                    except Exception:
+                        wait = 2.0
+                    time.sleep(min(max(wait, 1.0), 30.0))
+                    continue
+                if resp.status_code == 400 and "parse" in resp.text.lower() and "parse_mode" in payload:
+                    payload = {k: v for k, v in payload.items() if k != "parse_mode"}
+                    continue
+                logger.error("Telegram hiba (%s): %s", resp.status_code, resp.text)
+                break
+            except Exception as e:
+                logger.error("Telegram küldési hiba: %s", str(e).replace(TELEGRAM_BOT_TOKEN, "***"))
+                break
 
 async def send_telegram_message(text: str) -> None:
     await asyncio.to_thread(_send_telegram_message_sync, text)
@@ -2240,7 +2294,11 @@ def find_oi_baseline(history_without_current: list, now: datetime, target_minute
     max_w = OI_MAX_WINDOW_MINUTES if max_minutes is None else max_minutes
     best, best_diff = None, None
     for h in history_without_current:
-        age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
+        # JAVÍTVA: egy sérült/naiv időbélyegű history-elem ne dobjon kivételt
+        try:
+            age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
+        except (KeyError, ValueError, TypeError):
+            continue
         if min_w <= age_min <= max_w:
             diff = abs(age_min - target)
             if best_diff is None or diff < best_diff:
@@ -2256,7 +2314,11 @@ def find_funding_baseline(history_without_current: list, now: datetime, target_m
     max_w = FUNDING_HISTORY_MAX_MINUTES if max_minutes is None else max_minutes
     best, best_diff = None, None
     for h in history_without_current:
-        age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
+        # JAVÍTVA: egy sérült/naiv időbélyegű history-elem ne dobjon kivételt
+        try:
+            age_min = (now - datetime.fromisoformat(h["ts"])).total_seconds() / 60
+        except (KeyError, ValueError, TypeError):
+            continue
         if min_w <= age_min <= max_w:
             diff = abs(age_min - target)
             if best_diff is None or diff < best_diff:
@@ -2583,6 +2645,9 @@ async def run_single_pass(state: dict, valid_contracts, htf_cache: dict, funding
         evaluated += 1
 
         entry = state.setdefault(symbol, {"oi_history": [], "last_alert_ts": None})
+        # JAVÍTVA: hiányos/régi állapot-bejegyzés ne okozzon KeyError-t
+        entry.setdefault("oi_history", [])
+        entry.setdefault("last_alert_ts", None)
         entry["oi_history"].append({"ts": now.isoformat(), "oi": oi_now})
         cutoff = now - timedelta(minutes=MAX_HISTORY_AGE_MINUTES)
         entry["oi_history"] = [h for h in entry["oi_history"] if datetime.fromisoformat(h["ts"]) >= cutoff]
@@ -2868,7 +2933,8 @@ async def main():
             lock_age_minutes = (now_start - datetime.fromisoformat(existing_lock)).total_seconds() / 60
         except (ValueError, TypeError):
             lock_age_minutes = None
-        if lock_age_minutes is not None and lock_age_minutes < RUN_LOCK_STALE_MINUTES:
+        # JAVÍTVA: jövőbeli (negatív korú) zár-időbélyeg ne tudjon tartós zárat okozni
+        if lock_age_minutes is not None and 0 <= lock_age_minutes < RUN_LOCK_STALE_MINUTES:
             logger.warning("Egy másik futás már aktívnak tűnik (zár kora: %.1f perc) - "
                             "ez a példány csendben kilép.", lock_age_minutes)
             return
@@ -2911,6 +2977,8 @@ async def _run_main_loop(state: dict):
             audit_semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
             await resolve_signal_audit(state, audit_session, audit_semaphore, datetime.now(timezone.utc))
         await maybe_send_daily_audit_report(state, datetime.now(timezone.utc))
+        # JAVÍTVA: a régi symbol-bejegyzések takarítása korábban csak a (kikapcsolt) legacy összesítőből futott -> a state korlátlanul nőtt
+        _cleanup_stale_state_entries(state, datetime.now(timezone.utc))
         save_state(state)
     except Exception as e:
         logger.warning("Signal-audit feloldás/riport sikertelen (a fő ciklus ettől függetlenül folytatódik): %s", e)
@@ -2932,6 +3000,12 @@ async def _run_main_loop(state: dict):
                 logger.warning("Túllépte az időkeretet (%.0f mp), megszakítva.", remaining_budget)
                 save_state(state)
                 break
+            except Exception as e:
+                # JAVÍTVA: egy kör váratlan hibája ne ölje meg a teljes futást (non-zero exit) - naplózzuk és a következő körrel folytatjuk
+                logger.error("Hiba a kör közben (kihagyva, a futás folytatódik): %s: %s", type(e).__name__, e)
+                save_state(state)
+                await asyncio.sleep(PASS_INTERVAL_SECONDS)
+                continue
             save_state(state)
             logger.info("Kör kész: %d pár kiértékelve, %d riasztás.", evaluated, alerts)
             # JAVÍTÁS: a korábbi "pass_elapsed = time.monotonic() - (time.monotonic() - remaining_budget)"

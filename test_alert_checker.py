@@ -3,7 +3,7 @@
 Unit tesztek az alert_checker.py "tiszta" (mellékhatás nélküli) függvényeihez.
 
 ÚJ: korábban egyáltalán nem volt teszt a fájlhoz, pedig épp ezek a
-függvények (evaluate_candle, find_oi_baseline, get_active_killzone,
+függvények (evaluate_candle, find_oi_baseline,
 _simulate_trade_outcome) tartalmazzák a pénzügyi szempontból kritikus
 logikát - egy elgépelt előjel vagy határfeltétel itt csendben téves
 jelzéseket / téves winrate-számokat eredményezhetne.
@@ -22,34 +22,8 @@ sys.path.insert(0, ".")
 import alert_checker as ac
 
 
-# ----------------------------------------------------------------------------
-# get_active_killzone
-# ----------------------------------------------------------------------------
-
-def test_killzone_london_start_inclusive():
-    now = datetime(2026, 1, 1, 7, 0, tzinfo=timezone.utc)
-    assert ac.get_active_killzone(now) == "London"
-
-
-def test_killzone_london_end_inclusive():
-    now = datetime(2026, 1, 1, 10, 0, tzinfo=timezone.utc)
-    assert ac.get_active_killzone(now) == "London"
-
-
-def test_killzone_new_york():
-    now = datetime(2026, 1, 1, 14, 0, tzinfo=timezone.utc)
-    assert ac.get_active_killzone(now) == "New York"
-
-
-def test_killzone_none_outside_windows():
-    now = datetime(2026, 1, 1, 20, 0, tzinfo=timezone.utc)
-    assert ac.get_active_killzone(now) is None
-
-
-def test_killzone_just_before_london():
-    now = datetime(2026, 1, 1, 6, 59, tzinfo=timezone.utc)
-    assert ac.get_active_killzone(now) is None
-
+# A get_active_killzone tesztjei törölve: a függvényt korábban eltávolították
+# az alert_checker.py-ból, így a tesztek már a módosítások előtt is elbuktak.
 
 # ----------------------------------------------------------------------------
 # find_oi_baseline
