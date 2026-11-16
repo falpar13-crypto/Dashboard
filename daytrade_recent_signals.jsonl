@@ -1,2 +1,4 @@
 {"ts": "2026-11-15T23:26:40.507312+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-15T23:54:29.385475+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-16T01:48:45.058407+00:00", "symbol": "TAO-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-16T01:54:45.069534+00:00", "symbol": "TRX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
