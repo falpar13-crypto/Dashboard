@@ -6,3 +6,4 @@
 {"ts": "2026-11-17T02:14:18.736030+00:00", "symbol": "AAVE-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-17T03:19:55.960358+00:00", "symbol": "FIL-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-17T04:28:34.525552+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-17T04:44:27.870047+00:00", "symbol": "AKE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
