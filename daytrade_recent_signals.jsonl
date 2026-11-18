@@ -1,4 +1,3 @@
-{"ts": "2026-11-17T23:42:56.753943+00:00", "symbol": "XAUT-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
-{"ts": "2026-11-18T00:32:28.137380+00:00", "symbol": "INJ-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-18T02:13:50.179638+00:00", "symbol": "QNT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-18T05:15:59.033363+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-18T06:54:51.248861+00:00", "symbol": "AKE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
