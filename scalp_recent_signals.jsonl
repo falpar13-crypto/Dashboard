@@ -1,6 +1,4 @@
-{"ts": "2026-11-18T17:04:31.362279+00:00", "symbol": "BOME-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-18T17:04:31.362279+00:00", "symbol": "DOGE-USDT", "direction": "LONG", "signal_type": "STANDARD"}
-{"ts": "2026-11-18T17:24:58.520098+00:00", "symbol": "BLESS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-18T21:17:43.270049+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-18T22:03:23.987914+00:00", "symbol": "PIEVERSE-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-18T22:54:42.185050+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-18T23:43:58.142638+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
