@@ -8,3 +8,5 @@
 {"ts": "2026-11-19T17:23:44.889121+00:00", "symbol": "DOT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-19T17:26:44.892569+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-19T17:26:44.892569+00:00", "symbol": "TRB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-19T17:39:29.831491+00:00", "symbol": "TURBO-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-19T17:47:29.843492+00:00", "symbol": "IRYS-USDT", "direction": "SHORT", "signal_type": "DIVERGENCE_REVERSAL"}
