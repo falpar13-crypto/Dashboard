@@ -3,3 +3,4 @@
 {"ts": "2026-11-18T22:54:42.185050+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-18T23:43:58.142638+00:00", "symbol": "ZEC-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-19T00:42:49.525236+00:00", "symbol": "TIA-USDT", "direction": "LONG", "signal_type": "STANDARD"}
+{"ts": "2026-11-19T01:54:23.575454+00:00", "symbol": "TIA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
