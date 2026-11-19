@@ -3,3 +3,4 @@
 {"ts": "2026-11-19T03:25:46.858781+00:00", "symbol": "APT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-19T03:26:46.861227+00:00", "symbol": "CFX-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-19T03:39:43.442431+00:00", "symbol": "BNB-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
+{"ts": "2026-11-19T05:43:15.867881+00:00", "symbol": "BNB-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
