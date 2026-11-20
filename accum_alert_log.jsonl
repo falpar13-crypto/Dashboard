@@ -21,3 +21,6 @@
 {"ts": "2026-11-20T05:52:00.362321+00:00", "symbol": "YB-USDT", "direction": "LONG", "price": 0.0508, "drop_from_peak_pct": 63.05, "volume_growth_ratio": 1.34, "price_range_pct": 17.94, "monotonic_fraction": 0.89}
 {"ts": "2026-11-20T14:56:48.776421+00:00", "symbol": "PEOPLE-USDT", "direction": "LONG", "price": 0.005008, "drop_from_peak_pct": 61.88, "volume_growth_ratio": 3.21, "price_range_pct": 18.33, "monotonic_fraction": 0.67}
 {"ts": "2026-11-20T14:56:48.776421+00:00", "symbol": "DYDX-USDT", "direction": "LONG", "price": 0.07754, "drop_from_peak_pct": 68.23, "volume_growth_ratio": 2.1, "price_range_pct": 17.25, "monotonic_fraction": 0.78}
+{"ts": "2026-11-20T23:42:24.641597+00:00", "symbol": "1000BONK-USDT", "direction": "LONG", "price": 0.002303, "drop_from_peak_pct": 62.75, "volume_growth_ratio": 2.41, "price_range_pct": 21.25, "monotonic_fraction": 0.67}
+{"ts": "2026-11-20T23:42:24.641597+00:00", "symbol": "ZKC-USDT", "direction": "LONG", "price": 0.0259, "drop_from_peak_pct": 63.39, "volume_growth_ratio": 1.53, "price_range_pct": 20.98, "monotonic_fraction": 0.89}
+{"ts": "2026-11-20T23:42:24.641597+00:00", "symbol": "BOME-USDT", "direction": "LONG", "price": 0.0004925, "drop_from_peak_pct": 68.53, "volume_growth_ratio": 2.91, "price_range_pct": 21.87, "monotonic_fraction": 0.78}
