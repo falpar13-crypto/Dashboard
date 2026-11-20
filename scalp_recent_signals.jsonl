@@ -1,2 +1,4 @@
 {"ts": "2026-11-20T14:19:50.860952+00:00", "symbol": "CYBER-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-20T15:13:05.316485+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-20T17:18:16.438181+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-20T17:18:16.438181+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
