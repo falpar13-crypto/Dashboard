@@ -15,3 +15,7 @@
 {"ts": "2026-11-09T04:50:12.440599+00:00", "symbol": "GRIFFAIN-USDT", "direction": "LONG", "price": 0.010056, "drop_from_peak_pct": 65.46, "volume_growth_ratio": 2.4, "price_range_pct": 17.81, "monotonic_fraction": 0.67}
 {"ts": "2026-11-10T04:01:02.593460+00:00", "symbol": "SAPIEN-USDT", "direction": "LONG", "price": 0.0454, "drop_from_peak_pct": 68.16, "volume_growth_ratio": 1.79, "price_range_pct": 17.41, "monotonic_fraction": 0.67}
 {"ts": "2026-11-19T16:01:02.638938+00:00", "symbol": "SKR-USDT", "direction": "LONG", "price": 0.009638, "drop_from_peak_pct": 72.3, "volume_growth_ratio": 1.48, "price_range_pct": 24.79, "monotonic_fraction": 0.89}
+{"ts": "2026-11-20T05:52:00.362321+00:00", "symbol": "GALA-USDT", "direction": "LONG", "price": 0.001334, "drop_from_peak_pct": 60.68, "volume_growth_ratio": 3.08, "price_range_pct": 13.9, "monotonic_fraction": 0.78}
+{"ts": "2026-11-20T05:52:00.362321+00:00", "symbol": "BLUR-USDT", "direction": "LONG", "price": 0.006696, "drop_from_peak_pct": 73.83, "volume_growth_ratio": 1.86, "price_range_pct": 12.58, "monotonic_fraction": 1.0}
+{"ts": "2026-11-20T05:52:00.362321+00:00", "symbol": "STRK-USDT", "direction": "LONG", "price": 0.0317, "drop_from_peak_pct": 74.92, "volume_growth_ratio": 2.47, "price_range_pct": 16.93, "monotonic_fraction": 0.67}
+{"ts": "2026-11-20T05:52:00.362321+00:00", "symbol": "YB-USDT", "direction": "LONG", "price": 0.0508, "drop_from_peak_pct": 63.05, "volume_growth_ratio": 1.34, "price_range_pct": 17.94, "monotonic_fraction": 0.89}
