@@ -4,3 +4,4 @@
 {"ts": "2026-11-20T17:18:16.438181+00:00", "symbol": "MMT-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-20T18:18:12.543184+00:00", "symbol": "BLESS-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-20T18:18:12.543184+00:00", "symbol": "PUMP-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-20T19:49:14.968523+00:00", "symbol": "BLESS-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
