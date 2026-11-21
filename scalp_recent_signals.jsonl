@@ -8,3 +8,5 @@
 {"ts": "2026-11-21T06:41:23.899208+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-21T06:41:53.901676+00:00", "symbol": "AVAX-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-21T06:48:23.930580+00:00", "symbol": "DYM-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-21T07:13:38.580486+00:00", "symbol": "EVAA-USDT", "direction": "LONG", "signal_type": "EMA_REJECTION"}
+{"ts": "2026-11-21T07:13:38.580486+00:00", "symbol": "JUP-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
