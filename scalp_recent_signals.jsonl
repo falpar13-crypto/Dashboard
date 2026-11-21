@@ -3,3 +3,4 @@
 {"ts": "2026-11-21T01:29:46.251957+00:00", "symbol": "WIF-USDT", "direction": "SHORT", "signal_type": "EMA_REJECTION"}
 {"ts": "2026-11-21T02:49:01.666378+00:00", "symbol": "STRK-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
 {"ts": "2026-11-21T04:04:39.231882+00:00", "symbol": "ENA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-21T04:48:29.578470+00:00", "symbol": "WIF-USDT", "direction": "LONG", "signal_type": "STANDARD"}
