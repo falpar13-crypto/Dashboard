@@ -10,3 +10,4 @@
 {"ts": "2026-11-21T13:31:15.396324+00:00", "symbol": "ENS-USDT", "direction": "LONG", "signal_type": "STANDARD"}
 {"ts": "2026-11-21T13:34:15.402732+00:00", "symbol": "XAUT-USDT", "direction": "LONG", "signal_type": "DIVERGENCE_REVERSAL"}
 {"ts": "2026-11-21T14:09:37.676042+00:00", "symbol": "BLUR-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
+{"ts": "2026-11-21T14:24:16.533926+00:00", "symbol": "ADA-USDT", "direction": "SHORT", "signal_type": "STANDARD"}
